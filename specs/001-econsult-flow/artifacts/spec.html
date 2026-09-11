@@ -1,0 +1,244 @@
+<title>E-consult Flow Spec</title>
+<meta name="description" content="The design for the e-consult submission flow: approach, contract changes, screens, edge cases and success criteria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Flow record · 001-econsult-flow · Specification (after checker rounds 1 and 2)</p>
+    <h1>Spec: E-consult submission in the app</h1>
+    <p class="lede">The design for the e-consult submission flow: approach, contract changes, screens, edge cases and success criteria.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#problem-and-goals">Problem &amp; Goals</a></li><li><a href="#users-and-scenarios">Users &amp; Scenarios</a></li><li><a href="#chosen-approach">Chosen Approach</a></li><li><a href="#the-contract-owned-by-the-app">The Contract (owned by the app)</a></li><li><a href="#affected-areas-and-behavior-changes">Affected Areas &amp; Behavior Changes</a></li><li><a href="#screens">Screens</a></li><li><a href="#edge-cases">Edge Cases</a></li><li><a href="#ux-ui-patterns-and-platform-lens-react-native">UX/UI Patterns &amp; Platform Lens (React Native)</a></li><li><a href="#reuse-map">Reuse Map</a></li><li><a href="#success-criteria">Success Criteria</a></li><li><a href="#out-of-scope">Out of Scope</a></li><li><a href="#open-questions">Open Questions</a></li></ol>
+  </aside>
+  <main>
+
+<p>Feature <code>001-econsult-flow</code> · branch <code>feat/econsult-flow</code> · written 2026-09-11, revised after checker rounds 1 and 2 and the platform research critique</p>
+<p>How it works today: how-it-works.md (rendered copy: <code>artifacts/how-it-works.html</code>). Platform facts behind the choices below: research.md (rendered copy: <code>artifacts/research.html</code>).</p>
+<h2 id="problem-and-goals">Problem &amp; Goals</h2>
+<p>Patients drop out of the current e-consult because it asks too much, while GPs receive messages too thin to act on. The ticket asks for a flow that feels light and quick for the patient yet arrives at the practice with enough to work with. Practices differ: each decides who patients may write to and whether patients answer a set of questions first, and that comes from the practice&#39;s configuration.</p>
+<p>Goals, in priority order:</p>
+<ol>
+<li>One complete path a patient can finish in under two minutes: choose a recipient, answer the practice&#39;s questions, write the message, optionally add a photo, see a clear confirmation.</li>
+<li>Every real state, not just the happy one: loading, empty, error, sending, offline, and the partial failure where the message is sent but the photo is not.</li>
+<li>Usable by the actual audience: screen readers, the largest text sizes, unsteady hands, poor connections, older phones.</li>
+<li>Code a reviewer could work in: small units with one purpose each, typed contracts, tests that read like acceptance criteria.</li>
+</ol>
+<p>The deliverable is a repository that runs from a clean clone with <code>npx expo start</code> in Expo Go on the iOS simulator, plus DECISIONS.md and AI-USAGE.md. The screen recording is made by hand after the flow finishes. DECISIONS.md states that the app was run on the iOS simulator and lists what to check on Android: the back gesture on the confirmation screen, TalkBack live regions, the virtual-scene camera, and edge-to-edge insets.</p>
+<h2 id="users-and-scenarios">Users &amp; Scenarios</h2>
+<ul>
+<li><strong>Ria, 74, iPhone, text size at the largest accessibility setting, VoiceOver on some days.</strong> She has had a painful knee for two weeks. She wants to reach her own GP without phoning. She must be able to hear every label, every error, and the confirmation.</li>
+<li><strong>Ahmed, 45, older Android phone on a weak mobile connection.</strong> He has a rash and wants to send a photo. The config takes seconds to arrive; the upload may fail. He must never lose his message because the photo failed.</li>
+<li><strong>A practice with no questions configured (prc-0873).</strong> The flow must feel just as complete with the question step absent, and the step counter must not lie.</li>
+<li><strong>The reviewer.</strong> Clones the repo, runs it, switches practice and injects failures without editing code, and reads the decision record.</li>
+</ul>
+<h2 id="chosen-approach">Chosen Approach</h2>
+<p>Three approaches were weighed for the flow shape.</p>
+<p><strong>A. One screen per question (wizard).</strong> Recipient, then each practice question on its own screen, then message, then photo, then review, then sent. Each screen is minimal, but a practice with three questions becomes an eight-screen flow. Patients lose their place, progress is hard to convey, and the review screen repeats what they just typed. Rejected: it optimises the wrong thing.</p>
+<p><strong>B. Three steps plus a confirmation (chosen).</strong> Step 1 &quot;Who are you writing to?&quot; lists the practice&#39;s care team. Step 2 &quot;A few questions from your practice&quot; shows all configured questions on one scrollable screen and is skipped entirely when the practice configured none. Step 3 &quot;Your message&quot; holds the free-text field, the optional photo block and the Send button; a &quot;To: Dr. X · Change&quot; row at the top replaces a separate review screen. The confirmation screen states what was sent, to whom, and what happens next. The step counter reads &quot;Step 1 of 3&quot; or &quot;Step 1 of 2&quot; depending on the practice.</p>
+<p><strong>C. One long form.</strong> Everything on one scrollable screen. Fewest screens, but at large text sizes it becomes a very long page, the keyboard fights the photo block, and errors far above the fold go unnoticed. It also reads as a web page in a shell, which the brief explicitly does not want. Rejected.</p>
+<p>Supporting choices, each weighed against alternatives in the research record:</p>
+<ul>
+<li><strong>Navigation and draft state.</strong> expo-router native stack. A nested <code>src/app/econsult/_layout.tsx</code> mounts a <code>DraftProvider</code> (a pure <code>useReducer</code> plus context) around its own <code>Stack</code>, so the draft lives exactly as long as the flow and dies with it. The root stack hides its own header for the <code>econsult</code> group, so the nested stack owns titles and back buttons. Alternatives considered: route params (would serialise the answer map and break typed routes), a module-level store such as zustand (would need a manual reset and outlives the flow), react-hook-form (built for large uncontrolled forms; three to five practice-configured fields do not justify it). The draft is rebuilt from scratch on every entry; persistence across app restarts is out of scope.</li>
+<li><strong>Data fetching.</strong> TanStack Query v5. The recipient step runs <code>useQueries</code> with <code>combine</code> over the practice config and the care team, so two parallel requests render as one loading, one error and one empty state. Sending is one <code>useMutation</code> whose function creates the e-consult and then uploads the photo. Reads use <code>networkMode: &#39;offlineFirst&#39;</code> with <code>retry: 1, retryDelay: 1000</code>: the first attempt always runs (the fake transport is in-process; a real request fails fast) and only the retry pauses until the device is back online. The send mutation uses <code>networkMode: &#39;always&#39;</code> and never retries automatically, so a send can never sit paused with a spinner that lies; our own timeout is the authority. Alternative: hand-rolled <code>useEffect</code> fetching would need its own state machine, cancellation and dedupe per screen and still leave offline handling to us.</li>
+<li><strong>Contracts.</strong> zod schemas at the network boundary with TypeScript types inferred from them, one source of truth. A malformed payload maps onto the same error state as a failed request instead of crashing the screen.</li>
+<li><strong>Fake backend.</strong> A <code>Transport</code> interface (<code>getJson</code>, <code>postJson</code>, <code>uploadPhoto</code>, each taking an <code>AbortSignal</code>) with one shipped implementation: an in-process fake with configurable latency, a per-request fault map and abort support, three typed services on top of it, fixtures imported statically. The fake honours <code>AbortSignal</code> by rejecting with an <code>AbortError</code>, so the timeout path is exercised for real in tests. No HTTP implementation is shipped; DECISIONS.md names the real one (Expo&#39;s <code>fetch</code> for JSON, expo-file-system&#39;s upload task for the photo, see The Contract) so the seam is explicit. Alternatives: msw has two open, unanswered React Native breakages (empty bodies since 2.14, interception failing in Expo runtimes) and SDK 57 swaps the global fetch for its own native-backed implementation; a local HTTP server needs a second terminal and three different base URLs for simulator, emulator and phone, which breaks &quot;clean clone plus <code>npx expo start</code>&quot;.</li>
+<li><strong>Practice switching and failure injection.</strong> A committed <code>.env</code> seeds the fake through <code>EXPO_PUBLIC_PRACTICE_ID</code> (default practice), <code>EXPO_PUBLIC_LATENCY_MS</code> and <code>EXPO_PUBLIC_FAULTS</code> (comma-separated <code>request:kind</code> pairs, for example <code>config:timeout</code>). A development-only settings screen switches between the three fixture practices at runtime, sets latency, forces any of the four requests to fail (network, server or timeout) and forces offline. Applying the settings clears the query cache and returns home, so the next entry into the flow fetches fresh. Env values are inlined at build time, so they are seeds, never the live toggle.</li>
+<li><strong>Photo.</strong> expo-image-picker for both camera and library, included in Expo Go, so no development build is needed. The picker runs at <code>quality: 1</code>; expo-image-manipulator then bounds the long edge to at most 1600 px and re-encodes as JPEG at 0.7, releasing its native handles, so a 12-megapixel capture becomes a sub-megabyte upload on a poor connection instead of a multi-megabyte one. A brief &quot;Preparing photo&quot; state covers the processing; if processing fails the original asset is kept and a development warning is logged. The result is previewed with expo-image and can be removed. The camera action is offered only when <code>Device.isDevice</code> from expo-device (already installed) is true; on a simulator a one-line note takes its place, and the library path works everywhere.</li>
+<li><strong>Keyboard and safe areas.</strong> Core React Native only: one <code>ScrollView</code> per step with the primary button as the last child inside the scroll content, <code>keyboardShouldPersistTaps=&quot;handled&quot;</code>, <code>automaticallyAdjustKeyboardInsets</code> on iOS, and bottom insets from <code>useSafeAreaInsets</code>. expo-router already mounts the safe-area provider and the header consumes the top inset. react-native-keyboard-controller was considered and rejected: the Expo docs contradict themselves on its Expo Go status, and the baseline needs no native module.</li>
+<li><strong>Offline.</strong> expo-network&#39;s <code>useNetworkState</code>, fail-open: only an explicit <code>isConnected === false</code> counts as offline, unknown counts as online. A banner inside the screen scaffold below the header, the Send button disabled with a spoken reason while the link is reported down, and TanStack Query&#39;s online manager wired to the same source so the UI and the cache agree. The banner is advisory; the request itself is the real check. No queueing.</li>
+<li><strong>Copy and appearance.</strong> English, matching the brief&#39;s sample data; internationalisation is out of scope. Light appearance only (<code>userInterfaceStyle: &quot;light&quot;</code>), system font so Dynamic Type and Android font scaling work without configuration. No design system: a small token file for colour, spacing, type scale and the 48-point minimum touch target.</li>
+</ul>
+<h2 id="the-contract-owned-by-the-app">The Contract (owned by the app)</h2>
+<p>The brief&#39;s draft types are changed as follows. All schemas live in <code>src/api/contracts.ts</code>.</p>
+<div class="wide"><table><thead><tr><th>Type</th><th>Change</th><th>Why</th></tr></thead><tbody><tr><td><code>Question.type: string</code></td><td>Discriminated union: <code>{ type: &#39;choice&#39;, options: string[] (at least 2) }</code> or <code>{ type: &#39;text&#39; }</code>. An unknown <code>type</code> from the backend is coerced to <code>text</code>.</td><td>A bare string cannot drive rendering safely; coercing unknown types keeps the patient moving instead of blocking on a config the practice got wrong.</td></tr><tr><td><code>CareTeamMember</code></td><td>Adds <code>role: &#39;gp&#39; | &#39;nurse&#39; | &#39;assistant&#39; | &#39;other&#39;</code>; unknown roles are coerced to <code>other</code>.</td><td>A patient cannot choose between two names without knowing who the GP is and who the nurse is.</td></tr><tr><td><code>CreateEConsultRequest.subject</code></td><td>Removed.</td><td>No acceptance criterion asks the patient for a subject, and asking is exactly the kind of extra field that makes the flow feel heavy. Assumption: the practice inbox can derive a preview from the first line of the body. If it cannot, the client derives <code>subject</code> from the first sentence without asking the patient.</td></tr><tr><td><code>CreateEConsultRequest</code></td><td>Adds an <code>Idempotency-Key</code> request header, generated once per draft and reused on every retry of the create call.</td><td>Creating an e-consult is not idempotent; a retry after a timeout must not create two messages.</td></tr><tr><td>Attachments</td><td>New: <code>POST /econsults/{id}/attachments</code> takes multipart form data with one file part named <code>photo</code> and returns <code>{ attachmentId: string }</code>. Implementation note: on SDK 57 Expo&#39;s own <code>fetch</code> is the global one and rejects the classic React Native <code>{ uri, name, type }</code> form-data part, so the real client uploads through expo-file-system&#39;s <code>File.createUploadTask</code> (multipart, field <code>photo</code>, <code>AbortSignal</code>, progress), which streams from disk. This iteration ships only the fake transport; the real path is recorded in DECISIONS.md.</td><td>The brief names the endpoint but gives no shape, and the obvious client code does not work on this SDK.</td></tr><tr><td><code>PracticeEConsultConfig</code>, <code>PatientSession</code>, <code>answers[]</code>, <code>CreateEConsultResponse</code></td><td>Unchanged.</td><td>They already serve the interface.</td></tr></tbody></table></div>
+<p>Three practices are shipped as fixtures: <code>prc-0421</code> (three recipients, one required choice question and one optional text question), <code>prc-0873</code> (two recipients, no questions) and <code>prc-0000</code> (no recipients, no questions), which exists only to exercise the empty state and is selectable from the developer settings screen like the other two. The care team fixture holds five members with roles; <code>recipientIds</code> selects who is writable.</p>
+<h2 id="affected-areas-and-behavior-changes">Affected Areas &amp; Behavior Changes</h2>
+<p>Today the app is a blank screen (see how-it-works.md). Everything below is new behaviour; there are no consumers elsewhere and no cross-repo impact.</p>
+<div class="wide"><table><thead><tr><th>Area</th><th>Change</th></tr></thead><tbody><tr><td><code>src/app/_layout.tsx</code></td><td>Wraps the stack in the query client, session and development-settings providers; sets stack defaults (minimal back button); declares <code>headerShown: false</code> for the <code>econsult</code> group so the nested stack owns the header.</td></tr><tr><td><code>src/app/index.tsx</code></td><td>Becomes the home screen: greets the patient by name, one primary action &quot;Write to your practice&quot;, a development-only link to the settings screen. Prefetches the practice config and care team so the first step is usually instant; the loading state stays visible when the flow is entered inside the latency window or after raising latency in developer settings, and the recording enters the flow immediately.</td></tr><tr><td><code>src/app/econsult/_layout.tsx</code> (new)</td><td>Draft provider and a nested stack that owns titles and back buttons for the four flow screens; step 1 sets a labelled Home button as its header-left action. The offline banner renders inside the screen scaffold below the header, so the header keeps the top inset.</td></tr><tr><td><code>src/app/econsult/recipient.tsx</code>, <code>questions.tsx</code>, <code>message.tsx</code>, <code>sent.tsx</code> (new)</td><td>The four steps.</td></tr><tr><td><code>src/app/dev-settings.tsx</code> (new)</td><td>Development-only panel: practice (all three fixtures), latency, per-request faults, force offline. Applying it clears the query cache and returns home. Not rendered in release builds.</td></tr><tr><td><code>src/api/</code> (new)</td><td>Contracts, the transport interface, the fake transport, three services, fixtures.</td></tr><tr><td><code>src/features/econsult/</code> (new)</td><td>Draft reducer and provider, validation, submission function, the two hooks that screens call.</td></tr><tr><td><code>src/components/</code> (new)</td><td>Screen scaffold, buttons, text field, choice group, recipient card, photo picker, step header, offline banner, loading, empty and error states.</td></tr><tr><td><code>src/lib/</code> (new)</td><td>Query client, network state hook, accessibility announcement helper, session, photo processing, <code>devWarn</code>.</td></tr><tr><td><code>src/theme/</code> (new)</td><td>Tokens.</td></tr><tr><td><code>app.json</code></td><td><code>userInterfaceStyle</code> becomes <code>light</code>; the expo-image-picker plugin is added with English usage strings and <code>microphonePermission: false</code>; the <code>web</code> block is removed.</td></tr><tr><td><code>package.json</code></td><td>Adds expo-image-picker, expo-image-manipulator, expo-network, expo-crypto, @tanstack/react-query and zod 4; adds the test, lint, format and type-check tooling with hand-pinned versions where Expo&#39;s install command would fetch incompatible ones (@testing-library/react-native 13.3.3 exact, jest on the 29 line, @react-native/jest-preset ^0.86.3); removes packages the app never imports (expo-font, react-native-web, react-dom, react-native-gesture-handler, react-native-reanimated, react-native-worklets) and the <code>web</code> script. expo-device stays: it is the source of <code>isDevice</code>.</td></tr><tr><td><code>README.md</code>, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>DECISIONS.md</code>, <code>AI-USAGE.md</code></td><td>Rewritten or created for the submission.</td></tr><tr><td><code>assets/</code></td><td>The template&#39;s fourteen unused demo images are deleted; every file <code>app.json</code> references stays, including <code>assets/expo.icon/</code>, except <code>favicon.png</code>, which goes with the removed <code>web</code> block.</td></tr></tbody></table></div>
+<h3>Delivery order</h3>
+<p>The brief expects two to four hours and says a bigger submission will not score higher, so the work is ordered so that a cut still leaves something complete:</p>
+<ol>
+<li>Tooling first, because every later task is test-driven: jest-expo, Testing Library, lint, format, type-check, and one smoke test proving Testing Library 13 renders on React 19 before anything depends on it.</li>
+<li>One complete path for <code>prc-0421</code>: contracts, fake API, draft state, the four screens, sending with a create failure, tests.</li>
+<li>The states that make it real: partial upload failure, offline, the <code>prc-0873</code> question skip, the <code>prc-0000</code> empty state.</li>
+<li>The developer settings screen. Until it exists, the <code>.env</code> seeds switch practice, latency and faults.</li>
+<li>Dependency and asset cleanup, then the three documents.</li>
+</ol>
+<p>If time runs out, item 4 is cut first (the <code>.env</code> seeds remain), then the cleanup inside item 5. The three documents are never cut, and DECISIONS.md names whatever was.</p>
+<h2 id="screens">Screens</h2>
+<p><strong>Home.</strong> &quot;Hello, {displayName}.&quot; (no time-of-day branch.) One primary button. In development a small &quot;Developer settings&quot; link. The screen prefetches config and care team on mount.</p>
+<p><strong>Step 1: Who are you writing to?</strong> Loading: three placeholder cards with an accessible &quot;Loading your practice&#39;s care team&quot; label. Loaded: one card per writable care team member, name in large type with the role beneath, radio semantics, 48-point minimum height, selected state visible and spoken. Continue is disabled until a recipient is chosen and says why in its accessibility hint. Error: &quot;We couldn&#39;t load your practice&#39;s details&quot; with Retry, shown whenever either request has failed, even when an earlier fetch left stale data. Empty: &quot;Your practice hasn&#39;t switched on e-consults in the app yet&quot; with a way back home.</p>
+<p><strong>Step 2: A few questions from your practice.</strong> Skipped when the practice configured no questions. Each question shows its label with &quot;(required)&quot; or &quot;(optional)&quot; in words. Choice questions render as a group of large radio buttons; text questions render as a multiline field. Continue validates required questions; an unanswered required question gets an inline error tied to the field, the first invalid field receives screen-reader focus, and the error is announced.</p>
+<p><strong>Step 3: Your message.</strong> A &quot;To: Dr. J. de Vries · Change&quot; row; Change dismisses back to step 1 (<code>router.dismissTo</code>), the draft keeps answers, message and photo, and Continue re-walks step 2 (if any) and step 3 intact. A multiline field labelled &quot;What would you like to ask?&quot; with a hint listing what helps the GP: where, since when, what you have tried. Under twenty characters a soft, non-blocking nudge appears; only an empty message blocks sending. The photo block offers &quot;Take a photo&quot; and &quot;Choose from library&quot; (the camera action only on a real device), shows &quot;Preparing photo&quot; while the image is downscaled, then the preview with a labelled &quot;Remove photo&quot; button. Send sits inside the scroll content below the photo block. While sending, the button is busy, the fields are read-only and a live status line reads &quot;Sending your message&quot; and then &quot;Message sent, adding your photo&quot;. While the link is reported down, Send is disabled with the reason in its hint.</p>
+<p><strong>Sent.</strong> A large heading &quot;Message sent&quot; that receives screen-reader focus, then &quot;Sent to Dr. J. de Vries&quot;, &quot;Your practice usually replies within two working days&quot;, and the reference number. When the photo upload failed: &quot;Your message was sent, but the photo could not be attached&quot; with &quot;Try again&quot; (re-uploads to the existing e-consult) and &quot;Continue without the photo&quot;. Back navigation is prevented while the screen is showing (<code>usePreventRemove(!isLeaving)</code>). Done sets <code>isLeaving</code>; an effect then calls <code>router.dismissTo(&#39;/&#39;)</code> (not <code>dismissAll</code>, which only reaches step 1 of the nested stack). Leaving the group unmounts the draft provider, which is what clears the draft.</p>
+<h2 id="edge-cases">Edge Cases</h2>
+<p><strong>Functional scope</strong></p>
+<ul>
+<li>Exactly one writable recipient: the step still shows, with one preselected card, so the flow has one shape.</li>
+<li>Zero writable recipients (config lists none, or none match the care team): empty state; the flow cannot continue.</li>
+<li><code>recipientIds</code> naming an id absent from the care team: that id is dropped silently; a development warning is logged through <code>devWarn</code>.</li>
+<li>Care team members not listed in <code>recipientIds</code>: not shown.</li>
+<li>Zero questions: step 2 is skipped and the counter reads &quot;of 2&quot;.</li>
+<li>Unknown question type: rendered as a text question.</li>
+<li>Choice question with fewer than two options: schema rejects it, which surfaces as the config error state.</li>
+<li>Required text answered with whitespace only: invalid.</li>
+<li>Message with whitespace only: invalid; message under twenty characters: soft nudge, not blocking.</li>
+<li>Photo picker cancelled: no change to the draft.</li>
+<li>Camera or library permission denied: an inline explanation with an &quot;Open Settings&quot; action; the other source stays available.</li>
+<li>Camera unavailable (<code>Device.isDevice</code> is false, as on the iOS simulator): the camera action is not offered, with a one-line note.</li>
+<li>Photo picked, removed, picked again: the last pick wins; only one photo is ever attached.</li>
+<li>Photo processing fails: the original asset is kept and a development warning is logged.</li>
+<li>Photo of any size: downscaled at pick time to at most 1600 px on the long edge and re-encoded as JPEG at quality 0.7; no byte cap is enforced beyond that.</li>
+</ul>
+<p><strong>Data model &amp; lifecycle</strong></p>
+<ul>
+<li>The draft is created when the flow opens and discarded when the group unmounts; it is not persisted across app restarts.</li>
+<li>The idempotency key is generated on the first Send and reused for every retry of the create call; a new draft gets a new key.</li>
+<li>After a successful create, the e-consult id is kept in the draft so a failed upload can be retried without re-creating the message, and so the step 1 leave guard knows the message is already safe.</li>
+<li>Changing the recipient after answering questions keeps the answers.</li>
+<li>Going back from step 3 to step 2 keeps the typed message and the photo.</li>
+</ul>
+<p><strong>UX flows</strong></p>
+<ul>
+<li>Back from step 1 (the labelled Home button, or swipe-back) returns home immediately when the draft has no message and no photo, or when the e-consult has already been created; otherwise a &quot;Discard your message?&quot; confirmation guards it (<code>usePreventRemove((hasMessage || hasPhoto) &amp;&amp; econsultId == null)</code>). Leaving unmounts the group and discards the draft.</li>
+<li>The confirmation screen cannot be left by swipe-back, header back, or the Android back gesture; Done is the only way out, and Done lowers the guard before it navigates.</li>
+<li>The step counter and the screen heading are announced when each step appears, because neither platform reliably announces route changes.</li>
+</ul>
+<p><strong>Non-functional</strong></p>
+<ul>
+<li>Default simulated latency: config 2000 ms, care team 1000 ms, create 1000 ms, upload 1000 ms, each adjustable from the developer settings screen or seeded from <code>.env</code>.</li>
+<li>Request timeouts: fifteen seconds for reads and the create, forty-five seconds for the upload, implemented with <code>AbortController</code> since <code>AbortSignal.timeout</code> is not available in React Native 0.86. Worst-case time to a read error state is two attempts of fifteen seconds plus the one-second retry delay: 31 seconds.</li>
+<li>Photos are bounded to 1600 px on the long edge and re-encoded as JPEG at quality 0.7 at pick time.</li>
+<li>Every interactive element is at least 48 by 48 points; font scaling is never disabled; layouts stack vertically at large font scales instead of shrinking text.</li>
+<li>Read scale from <code>useWindowDimensions().fontScale</code>, never <code>PixelRatio.getFontScale()</code>, which returns the device pixel ratio when no scale is set.</li>
+</ul>
+<p><strong>Integrations &amp; failure modes</strong></p>
+<ul>
+<li>Config fails, care team fails, or both: one error state with Retry that refetches whichever failed.</li>
+<li>Create fails with a network error, a server error or a timeout: inline error near Send, Retry re-sends with the same idempotency key. Nothing is auto-retried for the create call.</li>
+<li>Create succeeds and upload fails: the flow moves to the confirmation with the partial-failure variant; upload retry is safe because it is keyed to the e-consult id.</li>
+<li>Offline before Send: Send disabled with reason. Offline mid-send: surfaces as a network error with Retry.</li>
+<li>Malformed response bodies: schema failure is treated exactly like a server error.</li>
+<li>The fake transport can be told, per endpoint, to fail with <code>network</code>, <code>server</code> or <code>timeout</code>, and to add latency, from the development settings screen or the <code>.env</code> seeds. Query keys include the practice id, so switching practice never serves another practice&#39;s cached data.</li>
+</ul>
+<p><strong>Terminology</strong></p>
+<ul>
+<li>&quot;e-consult&quot; is the product term and appears in the confirmation and the README; the patient-facing verb is &quot;write to your practice&quot;.</li>
+<li>&quot;Care team&quot; for the group; &quot;GP&quot;, &quot;practice nurse&quot; and &quot;practice assistant&quot; for roles, and &quot;care team member&quot; for the role <code>other</code>.</li>
+<li>&quot;Message&quot; for the free text, &quot;photo&quot; for the attachment, &quot;Send&quot; for the action, &quot;Sent&quot; for the outcome.</li>
+</ul>
+<h2 id="ux-ui-patterns-and-platform-lens-react-native">UX/UI Patterns &amp; Platform Lens (React Native)</h2>
+<ul>
+<li><strong>Screen readers.</strong> Every control has an accessible name; errors are tied to their field by folding the error into the field&#39;s accessible name, marking the visible error as a polite live region (Android) and announcing it once (both platforms). Recipient cards are grouped as radio buttons in a radio group with <code>checked</code> state. Form fields are never grouped, so each stays individually focusable. Headings use the header role. Screen-reader focus moves to the first invalid field on validation failure and to the heading on the confirmation screen.</li>
+<li><strong>Large text.</strong> <code>allowFontScaling</code> stays on everywhere; <code>maxFontSizeMultiplier</code> is used only on the step counter chip. Buttons grow with their text. The native header keeps a short title; the real heading sits in the scrollable body where it can wrap.</li>
+<li><strong>Touch.</strong> 48-point minimum on every pressable, real <code>minHeight</code> rather than <code>hitSlop</code>, generous spacing between recipient cards and radio options.</li>
+<li><strong>Keyboard.</strong> Scroll content with the primary button inside it, taps on the button do not first dismiss the keyboard, drag to dismiss, bottom inset padding so the last field clears the home indicator.</li>
+<li><strong>Safe areas.</strong> Header consumes the top inset via the native stack; screens apply only bottom and horizontal insets. Android is edge-to-edge by default on SDK 57, so the same rule applies there.</li>
+<li><strong>Permissions.</strong> Camera and library permission is requested at the moment of use through expo-image-picker&#39;s hooks. Denied permission gets an explanation and an Open Settings action. Expo Go shows its own permission prompt text; the English usage strings in <code>app.json</code> take effect in a real build.</li>
+<li><strong>iOS versus Android.</strong> <code>gestureEnabled: false</code> only works on iOS, so the confirmation screen also uses <code>usePreventRemove</code> for Android&#39;s back gesture. Live regions are Android only; announcements are used on both. The iOS simulator has no camera; the Android emulator has a virtual scene camera that can be fed an image. <code>keyboardDismissMode</code> is <code>interactive</code> on iOS and <code>on-drag</code> on Android.</li>
+<li><strong>Offline.</strong> Fail-open detection, a persistent banner announced on transition, Send disabled with reason only while the link is reported down, and Query&#39;s online manager driven by the same state.</li>
+</ul>
+<h2 id="reuse-map">Reuse Map</h2>
+<p>Seeded from how-it-works.md. Nothing in the current tree can be extended because the tree holds two placeholder files; every new unit is justified against what the platform already provides.</p>
+<div class="wide"><table><thead><tr><th>Need</th><th>Reused from the platform or template</th><th>New because</th></tr></thead><tbody><tr><td>Navigation, header, back handling</td><td>expo-router <code>Stack</code>, <code>router.replace</code>, <code>router.dismissTo</code>, <code>usePreventRemove</code> from <code>expo-router/react-navigation</code></td><td>nothing to write beyond screen options</td></tr><tr><td>Safe areas</td><td><code>useSafeAreaInsets</code> from react-native-safe-area-context; provider already mounted by expo-router</td><td>no provider of our own</td></tr><tr><td>Photo preview</td><td>expo-image (already installed)</td><td>no image component of our own</td></tr><tr><td>Photo downscaling</td><td>expo-image-manipulator (new dependency, included in Expo Go)</td><td>one small <code>processPhoto</code> function in <code>src/lib</code></td></tr><tr><td>Camera availability</td><td>expo-device <code>isDevice</code> (already installed, included in Expo Go)</td><td></td></tr><tr><td>Networking primitives</td><td><code>AbortController</code> for timeouts; Expo&#39;s <code>fetch</code> for JSON and expo-file-system&#39;s upload task for the photo are the named real path, not shipped</td><td>the fake transport honours <code>AbortSignal</code>, so the timeout path is exercised in tests</td></tr><tr><td>Accessibility</td><td><code>AccessibilityInfo.announceForAccessibility</code>, <code>AccessibilityInfo.sendAccessibilityEvent(ref, &#39;focus&#39;)</code>, <code>accessibilityRole</code>, <code>accessibilityState</code>, <code>useWindowDimensions().fontScale</code>, <code>Pressable</code></td><td>one tiny helper for announcements, nothing else</td></tr><tr><td>Data cache and states</td><td>@tanstack/react-query (new dependency)</td><td>Query&#39;s paused, pending, error and success states cover loading, offline, error and success without a hand-written machine</td></tr><tr><td>Schema validation</td><td>zod 4 (new dependency; a zod 3 copy already exists transitively for Expo&#39;s CLI and is not what the app imports)</td><td>typed contracts with runtime checks at the boundary</td></tr><tr><td>Photo capture</td><td>expo-image-picker (new dependency, included in Expo Go)</td><td></td></tr><tr><td>Network state</td><td>expo-network (new dependency, included in Expo Go)</td><td>first-party, no third-party reachability probe</td></tr><tr><td>Idempotency key</td><td>expo-crypto <code>randomUUID</code> (new dependency, included in Expo Go)</td><td></td></tr><tr><td>Tests</td><td>jest-expo, @testing-library/react-native 13.3.3 (expo-router&#39;s <code>renderRouter</code> calls render and act synchronously, which version 14 breaks; the tooling task proves 13.3.3 renders on React 19 with a smoke test before anything depends on it), <code>expo-router/testing-library</code></td><td></td></tr><tr><td>Lint and format</td><td><code>npx expo lint</code> generated flat config plus eslint-plugin-prettier; React Compiler rules ship inside eslint-config-expo on SDK 57</td><td></td></tr></tbody></table></div>
+<h2 id="success-criteria">Success Criteria</h2>
+<ol>
+<li>Both fixture practices with recipients complete the flow end to end in Expo Go on the iOS simulator from a clean clone with <code>npm install &amp;&amp; npx expo start</code>; <code>prc-0873</code> skips the question step and its counter reads &quot;of 2&quot;; the recorded happy path for <code>prc-0421</code> takes under two minutes of patient time.</li>
+<li>Each of the six acceptance criteria maps to at least one automated test whose name states the behaviour, and the whole suite passes.</li>
+<li>Every interactive element has an accessible name, verified by accessibility-first test queries (<code>getByRole</code>, <code>getByLabelText</code>), a <code>minHeight</code> and <code>minWidth</code> of 48 verified with <code>toHaveStyle</code>, and an Accessibility Inspector audit on the simulator with zero errors.</li>
+<li>With the simulator&#39;s text size at the largest accessibility setting, every screen remains readable and operable without clipped text or overlapping controls, evidenced by screenshots.</li>
+<li>With the keyboard open on the question and message screens, the focused field and the primary button are both visible, evidenced by screenshots.</li>
+<li>Each of these states is reachable from the development settings screen and covered by a test: loading, empty (through the <code>prc-0000</code> fixture), config error, care team error, create error, upload failure after a successful create, offline before send (force offline, Apply, enter the flow: step 1 still loads because reads are offline-first; step 3 shows the banner and the disabled Send).</li>
+<li>Type-check, lint, format check and tests all pass; coverage on <code>src/api</code>, <code>src/features</code> and <code>src/lib</code> is 100 percent of statements and branches; <code>src/components</code> and <code>src/app</code> reach at least 90 percent of statements, with <code>Platform.OS</code> branches exercised by mocking the platform per test; the <code>__DEV__</code> guard lives in the single <code>src/lib/devWarn.ts</code> helper, whose test sets <code>globalThis.__DEV__ = false</code> to exercise the release branch.</li>
+<li>A message can never be created twice by retrying: the same idempotency key is sent on every retry of the create call, and the fake API returns the original id for a repeated key.</li>
+</ol>
+<h2 id="out-of-scope">Out of Scope</h2>
+<p>Authentication, a real backend or a shipped HTTP transport, push notifications, offline queueing or draft persistence across app restarts, upload progress, recovery of a camera capture after Android kills the activity, a design system or component library, internationalisation, app store builds, the GP-side interface, the reply and inbox flow, dark appearance, multiple photos or video, photo editing or cropping, a client-side byte cap, analytics, web support.</p>
+<h2 id="open-questions">Open Questions</h2>
+<p>None. Decisions the reviewer may reasonably overturn are recorded in the Chosen Approach and in DECISIONS.md with their alternatives.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>001-econsult-flow/spec.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>
