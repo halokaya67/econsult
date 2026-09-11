@@ -6920,4 +6920,4 @@ Expected: both exit 0 (the documents are prettier-formatted markdown).
 
 ## Amendments
 
-None yet.
+- 2026-09-12, during T006 — the committed `.env` seed file could not be written: the user's Claude permission settings deny every `.env*` path, for the implementer and the lead alike. Decision (user, at the T006 stop): ship a template instead. T006 now also creates `env.example` at the repo root with the same three `EXPO_PUBLIC_*` variables and a one-line comment per variable; `.env` stays optional (the app's defaults equal the template's values), and T022's README tells a reviewer to `cp env.example .env` to change the seeds. T006's file fence gains `env.example`.
