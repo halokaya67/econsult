@@ -16,8 +16,9 @@ export function testSettings(overrides: Partial<DevSettings> = {}): DevSettings 
   return { practiceId: "prc-0421", latencyMs: 0, faults: {}, forceOffline: false, ...overrides };
 }
 
+// gcTime 0: the default five-minute garbage-collection timer outlives the test and holds jest open.
 function testClient(): QueryClient {
-  return new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
 }
 
 export function TestProviders({
