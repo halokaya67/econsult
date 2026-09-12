@@ -1,0 +1,180 @@
+<meta charset="utf-8">
+<title>Spec review, round 3</title>
+<meta name="description" content="Verdict: PASS_WITH_FLAGS. 2 warnings, 1 information item.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · spec round 3</p>
+    <h1>Spec review, round 3</h1>
+    <p class="lede">Verdict: PASS_WITH_FLAGS. 2 warnings, 1 information item.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: a7b433df484c8b1bf
+mode: spec · round: 3 · reviewed head: 32db7de · previous rounds: checker/spec-r1.md, checker/spec-r2.md</p>
+<p>All verification is in. Evidence summary before the report:</p>
+<ul>
+<li><code>node_modules/expo/src/winter/runtime.native.ts:40-52</code> installs <code>expo/fetch</code> as the global unless <code>EXPO_PUBLIC_USE_RN_FETCH</code> is set; <code>winter/fetch/convertFormData.ts:35-36,76</code> rejects a <code>{ uri, name, type }</code> part (<code>Unsupported FormDataPart implementation</code>); <code>expo-file-system</code> 57.0.7 is installed as a dependency of <code>expo</code> and <code>build/File.d.ts:145</code> declares <code>createUploadTask(url, options?): UploadTask</code>. The spec&#39;s new Contract row and Fake-backend bullet hold; how-it-works.md:86 is now the stale side.</li>
+<li><code>winter/AbortSignal.ts:9-14</code> (<code>installAbortSignalPatch</code>, called at <code>runtime.native.ts:38</code>) defines <code>AbortSignal.timeout</code> and <code>AbortSignal.any</code>, so spec.md:146&#39;s rationale (&quot;not available in React Native 0.86&quot;) is wrong in this runtime even though the decision still stands. <code>winter/fetch/fetch.ts:77-83</code> honours the signal but rejects with <code>FetchError</code>, not a DOMException.</li>
+<li>W2 fix ordering confirmed in the vendored navigator: <code>utils/useLatestCallback.js</code> writes the listener ref in <code>useInsertionEffect</code>; <code>core/usePreventRemove.js</code> early-returns when <code>preventRemove</code> is false; <code>global-state/routingQueue.js</code> <code>add</code> only notifies subscribers and <code>imperative-api.js:10-13</code> dispatches in a later <code>useEffect</code>; the root pop then walks nested routes at <code>core/useOnPreventRemove.js:87-89</code> / <code>core/useOnAction.js:75</code> with both guards down.</li>
+<li><code>expo-router/build/testing-library/index.js:48,75-109</code> calls <code>render</code> and <code>act</code> synchronously; <code>expo-router/package.json</code> peers RNTL <code>&gt;= 13.2.0</code> (optional), devDeps <code>^13.3.0</code>. <code>bundledNativeModules.json</code> pins expo-image-manipulator ~57.0.17, expo-file-system ~57.0.7, jest-expo ~57.0.5.</li>
+<li>Decisions log: one entry (2026-09-11T17:30:19Z, phase <code>spec</code>, &quot;Approve the spec&quot;); <code>grep -in dismiss</code> → 0.</li>
+</ul>
+<h2 id="spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</h2>
+<p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
+<p><strong>Reviewed:</strong> 8/8 files (spec.md, how-it-works.md, checker/spec-r1.md, checker/spec-r2.md, <code>case-study-mobile.md</code>, package.json, app.json, .gitignore; research.md consulted by grep only per dispatch, 9 greps below) · diff: n/a (mode spec) · head: 32db7de (spec docs now committed; <code>git status --porcelain</code> clean) · canon cited: workflow.md (Coding Canon: KISS/YAGNI; &quot;Errors &amp; inputs — handle explicitly at every level&quot;; Testing bar) · decisions log: 1 entry (spec-gate approval), <code>grep -in dismiss</code> → 0 · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): <code>install(&#39;fetch&#39;</code> in expo/src/winter/runtime.native.ts → 1 (:40-52, gated on <code>EXPO_PUBLIC_USE_RN_FETCH</code>); <code>uri|Unsupported FormDataPart</code> in expo/src/winter/fetch/convertFormData.ts → 2 (:35-36 comment, :76 throw); <code>createUploadTask|uploadAsync|UploadTask</code> in expo-file-system/build → 15 (File.d.ts:145); <code>timeout|any</code> in expo/src/winter/AbortSignal.ts → <code>installAbortSignalPatch</code> defines both (:9-14); <code>signal|abort</code> in expo/src/winter/fetch/fetch.ts → 8 (:77-83 <code>FetchError</code>, <code>cause: signal.reason</code>); <code>render|act(</code> in expo-router/build/testing-library/index.js → 6 (sync :48, :75-109); <code>@testing-library/react-native</code> in expo-router/package.json → peer <code>&gt;= 13.2.0</code> optional, devDep <code>^13.3.0</code>; bundledNativeModules.json → 6 hits (image-manipulator 57.0.17, file-system 57.0.7, image-picker 57.0.17, network 57.0.2, crypto 57.0.3, jest-expo 57.0.5); installed check → expo-file-system 57.0.7 present, 8 spec&#39;d packages absent (react-query, image-manipulator, image-picker, network, jest, jest-expo, RNTL, @react-native/jest-preset); <code>shouldPreventRemove|addKeyedListener|emit(</code> in core/useOnPreventRemove.js → 7 (:44, :63, :68-71, :87-89) + useOnAction.js:75; <code>if (!preventRemove)</code> in core/usePreventRemove.js → 1; <code>useInsertionEffect</code> in utils/useLatestCallback.js → 1; <code>add|run</code> in global-state/routingQueue.js → notify-only <code>add</code>, dispatch in <code>useImperativeApiEmitter</code> useEffect (imperative-api.js:10-13); research.md <code>fetch|FormData|createUploadTask|expo-file-system</code> → 40+ (:620-621, :1065, :1107, :1123, :1141); <code>offlineFirst|networkMode|useNetworkState|isConnected</code> → 30 (:144, :841, :1185, :1195); <code>quality|manipulat|1600|release()</code> → 40 (:50, :1223-1225, :1255, :1270-1272); <code>13.3.3|renderRouter|jest-preset|jest-expo</code> → 40 (:918-920, :958-969, :1004-1009); <code>preparing|processing|exif</code> → 0 on Send-during-processing; spec.md <code>preparing|processing|disabled.*send</code> → 6 lines, none define Send while preparing; <code>.env*</code> in repo root → 0 (to be created; <code>.gitignore</code> ignores only <code>.env*.local</code>)</p>
+<div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>W1 — offline state unreachable after cache clear</td><td>RESOLVED</td><td>spec.md:40 <code>networkMode: &#39;offlineFirst&#39;</code>, <code>retry: 1, retryDelay: 1000</code>, send mutation <code>networkMode: &#39;always&#39;</code> with no auto-retry; :205 SC6 spells the path out; :146 worst case still 31 s; :154/:156 consistent. First-attempt semantics verified via research.md:1185 (<code>canFetch</code> is true for every mode but <code>online</code>); retry-pause-while-offline is training-data recall, not verified (package not installed).</td></tr><tr><td>W2 — Done blocked by leave guards</td><td>RESOLVED</td><td>spec.md:107 <code>usePreventRemove(!isLeaving)</code>, Done sets <code>isLeaving</code>, effect calls <code>router.dismissTo(&#39;/&#39;)</code>; :139 <code>usePreventRemove((hasMessage || hasPhoto) &amp;&amp; econsultId == null)</code>; :183 reuse map no longer lists <code>dismissAll</code>. Vendored ordering confirms it works: <code>useLatestCallback.js</code> (<code>useInsertionEffect</code>) → <code>usePreventRemove.js</code> early return → <code>routingQueue.js</code>/<code>imperative-api.js:10-13</code> dispatch after commit → <code>useOnPreventRemove.js:87-89</code>, <code>useOnAction.js:75</code> see both guards down.</td></tr><tr><td>I1 — <code>.env</code> fault seeds undeclared</td><td>RESOLVED</td><td>spec.md:43 declares <code>EXPO_PUBLIC_PRACTICE_ID</code>, <code>EXPO_PUBLIC_LATENCY_MS</code>, <code>EXPO_PUBLIC_FAULTS</code> (<code>request:kind</code> pairs); :92/:95 reference them; <code>.gitignore</code> permits a committed <code>.env</code>.</td></tr><tr><td>I2 — <code>__DEV__</code> branch in a 100 % tier</td><td>RESOLVED</td><td>spec.md:206 single <code>src/lib/devWarn.ts</code>, test sets <code>globalThis.__DEV__ = false</code>; :78, :115, :126 route warnings through it.</td></tr></tbody></table></div>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>consistency</td><td>how-it-works.md:86</td><td>Doc still describes React Native&#39;s fetch/FormData/AbortSignal; the Expo 57 runtime replaces all three, and spec.md:146 repeats one stale rationale</td></tr><tr><td>W2</td><td>WARNING</td><td>ambiguity</td><td>spec.md:105</td><td>Send, Remove, the draft and the leave guard are undefined during the new &quot;Preparing photo&quot; window</td></tr><tr><td>I1</td><td>INFO</td><td>coverage</td><td>spec.md:127</td><td>Long-edge downscale has no guard for the picker&#39;s documented 0 <code>width</code>/<code>height</code></td></tr></tbody></table></div>
+<h3>W1 — how-it-works.md:86 is out of date against the Expo 57 runtime; spec.md:146 carries the same stale rationale</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/how-it-works.md:86</code> (also :87; <code>spec.md:146</code>)</li>
+<li><strong>Finding:</strong> The research-driven edits made spec.md:42/:59 say what the code does — <code>node_modules/expo/src/winter/runtime.native.ts:40-52</code> installs <code>expo/fetch</code> as the global unless <code>EXPO_PUBLIC_USE_RN_FETCH</code> is set, and <code>winter/fetch/convertFormData.ts:35-36,76</code> throws <code>Unsupported FormDataPart implementation</code> for a <code>{ uri, name, type }</code> part — but how-it-works.md:86 still says <code>fetch</code> is whatwg-fetch 3.6.20 and that <code>FormData</code> accepts <code>{ uri, name, type }</code> parts &quot;so a file can be uploaded straight from its URI&quot;. The same line says there is no <code>AbortSignal.timeout</code>; <code>winter/AbortSignal.ts:9-14</code> (<code>installAbortSignalPatch</code>, called at <code>runtime.native.ts:38</code>) defines both <code>AbortSignal.timeout</code> and <code>AbortSignal.any</code>, and spec.md:146 repeats the stale reason (&quot;implemented with <code>AbortController</code> since <code>AbortSignal.timeout</code> is not available in React Native 0.86&quot;). Line 87 lists expo-file-system as &quot;not yet installed&quot;; <code>node_modules/expo-file-system</code> 57.0.7 is present as a dependency of <code>expo</code>. The decision (manual <code>AbortController</code>) still stands, for a reason the spec should state instead: Expo&#39;s <code>timeout()</code> aborts with a <code>TimeoutError</code> reason while <code>abort()</code> yields <code>AbortError</code>, which the fake and the error taxonomy key on. One more runtime fact for the DECISIONS.md &quot;real path&quot; note: <code>winter/fetch/fetch.ts:77-83</code> rejects an aborted request with <code>FetchError(&#39;fetch failed: The operation was aborted.&#39;, { cause: signal.reason })</code>, not a DOMException, so <code>err.name === &#39;AbortError&#39;</code> will not hold on the real transport.</li>
+<li><strong>Why:</strong> how-it-works.md is the plan&#39;s orientation doc; a planner reading :86 can write the <code>{ uri }</code> FormData upload the research proved crashes (research.md:1107), or reach for <code>AbortSignal.timeout</code> and get a <code>TimeoutError</code> the mapping does not expect. Doc and code disagree → the code wins; the doc is the wrong side, and spec.md:146 inherited it.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>how-it-works.md:86 — replace with:
+"**Networking primitives**: on SDK 57 the global `fetch` is `expo/fetch` (`expo/src/winter/runtime.native.ts:40-52`;
+React Native's whatwg-fetch stays only when `EXPO_PUBLIC_USE_RN_FETCH=1`). It honours `AbortSignal` but rejects an
+aborted request with `FetchError` (`fetch failed: The operation was aborted.`, `cause: signal.reason`), not a
+DOMException. Its FormData conversion rejects React Native's `{ uri, name, type }` file part
+(`winter/fetch/convertFormData.ts`: `Unsupported FormDataPart implementation`); a local file goes up through
+expo-file-system's `File.createUploadTask` or as a `File` object. `AbortController` is the abort-controller 3.0.0
+polyfill, and Expo's runtime patches `AbortSignal.timeout` and `AbortSignal.any` onto it (`winter/AbortSignal.ts`);
+`timeout()` aborts with a `TimeoutError` reason."
+how-it-works.md:87 — "expo-file-system 57.0.7 is already installed as a dependency of `expo`, though not declared
+in package.json; expo-image-picker and expo-network are not installed."
+spec.md:146 — replace "implemented with `AbortController` since `AbortSignal.timeout` is not available in
+React Native 0.86" with "implemented with `AbortController` plus `setTimeout` rather than `AbortSignal.timeout`,
+which Expo's runtime does patch in but which aborts with a `TimeoutError` reason; one `AbortError` path keeps the
+fake's abort and the timeout identical and does not depend on the winter patch being present under jest".
+DECISIONS.md real-path note — "expo/fetch rejects an aborted request with `FetchError` whose `cause` is the
+signal's reason; the HTTP transport maps that onto the same timeout error the fake produces."</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W2 — Send, Remove, the draft and the leave guard are undefined while a photo is &quot;Preparing&quot;</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> ambiguity</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:105</code> (also :44, :125, :131-135, :139)</li>
+<li><strong>Finding:</strong> Pick-time processing introduces an async state between &quot;picked&quot; and &quot;previewed&quot;, and the spec defines only its label. Unstated: whether Send is enabled during it; what the draft holds (nothing yet → <code>hasPhoto</code> is false, so after a &quot;Change&quot; the step-1 Home button discards a photo still processing without the confirmation :139 promises; or the original URI → a Send inside the window uploads the multi-megabyte original the downscale exists to prevent); what &quot;Remove photo&quot; does mid-processing (cancel, or the late result re-attaches a photo the patient removed); and what :125 &quot;the last pick wins&quot; means when two processings overlap and finish out of order. The research pipeline was written for an on-submit resize (research.md:1221 &quot;runs once on confirm&quot;) and never covers this window; the spec moved it to pick time without specifying it.</li>
+<li><strong>Why:</strong> Three valid implementations diverge and two can silently drop or replace the patient&#39;s photo — Ahmed&#39;s scenario (:23, &quot;he must never lose his message because the photo failed&quot; extends naturally to the photo itself). The AC4 tests (SC2) need one defined behaviour. Canon: workflow.md &quot;handle errors explicitly at every level&quot;.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>Line 105 — after "shows 'Preparing photo' while the image is downscaled" add:
+"the draft records the photo as soon as it is picked, with status `preparing`, so `hasPhoto` is true from the
+first tap; Send is disabled while a photo is `preparing`, with the reason in its hint; Remove during preparation
+discards the result when it arrives; a newer pick supersedes an older one, so only the latest pick's result is kept."
+Edge Cases, after :125 — "Photo still preparing: Send is disabled with reason; Remove discards the pending
+result; a newer pick supersedes an older one."</code></pre>
+<pre class="code"><code>type DraftPhoto =
+  | { status: 'preparing'; pickId: string }
+  | { status: 'ready'; pickId: string; uri: string; width: number; height: number };
+// reducer: PHOTO_READY / PHOTO_FAILED are ignored unless action.pickId === state.photo?.pickId</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I1 — <code>processPhoto</code> has no guard for the picker&#39;s documented 0 <code>width</code>/<code>height</code></h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> coverage</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:127</code> (also :44, :186)</li>
+<li><strong>Finding:</strong> Bounding the long edge needs the asset&#39;s <code>width</code>/<code>height</code> to pick which dimension to pass; the SDK 57 picker documents both as possibly 0 (research.md:50), and the research&#39;s own pipeline step names the guard (research.md:1224: fall back to <code>{ width: 1600 }</code>). :127 &quot;downscaled at pick time to at most 1600 px on the long edge&quot; does not carry it, so a 0 becomes <code>Math.min(1600, 0)</code> → resize to 0 → at best the :126 failure path keeps an unbounded original, at worst an empty image.</li>
+<li><strong>Why:</strong> <code>src/lib</code> is in the 100 %-branch tier (:206); the branch must exist to be counted, and the failure path should not be how a documented input is handled.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>Line 127 — append: "when the picker reports a 0 width or height, the long edge is unknown and the resize passes
+`{ width: 1600 }`."</code></pre>
+<pre class="code"><code>const size =
+  width &gt; 0 &amp;&amp; height &gt; 0
+    ? width &gt;= height ? { width: Math.min(1600, width) } : { height: Math.min(1600, height) }
+    : { width: 1600 };</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
+<p><strong>Summary:</strong> All four round-2 flags are resolved in the current text, and the W2 fix is confirmed against the vendored navigator&#39;s real ordering (insertion-effect ref, queued dispatch after commit), not just against its own description. The research-driven edits are accurate wherever they touch the runtime — expo/fetch as the global, <code>File.createUploadTask</code> present in expo-file-system 57.0.7, RNTL 13 forced by expo-router&#39;s synchronous <code>renderRouter</code> — and that accuracy is exactly what leaves how-it-works.md:86 as the stale side; correct it first, since the plan reads that doc for orientation, then pin down the &quot;Preparing photo&quot; window so the AC4 tests have one behaviour to assert. Nothing CRITICAL; the spec is ready for the plan after those two edits.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/spec-r3.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

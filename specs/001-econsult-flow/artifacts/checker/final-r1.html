@@ -1,0 +1,450 @@
+<meta charset="utf-8">
+<title>Final review, round 1</title>
+<meta name="description" content="Verdict: PASS_WITH_FLAGS. 7 warnings, 6 information items.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · final round 1</p>
+    <h1>Final review, round 1</h1>
+    <p class="lede">Verdict: PASS_WITH_FLAGS. 7 warnings, 6 information items.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-final">Spec-Checker Report — mode: final</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: a03fef9c446e118f7
+mode: final · reviewed head: a04aede · base: f39fb58 · previous rounds: spec-r1..r5, plan-r1..r3 · dispatched in the foreground (recorded as completed in flow-dispatches.jsonl)</p>
+<h2 id="spec-checker-report-mode-final">Spec-Checker Report — mode: final</h2>
+<p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
+<p><strong>Reviewed:</strong> 119/132 files · <code>base: f39fb58 · head: a04aede</code> · <code>132 files changed, 34591 insertions(+), 2294 deletions(-)</code> (25 commits) · canon cited: <code>rules/workflow.md</code> (Coding Canon: size caps, explicit errors, KISS/DRY, testing bar), <code>rules/comments.md</code> (≤ 2 sentences), <code>rules/javascript.md</code> (naming, 100 % on changed files), repo <code>AGENTS.md</code> (48 pt, error folding, offline-first reads / always-mode send, functions &lt; 50 lines) · Sourcegraph not configured: local tree only · verify evidence read: <code>verify/finish-3/coverage.log</code> → All files 100/100/100/100, 41 suites, 261 tests; <code>typecheck.log</code>, <code>lint.log</code>, <code>format.log</code> present · UI evidence read: T016/T018/T019/T020 re-check reports (all PASS) · searches: <code>git diff f39fb58...HEAD --name-only</code> → 132 · <code>grep -in dismiss &lt;decisions log&gt;</code> → 1 line (T001-C1/C3/C4, none in this diff&#39;s scope) · <code>grep visual_defect_fix|visual_scope|step_auto_pass|verify_fix_commit</code> → 5 + 1 + 21 + 1, all read · <code>grep -rn &#39;TODO|FIXME|console.log|debugger&#39; src</code> (non-test) → 0 · <code>grep -rn &#39;fetch(|createUploadTask|expo-file-system&#39; src</code> → 0 (only <code>refetch()</code>), confirms DECISIONS.md:95-97 · <code>grep -rn allowFontScaling src</code> → 0; <code>maxFontSizeMultiplier</code> → 3 sites (chip, header Home, header Cancel) · comment-length scan over <code>src/**/*.ts(x)</code> (non-test) → 1 block &gt; 2 sentences · function-length scan → 1 function &gt; 50 lines · <code>FixturePracticeId</code> consumers → 0 · <code>&quot;reset&quot;</code> dispatches → 0 · <code>function handled&lt;T&gt;</code> → 3 test files · <code>Accessibility Inspector</code> in <code>ui-verification/*/report.md</code> → 0 · node_modules facts: <code>expo-router/build/react-navigation/core/useOnPreventRemove.js:43-67</code>, <code>expo-router/build/global-state/router.js:77-78</code>, <code>expo-router/build/getRoutesCore.js:655</code>, <code>react-native/src/private/webapis/dom/nodes/ReactNativeElement.js:177-190</code>, <code>expo/src/winter/fetch/convertFormData.ts:35,77</code>, <code>react-native/Libraries/Components/Switch/Switch.js:267</code>, <code>react-native/Libraries/Components/ScrollView/ScrollView.d.ts:891</code>, <code>AccessibilityInfo.d.ts:174</code></p>
+<p><strong>Files:</strong> (relative to the repo root)</p>
+<pre class="code"><code>.gitignore
+.prettierignore
+.prettierrc
+AGENTS.md
+AI-USAGE.md
+DECISIONS.md
+README.md
+app.json
+assets/images/expo-badge-white.png            (deleted; matches T021 list)
+assets/images/expo-badge.png                  (deleted)
+assets/images/expo-logo.png                   (deleted)
+assets/images/favicon.png                     (deleted)
+assets/images/logo-glow.png                   (deleted)
+assets/images/react-logo.png                  (deleted)
+assets/images/react-logo@2x.png               (deleted)
+assets/images/react-logo@3x.png               (deleted)
+assets/images/tabIcons/explore.png            (deleted)
+assets/images/tabIcons/explore@2x.png         (deleted)
+assets/images/tabIcons/explore@3x.png         (deleted)
+assets/images/tabIcons/home.png               (deleted)
+assets/images/tabIcons/home@2x.png            (deleted)
+assets/images/tabIcons/home@3x.png            (deleted)
+assets/images/tutorial-web.png                (deleted)
+env.example
+eslint.config.js
+jest.setup.ts
+package-lock.json — NOT REVIEWED (generated; package.json verified against the base)
+package.json
+specs/001-econsult-flow/artifacts/how-it-works.html — NOT REVIEWED (rendered copy)
+specs/001-econsult-flow/artifacts/plan.html — NOT REVIEWED (rendered copy)
+specs/001-econsult-flow/artifacts/research.html — NOT REVIEWED (rendered copy)
+specs/001-econsult-flow/artifacts/spec.html — NOT REVIEWED (rendered copy)
+specs/001-econsult-flow/checker/plan-r1.md — NOT REVIEWED (verdict table only)
+specs/001-econsult-flow/checker/plan-r2.md — NOT REVIEWED (verdict table only)
+specs/001-econsult-flow/checker/plan-r3.md
+specs/001-econsult-flow/checker/spec-r1.md — NOT REVIEWED (verdict table only)
+specs/001-econsult-flow/checker/spec-r2.md — NOT REVIEWED (verdict table only)
+specs/001-econsult-flow/checker/spec-r3.md — NOT REVIEWED (verdict table only)
+specs/001-econsult-flow/checker/spec-r4.md — NOT REVIEWED (verdict table only)
+specs/001-econsult-flow/checker/spec-r5.md
+specs/001-econsult-flow/how-it-works.md
+specs/001-econsult-flow/plan.md — NOT REVIEWED in full (read: header, file structure, reuse map, every Files fence, every checkbox step, T015–T022 headers, T021/T022 bodies, requirement coverage, self-review, all amendments)
+specs/001-econsult-flow/research.md — NOT REVIEWED (headers only)
+specs/001-econsult-flow/spec.md
+src/__tests__/app/_layout.test.tsx
+src/__tests__/app/dev-settings.test.tsx
+src/__tests__/app/econsult/_layout.test.tsx
+src/__tests__/app/econsult/message.test.tsx
+src/__tests__/app/econsult/questions.test.tsx
+src/__tests__/app/econsult/recipient.test.tsx
+src/__tests__/app/econsult/sent.test.tsx
+src/__tests__/app/index.test.tsx
+src/api/contracts.test.ts
+src/api/contracts.ts
+src/api/fake/fakeTransport.test.ts
+src/api/fake/fakeTransport.ts
+src/api/fake/fixtures.test.ts
+src/api/fake/fixtures.ts
+src/api/services.test.ts
+src/api/services.ts
+src/api/transport.test.ts
+src/api/transport.ts
+src/app/_layout.tsx
+src/app/dev-settings.tsx
+src/app/econsult/_layout.tsx
+src/app/econsult/message.tsx
+src/app/econsult/questions.tsx
+src/app/econsult/recipient.tsx
+src/app/econsult/sent.tsx
+src/app/index.tsx
+src/components/ChoiceGroup.test.tsx
+src/components/ChoiceGroup.tsx
+src/components/OfflineBanner.test.tsx
+src/components/OfflineBanner.tsx
+src/components/PhotoPicker.test.tsx
+src/components/PhotoPicker.tsx
+src/components/PrimaryButton.test.tsx
+src/components/PrimaryButton.tsx
+src/components/RecipientCard.test.tsx
+src/components/RecipientCard.tsx
+src/components/ScreenScaffold.test.tsx
+src/components/ScreenScaffold.tsx
+src/components/StatusViews.test.tsx
+src/components/StatusViews.tsx
+src/components/StepHeader.test.tsx
+src/components/StepHeader.tsx
+src/components/TextButton.test.tsx
+src/components/TextButton.tsx
+src/components/TextField.test.tsx
+src/components/TextField.tsx
+src/features/econsult/DraftProvider.test.tsx
+src/features/econsult/DraftProvider.tsx
+src/features/econsult/draft.test.ts
+src/features/econsult/draft.ts
+src/features/econsult/errorCopy.test.ts
+src/features/econsult/errorCopy.ts
+src/features/econsult/queries.ts
+src/features/econsult/recipients.test.ts
+src/features/econsult/recipients.ts
+src/features/econsult/steps.test.ts
+src/features/econsult/steps.ts
+src/features/econsult/submit.test.ts
+src/features/econsult/submit.ts
+src/features/econsult/useQuestions.test.tsx
+src/features/econsult/useQuestions.ts
+src/features/econsult/useRecipients.test.tsx
+src/features/econsult/useRecipients.ts
+src/features/econsult/useSubmit.test.tsx
+src/features/econsult/useSubmit.ts
+src/features/econsult/validation.test.ts
+src/features/econsult/validation.ts
+src/lib/announce.test.ts
+src/lib/announce.ts
+src/lib/devSettings.test.tsx
+src/lib/devSettings.tsx
+src/lib/devWarn.test.ts
+src/lib/devWarn.ts
+src/lib/ids.test.ts
+src/lib/ids.ts
+src/lib/network.test.tsx
+src/lib/network.tsx
+src/lib/photo.test.ts
+src/lib/photo.ts
+src/lib/queryClient.test.ts
+src/lib/queryClient.ts
+src/smoke.test.tsx
+src/test/expo-router-matchers.d.ts
+src/test/flowLayout.tsx
+src/test/providers.tsx
+src/theme/text.ts
+src/theme/tokens.ts
+tsconfig.json                                 (formatting-only diff)</code></pre>
+<h3>Runtime facts verified against node_modules (not recall)</h3>
+<div class="wide"><table><thead><tr><th>Claim in code/docs</th><th>Source</th><th>Result</th></tr></thead><tbody><tr><td>Expo&#39;s <code>fetch</code> rejects the RN <code>{ uri, name, type }</code> form-data part (DECISIONS.md:27-30, AI-USAGE.md:16-21)</td><td><code>expo/src/winter/fetch/convertFormData.ts:35</code> (&quot;<code>uri</code> is not supported&quot;), <code>:77</code> <code>throw new Error(&#39;Unsupported FormDataPart implementation&#39;)</code></td><td>confirmed</td></tr><tr><td><code>measureLayout</code> returns early unless the reference is an element (ScreenScaffold.tsx:25-27, DECISIONS.md:64-67)</td><td><code>react-native/src/private/webapis/dom/nodes/ReactNativeElement.js:182-190</code> — <code>if (!(relativeToNativeNode instanceof ReactNativeElement)) { … return; }</code></td><td>confirmed</td></tr><tr><td><code>getInnerViewRef</code> missing from <code>ScrollView</code>&#39;s types (ScreenScaffold.tsx:22-23)</td><td><code>ScrollView.d.ts:891</code> declares only <code>getInnerViewNode(): any</code>; <code>ScrollView.js:142,870</code> implement <code>getInnerViewRef</code></td><td>confirmed</td></tr><tr><td>iOS <code>Switch</code> composes <code>alignSelf: &#39;flex-start&#39;</code> (dev-settings.tsx:96)</td><td><code>Switch.js:267</code> <code>{alignSelf: &#39;flex-start&#39; as const}</code></td><td>confirmed</td></tr><tr><td><code>unstable_settings.anchor</code> is honoured on expo-router 57 (econsult/_layout.tsx:5)</td><td><code>expo-router/build/getRoutesCore.js:655</code> <code>loaded.unstable_settings.anchor ?? loaded.unstable_settings.initialRouteName</code></td><td>confirmed</td></tr><tr><td><code>usePreventRemove</code> + <code>navigation.dispatch(data.action)</code> works through the nested stack (recipient.tsx:60-65; implementer concern in decisions log line 55)</td><td><code>expo-router/build/react-navigation/core/useOnPreventRemove.js:43-67</code>: the action carries a <code>VISITED_ROUTE_KEYS</code> set; the parent&#39;s <code>beforeRemoveListeners[route.key]?.(beforeRemoveAction)</code> hands the same set to the nested navigator, so the re-dispatched action skips the recipient key and the root pop proceeds. <code>router.js:77-78</code>: <code>dismissTo</code> = <code>linkTo(…, { event: &#39;POP_TO&#39; })</code>, one action for both Home and back</td><td>confirmed by source; <code>recipient.test.tsx:153-166</code> drives Discard after <code>router.back()</code>, not after the header Home <code>dismissTo</code> — still worth one drive in finish:ui-verify (I6)</td></tr><tr><td><code>Focusable</code> is <code>HostInstance</code> (announce.ts:3)</td><td><code>AccessibilityInfo.d.ts:174-177</code> <code>sendAccessibilityEvent(handle: HostInstance, …)</code></td><td>confirmed</td></tr></tbody></table></div>
+<h3>Requirement coverage matrix</h3>
+<p>Paths relative to the repo root; &quot;test&quot; names the file and test title or line.</p>
+<div class="wide"><table><thead><tr><th>#</th><th>Spec requirement (spec.md line)</th><th>Implementation</th><th>Test</th><th>Status</th></tr></thead><tbody><tr><td>U1</td><td>Ria: hear every label, error, confirmation (:22)</td><td>accessible names on every control (<code>PrimaryButton.tsx:27-30</code>, <code>TextButton.tsx:23-27</code>, <code>RecipientCard.tsx:13-15</code>, <code>ChoiceGroup.tsx:44-46</code>, <code>TextField.tsx:64</code>); errors folded + announced (<code>TextField.tsx:30-32</code>, <code>questions.tsx:98-101</code>, <code>message.tsx:56-61</code>); confirmation heading focus (<code>sent.tsx:108-110</code>)</td><td>role/label queries throughout; <code>questions.test:94-111</code>, <code>message.test:89-106</code>, <code>sent.test:51-62</code>; AX3XL simulator re-checks T016–T020</td><td>met</td></tr><tr><td>U2</td><td>Ahmed: never lose the message when the photo fails (:23)</td><td><code>submit.ts:34-46,58-59</code> partial outcome; <code>sent.tsx:65-95</code></td><td><code>submit.test:59-69</code>, <code>message.test:185-195</code>, <code>sent.test:83-97</code></td><td>met</td></tr><tr><td>U3</td><td>prc-0873: step absent, counter honest (:24)</td><td><code>steps.ts:12-26</code>, <code>recipient.tsx:72,91,112</code></td><td><code>recipient.test:90-99</code> (&quot;Step 1 of 2&quot;), <code>steps.test</code></td><td>met</td></tr><tr><td>U4</td><td>Reviewer switches practice / injects failures without editing code (:25)</td><td><code>dev-settings.tsx</code>, <code>env.example</code>, <code>devSettings.tsx:28-72</code></td><td><code>dev-settings.test:93-124</code>, <code>devSettings.test</code></td><td>met</td></tr><tr><td>A1</td><td>Three steps + confirmation, counter &quot;of 3&quot;/&quot;of 2&quot; (:33)</td><td><code>StepHeader.tsx</code>, <code>steps.ts</code></td><td><code>StepHeader.test</code>, <code>recipient.test:60,95</code></td><td>met</td></tr><tr><td>A2</td><td>Nested layout mounts DraftProvider; root hides header for group (:39, :70, :72)</td><td><code>econsult/_layout.tsx:7-20</code>, <code>app/_layout.tsx:21</code></td><td><code>econsult/_layout.test</code>, <code>_layout.test</code></td><td>met</td></tr><tr><td>A3</td><td><code>useQueries</code>+<code>combine</code>; reads offlineFirst retry 1/1000; mutation always/retry 0 (:40)</td><td><code>useRecipients.ts:16-39</code>, <code>queryClient.ts:9-21</code>, <code>useSubmit.ts:10-23</code></td><td><code>useRecipients.test</code>, <code>queryClient.test</code>, <code>useSubmit.test:32-41</code></td><td>met</td></tr><tr><td>A4</td><td>zod at the boundary, malformed = error state (:41, :158)</td><td><code>contracts.ts</code>, <code>services.ts:31-37</code></td><td><code>contracts.test</code>, <code>services.test:77-91</code></td><td>met</td></tr><tr><td>A5</td><td><code>Transport</code> with <code>AbortSignal</code>, fake honours abort with <code>AbortError</code>; no HTTP shipped (:42)</td><td><code>transport.ts:21-30</code>, <code>fakeTransport.ts:28-54</code>; grep <code>fetch(</code> → 0</td><td><code>fakeTransport.test:99-120,180-192</code></td><td>met</td></tr><tr><td>A6</td><td><code>.env</code> seeds; dev screen; Apply clears cache and returns home (:43)</td><td><code>devSettings.tsx:66-72</code>, <code>env.example</code>, <code>dev-settings.tsx:145-149</code></td><td><code>devSettings.test:29-76</code>, <code>dev-settings.test:93-108</code></td><td>met (amended: <code>env.example</code> instead of a committed <code>.env</code>, user decision at T006)</td></tr><tr><td>A7</td><td>Photo: quality 1, ≤ 1600 px, JPEG 0.7, release handles, &quot;Preparing&quot;, failure keeps original + devWarn, expo-image preview, camera only on device (:44)</td><td><code>PhotoPicker.tsx:26-30,60-87,126-134</code>, <code>photo.ts:5-50</code></td><td><code>photo.test</code>, <code>PhotoPicker.test:58-65,125-150</code></td><td>met</td></tr><tr><td>A8</td><td>Keyboard/safe areas: one ScrollView, button last child, persistTaps handled, adjust insets, bottom insets (:45)</td><td><code>ScreenScaffold.tsx:55-76</code></td><td><code>ScreenScaffold.test:48-58,93-105</code></td><td>met</td></tr><tr><td>A9</td><td>Offline fail-open, banner in scaffold, Send disabled with reason, onlineManager wired (:46)</td><td><code>network.tsx:8-27</code>, <code>ScreenScaffold.tsx:72</code>, <code>message.tsx:142-166</code></td><td><code>network.test</code>, <code>message.test:232-240</code></td><td>met (announcement fires per mounted scaffold — W2)</td></tr><tr><td>A10</td><td>English, light only, system font, tokens with 48-pt minimum (:47)</td><td><code>app.json:9</code>, <code>tokens.ts:25-26</code></td><td><code>npx expo config</code> in T021 evidence</td><td>met</td></tr><tr><td>C1</td><td><code>Question</code> union, unknown type → text (:55)</td><td><code>contracts.ts:10-36</code></td><td><code>contracts.test:45-55</code></td><td>met</td></tr><tr><td>C2</td><td><code>CareTeamMember.role</code>, unknown → other (:56)</td><td><code>contracts.ts:38-44</code></td><td><code>contracts.test:71-75</code></td><td>met</td></tr><tr><td>C3</td><td><code>subject</code> removed (:57)</td><td><code>contracts.ts:54-59</code></td><td><code>submit.test:31-38</code></td><td>met</td></tr><tr><td>C4</td><td><code>Idempotency-Key</code> per draft, reused on retry; fake returns the original id (:58, SC8)</td><td><code>contracts.ts:6</code>, <code>services.ts:55-66</code>, <code>draft.ts:65-66</code>, <code>message.tsx:122-123</code>, <code>fakeTransport.ts:62-72</code></td><td><code>fakeTransport.test:122-137</code>, <code>services.test:48-63</code>, <code>draft.test:109-115</code>, <code>message.test:212-230</code></td><td>met</td></tr><tr><td>C5</td><td><code>POST /econsults/{id}/attachments</code>, timeout helper decides on its own signal (:59, :147)</td><td><code>fakeTransport.ts:26,107-115</code>, <code>transport.ts:35-50</code></td><td><code>transport.test:35-66</code>, <code>services.test:102-114</code></td><td>met</td></tr><tr><td>C6</td><td>Three fixtures incl. prc-0000, four members with one not writable (:62)</td><td><code>fixtures.ts</code></td><td><code>fixtures.test</code>, <code>recipient.test:59</code></td><td>met</td></tr><tr><td>B1</td><td>Affected-areas table (:68-83): every listed file exists; app.json light + picker plugin + no web; package.json adds/removes as listed; 15 assets deleted; referenced assets kept</td><td>diff + <code>ls assets</code></td><td>T021 verify</td><td>met (<code>CLAUDE.md</code> unchanged by design, plan.md:6820)</td></tr><tr><td>B2</td><td>Delivery order 1–5, nothing cut (:85-95)</td><td>commits <code>069cc8b</code> → <code>0d46de5</code></td><td>DECISIONS.md:93-94</td><td>met</td></tr><tr><td>S1</td><td>Home greeting, one action, dev link, prefetch (:99)</td><td><code>index.tsx:22-44</code></td><td><code>index.test</code></td><td>met</td></tr><tr><td>S2</td><td>Step 1 loading/loaded/error/empty, Continue disabled with hint, error even with stale data (:101)</td><td><code>recipient.tsx:85-134</code>, <code>StatusViews.tsx</code>, <code>useRecipients.ts:15-25</code></td><td><code>recipient.test:49-134</code>, <code>useRecipients.test:31-42</code></td><td>met</td></tr><tr><td>S3</td><td>Step 2 skipped when none; &quot;(required)/(optional)&quot;; validate, tie, focus, announce (:103)</td><td><code>questions.tsx:85-102</code>, <code>TextField.tsx:24-32</code>, <code>ChoiceGroup.tsx:26-37</code></td><td><code>questions.test</code></td><td>met</td></tr><tr><td>S4</td><td>Step 3 To/Change row via <code>dismissTo</code>; nudge; photo states; Send disabled while preparing; busy + read-only + status line; offline (:105)</td><td><code>message.tsx:114-135,142-168,170-200,262</code>, <code>TextField.tsx:61</code>, <code>PhotoPicker.tsx:116-121</code></td><td><code>message.test:78-87,149-159,232-265</code>, <code>PhotoPicker.test:152-161</code></td><td>met; Change and back stay live during the send (W1)</td></tr><tr><td>S5</td><td>Sent: heading focus, texts, partial variant with Try again / Continue without, <code>usePreventRemove(!isLeaving)</code>, Done → <code>dismissTo(&#39;/&#39;)</code> (:107)</td><td><code>sent.tsx:31-133</code></td><td><code>sent.test</code> (9 tests)</td><td>met</td></tr><tr><td>E1</td><td>Exactly one recipient preselected (:113)</td><td><code>recipient.tsx:73-82</code></td><td><code>recipient.test:101-113</code></td><td>met</td></tr><tr><td>E2</td><td>Zero writable → empty (:114)</td><td><code>useRecipients.ts:28</code></td><td><code>useRecipients.test:104-110</code>, <code>recipient.test:125-134</code></td><td>met</td></tr><tr><td>E3</td><td>Absent recipient id dropped + devWarn (:115)</td><td><code>recipients.ts:25-30</code></td><td><code>recipients.test:22-30</code></td><td>met</td></tr><tr><td>E4</td><td>Members not in <code>recipientIds</code> hidden (:116)</td><td><code>recipients.ts:25</code></td><td><code>recipient.test:59</code></td><td>met</td></tr><tr><td>E5</td><td>Unknown type → text; choice &lt; 2 options rejected (:118-119)</td><td><code>contracts.ts:11-22</code></td><td><code>contracts.test:33-55</code></td><td>met</td></tr><tr><td>E6</td><td>Whitespace answers/messages invalid; &lt; 20 chars nudge (:120-121)</td><td><code>validation.ts</code></td><td><code>validation.test</code></td><td>met</td></tr><tr><td>E7</td><td>Picker cancelled → no change (:122)</td><td><code>PhotoPicker.tsx:106</code></td><td><code>PhotoPicker.test:100-107</code></td><td>met</td></tr><tr><td>E8</td><td>Permission denied → explanation + Open Settings, other source stays (:123)</td><td><code>PhotoPicker.tsx:103,140-147</code></td><td><code>PhotoPicker.test:109-123</code></td><td>met (copy names &quot;Photos&quot; for a camera denial — I3)</td></tr><tr><td>E9</td><td>Camera unavailable note (:124)</td><td><code>PhotoPicker.tsx:126-134</code></td><td><code>PhotoPicker.test:58-65</code></td><td>met</td></tr><tr><td>E10</td><td>Pick/remove/pick: last wins; <code>pickId</code> supersede; Remove discards pending (:125-126)</td><td><code>draft.ts:41-49,59-64</code></td><td><code>draft.test:60-107</code></td><td>met</td></tr><tr><td>E11</td><td>Preview fixed height, <code>cover</code>, never sized from w/h (:126)</td><td><code>PhotoPicker.tsx:74-87,155-160</code></td><td><code>PhotoPicker.test:136-150</code> (10×10 asset; component reads no dimension)</td><td>met</td></tr><tr><td>E12</td><td>Processing failure → ready with original + devWarn; 0 dimension skips downscale (:127-128)</td><td><code>photo.ts:34-50</code></td><td><code>photo.test:49-72</code></td><td>met</td></tr><tr><td>E13</td><td>Draft lifecycle; key generated on first Send; econsultId kept; recipient change keeps answers; back keeps message/photo (:132-136)</td><td><code>DraftProvider.tsx</code>, <code>draft.ts</code></td><td><code>draft.test:36-50,109-123</code>, <code>DraftProvider.test</code></td><td>met</td></tr><tr><td>E14</td><td>Step-1 leave guard <code>(hasMessage || hasPhoto) &amp;&amp; econsultId == null</code> (:140)</td><td><code>draft.ts:88-90</code>, <code>recipient.tsx:58-66</code></td><td><code>draft.test:139-146</code>, <code>recipient.test:136-177</code></td><td>met (Home-button Discard path verified by source, I6)</td></tr><tr><td>E15</td><td>Confirmation cannot be left (:141)</td><td><code>sent.tsx:106</code>, <code>econsult/_layout.tsx:16</code></td><td><code>sent.test:64-71</code></td><td>met</td></tr><tr><td>E16</td><td>Step counter + heading announced (:142)</td><td><code>StepHeader.tsx:13-15</code></td><td><code>StepHeader.test</code></td><td>met</td></tr><tr><td>E17</td><td>Latency defaults (:146)</td><td><code>fakeTransport.ts:12-17</code></td><td><code>fakeTransport.test:20-52</code></td><td>met</td></tr><tr><td>E18</td><td>Timeouts 15 s / 45 s via AbortController (:147)</td><td><code>services.ts:16-17</code>, <code>transport.ts:39-40</code></td><td><code>services.test:93-114</code></td><td>met</td></tr><tr><td>E19</td><td>48-pt targets, scaling never disabled, caps only chip + nav-bar buttons (:149, :170)</td><td><code>tokens.ts:26-32</code>; grep → 0 <code>allowFontScaling</code>, 3 <code>maxFontSizeMultiplier</code> sites</td><td><code>PrimaryButton.test:6-12</code>, <code>TextButton.test:6-16</code>, <code>ChoiceGroup.test:29-31</code></td><td>met</td></tr><tr><td>E20</td><td><code>fontScale</code> from <code>useWindowDimensions</code> (:150)</td><td><code>TextField.tsx:50</code></td><td><code>TextField.test:87-95</code></td><td>met</td></tr><tr><td>E21</td><td>Config/care-team failure → one error, retry refetches the failed one (:154)</td><td><code>useRecipients.ts:17-25</code></td><td><code>useRecipients.test:31-54,88-102</code></td><td>met</td></tr><tr><td>E22</td><td>Create failure → inline error near Send, Retry same key (:155)</td><td><code>message.tsx:216-242</code></td><td><code>message.test:197-230</code></td><td>met</td></tr><tr><td>E23</td><td>Create ok + upload fail → partial variant, retry keyed to id (:156)</td><td><code>submit.ts:62-68</code>, <code>sent.tsx:38-54</code></td><td><code>sent.test:99-115</code></td><td>met</td></tr><tr><td>E24</td><td>Offline before Send disabled (:157)</td><td><code>message.tsx:163</code></td><td><code>message.test:232-240</code></td><td>met (Retry after a failed create not disabled offline — I4)</td></tr><tr><td>E25</td><td>Query keys include practice id (:159)</td><td><code>queries.ts:5-8</code></td><td><code>index.test:35-41</code></td><td>met</td></tr><tr><td>E26</td><td>Terminology (:163-165)</td><td><code>recipients.ts:9-14</code>, copy constants</td><td>—</td><td>met (&quot;e-consult&quot; appears in README and DECISIONS, not on the confirmation screen; wording only)</td></tr><tr><td>P1</td><td>Radio group around cards, fields never grouped, header roles (:169)</td><td><code>recipient.tsx:40-44</code>, <code>StatusViews.tsx:39,66</code></td><td><code>recipient.test:56</code></td><td>met</td></tr><tr><td>P2</td><td><code>gestureEnabled:false</code> + <code>usePreventRemove</code>; <code>keyboardDismissMode</code> per platform (:175)</td><td><code>econsult/_layout.tsx:16</code>, <code>ScreenScaffold.tsx:61</code></td><td><code>ScreenScaffold.test:93-105</code></td><td>met</td></tr><tr><td>SC1</td><td>Both practices complete E2E on the simulator (:201)</td><td>—</td><td>T016–T020 UI reports; recording by hand</td><td>met per evidence</td></tr><tr><td>SC2</td><td>Six ACs → behaviour-named tests (:202)</td><td>—</td><td>recipient/questions/message/PhotoPicker/sent tests</td><td>met</td></tr><tr><td>SC3</td><td>Accessible names by role queries; 48 via <code>toHaveStyle</code>; Accessibility Inspector audit with zero errors (:203)</td><td>—</td><td>role queries everywhere; <code>toHaveStyle</code> in three component tests; <strong>no report records an Accessibility Inspector audit</strong></td><td>partially met (W6)</td></tr><tr><td>SC4/SC5</td><td>Largest-text and keyboard-open screenshots (:204-205)</td><td>—</td><td>T017/T018 reports</td><td>met</td></tr><tr><td>SC6</td><td>Every state reachable from dev settings and tested (:206)</td><td><code>dev-settings.tsx</code></td><td>loading <code>recipient.test:49</code>; empty <code>:125</code>; config error <code>:115</code>; care-team error <code>useRecipients.test:96</code>; create error <code>message.test:197</code>; upload failure <code>:185</code>; offline <code>:232</code></td><td>met</td></tr><tr><td>SC7</td><td>Type-check, lint, format, tests; 100 % on api/features/lib; <code>Platform.OS</code> mocked; <code>__DEV__</code> in one helper (:207)</td><td><code>devWarn.ts</code>, <code>package.json</code> thresholds</td><td><code>verify/finish-3</code> all green, 100 % everywhere; <code>ScreenScaffold.test:93</code>; <code>devWarn.test:29-36</code></td><td>met</td></tr><tr><td>SC8</td><td>Never created twice on retry (:208)</td><td><code>fakeTransport.ts:65-66</code>, <code>draft.ts:66</code></td><td><code>submit.test:83-90</code>, <code>message.test:212-230</code></td><td>met</td></tr><tr><td>OOS</td><td>Out of scope list (:212)</td><td>grep: no fetch, no persistence, no i18n, no web</td><td>—</td><td>respected</td></tr><tr><td>Docs</td><td>README, DECISIONS.md, AI-USAGE.md exist and match the code (:18, :82)</td><td>all three read in full; every code claim checked (latency options, coverage tiers, Cancel button, no <code>fetch(</code>, no <code>expo-file-system</code>, five checker + three plan rounds, Android checklist)</td><td>—</td><td>met</td></tr></tbody></table></div>
+<h3>Plan compliance (22 tasks + amendments)</h3>
+<div class="wide"><table><thead><tr><th>Task</th><th>Shipped</th><th>Notes</th></tr></thead><tbody><tr><td>T001 tooling</td><td>✓ all 7 files</td><td><code>/// &lt;reference types=&quot;jest&quot; /&gt;</code> dismissed at the T001 stop; <code>test:coverage</code> now passes</td></tr><tr><td>T002–T005 api + lib</td><td>✓</td><td>four services (plan wording), matching tests</td></tr><tr><td>T006 dev settings + providers</td><td>✓</td><td><code>.env</code> → <code>env.example</code> per amendment; <code>.env</code> git-ignored per T021 amendment</td></tr><tr><td>T007–T011 draft, queries, validation, submit, photo</td><td>✓</td><td><code>gcTime: 0</code> amendments in <code>providers.tsx:21-25</code></td></tr><tr><td>T012–T014 components</td><td>✓</td><td><code>useScrollToField</code>, <code>containerRef</code>, <code>TextButton.maxFontSizeMultiplier</code>, <code>HEADER_BUTTON_MAX_FONT_SCALE</code> per amendments</td></tr><tr><td>T015 shell</td><td>✓</td><td>placeholders replaced by T016–T020; <code>unstable_settings.anchor</code> present</td></tr><tr><td>T016–T019 screens</td><td>✓</td><td>all amendments reflected (scroll-to-field, error under label, hint only while disabled, failed-retry line)</td></tr><tr><td>T020 dev settings screen</td><td>✓</td><td>Cancel header button, wrapping label, centred switch per amendment</td></tr><tr><td>T021 cleanup</td><td>✓</td><td>6 packages + <code>web</code> script removed, 15 assets deleted, plugin added, <code>.gitignore</code> amendment</td></tr><tr><td>T022 docs</td><td>✓</td><td>three documents, lead-read</td></tr><tr><td>Shipped without a task/amendment</td><td>none found</td><td>every new symbol traced to a task or an amendment entry</td></tr><tr><td>Promised but absent</td><td>none found</td><td></td></tr></tbody></table></div>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>spec-compliance</td><td><code>src/app/econsult/message.tsx:170-177, 260-263</code></td><td>Change, native back and the step-1 Home button stay live while the send is in flight; the completion handler then navigates against whatever is on top</td></tr><tr><td>W2</td><td>WARNING</td><td>react</td><td><code>src/components/ScreenScaffold.tsx:41-48</code></td><td>The offline/back-online announcement fires once per mounted scaffold (up to four in a native stack) instead of once per transition</td></tr><tr><td>W3</td><td>WARNING</td><td>standards</td><td><code>src/components/PhotoPicker.tsx:100-114</code></td><td><code>pick()</code> has no error path: a rejected <code>launch*Async</code> or permission request becomes an unhandled rejection with no feedback</td></tr><tr><td>W4</td><td>WARNING</td><td>standards</td><td><code>src/app/econsult/recipient.tsx:68-137</code></td><td><code>RecipientScreen</code> is 70 lines against the 50-line cap</td></tr><tr><td>W5</td><td>WARNING</td><td>standards</td><td><code>src/components/ChoiceGroup.tsx:18-21</code></td><td>Inline comment is three sentences</td></tr><tr><td>W6</td><td>WARNING</td><td>tests</td><td><code>specs/001-econsult-flow/spec.md:203</code></td><td>SC3&#39;s Accessibility Inspector audit has no recorded evidence</td></tr><tr><td>W7</td><td>WARNING</td><td>coverage</td><td>13 <code>NOT REVIEWED</code> files above</td><td>Partial review of generated/rendered/prior-round artifacts</td></tr><tr><td>I1</td><td>INFO</td><td>debt</td><td><code>src/features/econsult/draft.ts:29,71-72</code>; <code>src/api/fake/fixtures.ts:5</code></td><td><code>reset</code> action never dispatched; <code>FixturePracticeId</code> exported and never imported</td></tr><tr><td>I2</td><td>INFO</td><td>reuse</td><td><code>src/api/transport.test.ts:5-8</code>, <code>fake/fakeTransport.test.ts:11-14</code>, <code>services.test.ts:11-14</code></td><td><code>handled()</code> copied three times</td></tr><tr><td>I3</td><td>INFO</td><td>consistency</td><td><code>src/components/PhotoPicker.tsx:19-20,103</code></td><td>One denied-permission note (&quot;Photos are switched off&quot;) for both camera and library</td></tr><tr><td>I4</td><td>INFO</td><td>spec-compliance</td><td><code>src/app/econsult/message.tsx:233-239</code></td><td>Retry after a failed create is not disabled while offline, unlike Send</td></tr><tr><td>I5</td><td>INFO</td><td>consistency</td><td>see Structure section</td><td>Four ownership misplacements for the restructuring pass</td></tr><tr><td>I6</td><td>INFO</td><td>regression</td><td><code>src/app/econsult/recipient.tsx:60-65</code></td><td>Home → Discard path verified in the vendored navigation source but only the <code>router.back()</code> variant is tested/driven</td></tr></tbody></table></div>
+<h3>W1 — Navigation is not locked while a send is in flight</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> spec-compliance</li>
+<li><strong>Location:</strong> <code>src/app/econsult/message.tsx:170-177</code> (Change), <code>:244-268</code> (screen, no leave guard), <code>:126-130</code> (post-await navigation)</li>
+<li><strong>Finding:</strong> spec.md:105 makes the fields read-only and the button busy while sending; <code>TextField.editable</code> and <code>PhotoPicker.disabled</code> honour that, but <code>ToRow</code>&#39;s Change button, the nested header back arrow, swipe-back and step 1&#39;s Home button are all still enabled during <code>submit.isPending</code>. After the awaited <code>mutateAsync</code> resolves, <code>router.replace(&quot;/econsult/sent&quot;)</code> runs regardless of where the patient now is. Change mid-send pops to step 1 and the create then replaces step 1 with Sent (draft intact, so harmless); back mid-send lands Sent over the questions screen (harmless). The bad route is Home → &quot;Discard&quot; while the create is still pending on a slow link (up to 15 s): the dialog says &quot;Your message and photo will be lost&quot; (<code>recipient.tsx:25</code>), the group unmounts, the create still completes, the reducer dispatches go nowhere, and <code>router.replace</code> mounts a fresh <code>econsult/sent</code> over Home with <code>econsultId</code> null — &quot;Sent to your practice&quot;, &quot;Reference: &quot; blank.</li>
+<li><strong>Why:</strong> The spec&#39;s &quot;fields read-only while sending&quot; intent is only half applied; a patient on a weak connection (Ahmed, spec.md:23) taps back while waiting. Rare enough to stay WARNING, but the message is told &quot;lost&quot; while it has actually been sent.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>// message.tsx
+import { usePreventRemove } from "expo-router/react-navigation";
+
+function ToRow({ name, disabled, onChange }: { name: string; disabled: boolean; onChange: () =&gt; void }) {
+  return (
+    &lt;View style={styles.toRow}&gt;
+      &lt;Text style={styles.to}&gt;To: {name}&lt;/Text&gt;
+      &lt;TextButton label="Change" disabled={disabled} accessibilityHint={CHANGE_HINT} onPress={onChange} /&gt;
+    &lt;/View&gt;
+  );
+}
+
+export default function MessageScreen() {
+  …
+  const send = useSend();
+  const isSending = send.submit.isPending;
+  // Back, swipe and the step-1 Home button wait for the send to settle; the busy button says why.
+  usePreventRemove(isSending, () =&gt; {});
+  …
+      &lt;ToRow name={…} disabled={isSending} onChange={() =&gt; router.dismissTo("/econsult/recipient")} /&gt;</code></pre>
+Add to <code>message.test.tsx</code>: &quot;Change and going back are blocked while sending&quot; (render with <code>settings: { latencyMs: 50 }</code>, press Send, assert <code>Change</code> has <code>disabled: true</code> and <code>router.back()</code> keeps <code>/econsult/message</code>).</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W2 — Offline announcement repeats once per mounted screen</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> react</li>
+<li><strong>Location:</strong> <code>src/components/ScreenScaffold.tsx:41-48</code></li>
+<li><strong>Finding:</strong> The transition effect lives in <code>ScreenScaffold</code>, and a native stack keeps every pushed screen mounted, so on step 3 of prc-0421 four scaffolds (Home, recipient, questions, message) each run <code>announce(OFFLINE_MESSAGE)</code> when <code>useIsOffline()</code> flips. VoiceOver interrupts earlier announcements (one stuttered read); TalkBack queues them (four reads). <code>ScreenScaffold.test.tsx:61-91</code> renders one scaffold so it cannot see this. spec.md:176 asks for &quot;a persistent banner announced on transition&quot;, singular.</li>
+<li><strong>Why:</strong> Accessibility regression for exactly the audience the spec centres; canon <code>AGENTS.md</code> &quot;announced once&quot;.</li>
+<li><strong>Suggested fix:</strong> move the transition effect to the single <code>NetworkProvider</code> and keep the banner copy in <code>lib</code> so <code>lib</code> does not import from <code>components</code>:<pre class="code"><code>// src/lib/network.tsx
+export const OFFLINE_MESSAGE = "You're offline. You can keep writing, but sending needs a connection.";
+export const BACK_ONLINE_MESSAGE = "You're back online.";
+
+export function NetworkProvider({ forceOffline, children }: Props) {
+  const state = useNetworkState();
+  const isOffline = isLinkDown(state.isConnected, forceOffline);
+  const wasOffline = useRef(isOffline);
+
+  useEffect(() =&gt; {
+    onlineManager.setOnline(!isOffline);
+    if (isOffline === wasOffline.current) return;
+    wasOffline.current = isOffline;
+    announce(isOffline ? OFFLINE_MESSAGE : BACK_ONLINE_MESSAGE);
+  }, [isOffline]);
+  …</code></pre>
+<code>OfflineBanner.tsx</code> imports <code>OFFLINE_MESSAGE</code> from <code>@/lib/network</code>; delete <code>ScreenScaffold.tsx:41,44-48</code> and the <code>announce</code>/<code>BACK_ONLINE_MESSAGE</code> imports; move the announcement assertions of <code>ScreenScaffold.test.tsx:61-91</code> to <code>network.test.tsx</code>.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W3 — <code>pick()</code> swallows launcher and permission failures</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> standards</li>
+<li><strong>Location:</strong> <code>src/components/PhotoPicker.tsx:100-114</code> (invoked as <code>void pick(…)</code> at <code>:130,138</code>)</li>
+<li><strong>Finding:</strong> <code>ensureGranted</code> and <code>launch</code> can reject (<code>launchCameraAsync</code> throws when the camera cannot be opened; Android can kill the activity — spec.md:212 names that as out of scope for recovery, not for feedback). Nothing catches: the promise rejection goes unhandled, the draft is untouched, and the patient sees nothing happen. <code>processPhoto</code> itself is safe (<code>photo.ts:44-46</code>).</li>
+<li><strong>Why:</strong> canon <code>workflow.md</code> &quot;handle errors explicitly at every level, never swallow&quot;; the patient-facing effect is a dead button.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>const PICK_FAILED_NOTE = "We couldn't open your photos just now. Please try again.";
+…
+const [note, setNote] = useState&lt;"denied" | "failed" | null&gt;(null);
+
+async function pick(source: Source) {
+  try {
+    const permission: Permission = source === "camera" ? [cameraStatus, requestCamera] : [libraryStatus, requestLibrary];
+    if (!(await ensureGranted(permission))) return setNote("denied");
+    setNote(null);
+    const result = await launch(source);
+    if (result.canceled) return;
+    const asset = result.assets[0];
+    const pickId = newId();
+    onPickStarted(pickId);
+    onPickReady(pickId, await processPhoto({ uri: asset.uri, width: asset.width, height: asset.height }));
+  } catch (error) {
+    devWarn(`Photo pick failed: ${String(error)}`);
+    setNote("failed");
+  }
+}</code></pre>
+Render <code>PERMISSION_DENIED_NOTE</code> + Open Settings for <code>&quot;denied&quot;</code> and <code>PICK_FAILED_NOTE</code> alone for <code>&quot;failed&quot;</code>; add a test with <code>launchImageLibraryAsync.mockRejectedValueOnce(new Error(&quot;busy&quot;))</code> asserting the note and that <code>onPickStarted</code> was not called.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W4 — <code>RecipientScreen</code> is 70 lines</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> standards</li>
+<li><strong>Location:</strong> <code>src/app/econsult/recipient.tsx:68-137</code></li>
+<li><strong>Finding:</strong> The component body runs from <code>:68</code> to <code>:137</code> (70 lines, scan output above); the plan&#39;s global constraint (plan.md:23) and <code>AGENTS.md</code> say under 50, and plan-r2 W3 already trimmed this file once. The four-way status switch in the JSX (<code>:109-133</code>) plus the header button (<code>:97-107</code>) are the bulk.</li>
+<li><strong>Why:</strong> canon size cap; the file is otherwise clean.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>function HomeHeaderButton({ onPress }: { onPress: () =&gt; void }) {
+  return &lt;TextButton label="Home" onPress={onPress} maxFontSizeMultiplier={HEADER_BUTTON_MAX_FONT_SCALE} /&gt;;
+}
+
+function RecipientBody({ result, selectedId, onSelect, goHome }: {
+  result: RecipientsResult; selectedId: string | null; onSelect: (id: string) =&gt; void; goHome: () =&gt; void;
+}) {
+  if (result.status === "loading") return &lt;LoadingCards label={LOADING_LABEL} /&gt;;
+  if (result.status === "error") return &lt;ErrorState title={ERROR_TITLE} body={ERROR_BODY} onRetry={result.retry} /&gt;;
+  if (result.status === "empty") {
+    return &lt;EmptyState title={EMPTY_TITLE} body={EMPTY_BODY} action={&lt;TextButton label="Back to start" onPress={goHome} /&gt;} /&gt;;
+  }
+  return &lt;RecipientList result={result} selectedId={selectedId} onSelect={onSelect} /&gt;;
+}</code></pre>
+<code>RecipientScreen</code> then keeps the hooks, the <code>StepHeader</code> guard and <code>&lt;RecipientBody …/&gt;</code> (about 40 lines).</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W5 — Three-sentence inline comment</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> standards</li>
+<li><strong>Location:</strong> <code>src/components/ChoiceGroup.tsx:18-21</code></li>
+<li><strong>Finding:</strong> The only block in <code>src/</code> over the limit (scan → 1 hit). Canon <code>comments.md</code>: inline comments ≤ 2 sentences.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>// The group View carries role and name for TalkBack but is not `accessible`, which would swallow
+// its radios; iOS has no group element, so the label Text folds in the error and takes the ref.
+// The error sits between label and radios so it stays visible when a tall label is scrolled to.</code></pre>
+(two sentences: the second clause joined with a semicolon, the layout note kept as the second sentence — or move the layout note to the <code>error</code> JSX line.)</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W6 — SC3&#39;s Accessibility Inspector audit has no evidence</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:203</code>; <code>README.md:113-114</code> tells the reviewer to run it</li>
+<li><strong>Finding:</strong> SC3 names three verifications: role/label queries (done), <code>toHaveStyle</code> 48-pt checks (done in <code>PrimaryButton.test:11</code>, <code>TextButton.test:14</code>, <code>ChoiceGroup.test:29-31</code>), and &quot;an Accessibility Inspector audit on the simulator with zero errors&quot;. No UI report under <code>ui-verification/</code> mentions the audit (grep → 0); the reports use agent-device accessibility dumps, which are not the Xcode audit.</li>
+<li><strong>Why:</strong> A success criterion the spec itself made measurable is unrecorded; the README promises the reviewer &quot;it should report no issues&quot;.</li>
+<li><strong>Suggested fix:</strong> in finish:ui-verify, run Xcode &gt; Open Developer Tool &gt; Accessibility Inspector &gt; Audit on Home, step 1 (loaded and empty), step 2, step 3 (pristine and with the error), Sent (partial variant) and Developer settings; record the result per screen in the report. If the audit cannot be automated, amend SC3 to name the agent-device a11y dump as the audit and say so in DECISIONS.md.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W7 — Partial review of thirteen artifact files</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> coverage</li>
+<li><strong>Location:</strong> <code>package-lock.json</code>; <code>specs/001-econsult-flow/artifacts/*.html</code> (4); <code>checker/spec-r1..r4.md</code>, <code>checker/plan-r1..r2.md</code> (6); <code>plan.md</code> (read in part, see Files); <code>research.md</code> (headers)</li>
+<li><strong>Finding:</strong> These are generated, rendered or prior-round artifacts. <code>package.json</code> was diffed against <code>f39fb58</code> directly, so the lockfile&#39;s product content is covered indirectly; the prior checker rounds were read via their verdict tables and the two final rounds in full; <code>plan.md</code> was read for every fence, step, amendment and the T015–T022 headers plus T021/T022 bodies.</li>
+<li><strong>Why:</strong> Reported so the verdict cannot be read as a full-text review of those files.</li>
+<li><strong>Suggested fix:</strong> none required for merge; a reviewer wanting the lockfile checked can run <code>npm ls --depth=0</code> and <code>npm audit</code> (T021 evidence recorded <code>npm ls clean</code>).</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I1 — Dead <code>reset</code> action and unused <code>FixturePracticeId</code> export</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> debt</li>
+<li><strong>Location:</strong> <code>src/features/econsult/draft.ts:29,71-72</code>; <code>src/api/fake/fixtures.ts:5</code></li>
+<li><strong>Finding:</strong> <code>{ type: &quot;reset&quot; }</code> is never dispatched (the draft dies with the provider, spec.md:107); <code>FixturePracticeId</code> has zero importers. Both are covered by tests, so coverage hides them.</li>
+<li><strong>Suggested fix:</strong> delete the <code>reset</code> member, its reducer case and <code>draft.test.ts:125-129</code>; delete <code>FixturePracticeId</code> or use it as the key type of <code>PRACTICE_LABELS</code> in <code>dev-settings.tsx:28</code>.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I2 — <code>handled()</code> copied into three test files</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> reuse</li>
+<li><strong>Location:</strong> <code>src/api/transport.test.ts:5-8</code>, <code>src/api/fake/fakeTransport.test.ts:11-14</code>, <code>src/api/services.test.ts:11-14</code></li>
+<li><strong>Suggested fix:</strong> <code>src/test/handled.ts</code> exporting the helper; import it in the three files.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I3 — Camera denial shows the photo-library copy</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>src/components/PhotoPicker.tsx:19-20,103</code></li>
+<li><strong>Finding:</strong> Both sources set the same <code>denied</code> flag; a camera denial reads &quot;Photos are switched off for this app.&quot; Behaviour meets spec.md:123; wording is off for the camera case.</li>
+<li><strong>Suggested fix:</strong> keep <code>denied: Source | null</code> and pick <code>CAMERA_DENIED_NOTE</code> / <code>PERMISSION_DENIED_NOTE</code> by source (folds naturally into the W3 change).</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I4 — Retry after a failed create is not disabled while offline</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> spec-compliance</li>
+<li><strong>Location:</strong> <code>src/app/econsult/message.tsx:233-239</code></li>
+<li><strong>Finding:</strong> Send is disabled with a reason while offline (spec.md:157); the <code>ErrorState</code> Retry that re-runs the same send is not. With <code>networkMode: &#39;always&#39;</code> the request goes out and fails as a network error, which the spec accepts (&quot;the request itself is the real check&quot;, :46), so this is consistency polish only.</li>
+<li><strong>Suggested fix:</strong> pass <code>disabled={isOffline}</code> through <code>SendFeedback</code> to a <code>PrimaryButton</code> prop on <code>ErrorState</code>, or leave as is and note it in DECISIONS.md.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I5 — Structure observations (for the separate restructuring pass)</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> see the Structure section below</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I6 — Home → Discard path: verified by source, driven only via <code>router.back()</code></h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> regression</li>
+<li><strong>Location:</strong> <code>src/app/econsult/recipient.tsx:60-65</code>; decisions log line 55</li>
+<li><strong>Finding:</strong> The implementer&#39;s flagged concern (&quot;Discard after the header Home button may not navigate&quot;) does not hold on the vendored navigation core: <code>useOnPreventRemove.js:50-55</code> threads the <code>VISITED_ROUTE_KEYS</code> set into the nested navigator&#39;s keyed listener (<code>:60</code>), so re-dispatching <code>data.action</code> skips the recipient screen and the root <code>POP_TO</code> completes. <code>dismissTo</code> and <code>back</code> both end as one navigation action (<code>router.js:77-78,89-95</code>). <code>recipient.test.tsx:153-166</code> proves the mechanism with <code>router.back()</code>; the Home button variant is the same code path but has not been driven.</li>
+<li><strong>Suggested fix:</strong> one drive in finish:ui-verify: type a message, tap Home, tap Discard, expect Home. No code change expected.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>Structure (folder/ownership) — concrete, not graded beyond INFO</h3>
+<p>The grouping is coherent overall: <code>src/api</code> never renders, <code>src/components</code> never fetches, <code>src/app</code> composes and owns navigation, <code>src/theme</code> and <code>src/test</code> are pure. Four files sit outside their responsibility:</p>
+<ol>
+<li><code>src/lib/devSettings.tsx:74-120</code> — <code>ServicesContext</code>, <code>useServices</code>, <code>useSession</code> and the hard-coded <code>PATIENT</code> are app wiring (a session and a services provider), not a library utility, and <code>lib</code> here imports <code>@/api/fake/*</code> (lines 3-11), so the fake backend is bound at the lowest layer. Move the providers and session to <code>src/providers/services.tsx</code> (or <code>src/features/session/</code>), keep only <code>parseLatency</code>/<code>parseFaults</code>/<code>parsePracticeId</code>/<code>readEnvSeeds</code> in <code>src/lib/devSettings.ts</code>, and let <code>src/app/_layout.tsx</code> be the one place that chooses <code>createFakeTransport</code>.</li>
+<li><code>src/components/PhotoPicker.tsx:6-8</code> — a &quot;building block&quot; that imports the feature&#39;s <code>DraftPhoto</code>, <code>newId</code> and <code>processPhoto</code> and orchestrates pick → process → report. It is a feature component: move to <code>src/features/econsult/components/PhotoPicker.tsx</code>, or give it its own <code>PhotoState</code> prop type and let the screen map from <code>DraftPhoto</code>.</li>
+<li><code>src/app/dev-settings.tsx:54-83</code> — seven exported pure helpers (<code>practiceLabelFor</code>, <code>latencyFor</code>, <code>withFault</code>, …) live in a route file and are imported by the test through the screen module. They belong beside the env parsers (<code>src/lib/devSettings.ts</code>) or in <code>src/features/devSettings/options.ts</code>; routes should export only the screen and <code>unstable_settings</code>.</li>
+<li><code>src/features/econsult/recipients.ts:3</code> ↔ <code>useRecipients.ts:5</code> — a two-way import (<code>recipients.ts</code> takes the <code>RecipientsResult</code> type from the hook; the hook takes <code>joinRecipients</code> from <code>recipients.ts</code>). Type-only in one direction so it is safe today; define <code>RecipientsResult</code> in <code>recipients.ts</code> (pure model) and have the hook import it.</li>
+</ol>
+<p>Smaller notes: <code>src/components/StatusViews.tsx</code> is the only multi-component file (three exports), and <code>src/lib/network.tsx</code> will need the banner copy once W2 moves the announcement (keep copy in <code>lib</code>, not <code>components</code>).</p>
+<p><strong>Possibly dismissed:</strong> none — the log holds three structured dismissals (T001-C1 <code>jest.setup.ts:1</code>, T001-C3 <code>package.json</code> coverage script, T001-C4 <code>expo-env.d.ts</code>), none of which overlaps a finding above.</p>
+<p><strong>Summary:</strong> The implementation meets the spec end to end: every numbered behaviour, edge case and success criterion maps to code and a behaviour-named test, all 22 tasks and nine amendments are reflected in the tree, the pre-feature snapshot lost nothing the spec did not declare, the three hand-in documents are truthful to the code (checked claim by claim, including the &quot;no <code>fetch(</code>&quot; and &quot;no <code>expo-file-system</code>&quot; assertions), and every runtime claim I could test against node_modules held. Fix W1 first (lock Change/back/Home while <code>submit.isPending</code>, one hook and one prop), then W2 (announce the offline transition from <code>NetworkProvider</code>, not per scaffold) and W3 (a catch in <code>pick()</code>); W4–W6 are standards and evidence polish. Done well: the reducer&#39;s <code>pickId</code> supersede logic, the timeout helper&#39;s signal-based decision, the partial-failure outcome model, and the screen tests that drive real navigation through <code>renderRouter</code> with a preset draft.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/final-r1.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

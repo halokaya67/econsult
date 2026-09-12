@@ -1,0 +1,30 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 26 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Questions"
+    @e5 [navigation-bar] "Questions"
+      @e6 [button] "Questions"
+      @e7 [text] "Message"
+    @e8 [other] "Vertical scroll bar, 1 page"
+      @e9 [other] "STEP 3 OF 3"
+        @e10 [scroll-area] "STEP 3 OF 3" [scrollable]
+          @e11 [text] "STEP 3 OF 3"
+          @e12 [text] "Your message"
+          @e13 [text] "To: Dr. J. de Vries"
+          @e14 [button] "Change"
+          @e15 [text] "What would you like to ask?"
+          @e16 [text] "What helps your GP: where it is, since when, and what you have already tried."
+          @e17 [other] "What would you like to ask?"
+            @e18 [text-view] [editable] [same label as parent]
+              @e19 [other] "Vertical scroll bar, 1 page"
+              @e20 [other] "Horizontal scroll bar, 1 page"
+          @e21 [text] "Add a photo if it helps, for example of a rash or a wound."
+          @e22 [text] "The camera isn't available on this device. You can choose a photo from your library."
+          @e23 [button] "Choose from library"
+          @e24 [button] "Send"
+          @e25 [other] "Vertical scroll bar, 1 page"
+          @e26 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]

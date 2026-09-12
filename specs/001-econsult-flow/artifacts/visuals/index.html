@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulator previews — 001-econsult-flow</title>
+<meta name="description" content="The thirteen simulator runs behind the six steps that added a screen: what each run found, which fix followed and the run that finally passed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--ground:#F6F8F8;--surface:#FFFFFF;--ink:#16262B;--muted:#55686D;--line:#D6DFE1;--accent:#0F6B75;--accent-soft:#E3F1F2;--accent-ink:#0B4E56;--warm:#A8681A;--warm-soft:#FBF1E3;--code-bg:#EEF3F4;--shadow:0 1px 0 rgba(22,38,43,.06);color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--ground:#0F1719;--surface:#152124;--ink:#E4ECED;--muted:#9BB0B4;--line:#263539;--accent:#66C7D0;--accent-soft:#16333A;--accent-ink:#A7E3E8;--warm:#E0A650;--warm-soft:#2E2515;--code-bg:#1B292D;--shadow:none;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+.shell{max-width:940px;margin:0 auto}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+header.head{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:26ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+h2{font-size:22px;line-height:1.3;font-weight:800;letter-spacing:-.01em;margin:44px 0 6px;text-wrap:balance}
+.step-id{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--accent-ink);font-weight:500;margin:0}
+p{margin:0 0 14px;max-width:72ch}
+.shows{color:var(--muted);font-size:15px;margin:0 0 14px}
+ul{padding-left:1.3em;margin:0 0 16px;max-width:72ch}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+.runs{list-style:none;padding:0;margin:0 0 8px;max-width:none;display:grid;gap:12px}
+.runs li{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:14px 18px;margin:0}
+.runs .top{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:0 0 4px}
+.runs .top a{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:14px;font-weight:500}
+.note{margin:0;color:var(--muted);font-size:15px;max-width:70ch}
+.badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;border-radius:99px;padding:2px 9px;border:1px solid var(--line);color:var(--muted)}
+.badge-fail{background:var(--warm-soft);border-color:var(--warm);color:var(--warm)}
+.badge-pass{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.badge-final{background:var(--accent);border-color:var(--accent);color:var(--ground)}
+footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Flow record · 001-econsult-flow · Simulator previews</p>
+    <h1>Simulator previews, step by step</h1>
+    <p class="lede">Six of the twenty-two steps added a screen. Each of those was driven on an iPhone 17 simulator before it was allowed to pass, at the default text size and at the largest accessibility size. Where a run found a defect, the fix was made and the screen re-driven until it passed.</p>
+  </header>
+  <main>
+
+    <p><a href="../index.html">← Back to the record</a></p>
+    <p>Every page below is the evidence page the run itself produced: annotated screenshots with the measurements they were read from. The runs are listed in the order they happened, and the last one in each list is the page the progress board links to. The board reaches them as <code>T015.html</code> to <code>T020.html</code>, which are copies of those final pages.</p>
+
+    <p class="step-id">T015</p>
+    <h2>App shell: providers, root stack, home screen, the flow group with placeholder screens, and the test flow layout</h2>
+    <p class="shows">Final page: home at the default and largest text sizes, plus the first-step placeholder.</p>
+    <ul class="runs">
+      <li>
+        <p class="top"><a href="T015-phone.html">T015-phone</a> <span class="badge badge-final">final</span></p>
+        <p class="note">Home renders cleanly at both text sizes. One defect reported: the placeholder first step shows a header with a title and no back control, so the invisible edge-swipe gesture is the only way out. The lead carried it forward to T016, which builds the header Home button.</p>
+      </li>
+    </ul>
+
+    <p class="step-id">T016</p>
+    <h2>Step 1, the recipient screen</h2>
+    <p class="shows">Final page: the header re-check at the largest text size after the font-scale cap.</p>
+    <ul class="runs">
+      <li>
+        <p class="top"><a href="T016-phone.html">T016-phone</a></p>
+        <p class="note">Seven captures of the loaded, loading, error, empty and preselected list. Two defects flagged: the header Home label is clipped to about half its glyph height at the largest text size, and the Continue hint is announced even when Continue is enabled.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T016-phone-recheck.html">T016-phone-recheck</a> <span class="badge badge-final">final</span></p>
+        <p class="note">Re-check after capping that one button's font scaling at 1.3, the way iOS caps its own bar buttons: the label now reads in full, with no defects. This also closes the flag T015 carried forward, because the Home control is the step's visible way out.</p>
+      </li>
+    </ul>
+
+    <p class="step-id">T017</p>
+    <h2>Step 2, the questions screen</h2>
+    <p class="shows">Final page: scroll-to-field lands the label 16 pt from the top with its error directly beneath, at both text sizes.</p>
+    <ul class="runs">
+      <li>
+        <p class="top"><a href="T017-phone.html">T017-phone</a></p>
+        <p class="note">Reported, not fixed. At the largest text size an invalid submit leaves the error above the top of the viewport with no scroll, so the tap looks like it did nothing; and the error text is not attached to any accessibility element, so a screen reader never reaches it.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T017-phone-recheck.html">T017-phone-recheck</a> <span class="badge badge-fail">fail</span></p>
+        <p class="note">The error now folds into the question label's accessible name, but the scroll still never fires — and it throws. Measuring a view under the New Architecture needs a host instance, not the numeric node handle the first fix passed in.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T017-phone-recheck2.html">T017-phone-recheck2</a> <span class="badge badge-fail">fail</span></p>
+        <p class="note">The scroll now lands to the pixel and the warning is gone, but the error is still rendered after the radio options, which alone fill more than the viewport — so at the largest size the label it scrolled to and the error it scrolled for are never on screen together.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T017-phone-recheck3.html">T017-phone-recheck3</a> <span class="badge badge-pass">pass</span> <span class="badge badge-final">final</span></p>
+        <p class="note">With the error moved directly under the question label, the label lands 16 pt below the viewport top and the red error text is fully inside the viewport. The default text size is unchanged and clean.</p>
+      </li>
+    </ul>
+
+    <p class="step-id">T018</p>
+    <h2>Step 3, the message screen with photo and sending</h2>
+    <p class="shows">Final page: the re-check at the largest and default text sizes after the scroll-anchor fix. The first run's gallery covers pristine, keyboard, photo, sending and create failure.</p>
+    <ul class="runs">
+      <li>
+        <p class="top"><a href="T018-phone.html">T018-phone</a> <span class="badge badge-fail">fail</span></p>
+        <p class="note">Seven of eight declared states render correctly. The eighth does not: an empty Send at the largest text size scrolls the input to the top, which pushes the field's own label 592 pt above the viewport and leaves the user looking at an unlabelled red box. The offline state could not be reached here and was deferred to T020, which builds the toggle for it.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T018-phone-recheck.html">T018-phone-recheck</a> <span class="badge badge-pass">pass</span> <span class="badge badge-final">final</span></p>
+        <p class="note">All three re-checks pass. The label now lands 16 pt below the viewport top after an invalid submit, the default size no longer scroll-jumps at all, and the multiline box grows with the font scale to 471 pt.</p>
+      </li>
+    </ul>
+
+    <p class="step-id">T019</p>
+    <h2>The confirmation screen</h2>
+    <p class="shows">Final page: a failed photo retry reporting itself inside the alert at both text sizes. The first run's gallery covers sent, photo attached, partial failure, back blocked and Done.</p>
+    <ul class="runs">
+      <li>
+        <p class="top"><a href="T019-phone.html">T019-phone</a> <span class="badge badge-fail">fail</span></p>
+        <p class="note">Eight of nine declared states render correctly. The ninth does not: after a failed “Try again” the alert is unchanged and nothing is announced, because a failed upload is an outcome rather than an exception, so the error path the screen renders never runs.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T019-phone-recheck.html">T019-phone-recheck</a> <span class="badge badge-pass">pass</span> <span class="badge badge-final">final</span></p>
+        <p class="note">The retry that resolves as failed is now its own visible outcome: the alert gains a plain-language line, a second tap does not duplicate it, and both controls remain. Verified at the default and largest text sizes.</p>
+      </li>
+    </ul>
+
+    <p class="step-id">T020</p>
+    <h2>Developer settings screen</h2>
+    <p class="shows">Final page: the switch row wrapping and centring at the largest size, and Cancel leaving the modal without applying. The first run's gallery covers the practice switch and the offline message step.</p>
+    <ul class="runs">
+      <li>
+        <p class="top"><a href="T020-phone.html">T020-phone</a> <span class="badge badge-fail">fail</span></p>
+        <p class="note">Five of six scenarios pass, including the offline state deferred from T018 — the banner shows, Send is disabled and reads are still served from the cache. The sixth fails: at the largest text size the “Force offline” label neither shrinks nor wraps, so it pushes the native switch past the right edge of the screen. Two smaller notes: the switch paints high of its label, and the modal has no exit but Apply.</p>
+      </li>
+      <li>
+        <p class="top"><a href="T020-phone-recheck.html">T020-phone-recheck</a> <span class="badge badge-pass">pass</span> <span class="badge badge-final">final</span></p>
+        <p class="note">All three checks pass. The label wraps, the switch sits fully inside the screen with its rounded cap intact and is centred on the row to within half a point at both text sizes, and the new Cancel button leaves the modal without applying the draft.</p>
+      </li>
+    </ul>
+
+    <h2>Steps without a preview</h2>
+    <p>The other sixteen steps built contracts, transport, services, state, hooks, validation, the send pipeline, photo processing and the shared components. None of them put a new screen on the device, so the plan declared no visual for them and they were verified by their tests, types and lint alone.</p>
+
+  </main>
+  <footer class="foot">Thirteen evidence pages, one per run, with their screenshots embedded. Each page is a copy of what the run produced at the time.</footer>
+</div>
+</html>

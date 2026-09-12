@@ -1,0 +1,140 @@
+<meta charset="utf-8">
+<title>Spec review, round 5</title>
+<meta name="description" content="Verdict: PASS_WITH_FLAGS. 0 warnings, 2 information items.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · spec round 5</p>
+    <h1>Spec review, round 5</h1>
+    <p class="lede">Verdict: PASS_WITH_FLAGS. 0 warnings, 2 information items.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: a5fc3c6c06d601007
+mode: spec · round: 5 · reviewed head: 32db7de (working tree) · previous rounds: checker/spec-r1.md to checker/spec-r4.md · dispatched in the foreground (recorded as completed in flow-dispatches.jsonl)</p>
+<h2 id="spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</h2>
+<p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
+<p><strong>Reviewed:</strong> 3/3 in-scope files read in full (<code>specs/001-econsult-flow/spec.md</code> and <code>how-it-works.md</code> from the working tree, <code>checker/spec-r4.md</code>; plan.md not opened, out of scope for mode spec; research.md and the brief grepped, not read whole) · diff: n/a (mode spec) · head: 32db7de, working tree <code>M spec.md</code>, <code>M how-it-works.md</code> (+2 html; 5 untracked plan/checker files); the fix-delta <code>git diff -U0</code> on the two docs is 2 files, +10/−8, reviewed line by line · canon cited: workflow.md (Coding Canon: KISS/YAGNI) · searches (local Grep/sed only; Sourcegraph not configured; no cross-repo consumers — standalone take-home repo, spec.md:66): decisions log <code>wc -l</code> → 1 entry, <code>grep -ic dismiss</code> → 0; <code>git diff --stat f39fb58..HEAD -- . &#39;:!specs&#39;</code> → empty (how-it-works snapshot still equals the app); expo <code>runtime.native.ts:38-53</code> read → <code>useRnFetch</code> :41-42, <code>install(&#39;fetch&#39;)</code> :44-52; <code>fetch/fetch.ts:74-92</code> read → :77-78 pre-aborted <code>FetchError { cause: signal.reason }</code>, :83-84 <code>response.abort()</code> + <code>request.cancel()</code>, :90 <code>createFromError</code>; <code>fetch/FetchResponse.ts:180-200</code> read → :183-189 reason-else-<code>DOMException(&#39;AbortError&#39;)</code>; <code>AbortError</code> in <code>fetch/__tests__/FetchResponse-test.ts</code> → 5 (:146, :153, :156, :161, :175); <code>Fetch request has been canceled</code> in <code>expo/ios/Fetch</code> + <code>android/.../fetch</code> → 2 (FetchExceptions.swift:13, FetchExceptions.kt:11); <code>fetch/FetchErrors.ts</code> read whole → prefix <code>fetch failed: </code>, <code>createFromError</code> copies <code>error.cause</code> (native exception carries none); <code>convertFormData.ts:33-37,70-78</code> → :35-36 comment, :77 throw; <code>AbortSignal.ts:7-15</code> → :9-14 patch, <code>TimeoutError</code> → 1 (:23); <code>reason</code> in <code>abort-controller/dist/abort-controller.js</code> → 0; <code>createUploadTask</code> in <code>expo-file-system/build/File.d.ts</code> → 2 (:135 doc, :145 decl), version 57.0.7; <code>bundledNativeModules.json</code> → image-manipulator :53 <code>~57.0.17</code>, image-picker :54 <code>~57.0.17</code>, network :72 <code>~57.0.2</code>; brief <code>photo|attach|upload</code> → 5 (:45-46, :53, :75, :197); research.md <code>aspectRatio|asset.width|getSize|width: 1600</code> → 3 (:221, :1224, :1275), <code>photo.*width|preview.*height</code> → 4 (:32 keeps <code>{ uri, width, height }</code> &quot;in state for the preview&quot;, :50, :937, :1355); spec.md <code>aspect|preview</code> → 4 (:44, :57, :105, :186 — no sizing rule anywhere), <code>AbortError|TimeoutError|signal</code> → 3 (:42, :59, :147)</p>
+<div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>r4 W1 — expo/fetch abort shape mis-stated for the mid-flight path</td><td>RESOLVED</td><td>how-it-works.md:86 now separates the three shapes: pre-aborted <code>FetchError(..., { cause: signal.reason })</code> (<code>fetch.ts:77-78</code> confirmed), in-flight cancel <code>FetchError(&quot;fetch failed: Fetch request has been canceled&quot;)</code> with no <code>cause</code> (FetchExceptions.swift:13 / .kt:11 via <code>fetch.ts:90</code>; <code>createFromError</code> copies <code>error.cause</code>, which the native exception does not set), post-headers <code>signal.reason</code> else <code>DOMException</code> <code>AbortError</code> (<code>FetchResponse.ts:183-189</code>; test :146-153); polyfill has no <code>reason</code> (0 hits); <code>convertFormData.ts:35-36,77</code> correct; Sources :111 lists the files. spec.md:59 now decides on <code>signal.aborted</code> in the helper&#39;s catch, not on class or <code>cause</code>, and maps any rejection under that signal to the timeout error — matches the runtime.</td></tr><tr><td>r4 W2 — Preparing block controls unstated</td><td>RESOLVED</td><td>spec.md:105: once picked, both source actions are replaced by the block state (&quot;Preparing photo&quot; + labelled &quot;Remove photo&quot;, then preview + the same button); Remove is the only way to replace and returns the two source actions; the draft records on the picker returning an asset (not the tap); a pick after Remove supersedes via <code>pickId</code>. :126 mirrors it (source actions hidden while preparing, Remove shows them again, result ignored unless <code>pickId</code> matches). Different route from the r4 suggestion (actions hidden rather than kept), same outcome: one control set per state for the AC4/SC3 tests. Agrees with :44 (&quot;can be removed&quot;), :123 (permission-denied explanation only appears while the actions are shown, i.e. with no photo), :125 (pick → remove → pick, last wins), :140 (<code>hasPhoto</code> true from <code>preparing</code>).</td></tr><tr><td>r4 I1 — failed processing state implied</td><td>RESOLVED</td><td>spec.md:127: failure moves the draft to <code>ready</code> with the picker&#39;s original <code>uri</code>, <code>width</code>, <code>height</code>, &quot;there is no failed status&quot;, dev warning logged. Consistent with the :126 union and :44.</td></tr><tr><td>r4 I2 — zero-dimension fallback could upscale</td><td>RESOLVED</td><td>spec.md:128 drops the <code>{ width: 1600 }</code> fallback: on a 0 width or height <code>processPhoto</code> skips the downscale, keeps the original asset with a dev warning, &quot;the same outcome as a processing failure&quot;. No longer relies on the unverified upscale behaviour (research.md:1275). Introduces one follow-on ambiguity — new I2 below.</td></tr></tbody></table></div>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>I1</td><td>INFO</td><td>consistency</td><td>spec.md:147</td><td>The timeout rationale still keys on error identity (&quot;aborts with a <code>TimeoutError</code> reason; one <code>AbortError</code> path keeps the fake&#39;s abort and the timeout identical&quot;) while :59 now says the helper never inspects the error&#39;s class or <code>cause</code></td></tr><tr><td>I2</td><td>INFO</td><td>ambiguity</td><td>spec.md:128</td><td>The 0-dimension path and the failure path land a <code>ready</code> photo whose <code>width</code> or <code>height</code> can be 0, and no line says how the preview is sized; the research&#39;s stated reason for carrying those fields is the preview</td></tr></tbody></table></div>
+<h3>I1 — Two stories for how a timeout is recognised</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:147</code> (also :59, :42)</li>
+<li><strong>Finding:</strong> :147 justifies <code>AbortController</code> + <code>setTimeout</code> over <code>AbortSignal.timeout</code> with two reasons: (a) <code>timeout()</code> &quot;aborts with a <code>TimeoutError</code> reason; one <code>AbortError</code> path keeps the fake&#39;s abort and the timeout identical&quot;, and (b) no dependence on the runtime patch under jest. The round-4 fix to :59 made the timeout helper decide &quot;on its own aborted signal in its catch rather than on the error&#39;s class or <code>cause</code>&quot;. Under that rule, what the abort rejects with — <code>AbortError</code> from the fake (:42), <code>TimeoutError</code>, <code>FetchError</code> — is never inspected, so reason (a) no longer explains anything, and a reader of DECISIONS.md (where :147 and :59 are both headed) gets one paragraph saying the error identity matters and another saying it does not. Reason (b) still stands on its own.</li>
+<li><strong>Why:</strong> Not a behavioural contradiction — both sentences can be implemented together — but a stale rationale in the decision record, which the brief&#39;s reviewer reads before the session. Round 4 introduced the :59 rule through its own suggested fix and did not carry it into :147 (which was itself a round-3 edit written when the class still mattered), so this is fix-delta, not a miss of earlier rounds.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>spec.md:147 — replace "implemented with `AbortController` plus `setTimeout` rather than
+`AbortSignal.timeout`, which Expo's runtime does patch in but which aborts with a `TimeoutError`
+reason; one `AbortError` path keeps the fake's abort and the timeout identical and does not depend
+on the runtime patch being present under jest." with:
+"implemented with `AbortController` plus `setTimeout` rather than `AbortSignal.timeout`: the helper
+owns the controller whose `signal.aborted` it checks in its catch (see The Contract), so neither the
+fake's `AbortError` nor a real transport's `FetchError` is ever inspected, and nothing depends on
+Expo's runtime patch being present under jest."</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I2 — A <code>ready</code> photo may now carry a 0 dimension, and the preview&#39;s sizing rule is unstated</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> ambiguity</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:128</code> (also :126, :127, :44)</li>
+<li><strong>Finding:</strong> :128 keeps the original asset when the picker reports <code>width</code> or <code>height</code> of 0, &quot;the same outcome as a processing failure&quot;, and :127 defines that outcome as <code>ready</code> with &quot;the picker&#39;s original <code>uri</code>, <code>width</code> and <code>height</code>&quot;. So the draft&#39;s <code>{ status: &#39;ready&#39;, pickId, uri, width, height }</code> (:126) can hold a 0. The spec names those two fields but never says what reads them; the only use on record is research.md:32, which keeps <code>{ uri, width, height, … }</code> in state &quot;for the preview&quot;. A preview sized from them (<code>aspectRatio: width / height</code>, or explicit <code>width</code>/<code>height</code> style) collapses to zero size or NaN on exactly this path, and the patient sees no photo while Send is enabled and the upload goes ahead. Before round 4 the fallback still ran the manipulator, so <code>ready</code> always carried the output&#39;s real dimensions; the r4 I2 suggestion offered &quot;keep original&quot; without tracing where the 0 lands — fix-delta.</li>
+<li><strong>Why:</strong> Rare path (the picker documents 0 as possible, research.md:50), so INFO; but the spec should say either how the preview is sized regardless of the draft&#39;s numbers, or that nothing reads <code>width</code>/<code>height</code> — in which case the fields are speculative and should go (canon: workflow.md, KISS/YAGNI).</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>spec.md:126 — after "`{ status: 'ready', pickId, uri, width, height }`" add:
+"; the preview renders at the block's fixed height with `contentFit: 'contain'` and never sizes
+itself from `width`/`height`, so a `ready` photo with a 0 dimension (:127, :128) still shows"</code></pre>
+Alternative if nothing else reads them: drop <code>width</code> and <code>height</code> from the <code>ready</code> shape at :126 and :127 and keep only <code>uri</code>.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
+<p><strong>Summary:</strong> All four round-4 flags are resolved in the working-tree text and verified against the Expo 57 runtime on disk, and the photo-block edits at :44, :105, :125-128 and :140 now tell one story (source actions replaced once picked, Remove the only way back, <code>preparing</code>/<code>ready</code> with <code>pickId</code>, failure and 0-dimension both landing in <code>ready</code> with the original asset). The two leftovers are fix-delta polish, not blockers: align the :147 timeout rationale with the signal-based rule :59 now states, and say how the preview is sized so a 0-dimension <code>ready</code> photo cannot render as nothing (the :3 header also still reads &quot;rounds 1 to 3&quot;). Done well: the how-it-works.md:86 runtime paragraph is now precise enough to be copied into DECISIONS.md as-is, with every citation matching the source.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/spec-r5.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

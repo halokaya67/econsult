@@ -1,0 +1,178 @@
+<meta charset="utf-8">
+<title>Final review, round 3 (closing)</title>
+<meta name="description" content="Verdict: PASS_WITH_FLAGS. 2 warnings, 4 information items.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · final round 3</p>
+    <h1>Final review, round 3 (closing)</h1>
+    <p class="lede">Verdict: PASS_WITH_FLAGS. 2 warnings, 4 information items.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-final-round-3-closing">Spec-Checker Report — mode: final (round 3, closing)</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: a94a3f144e2a21c3e
+mode: final · round: 3 (closing) · reviewed head: bfe019d · base: f39fb58 · previous rounds: final-r1 (checker/final-r1.md), final-r2 (checker/final-r2.md), spec-r1..r5, plan-r1..r3 · dispatched in the foreground (recorded as completed in flow-dispatches.jsonl)</p>
+<h2 id="spec-checker-report-mode-final-round-3-closing">Spec-Checker Report — mode: final (round 3, closing)</h2>
+<p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
+<p><strong>Reviewed:</strong> 120/133 files (cumulative over rounds 1–3; this round re-read in full the four files <code>bfe019d</code> touched — <code>src/app/econsult/message.tsx</code>, <code>src/__tests__/app/econsult/message.test.tsx</code>, <code>src/components/PhotoPicker.tsx</code>, <code>AI-USAGE.md</code> — plus <code>src/features/econsult/useSubmit.test.tsx</code>, <code>src/app/econsult/recipient.tsx:92-104</code>, <code>spec.md:105,140-141,203</code>, <code>README.md:113,131-135</code>) · <code>base: f39fb58 · head: bfe019d</code> · <code>133 files changed, 34806 insertions(+), 2294 deletions(-)</code> (28 commits; the one since round 2, <code>bfe019d</code>, read in full via <code>git show</code>) · canon cited: <code>rules/workflow.md</code> (size caps, explicit errors, testing bar), <code>rules/comments.md</code>, <code>rules/javascript.md</code>, repo <code>AGENTS.md</code> (functions under 50 lines) · Sourcegraph not configured: local tree only · verify evidence read: <code>verify/finish-6/</code> → format clean, typecheck clean, lint clean, coverage 41 suites / 268 tests, All files 100/100/100/100; <code>finish-6/jest.log</code> 18 suites / 103 tests for <code>__tests__/app</code> + <code>components</code> · decisions log (57 lines): <code>grep -in dismiss</code> → 1 (T001 C1/C3/C4, none in scope) · <code>verify_fix_commit</code> → 3, all read (line 57 records <code>bfe019d</code> as the &quot;second and last fix round&quot;) · searches: <code>git diff --name-only</code> → 133 · <code>git status --porcelain</code> → 2 untracked (<code>checker/final-r1.md</code>, <code>checker/final-r2.md</code>) · <code>router.(replace|dismissTo|back|push)|navigation.dispatch</code> non-test → 12 sites, exactly one REPLACE dispatcher (<code>message.tsx:131</code>) and one re-dispatch (<code>:275</code>) · docs grep <code>lock|in flight|while sending</code> → <code>AI-USAGE.md:10-11</code> only · TODO/FIXME/console/debugger non-test → 1 (<code>src/lib/devWarn.ts:8</code>, the designated <code>console.warn</code> helper) · <code>any</code> → 0 · catch sites non-test → 6, each acts (<code>message.tsx:132</code> drops the status line, <code>sent.tsx:50</code> announces, <code>submit.ts:42</code> rethrows non-API errors, <code>PhotoPicker.tsx:162</code> warns + note, <code>photo.ts:44</code> warns + returns original, <code>transport.ts:43</code> rethrows) · files over 800 lines → 0 (max non-test 317 <code>message.tsx</code>, max test 329) · brace-matched function-length scan over 46 non-test files → 0 over 50 (nearest the cap: <code>DevSettingsScreen</code> 48, <code>QuestionsScreen</code> 48, <code>RecipientScreen</code> 48, <code>PhotoPicker</code> 47) · inline comment blocks over 2 sentences → 0 · <code>allowFontScaling</code> → 0; <code>maxFontSizeMultiplier</code> → none added by <code>bfe019d</code> · <code>Accessibility Inspector</code> in <code>ui-verification/*</code> → 0 files; no <code>finish</code> UI-verify directory exists yet · <code>not wrapped in act</code> across <code>verify/*</code> → finish-2, finish-3, finish-4b, finish-6 (absent finish-1, finish-4a, finish-5) · node_modules facts: <code>expo-router/build/react-navigation/core/useOnPreventRemove.js:44-79</code> (<code>:67</code> adds the route key to <code>VISITED_ROUTE_KEYS</code> before the screen&#39;s listener runs at <code>:68-73</code>; <code>:58-61</code> skips it on re-entry), <code>core/useNavigationCache.js:101-105</code> (<code>{ source: route.key, ...action }</code> — the spread keeps the symbol-keyed visited set and the action&#39;s <code>target</code>), <code>core/useOnAction.js:67-79</code>, <code>global-state/getNavigationAction.js:33-41,91</code> (<code>target: navigationState.key</code>, the lowest navigator), <code>expo-router/react-navigation.js</code> → <code>./build/react-navigation</code> and <code>build/useNavigation.js:7</code> → <code>./react-navigation/native</code> (both hooks share the vendored context) · 4 probe runs of <code>message.test.tsx</code> from a scratchpad copy of the tree with <code>node_modules</code> symlinked (nothing written to the repo; <code>git status</code> unchanged afterwards), detailed under W8</p>
+<p><strong>Files:</strong> the same 133-file list as round 1 (<code>checker/final-r1.md</code>) plus <code>src/test/handled.ts</code>; <code>bfe019d</code> touched only <code>AI-USAGE.md</code>, <code>src/__tests__/app/econsult/message.test.tsx</code>, <code>src/app/econsult/message.tsx</code>, <code>src/components/PhotoPicker.tsx</code> (<code>git show --stat</code>). The same 13 files NOT REVIEWED in full: <code>package-lock.json</code>; <code>specs/001-econsult-flow/artifacts/{how-it-works,plan,research,spec}.html</code>; <code>checker/spec-r1..r4.md</code>; <code>checker/plan-r1..r2.md</code>; <code>plan.md</code> (read in part); <code>research.md</code> (headers).</p>
+<p>Locations below are relative to the repository root.</p>
+<h3>Prior flags</h3>
+<div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>W1 — navigation live while sending</td><td>RESOLVED (r2)</td><td>unchanged at head: <code>message.tsx:274-276</code> lock, Change <code>:287</code>, picker <code>:291</code>; <code>message.test.tsx:182-196</code></td></tr><tr><td>W2 — announcement per scaffold</td><td>RESOLVED (r2)</td><td>unchanged: <code>network.tsx</code>, <code>ScreenScaffold.tsx</code> not in <code>bfe019d</code></td></tr><tr><td>W3 — <code>pick()</code> swallowed failures</td><td>RESOLVED (r2)</td><td><code>PhotoPicker.tsx:147-166</code> try/catch intact after the W9 extraction</td></tr><tr><td>W4 — <code>RecipientScreen</code> 70 lines</td><td>RESOLVED (r2)</td><td>scan: <code>RecipientScreen</code> 48 lines at head</td></tr><tr><td>W5 — three-sentence comment</td><td>RESOLVED (r2)</td><td>scan: 0 blocks over 2 sentences</td></tr><tr><td>W6 — SC3 Accessibility Inspector evidence</td><td>DEFERRED to finish:ui-verify (still open)</td><td><code>spec.md:203</code> names the audit; <code>README.md:113</code> tells reviewers to run it; grep → 0 reports mention it. The UI stage must drive: Xcode &gt; Open Developer Tool &gt; Accessibility Inspector &gt; Audit on Home, step 1 (loaded and empty), step 2, step 3 (pristine and with the error shown), Sent (partial variant), Developer settings; record the result per screen — or amend SC3 and DECISIONS.md to name the agent-device a11y dump as the audit</td></tr><tr><td>W7 — partial review</td><td>STILL OPEN (restated below)</td><td>13 files, none touched by <code>bfe019d</code></td></tr><tr><td>W8 — lock survives its own <code>router.replace</code> by ordering</td><td>RESOLVED</td><td><code>message.tsx:274-276</code> <code>usePreventRemove(isSending, ({ data }) =&gt; { if (data.action.type === &quot;REPLACE&quot;) navigation.dispatch(data.action); })</code> — the re-dispatched action carries the visited set with the message key already added (<code>useOnPreventRemove.js:67</code> runs before <code>:68-73</code>), so the second pass skips it at <code>:58-61</code> and <code>useOnAction.js:79</code> sets state. Comment <code>:272-273</code> now states the real guarantee (&quot;A replace is re-dispatched instead, so reaching the confirmation never depends on which render the lock is read from&quot;) and the old &quot;can never land on top of&quot; sentence is gone. Test <code>message.test.tsx:198-210</code> read in full: arranges a pushed screen at <code>SEND_LATENCY_MS = 120</code> (<code>:66-68</code>), presses Send, acts <code>router.replace(&quot;/econsult/sent&quot;)</code>, asserts pathname synchronously and then the <code>SentProbe</code> reading <code>econsultId</code> from the still-mounted provider. Discriminating by probe: (A) bare lock <code>() =&gt; {}</code> → this test is the only failure of 17, at <code>:208</code> with <code>Received: &quot;/econsult/message&quot;</code>; (C) current fix with <code>router.replace</code> moved ahead of the <code>attachmentSettled</code> dispatch (<code>:130-131</code> swapped) → 17/17 green, which is the ordering independence the comment promises; (D) bare lock + swapped order → the same single failure; (E) real code in the copy → 17/17. Note for the record: in (D) the 120 ms <code>router.back()</code> test at <code>:182-196</code> still passed, so under jest the real screen&#39;s <code>onSuccess</code> updates (<code>:105-108</code>) also batch the lock down — round 2&#39;s blocking case was a minimal screen; the fix makes the question moot by construction</td></tr><tr><td>W9 — <code>PhotoPicker</code> 60 lines</td><td>RESOLVED</td><td><code>PhotoPicker.tsx:113-134</code> <code>SourceButtons</code> (22 lines), <code>PhotoPicker</code> <code>:136-182</code> = 47 lines (brace-matched scan); <code>disabled</code> still reaches both buttons and the camera-unavailable note branch is unchanged. <code>PhotoPicker.test.tsx</code> not touched (queries by role and label: <code>:55-56,65,68,73</code>) and PASS in <code>finish-6/jest.log</code></td></tr><tr><td>I1 — dead <code>reset</code>, unused <code>FixturePracticeId</code></td><td>RESOLVED (r2)</td><td>unchanged</td></tr><tr><td>I2 — <code>handled()</code> copied thrice</td><td>RESOLVED (r2)</td><td>unchanged</td></tr><tr><td>I3 — camera denial shows library copy</td><td>RESOLVED (r2)</td><td><code>PhotoPicker.tsx:106</code></td></tr><tr><td>I4 — Retry not disabled offline</td><td>RESOLVED (r2)</td><td><code>message.tsx:253</code></td></tr><tr><td>I5 — structure</td><td>DEFERRED (separate restructuring pass, still open)</td><td>all four unchanged at head: <code>src/lib/devSettings.tsx:10-11</code> imports <code>@/api/fake/*</code>, <code>:26</code> <code>PATIENT</code>, <code>:77</code> <code>ServicesContext</code>, <code>:113-117</code> <code>useServices</code>/<code>useSession</code>; <code>src/components/PhotoPicker.tsx:6</code> imports the feature&#39;s <code>DraftPhoto</code>; <code>src/app/dev-settings.tsx</code> exports 7 functions; <code>recipients.ts:3</code> ↔ <code>useRecipients.ts:5</code> type-only cycle</td></tr><tr><td>I6 — Home → Discard driven only via <code>router.back()</code></td><td>DEFERRED to finish:ui-verify (still open)</td><td><code>recipient.tsx:95-103</code> unchanged. Drive: step 1 → Continue → type a message on step 3 → Change (back to step 1) → header Home → Discard → expect Home. No code change expected</td></tr><tr><td>I7 — AI-USAGE checker record stops at the plan</td><td>RESOLVED</td><td><code>AI-USAGE.md:9-12</code> now records the final review (&quot;ran two rounds … fixed in one commit: the navigation lock while sending, a single offline announcement and the photo-picker error path, then making that lock timing-independent&quot;), accurate for <code>8ecfbb7</code> and <code>bfe019d</code>. Follow-on in I8: the count turns stale once this round&#39;s report is archived, and <code>final-r1.md</code>/<code>final-r2.md</code> are still untracked</td></tr></tbody></table></div>
+<h3>Requirement coverage (compact; changes since round 2 noted)</h3>
+<div class="wide"><table><thead><tr><th>Ids</th><th>Status</th></tr></thead><tbody><tr><td>U1 U2 U3 U4</td><td>met</td></tr><tr><td>A1–A10</td><td>met</td></tr><tr><td>C1–C6</td><td>met</td></tr><tr><td>B1 B2</td><td>met</td></tr><tr><td>S1 S2 S3 S5</td><td>met</td></tr><tr><td>S4</td><td>met — changed: the W8 condition is gone; the lock holds back/Change/Home and re-dispatches its own REPLACE, proven order-independent by probes A/C/D and <code>message.test.tsx:182-210</code></td></tr><tr><td>E1–E13, E15–E26</td><td>met</td></tr><tr><td>E14</td><td>met — I6 deferred to ui-verify, unchanged</td></tr><tr><td>P1 P2</td><td>met</td></tr><tr><td>SC1 SC2 SC4 SC5 SC6 SC8</td><td>met</td></tr><tr><td>SC7</td><td>met — now on <code>finish-6</code>: 268 tests, 100 % everywhere (one intermittent <code>act</code> warning in <code>useSubmit.test.tsx</code>, I9, pre-existing)</td></tr><tr><td>SC3</td><td>partially met — W6 deferred to ui-verify, unchanged</td></tr><tr><td>OOS</td><td>respected</td></tr><tr><td>Docs</td><td>met — I7 resolved; I8 notes the round count</td></tr></tbody></table></div>
+<p>Plan compliance for <code>bfe019d</code>: the four files belong to T018 (message screen), T014 (PhotoPicker) and T022 (docs); no unplanned file, no new export, no new dependency.</p>
+<h3>Fix-delta regression review of <code>bfe019d</code> (no flags)</h3>
+<p>Checked and clean: the callback re-dispatches only <code>REPLACE</code>, and the only REPLACE dispatcher in <code>src</code> is the send&#39;s own <code>message.tsx:131</code> (every other navigation is push, back, <code>dismissTo</code> = <code>POP_TO</code>), so back, swipe, hardware back and the step-1 Home button are still held (<code>message.test.tsx:192-194</code>); <code>useNavigation</code> from <code>expo-router</code> and <code>usePreventRemove</code> from <code>expo-router/react-navigation</code> resolve to the same vendored core; synchronous re-dispatch from inside <code>shouldPreventRemove</code> is the same pattern as <code>useDiscardGuard</code> (<code>recipient.tsx:95-103</code>), only without the Alert in between; the <code>SourceButtons</code> extraction keeps the <code>Device.isDevice</code> branch and passes <code>disabled</code> to both buttons; <code>SEND_LATENCY_MS</code> replaces the literal 50 in the existing lock test (<code>:185</code>) and the new test (<code>:200</code>), leaving the two &quot;moves to the confirmation&quot; tests at 0 ms as before; the <code>AI-USAGE.md</code> sentence is factual for both fix commits. Scans over <code>src/</code> after the commit: 0 TODO/console/debugger (outside <code>devWarn</code>), 0 <code>any</code>, 0 empty catch, 0 functions over 50 lines, 0 comments over two sentences, 0 files over 800 lines.</p>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W6</td><td>WARNING</td><td>tests</td><td><code>specs/001-econsult-flow/spec.md:203</code></td><td>SC3&#39;s Accessibility Inspector audit still has no recorded evidence — deferred to finish:ui-verify (restated)</td></tr><tr><td>W7</td><td>WARNING</td><td>coverage</td><td>13 <code>NOT REVIEWED</code> files above</td><td>Partial review of generated/rendered/prior-round artifacts (unchanged)</td></tr><tr><td>I5</td><td>INFO</td><td>consistency</td><td>four locations above</td><td>Structure items for the restructuring pass (unchanged)</td></tr><tr><td>I6</td><td>INFO</td><td>regression</td><td><code>src/app/econsult/recipient.tsx:95-103</code></td><td>Home → Discard path to be driven once in finish:ui-verify (restated)</td></tr><tr><td>I8</td><td>INFO</td><td>consistency</td><td><code>AI-USAGE.md:9</code>; <code>git status</code></td><td>&quot;ran two rounds&quot; is off by one once this report is archived; <code>checker/final-r1.md</code> and <code>final-r2.md</code> are still untracked</td></tr><tr><td>I9</td><td>INFO</td><td>tests</td><td><code>src/features/econsult/useSubmit.test.tsx:24-26,51-53</code></td><td>Intermittent &quot;not wrapped in act(...)&quot; from TanStack&#39;s deferred notification; pre-dates the fix commits (finish-2, -3, -4b, -6)</td></tr></tbody></table></div>
+<h3>W6 — SC3&#39;s Accessibility Inspector audit has no evidence (restated)</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:203</code>; <code>README.md:113</code></li>
+<li><strong>Finding:</strong> Unchanged since round 1: no report under <code>ui-verification/</code> mentions the audit (grep → 0), and no finish UI-verify run exists yet.</li>
+<li><strong>Why:</strong> A measurable success criterion the spec itself named is unrecorded; the README promises reviewers it reports no issues.</li>
+<li><strong>Suggested fix:</strong> in finish:ui-verify, run the Xcode Accessibility Inspector audit on Home, step 1 (loaded and empty), step 2, step 3 (pristine and with the error shown), Sent (partial variant) and Developer settings; record the per-screen result. If it cannot be driven, amend SC3 to name the agent-device a11y dump as the audit and say so in DECISIONS.md.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W7 — Partial review of thirteen artifact files (restated)</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> coverage</li>
+<li><strong>Location:</strong> <code>package-lock.json</code>; <code>specs/001-econsult-flow/artifacts/*.html</code> (4); <code>checker/spec-r1..r4.md</code>, <code>checker/plan-r1..r2.md</code> (6); <code>plan.md</code> (read in part); <code>research.md</code> (headers)</li>
+<li><strong>Finding:</strong> Same set as rounds 1 and 2; <code>bfe019d</code> touched none of them.</li>
+<li><strong>Suggested fix:</strong> none required for merge.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I5 — Structure observations (unchanged, for the restructuring pass)</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>src/lib/devSettings.tsx:10-11,26,77,113-117</code>; <code>src/components/PhotoPicker.tsx:6</code>; <code>src/app/dev-settings.tsx</code> (7 exported helpers); <code>src/features/econsult/recipients.ts:3</code> ↔ <code>useRecipients.ts:5</code></li>
+<li><strong>Suggested fix:</strong> as in <code>checker/final-r1.md</code>, Structure section.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I6 — Home → Discard path, driven only via <code>router.back()</code> (restated)</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> regression</li>
+<li><strong>Location:</strong> <code>src/app/econsult/recipient.tsx:95-103</code></li>
+<li><strong>Suggested fix:</strong> one drive in finish:ui-verify: step 1 → Continue → type a message on step 3 → Change → header Home → Discard → expect Home. No code change expected.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I8 — The final-review sentence will read &quot;two rounds&quot; beside three reports</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>AI-USAGE.md:9-12</code>; <code>README.md:133-134</code> points readers at <code>checker/</code></li>
+<li><strong>Finding:</strong> The I7 fix is accurate for what exists in git today, but this closing round becomes the third final report, and <code>final-r1.md</code>/<code>final-r2.md</code> are still <code>??</code> in <code>git status</code>. Once the three reports are committed, the record shows three final rounds against a sentence that says two. Can ride with the archival commit; no separate loop.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>The final implementation review then ran three rounds over the
+whole diff; the findings of the first two were each fixed in one commit — the navigation lock while
+sending, a single offline announcement and the photo-picker error path, then making that lock
+timing-independent — and the third verified those fixes.</code></pre>
+Commit <code>checker/final-r1.md</code>, <code>final-r2.md</code> and this report in the same change.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I9 — Intermittent <code>act(...)</code> warning from <code>useSubmit.test.tsx</code></h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> <code>src/features/econsult/useSubmit.test.tsx:24-26</code> and <code>:51-53</code></li>
+<li><strong>Finding:</strong> <code>finish-6/coverage.log:13-37</code>: &quot;An update to HookContainer inside a test was not wrapped in act(...)&quot;, stack through <code>notifyManager.ts:42</code> (<code>Timeout._onTimeout</code>) → <code>forceStoreRerender</code>. <code>mutateAsync</code> resolves before TanStack&#39;s <code>setTimeout(0)</code> notification, so the <code>await act(async () =&gt; { … await mutateAsync … })</code> scope can close before the observer re-renders. It appears in finish-2, finish-3, finish-4b and finish-6 but not finish-1, finish-4a or finish-5, and the file last changed in <code>a2498d1</code> (T010), so <code>bfe019d</code> did not introduce it. Rounds 1 and 2 read the coverage summary of those logs, not the console block — that is why it was not raised before. Tests pass; this is noise that could mask a real act warning later.</li>
+<li><strong>Suggested fix:</strong> absorb the notification inside an act-wrapped wait, in both <code>mutateAsync</code> tests:<pre class="code"><code>await act(async () =&gt; {
+  outcome = await result.current.mutateAsync(INPUT);
+});
+await waitFor(() =&gt; expect(result.current.isSuccess).toBe(true));</code></pre>
+(and <code>expect(result.current.isSuccess).toBe(true)</code> after the <code>useRetryAttachment</code> call). No behaviour change; 268 tests stay as they are.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<p><strong>Possibly dismissed:</strong> none — the log&#39;s only structured dismissals (T001-C1 <code>jest.setup.ts:1</code>, T001-C3 coverage script, T001-C4 <code>expo-env.d.ts</code>) do not overlap any finding above.</p>
+<p><strong>Summary:</strong> Round 2&#39;s three fixes are all genuinely in the code: the send lock now re-dispatches its own REPLACE and the new test is discriminating in the strict sense (it is the only test that fails when the lock is reverted to the bare shape, in either line order, and the fix stays green with the <code>replace</code>/<code>dispatch</code> order swapped), <code>PhotoPicker</code> is at 47 lines with no test churn, and the AI-USAGE sentence is truthful. Nothing in <code>bfe019d</code> regressed a caller and every scan is clean, so no fix loop opens; what remains is for finish:ui-verify to drive the Accessibility Inspector audit (W6) and the Home → Discard path (I6), plus two INFO notes that can travel with the archival commit (the &quot;two rounds&quot; count, I8) or a later pass (the pre-existing <code>act</code> warning in <code>useSubmit.test.tsx</code>, I9). Done well: the mid-send <code>router.replace</code> test is small, behaviour-named and pins exactly the mechanism the comment claims.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/final.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

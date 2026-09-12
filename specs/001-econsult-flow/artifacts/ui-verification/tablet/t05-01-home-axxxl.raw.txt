@@ -1,0 +1,56 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 53 nodes
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"label":"Expo Go","enabled":true,"hittable":false,"type":"Application","index":0,"depth":0,"ref":"e1"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":0,"type":"Window","index":1,"depth":1,"ref":"e2"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":1,"type":"Other","index":2,"depth":2,"ref":"e3"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":2,"type":"Other","index":3,"depth":3,"ref":"e4"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":3,"type":"Other","index":4,"depth":4,"ref":"e5"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":4,"type":"Other","index":5,"depth":5,"ref":"e6"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":5,"type":"Other","index":6,"depth":6,"ref":"e7"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":6,"type":"Other","index":7,"depth":7,"ref":"e8"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":7,"type":"Other","index":8,"depth":8,"ref":"e9"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":8,"type":"Other","index":9,"depth":9,"ref":"e10"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"label":"Your practice","enabled":true,"hittable":true,"parentIndex":9,"type":"Other","index":10,"depth":10,"ref":"e11"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"label":"Your practice","enabled":true,"hittable":true,"parentIndex":10,"type":"Other","index":11,"depth":11,"ref":"e12"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"label":"Your practice","enabled":true,"hittable":true,"parentIndex":11,"type":"Other","index":12,"depth":12,"ref":"e13"}
+{"rect":{"height":54,"y":32,"width":834,"x":0},"label":"Your practice","enabled":true,"hittable":true,"parentIndex":12,"type":"NavigationBar","index":13,"identifier":"Your practice","depth":13,"ref":"e14"}
+{"rect":{"height":21,"y":43.5,"width":106,"x":364},"label":"Your practice","enabled":true,"hittable":true,"parentIndex":13,"type":"StaticText","index":14,"depth":14,"ref":"e15"}
+{"rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"enabled":true,"parentIndex":12,"type":"Other","index":15,"depth":13,"ref":"e16"}
+{"depth":14,"parentIndex":15,"type":"Other","rect":{"height":1210,"y":0,"width":834,"x":0},"hittable":true,"index":16,"enabled":true,"ref":"e17"}
+{"depth":15,"parentIndex":16,"type":"Other","rect":{"height":1124,"y":86,"width":834,"x":0},"hittable":true,"index":17,"enabled":true,"ref":"e18"}
+{"depth":16,"label":"Vertical scroll bar, 1 page","type":"Other","parentIndex":17,"rect":{"height":1124,"y":86,"width":834,"x":0},"hittable":true,"index":18,"enabled":true,"ref":"e19"}
+{"depth":17,"label":"Vertical scroll bar, 1 page","type":"Other","parentIndex":18,"rect":{"x":0,"height":1124,"width":834,"y":86},"hittable":true,"index":19,"enabled":true,"ref":"e20"}
+{"depth":18,"label":"Hello, Ria de Boer.","type":"Other","parentIndex":19,"rect":{"x":0,"height":1124,"width":834,"y":86},"hittable":true,"index":20,"enabled":true,"ref":"e21"}
+{"depth":19,"label":"Hello, Ria de Boer.","type":"ScrollView","parentIndex":20,"rect":{"width":834,"x":0,"height":1124,"y":86},"hittable":true,"index":21,"enabled":true,"ref":"e22"}
+{"depth":20,"label":"Hello, Ria de Boer.","type":"Other","parentIndex":21,"rect":{"height":1124,"y":86,"width":834,"x":0},"hittable":true,"index":22,"enabled":true,"ref":"e23"}
+{"depth":21,"label":"Hello, Ria de Boer.","type":"Other","parentIndex":22,"rect":{"height":1124,"y":86,"x":0,"width":834},"hittable":true,"index":23,"enabled":true,"ref":"e24"}
+{"depth":22,"label":"Hello, Ria de Boer.","type":"StaticText","parentIndex":23,"rect":{"height":271.5,"y":102,"x":16,"width":802},"hittable":true,"index":24,"enabled":true,"ref":"e25"}
+{"depth":23,"label":"Hello, Ria de Boer.","type":"StaticText","parentIndex":24,"rect":{"height":271.5,"y":102,"x":16,"width":802},"hittable":true,"index":25,"enabled":true,"ref":"e26"}
+{"depth":22,"label":"Ask your GP practice a non-urgent question. They usually reply within two working days.","type":"StaticText","parentIndex":23,"rect":{"height":257.5,"y":389.5,"x":16,"width":802},"hittable":true,"index":26,"enabled":true,"ref":"e27"}
+{"depth":23,"label":"Ask your GP practice a non-urgent question. They usually reply within two working days.","type":"StaticText","parentIndex":26,"rect":{"height":257.5,"y":389.5,"x":16,"width":802},"hittable":true,"index":27,"enabled":true,"ref":"e28"}
+{"depth":22,"label":"Developer settings","type":"Button","parentIndex":23,"rect":{"height":86,"y":663,"x":16,"width":802},"hittable":true,"index":28,"enabled":true,"ref":"e29"}
+{"depth":22,"label":"Write to your practice","type":"Button","parentIndex":23,"rect":{"height":102,"y":773,"x":16,"width":802},"hittable":true,"index":29,"enabled":true,"ref":"e30"}
+{"depth":20,"label":"Vertical scroll bar, 1 page","type":"Other","value":"0%","parentIndex":21,"rect":{"height":1082.5,"y":97.5,"x":801,"width":30},"hittable":true,"index":30,"enabled":true,"ref":"e31"}
+{"depth":21,"parentIndex":30,"type":"Other","rect":{"height":1174,"y":89,"x":828,"width":3},"hittable":true,"index":31,"enabled":true,"ref":"e32"}
+{"depth":20,"label":"Horizontal scroll bar, 1 page","type":"Other","value":"0%","parentIndex":21,"rect":{"height":30,"y":1157,"x":30,"width":774},"hittable":true,"index":32,"enabled":true,"ref":"e33"}
+{"depth":21,"parentIndex":32,"type":"Other","rect":{"height":3,"y":1184,"x":33,"width":768},"hittable":true,"index":33,"enabled":true,"ref":"e34"}
+{"depth":20,"label":"Vertical scroll bar, 1 page","type":"Other","value":"0%","parentIndex":21,"rect":{"height":1082.5,"y":97.5,"x":801,"width":30},"hittable":true,"index":34,"enabled":true,"ref":"e35"}
+{"depth":21,"parentIndex":34,"type":"Other","rect":{"height":1174,"y":89,"x":828,"width":3},"hittable":true,"index":35,"enabled":true,"ref":"e36"}
+{"depth":20,"label":"Horizontal scroll bar, 1 page","type":"Other","value":"0%","parentIndex":21,"rect":{"height":30,"y":1157,"x":30,"width":774},"hittable":true,"index":36,"enabled":true,"ref":"e37"}
+{"depth":21,"enabled":true,"hittable":true,"index":37,"type":"Other","parentIndex":36,"rect":{"height":3,"y":1184,"x":33,"width":768},"ref":"e38"}
+{"depth":13,"enabled":true,"hittable":true,"index":38,"type":"Other","parentIndex":12,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e39"}
+{"depth":14,"enabled":true,"hittable":true,"index":39,"type":"Other","parentIndex":38,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e40"}
+{"depth":10,"enabled":true,"hittable":true,"index":40,"type":"Other","parentIndex":9,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e41"}
+{"depth":11,"enabled":true,"hittable":true,"index":41,"type":"Other","parentIndex":40,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e42"}
+{"depth":12,"enabled":true,"hittable":true,"index":42,"type":"Other","parentIndex":41,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e43"}
+{"depth":1,"enabled":true,"hittable":true,"index":43,"type":"Window","parentIndex":0,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e44"}
+{"depth":2,"enabled":true,"hittable":true,"index":44,"type":"Other","parentIndex":43,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e45"}
+{"depth":3,"enabled":true,"hittable":true,"index":45,"type":"Other","parentIndex":44,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e46"}
+{"depth":1,"enabled":true,"hittable":true,"index":46,"type":"Window","parentIndex":0,"rect":{"height":1210,"y":0,"x":0,"width":834},"ref":"e47"}
+{"depth":2,"enabled":true,"hittable":true,"index":47,"type":"Other","parentIndex":46,"rect":{"x":0,"width":834,"height":1210,"y":0},"ref":"e48"}
+{"depth":3,"label":"gearshape.fill","enabled":true,"hittable":true,"index":48,"type":"Other","parentIndex":47,"rect":{"x":0,"width":834,"height":1210,"y":0},"ref":"e49"}
+{"depth":4,"label":"gearshape.fill","enabled":true,"hittable":true,"index":49,"type":"Other","parentIndex":48,"rect":{"x":0,"width":834,"height":1210,"y":0},"ref":"e50"}
+{"depth":5,"label":"gearshape.fill","enabled":true,"hittable":true,"index":50,"type":"Other","parentIndex":49,"rect":{"x":0,"width":834,"height":1210,"y":0},"ref":"e51"}
+{"depth":6,"label":"gearshape.fill","enabled":true,"hittable":true,"index":51,"type":"Other","parentIndex":50,"rect":{"x":0,"width":834,"height":1210,"y":0},"ref":"e52"}
+{"depth":7,"label":"gearshape.fill","enabled":true,"hittable":true,"index":52,"type":"Image","identifier":"gearshape.fill","parentIndex":51,"rect":{"x":776,"width":26,"height":26,"y":41},"ref":"e53"}

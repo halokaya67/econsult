@@ -1,0 +1,23 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 19 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Home"
+    @e5 [navigation-bar] "Home"
+      @e6 [button] "Home"
+      @e7 [text] "Recipient"
+    @e8 [other] "Vertical scroll bar, 1 page"
+      @e9 [other] "You're offline. You can keep writing, but sending needs a connection."
+        @e10 [scroll-area] [scrollable] [same label as parent]
+          @e11 [other] [same label as parent]
+          @e12 [text] "STEP 1 OF 3"
+          @e13 [text] "Who are you writing to?"
+          @e14 [other] "Dr. J. de Vries, GP"
+          @e15 [other] "M. Bakker, Practice nurse"
+          @e16 [other] "S. Jansen, Practice assistant"
+          @e17 [button] "Continue" [disabled]
+          @e18 [other] "Vertical scroll bar, 1 page"
+          @e19 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]
