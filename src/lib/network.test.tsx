@@ -2,7 +2,14 @@ import { onlineManager } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react-native";
 import * as Network from "expo-network";
 import type { ReactNode } from "react";
-import { isLinkDown, NetworkProvider, useIsOffline } from "./network";
+import { AccessibilityInfo } from "react-native";
+import {
+  BACK_ONLINE_MESSAGE,
+  isLinkDown,
+  NetworkProvider,
+  OFFLINE_MESSAGE,
+  useIsOffline,
+} from "./network";
 
 const mockedState = jest.mocked(Network.useNetworkState);
 
@@ -24,7 +31,11 @@ describe("isLinkDown", () => {
 });
 
 describe("NetworkProvider", () => {
-  afterEach(() => onlineManager.setOnline(true));
+  afterEach(() => {
+    onlineManager.setOnline(true);
+    mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
+    jest.restoreAllMocks();
+  });
 
   test("reports online and tells the query client so when the link is up", () => {
     mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
@@ -59,6 +70,34 @@ describe("NetworkProvider", () => {
 
     expect(result.current).toBe(true);
     expect(onlineManager.isOnline()).toBe(false);
+  });
+
+  test("says nothing about the link on mount, even when it is already down", () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    mockedState.mockReturnValue({ isConnected: false, isInternetReachable: false });
+
+    renderHook(() => useIsOffline(), { wrapper: wrapperWith(false) });
+
+    expect(announce).not.toHaveBeenCalled();
+  });
+
+  test("announces the link going down once, and coming back once", () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
+    const { rerender } = renderHook(() => useIsOffline(), { wrapper: wrapperWith(false) });
+
+    mockedState.mockReturnValue({ isConnected: false, isInternetReachable: false });
+    rerender(undefined);
+    mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
+    rerender(undefined);
+
+    expect(announce).toHaveBeenCalledTimes(2);
+    expect(announce).toHaveBeenNthCalledWith(1, OFFLINE_MESSAGE);
+    expect(announce).toHaveBeenNthCalledWith(2, BACK_ONLINE_MESSAGE);
   });
 
   test("useIsOffline is false outside a provider", () => {

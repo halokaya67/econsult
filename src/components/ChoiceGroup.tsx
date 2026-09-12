@@ -15,9 +15,8 @@ type Props = {
 
 const DOT_SIZE = 24;
 
-// The group View carries the role and name for TalkBack but is deliberately not `accessible`:
-// making it one element would swallow its radios. iOS exposes no group element, so the label Text
-// folds in the error and takes the ref that a failed submit focuses and scrolls to.
+// The group View carries role and name for TalkBack but is not `accessible`, which would swallow
+// its radios; iOS has no group element, so the label Text folds in the error and takes the ref.
 // The error sits between label and radios so it stays visible when a tall label is scrolled to.
 export function ChoiceGroup({ label, options, value, onChange, requirement, error, ref }: Props) {
   const visibleLabel = labelWithRequirement(label, requirement);

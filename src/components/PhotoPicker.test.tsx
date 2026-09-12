@@ -3,10 +3,12 @@ import * as Device from "expo-device";
 import * as ImagePicker from "expo-image-picker";
 import { Linking } from "react-native";
 import {
+  CAMERA_DENIED_NOTE,
   CAMERA_UNAVAILABLE_NOTE,
   CHOOSE_PHOTO_LABEL,
   PERMISSION_DENIED_NOTE,
   PhotoPicker,
+  PICK_FAILED_NOTE,
   PREPARING_LABEL,
   REMOVE_PHOTO_LABEL,
   TAKE_PHOTO_LABEL,
@@ -25,6 +27,18 @@ const denied = {
   canAskAgain: false,
   expires: "never" as const,
 };
+const granted = { ...denied, granted: true, status: ImagePicker.PermissionStatus.GRANTED };
+
+// `jest.spyOn` on this wildcard-interop module survives `restoreAllMocks`, so a test that needs a
+// permission state says so instead of inheriting the previous test's.
+function mockPermission(
+  hook: "useCameraPermissions" | "useMediaLibraryPermissions",
+  response: ImagePicker.PermissionResponse,
+) {
+  jest
+    .spyOn(ImagePicker, hook)
+    .mockReturnValue([response, jest.fn(async () => response), jest.fn(async () => response)]);
+}
 
 function renderPicker(photo: Photo = null, disabled = false) {
   const handlers = { onPickStarted: jest.fn(), onPickReady: jest.fn(), onRemove: jest.fn() };
@@ -107,9 +121,7 @@ describe("PhotoPicker", () => {
   });
 
   test("a denied permission explains itself and offers Settings", async () => {
-    jest
-      .spyOn(ImagePicker, "useMediaLibraryPermissions")
-      .mockReturnValue([denied, jest.fn(async () => denied), jest.fn(async () => denied)]);
+    mockPermission("useMediaLibraryPermissions", denied);
     const openSettings = jest.spyOn(Linking, "openSettings").mockResolvedValue();
     const user = userEvent.setup();
     const handlers = renderPicker();
@@ -120,6 +132,35 @@ describe("PhotoPicker", () => {
     await user.press(screen.getByRole("button", { name: "Open Settings" }));
     expect(openSettings).toHaveBeenCalled();
     expect(handlers.onPickStarted).not.toHaveBeenCalled();
+  });
+
+  test("a denied camera permission names the camera, not the library", async () => {
+    mockPermission("useCameraPermissions", denied);
+    const user = userEvent.setup();
+    const handlers = renderPicker();
+
+    await user.press(screen.getByRole("button", { name: TAKE_PHOTO_LABEL }));
+
+    expect(await screen.findByText(CAMERA_DENIED_NOTE)).toBeOnTheScreen();
+    expect(screen.queryByText(PERMISSION_DENIED_NOTE)).toBeNull();
+    expect(screen.getByRole("button", { name: "Open Settings" })).toBeOnTheScreen();
+    expect(handlers.onPickStarted).not.toHaveBeenCalled();
+  });
+
+  test("a launcher that fails explains itself, warns and starts no pick", async () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    mockPermission("useMediaLibraryPermissions", granted);
+    jest.mocked(ImagePicker.launchImageLibraryAsync).mockRejectedValueOnce(new Error("busy"));
+    const user = userEvent.setup();
+    const handlers = renderPicker();
+
+    await user.press(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL }));
+
+    expect(await screen.findByText(PICK_FAILED_NOTE)).toBeOnTheScreen();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("busy"));
+    expect(screen.queryByRole("button", { name: "Open Settings" })).toBeNull();
+    expect(handlers.onPickStarted).not.toHaveBeenCalled();
+    expect(handlers.onPickReady).not.toHaveBeenCalled();
   });
 
   test("shows the preparing state as a live region and still offers Remove", async () => {

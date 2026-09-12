@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { usePreventRemove } from "expo-router/react-navigation";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import type { PatientSession } from "@/api/contracts";
@@ -167,11 +168,24 @@ function SendButton({
   );
 }
 
-function ToRow({ name, onChange }: { name: string; onChange: () => void }) {
+function ToRow({
+  name,
+  disabled,
+  onChange,
+}: {
+  name: string;
+  disabled: boolean;
+  onChange: () => void;
+}) {
   return (
     <View style={styles.toRow}>
       <Text style={styles.to}>To: {name}</Text>
-      <TextButton label="Change" accessibilityHint={CHANGE_HINT} onPress={onChange} />
+      <TextButton
+        label="Change"
+        disabled={disabled}
+        accessibilityHint={CHANGE_HINT}
+        onPress={onChange}
+      />
     </View>
   );
 }
@@ -216,10 +230,12 @@ function DraftPhotoPicker({ disabled }: { disabled: boolean }) {
 function SendFeedback({
   status,
   error,
+  isOffline,
   onSend,
 }: {
   status: string;
   error: Error | null;
+  isOffline: boolean;
   onSend: Send;
 }) {
   const scrollToField = useScrollToField();
@@ -234,6 +250,7 @@ function SendFeedback({
         <ErrorState
           title={ERROR_TITLE}
           body={sendErrorCopy(error)}
+          retryBlockedReason={isOffline ? OFFLINE_HINT : undefined}
           onRetry={() => void onSend(scrollToField)}
         />
       ) : null}
@@ -249,6 +266,11 @@ export default function MessageScreen() {
   const hasQuestions = useQuestions().length > 0;
   const send = useSend();
   const preparing = isPhotoPreparing(draft);
+  const isSending = send.submit.isPending;
+
+  // Back, swipe and step 1's Home button wait for the send to settle, so the confirmation can
+  // never land on top of a screen the patient moved to meanwhile.
+  usePreventRemove(isSending, () => {});
 
   return (
     <ScreenScaffold action={<SendButton send={send} isOffline={isOffline} preparing={preparing} />}>
@@ -259,11 +281,17 @@ export default function MessageScreen() {
       />
       <ToRow
         name={recipientNameFor(recipients, draft.recipientId)}
+        disabled={isSending}
         onChange={() => router.dismissTo("/econsult/recipient")}
       />
       <MessageField send={send} message={draft.message} />
-      <DraftPhotoPicker disabled={send.submit.isPending} />
-      <SendFeedback status={send.status} error={send.submit.error} onSend={send.onSend} />
+      <DraftPhotoPicker disabled={isSending} />
+      <SendFeedback
+        status={send.status}
+        error={send.submit.error}
+        isOffline={isOffline}
+        onSend={send.onSend}
+      />
     </ScreenScaffold>
   );
 }

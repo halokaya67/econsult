@@ -1,3 +1,4 @@
+import { handled } from "@/test/handled";
 import { IDEMPOTENCY_HEADER } from "../contracts";
 import { ApiError } from "../transport";
 import { createFakeTransport, DEFAULT_LATENCY_MS } from "./fakeTransport";
@@ -5,13 +6,6 @@ import { createFakeTransport, DEFAULT_LATENCY_MS } from "./fakeTransport";
 const signal = () => new AbortController().signal;
 const PHOTO = { uri: "file:///cache/a.jpg", name: "photo.jpg", type: "image/jpeg" };
 const key = (value: string) => ({ [IDEMPOTENCY_HEADER]: value });
-
-// Jest fails a test on an unhandled rejection, and fake timers settle these requests before the
-// assertion attaches, so every promise expected to reject is marked handled when it starts.
-function handled<T>(promise: Promise<T>): Promise<T> {
-  promise.catch(() => undefined);
-  return promise;
-}
 
 describe("createFakeTransport", () => {
   beforeEach(() => jest.useFakeTimers());

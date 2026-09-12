@@ -55,6 +55,43 @@ function RecipientList({
   );
 }
 
+function HomeHeaderButton({ onPress }: { onPress: () => void }) {
+  return (
+    <TextButton
+      label="Home"
+      onPress={onPress}
+      maxFontSizeMultiplier={HEADER_BUTTON_MAX_FONT_SCALE}
+    />
+  );
+}
+
+function RecipientBody({
+  result,
+  selectedId,
+  onSelect,
+  goHome,
+}: {
+  result: RecipientsResult;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  goHome: () => void;
+}) {
+  if (result.status === "loading") return <LoadingCards label={LOADING_LABEL} />;
+  if (result.status === "error") {
+    return <ErrorState title={ERROR_TITLE} body={ERROR_BODY} onRetry={result.retry} />;
+  }
+  if (result.status === "empty") {
+    return (
+      <EmptyState
+        title={EMPTY_TITLE}
+        body={EMPTY_BODY}
+        action={<TextButton label="Back to start" onPress={goHome} />}
+      />
+    );
+  }
+  return <RecipientList result={result} selectedId={selectedId} onSelect={onSelect} />;
+}
+
 function useDiscardGuard(draft: DraftState) {
   const navigation = useNavigation();
   usePreventRemove(shouldGuardLeaving(draft), ({ data }) => {
@@ -94,17 +131,7 @@ export default function RecipientScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerLeft: () => (
-            <TextButton
-              label="Home"
-              onPress={goHome}
-              maxFontSizeMultiplier={HEADER_BUTTON_MAX_FONT_SCALE}
-            />
-          ),
-        }}
-      />
+      <Stack.Screen options={{ headerLeft: () => <HomeHeaderButton onPress={goHome} /> }} />
       <ScreenScaffold action={action}>
         {result.status === "ready" ? (
           <StepHeader
@@ -113,24 +140,12 @@ export default function RecipientScreen() {
             title={STEP_TITLES.recipient}
           />
         ) : null}
-        {result.status === "loading" ? <LoadingCards label={LOADING_LABEL} /> : null}
-        {result.status === "error" ? (
-          <ErrorState title={ERROR_TITLE} body={ERROR_BODY} onRetry={result.retry} />
-        ) : null}
-        {result.status === "empty" ? (
-          <EmptyState
-            title={EMPTY_TITLE}
-            body={EMPTY_BODY}
-            action={<TextButton label="Back to start" onPress={goHome} />}
-          />
-        ) : null}
-        {result.status === "ready" ? (
-          <RecipientList
-            result={result}
-            selectedId={draft.recipientId}
-            onSelect={(id) => dispatch({ type: "recipientSelected", recipientId: id })}
-          />
-        ) : null}
+        <RecipientBody
+          result={result}
+          selectedId={draft.recipientId}
+          onSelect={(id) => dispatch({ type: "recipientSelected", recipientId: id })}
+          goHome={goHome}
+        />
       </ScreenScaffold>
     </>
   );

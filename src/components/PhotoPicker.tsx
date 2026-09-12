@@ -4,6 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ActivityIndicator, Linking, StyleSheet, Text, View } from "react-native";
 import type { DraftPhoto } from "@/features/econsult/draft";
+import { devWarn } from "@/lib/devWarn";
 import { newId } from "@/lib/ids";
 import { processPhoto, type PickedPhoto } from "@/lib/photo";
 import { text } from "@/theme/text";
@@ -18,6 +19,9 @@ export const CAMERA_UNAVAILABLE_NOTE =
   "The camera isn't available on this device. You can choose a photo from your library.";
 export const PERMISSION_DENIED_NOTE =
   "Photos are switched off for this app. You can allow them in Settings.";
+export const CAMERA_DENIED_NOTE =
+  "The camera is switched off for this app. You can allow it in Settings.";
+export const PICK_FAILED_NOTE = "We couldn't open your photos just now. Please try again.";
 const PHOTO_HINT = "Add a photo if it helps, for example of a rash or a wound.";
 const OPEN_SETTINGS_LABEL = "Open Settings";
 const PREVIEW_HEIGHT = 200;
@@ -34,6 +38,7 @@ type Permission = [
   ImagePicker.PermissionResponse | null,
   () => Promise<ImagePicker.PermissionResponse>,
 ];
+type Note = { kind: "denied"; source: Source } | { kind: "failed" };
 
 type Props = {
   photo: DraftPhoto | null;
@@ -86,6 +91,25 @@ function ReadyPhotoView({ uri, disabled, onRemove }: PhotoStateProps & { uri: st
   );
 }
 
+// Open Settings only helps a denied permission; a failed launcher is worth another tap instead.
+function PickNote({ note }: { note: Note }) {
+  if (note.kind === "failed") {
+    return (
+      <Text accessibilityLiveRegion="polite" style={text.muted}>
+        {PICK_FAILED_NOTE}
+      </Text>
+    );
+  }
+  return (
+    <View style={styles.stack}>
+      <Text accessibilityLiveRegion="polite" style={text.muted}>
+        {note.source === "camera" ? CAMERA_DENIED_NOTE : PERMISSION_DENIED_NOTE}
+      </Text>
+      <TextButton label={OPEN_SETTINGS_LABEL} onPress={() => void Linking.openSettings()} />
+    </View>
+  );
+}
+
 export function PhotoPicker({
   photo,
   disabled = false,
@@ -95,22 +119,27 @@ export function PhotoPicker({
 }: Props) {
   const [cameraStatus, requestCamera] = ImagePicker.useCameraPermissions();
   const [libraryStatus, requestLibrary] = ImagePicker.useMediaLibraryPermissions();
-  const [denied, setDenied] = useState(false);
+  const [note, setNote] = useState<Note | null>(null);
 
   async function pick(source: Source) {
-    const permission: Permission =
-      source === "camera" ? [cameraStatus, requestCamera] : [libraryStatus, requestLibrary];
-    if (!(await ensureGranted(permission))) return setDenied(true);
-    setDenied(false);
-    const result = await launch(source);
-    if (result.canceled) return;
-    const asset = result.assets[0];
-    const pickId = newId();
-    onPickStarted(pickId);
-    onPickReady(
-      pickId,
-      await processPhoto({ uri: asset.uri, width: asset.width, height: asset.height }),
-    );
+    try {
+      const permission: Permission =
+        source === "camera" ? [cameraStatus, requestCamera] : [libraryStatus, requestLibrary];
+      if (!(await ensureGranted(permission))) return setNote({ kind: "denied", source });
+      setNote(null);
+      const result = await launch(source);
+      if (result.canceled) return;
+      const asset = result.assets[0];
+      const pickId = newId();
+      onPickStarted(pickId);
+      onPickReady(
+        pickId,
+        await processPhoto({ uri: asset.uri, width: asset.width, height: asset.height }),
+      );
+    } catch (error) {
+      devWarn(`Photo pick failed: ${String(error)}`);
+      setNote({ kind: "failed" });
+    }
   }
 
   if (photo?.status === "preparing") {
@@ -137,14 +166,7 @@ export function PhotoPicker({
         disabled={disabled}
         onPress={() => void pick("library")}
       />
-      {denied ? (
-        <View style={styles.stack}>
-          <Text accessibilityLiveRegion="polite" style={text.muted}>
-            {PERMISSION_DENIED_NOTE}
-          </Text>
-          <TextButton label={OPEN_SETTINGS_LABEL} onPress={() => void Linking.openSettings()} />
-        </View>
-      ) : null}
+      {note ? <PickNote note={note} /> : null}
     </View>
   );
 }
