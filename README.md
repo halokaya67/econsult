@@ -132,3 +132,6 @@ size. Two caveats:
 - `AI-USAGE.md` — how AI was used to build this, what it got wrong, and how that was caught.
 - `specs/001-econsult-flow/` — the research record with its verification rounds, the spec, the plan,
   the checker reports, and `how-it-works.md`, the snapshot of the repository this was built into.
+- `specs/001-econsult-flow/artifacts/index.html` — a local, offline copy of the process record: the
+  progress board, the per-step visual proofs from the simulator, the finish-phase UI-verification
+  results with screenshots, and the checker reports. Open it in a browser from the clone.

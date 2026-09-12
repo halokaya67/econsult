@@ -24,6 +24,7 @@ describe("useSubmit", () => {
     await act(async () => {
       outcome = await result.current.mutateAsync(INPUT);
     });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(outcome).toEqual({ econsultId: expect.any(String), attachment: "attached" });
     expect(onCreated).toHaveBeenCalled();
@@ -51,6 +52,7 @@ describe("useRetryAttachment", () => {
     await act(async () => {
       status = await result.current.mutateAsync({ econsultId: "ec-missing", photo: PHOTO });
     });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(status).toBe("failed");
   });

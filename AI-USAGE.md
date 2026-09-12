@@ -6,13 +6,14 @@ Claude Code, inside a human-gated flow. Read-only research agents produced
 `specs/001-econsult-flow/research.md`, and every claim in it was adversarially re-checked
 against the installed Expo and React Native sources and the versioned SDK 57 docs, then marked
 verified or corrected with its source. A spec checker ran five rounds and a plan checker three
-(`specs/001-econsult-flow/checker/`). The final implementation review then ran two rounds over the
-whole diff, and the findings of each were fixed in one commit: the navigation lock while sending, a
-single offline announcement and the photo-picker error path, then making that lock
-timing-independent. Implementation was one agent per plan task, test-first and
-confined to that task's file fence. After every screen task a UI-verification agent drove the iPhone
-simulator at the default and the largest accessibility text size, and re-checked until clean. A human
-decided the design questions recorded in `DECISIONS.md` and approved the spec and the plan.
+(`specs/001-econsult-flow/checker/`). The final implementation review then ran three rounds over the
+whole diff: the findings of the first two were each fixed in one commit — the navigation lock while
+sending, a single offline announcement and the photo-picker error path, then making that lock
+timing-independent — and the third verified those fixes. Implementation was one agent per plan task,
+test-first and confined to that task's file fence. After every screen task a UI-verification agent
+drove the iPhone simulator at the default and the largest accessibility text size, and re-checked
+until clean. A human decided the design questions recorded in `DECISIONS.md` and approved the spec
+and the plan.
 
 ## What AI got wrong, and how it was caught
 
@@ -34,6 +35,11 @@ decided the design questions recorded in `DECISIONS.md` and approved the spec an
   into view and leaving its label above the fold; a failed photo retry that changed nothing on screen,
   because a failed upload resolves as an outcome rather than throwing; and the Force offline label
   pushing the native switch past the screen edge.
+- **Discard on the leave dialog did nothing on the device.** The finish-phase simulator walkthrough
+  found that step 1's Discard did nothing at all: re-dispatching a root-level navigation action on
+  the nested navigator is a no-op there, although the unit test's back-navigation variant passed. The
+  fix lowers the guard by state and navigates home explicitly, and a Home-button test now reproduces
+  the defect under jest.
 
 ## Where AI output was rejected
 
