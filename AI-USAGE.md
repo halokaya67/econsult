@@ -6,7 +6,10 @@ Claude Code, inside a human-gated flow. Read-only research agents produced
 `specs/001-econsult-flow/research.md`, and every claim in it was adversarially re-checked
 against the installed Expo and React Native sources and the versioned SDK 57 docs, then marked
 verified or corrected with its source. A spec checker ran five rounds and a plan checker three
-(`specs/001-econsult-flow/checker/`). Implementation was one agent per plan task, test-first and
+(`specs/001-econsult-flow/checker/`). The final implementation review then ran two rounds over the
+whole diff, and the findings of each were fixed in one commit: the navigation lock while sending, a
+single offline announcement and the photo-picker error path, then making that lock
+timing-independent. Implementation was one agent per plan task, test-first and
 confined to that task's file fence. After every screen task a UI-verification agent drove the iPhone
 simulator at the default and the largest accessibility text size, and re-checked until clean. A human
 decided the design questions recorded in `DECISIONS.md` and approved the spec and the plan.

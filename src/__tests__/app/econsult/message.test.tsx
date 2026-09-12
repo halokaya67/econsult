@@ -63,6 +63,9 @@ const measureLayout = jest.mocked(View.prototype.measureLayout);
 
 // Stands in for the content view element getInnerViewRef returns under the New Architecture.
 const CONTENT_REF = {};
+// Latency for the in-flight-send tests: far enough past the first renders that no stale render of
+// the leave guard can be what lets navigation through.
+const SEND_LATENCY_MS = 120;
 // The field group starts at its label; the input itself sits below the label and the hint.
 const FIELD_TOP = 540;
 const INPUT_TOP = 620;
@@ -179,7 +182,7 @@ describe("Message step", () => {
   test("Change and going back wait while the send is in flight", async () => {
     const user = userEvent.setup();
     // Pushed from step 1, so there is a screen to go back to for the guard to hold on to.
-    renderMessage({ settings: { latencyMs: 50 } }, DRAFT, "/econsult/recipient");
+    renderMessage({ settings: { latencyMs: SEND_LATENCY_MS } }, DRAFT, "/econsult/recipient");
     act(() => router.push("/econsult/message"));
     await screen.findByText("To: Dr. J. de Vries");
     await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
@@ -190,6 +193,20 @@ describe("Message step", () => {
     act(() => router.back());
     expect(screen).toHavePathname("/econsult/message");
     await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
+  });
+
+  test("a replace while the send is in flight goes through instead of being swallowed", async () => {
+    const user = userEvent.setup();
+    renderMessage({ settings: { latencyMs: SEND_LATENCY_MS } }, DRAFT, "/econsult/recipient");
+    act(() => router.push("/econsult/message"));
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+    await user.press(screen.getByRole("button", { name: "Send" }));
+
+    act(() => router.replace("/econsult/sent"));
+
+    expect(screen).toHavePathname("/econsult/sent");
+    await waitFor(() => expect(screen.getByText(/^sent:ec-\d+:none$/)).toBeOnTheScreen());
   });
 
   test("uploads the photo after the message and reports it attached", async () => {
