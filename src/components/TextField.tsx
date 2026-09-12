@@ -1,5 +1,5 @@
 import type { Ref } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, MIN_TOUCH, radius, spacing } from "@/theme/tokens";
 
@@ -14,6 +14,9 @@ type Props = {
   requirement?: Requirement;
   multiline?: boolean;
   editable?: boolean;
+  // The container is the scroll anchor and the input the screen-reader focus target: at large text
+  // sizes the label sits far above the box, so scrolling to the box alone hides the question.
+  containerRef?: Ref<View>;
   ref?: Ref<TextInput>;
   testID?: string;
 };
@@ -28,7 +31,7 @@ export function accessibleName(label: string, error?: string | null): string {
   return error ? `${label}. Error: ${error}` : label;
 }
 
-const MULTILINE_MIN_HEIGHT = 132;
+export const MULTILINE_MIN_HEIGHT = 132;
 
 export function TextField({
   label,
@@ -39,12 +42,16 @@ export function TextField({
   requirement,
   multiline = false,
   editable = true,
+  containerRef,
   ref,
   testID,
 }: Props) {
+  // Text inside the box grows with the system font scale, so its minimum height has to grow too.
+  const { fontScale } = useWindowDimensions();
+  const multilineStyle = { minHeight: MULTILINE_MIN_HEIGHT * fontScale };
   const visibleLabel = labelWithRequirement(label, requirement);
   return (
-    <View style={styles.wrap}>
+    <View ref={containerRef} style={styles.wrap}>
       <Text style={styles.label}>{visibleLabel}</Text>
       {hint ? <Text style={text.muted}>{hint}</Text> : null}
       <TextInput
@@ -56,7 +63,7 @@ export function TextField({
         textAlignVertical={multiline ? "top" : "center"}
         accessibilityLabel={accessibleName(visibleLabel, error)}
         accessibilityHint={hint}
-        style={[styles.input, multiline && styles.multiline, Boolean(error) && styles.inputError]}
+        style={[styles.input, multiline && multilineStyle, Boolean(error) && styles.inputError]}
         testID={testID}
       />
       {error ? (
@@ -88,7 +95,6 @@ const styles = StyleSheet.create({
     color: colors.text,
     backgroundColor: colors.background,
   },
-  multiline: { minHeight: MULTILINE_MIN_HEIGHT },
   inputError: { borderColor: colors.error },
   error: { color: colors.error, fontSize: fontSize.body, lineHeight: lineHeight.body },
 });
