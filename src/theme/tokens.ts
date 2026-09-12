@@ -27,3 +27,6 @@ export const MIN_TOUCH = 48;
 
 // The only place font scaling is capped: a chip that must stay a chip.
 export const STEP_CHIP_MAX_FONT_SCALE = 2;
+
+// The native navigation bar cannot grow, so its buttons cap their text like iOS bar buttons do.
+export const HEADER_BUTTON_MAX_FONT_SCALE = 1.3;

@@ -6,10 +6,18 @@ type Props = {
   onPress: () => void;
   disabled?: boolean;
   accessibilityHint?: string;
+  maxFontSizeMultiplier?: number;
   testID?: string;
 };
 
-export function TextButton({ label, onPress, disabled = false, accessibilityHint, testID }: Props) {
+export function TextButton({
+  label,
+  onPress,
+  disabled = false,
+  accessibilityHint,
+  maxFontSizeMultiplier,
+  testID,
+}: Props) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -25,7 +33,9 @@ export function TextButton({ label, onPress, disabled = false, accessibilityHint
         pressed && styles.pressed,
       ]}
     >
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label} maxFontSizeMultiplier={maxFontSizeMultiplier}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
