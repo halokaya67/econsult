@@ -12,6 +12,7 @@ import DevSettingsScreen, {
   practiceLabelFor,
   withFault,
 } from "@/app/dev-settings";
+import type { FaultKind } from "@/api/fake/fakeTransport";
 import { useDevSettings } from "@/lib/devSettings";
 import * as devWarn from "@/lib/devWarn";
 import { TestProviders } from "@/test/providers";
@@ -53,6 +54,13 @@ describe("helpers", () => {
     expect(faultFor(faultOptionFor("timeout"))).toBe("timeout");
   });
 
+  test("a fault kind with no matching option falls back to None", () => {
+    // The cast stands in for a kind the transport gains before this screen lists it.
+    const unlistedKind = "gateway" as string as FaultKind;
+
+    expect(faultOptionFor(unlistedKind)).toBe("None");
+  });
+
   test("withFault sets and clears one request's fault without mutating", () => {
     const faults = { config: "server" } as const;
 
@@ -67,6 +75,10 @@ describe("helpers", () => {
   test("practice labels round-trip and unknown labels fall back to the default practice", () => {
     expect(practiceIdFor(practiceLabelFor("prc-0873"))).toBe("prc-0873");
     expect(practiceIdFor("nonsense")).toBe("prc-0421");
+  });
+
+  test("a practice without a description is labelled with its own id", () => {
+    expect(practiceLabelFor("prc-1234")).toBe("prc-1234");
   });
 });
 

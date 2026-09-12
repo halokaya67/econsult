@@ -150,6 +150,21 @@ describe("Recipient step", () => {
     expect(screen).toHavePathname("/econsult/recipient");
   });
 
+  test("choosing Discard in the dialog carries out the blocked back navigation", async () => {
+    const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
+    const user = userEvent.setup();
+    renderFlow({}, { ...initialDraft, message: "My knee hurts" }, "/");
+    await user.press(screen.getByRole("button", { name: "Write to your practice" }));
+    await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" });
+    // Going back is what the guard intercepts; Discard then replays that very action.
+    act(() => router.back());
+
+    const discard = alert.mock.calls[0][2]?.find((button) => button.text === "Discard");
+    act(() => discard?.onPress?.());
+
+    await waitFor(() => expect(screen).toHavePathname("/"));
+  });
+
   test("leaving without content goes home at once", async () => {
     const user = userEvent.setup();
     renderFlow({}, undefined, "/");
