@@ -1,3 +1,4 @@
+import { handled } from "@/test/handled";
 import { IDEMPOTENCY_HEADER } from "./contracts";
 import { createFakeTransport } from "./fake/fakeTransport";
 import { createServices, READ_TIMEOUT_MS, UPLOAD_TIMEOUT_MS } from "./services";
@@ -5,13 +6,6 @@ import type { Transport } from "./transport";
 
 const PHOTO = { uri: "file:///cache/a.jpg", name: "photo.jpg", type: "image/jpeg" };
 const REQUEST = { patientId: "pat-1", recipientId: "ct-11", body: "My knee hurts", answers: [] };
-
-// Jest fails a test on an unhandled rejection, and fake timers settle these promises before the
-// assertion attaches, so the rejection is marked handled the moment the work starts.
-function handled<T>(promise: Promise<T>): Promise<T> {
-  promise.catch(() => undefined);
-  return promise;
-}
 
 function malformedTransport(payload: unknown): Transport {
   return {

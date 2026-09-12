@@ -45,15 +45,18 @@ export function EmptyState({
   );
 }
 
-// The alert groups only the two texts; the retry button stays a sibling so it remains its own element.
+// The alert groups only the two texts; the retry button stays a sibling so it remains its own
+// element. A blocking reason disables Retry and is spoken as its hint, so the block is never silent.
 export function ErrorState({
   title,
   body,
   onRetry,
+  retryBlockedReason,
 }: {
   title: string;
   body: string;
   onRetry: () => void;
+  retryBlockedReason?: string;
 }) {
   return (
     <View style={[styles.stack, styles.errorBox]}>
@@ -68,7 +71,12 @@ export function ErrorState({
         </Text>
         <Text style={text.body}>{body}</Text>
       </View>
-      <PrimaryButton label={RETRY_LABEL} onPress={onRetry} />
+      <PrimaryButton
+        label={RETRY_LABEL}
+        disabled={retryBlockedReason !== undefined}
+        accessibilityHint={retryBlockedReason}
+        onPress={onRetry}
+      />
     </View>
   );
 }

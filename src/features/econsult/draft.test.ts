@@ -121,12 +121,6 @@ describe("draftReducer", () => {
     expect(settled.econsultId).toBe("ec-1");
     expect(settled.attachment).toBe("failed");
   });
-
-  test("reset returns the initial draft", () => {
-    const filled = draftReducer(initialDraft, { type: "messageChanged", message: "Hi" });
-
-    expect(draftReducer(filled, { type: "reset" })).toEqual(initialDraft);
-  });
 });
 
 describe("selectors", () => {

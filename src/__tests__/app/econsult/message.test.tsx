@@ -2,7 +2,8 @@ import { onlineManager } from "@tanstack/react-query";
 import { userEvent } from "@testing-library/react-native";
 import * as Crypto from "expo-crypto";
 import * as ImagePicker from "expo-image-picker";
-import { renderRouter, screen, waitFor } from "expo-router/testing-library";
+import { router } from "expo-router";
+import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
 import MessageScreen from "@/app/econsult/message";
 import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/components/PhotoPicker";
@@ -10,6 +11,7 @@ import { RETRY_LABEL } from "@/components/StatusViews";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
 import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/validation";
+import * as networkModule from "@/lib/network";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders, type ProviderOptions } from "@/test/providers";
 import { spacing } from "@/theme/tokens";
@@ -31,7 +33,11 @@ const READY_PHOTO = {
 } as const;
 const FIELD = "What would you like to ask?";
 
-function renderMessage(options: ProviderOptions = {}, draft: DraftState = DRAFT) {
+function renderMessage(
+  options: ProviderOptions = {},
+  draft: DraftState = DRAFT,
+  initialUrl = "/econsult/message",
+) {
   return renderRouter(
     {
       "econsult/_layout": flowLayoutWith(draft),
@@ -40,7 +46,7 @@ function renderMessage(options: ProviderOptions = {}, draft: DraftState = DRAFT)
       "econsult/sent": SentProbe,
     },
     {
-      initialUrl: "/econsult/message",
+      initialUrl,
       wrapper: ({ children }) => <TestProviders {...options}>{children}</TestProviders>,
     },
   );
@@ -170,6 +176,22 @@ describe("Message step", () => {
     expect(screen.getByText(/^sent:ec-\d+:none$/)).toBeOnTheScreen();
   });
 
+  test("Change and going back wait while the send is in flight", async () => {
+    const user = userEvent.setup();
+    // Pushed from step 1, so there is a screen to go back to for the guard to hold on to.
+    renderMessage({ settings: { latencyMs: 50 } }, DRAFT, "/econsult/recipient");
+    act(() => router.push("/econsult/message"));
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+
+    await user.press(screen.getByRole("button", { name: "Send" }));
+
+    expect(screen.getByRole("button", { name: "Change", disabled: true })).toBeOnTheScreen();
+    act(() => router.back());
+    expect(screen).toHavePathname("/econsult/message");
+    await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
+  });
+
   test("uploads the photo after the message and reports it attached", async () => {
     const user = userEvent.setup();
     renderMessage({}, { ...DRAFT, photo: READY_PHOTO });
@@ -227,6 +249,30 @@ describe("Message step", () => {
 
     await waitFor(() => expect(announce).toHaveBeenCalledWith("Sending your message"));
     expect(randomUUID).not.toHaveBeenCalled();
+    // The retry fails too, which lifts the lock the send put on Change and on going back; act spans
+    // the wait because the leave-guard's own state cascade would otherwise land between its polls.
+    await act(async () => {
+      await waitFor(() =>
+        expect(screen.getByRole("button", { name: "Change", disabled: false })).toBeOnTheScreen(),
+      );
+    });
+  });
+
+  test("Retry after a failed create is disabled while offline, just like Send", async () => {
+    const user = userEvent.setup();
+    // The provider reads the network mock once per mount, so the link is flipped at the hook.
+    const isOffline = jest.spyOn(networkModule, "useIsOffline").mockReturnValue(false);
+    renderMessage({ settings: { faults: { create: "network" } } });
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+    await user.press(screen.getByRole("button", { name: "Send" }));
+    await screen.findByRole("alert");
+
+    isOffline.mockReturnValue(true);
+    await user.type(screen.getByLabelText(FIELD), " now");
+
+    const retry = screen.getByRole("button", { name: RETRY_LABEL, disabled: true });
+    expect(retry.props.accessibilityHint).toBe("You're offline. Sending needs a connection.");
   });
 
   test("Send is disabled with a spoken reason while offline", async () => {

@@ -1,10 +1,10 @@
-import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useRef, type ReactNode } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { announce, type Focusable } from "@/lib/announce";
+import type { Focusable } from "@/lib/announce";
 import { useIsOffline } from "@/lib/network";
 import { colors, spacing } from "@/theme/tokens";
-import { BACK_ONLINE_MESSAGE, OFFLINE_MESSAGE, OfflineBanner } from "./OfflineBanner";
+import { OfflineBanner } from "./OfflineBanner";
 
 type Props = { children: ReactNode; action?: ReactNode; testID?: string };
 
@@ -38,14 +38,7 @@ function scrollFieldIntoView(scroll: ScrollView, node: Focusable): void {
 export function ScreenScaffold({ children, action, testID }: Props) {
   const insets = useSafeAreaInsets();
   const isOffline = useIsOffline();
-  const wasOffline = useRef(isOffline);
   const scrollRef = useRef<ScrollView>(null);
-
-  useEffect(() => {
-    if (isOffline === wasOffline.current) return;
-    wasOffline.current = isOffline;
-    announce(isOffline ? OFFLINE_MESSAGE : BACK_ONLINE_MESSAGE);
-  }, [isOffline]);
 
   const scrollToField = useCallback<ScrollToField>((node) => {
     if (node && scrollRef.current) scrollFieldIntoView(scrollRef.current, node);

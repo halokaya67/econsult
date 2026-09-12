@@ -24,6 +24,26 @@ describe("StatusViews", () => {
     expect(screen.getByText("Go home")).toBeOnTheScreen();
   });
 
+  test("ErrorState blocks its retry with a spoken reason when one is given", async () => {
+    const onRetry = jest.fn();
+    const user = userEvent.setup();
+    const reason = "You're offline. Sending needs a connection.";
+    render(
+      <ErrorState
+        title="Your message wasn't sent"
+        body="Check your connection"
+        onRetry={onRetry}
+        retryBlockedReason={reason}
+      />,
+    );
+
+    const retry = screen.getByRole("button", { name: RETRY_LABEL, disabled: true });
+    await user.press(retry);
+
+    expect(retry.props.accessibilityHint).toBe(reason);
+    expect(onRetry).not.toHaveBeenCalled();
+  });
+
   test("ErrorState is an alert with a retry button", async () => {
     const onRetry = jest.fn();
     const user = userEvent.setup();
