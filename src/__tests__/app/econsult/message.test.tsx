@@ -1,9 +1,11 @@
 import { onlineManager } from "@tanstack/react-query";
 import { userEvent } from "@testing-library/react-native";
 import * as Crypto from "expo-crypto";
+import * as ImagePicker from "expo-image-picker";
 import { renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
 import MessageScreen from "@/app/econsult/message";
+import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/components/PhotoPicker";
 import { RETRY_LABEL } from "@/components/StatusViews";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
@@ -19,6 +21,7 @@ function SentProbe() {
 const RecipientStub = () => <Text>recipient</Text>;
 
 const DRAFT: DraftState = { ...initialDraft, recipientId: "ct-11" };
+const ASSET = { uri: "file:///cache/original.jpg", width: 4000, height: 3000 };
 const READY_PHOTO = {
   status: "ready",
   pickId: "p1",
@@ -117,6 +120,32 @@ describe("Message step", () => {
     expect(measureLayout.mock.contexts).not.toContainEqual(expect.any(TextInput));
   });
 
+  test("typing after a blocked Send takes the error off the field", async () => {
+    const user = userEvent.setup();
+    renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.press(screen.getByRole("button", { name: "Send" }));
+
+    await user.type(
+      screen.getByLabelText(`${FIELD}. Error: ${EMPTY_MESSAGE_ERROR}`),
+      "My knee has hurt for two weeks",
+    );
+
+    expect(screen.getByLabelText(FIELD)).toBeOnTheScreen();
+    expect(screen.queryByText(EMPTY_MESSAGE_ERROR)).toBeNull();
+  });
+
+  test("Send sends nothing while the draft has no recipient", async () => {
+    const user = userEvent.setup();
+    renderMessage({}, { ...initialDraft, message: "My knee has hurt for two weeks" });
+    await screen.findByText("To: your practice");
+
+    await user.press(screen.getByRole("button", { name: "Send" }));
+
+    expect(screen.queryByText("Sending your message")).toBeNull();
+    expect(screen).toHavePathname("/econsult/message");
+  });
+
   test("a short message gets a nudge that never blocks sending", async () => {
     const user = userEvent.setup();
     renderMessage();
@@ -208,6 +237,22 @@ describe("Message step", () => {
 
     expect(send.props.accessibilityHint).toBe("You're offline. Sending needs a connection.");
     expect(screen.getByRole("alert")).toHaveTextContent(/offline/);
+  });
+
+  test("a picked photo becomes the draft's preview and Remove takes it back out", async () => {
+    jest
+      .mocked(ImagePicker.launchImageLibraryAsync)
+      .mockResolvedValueOnce({ canceled: false, assets: [ASSET] });
+    const user = userEvent.setup();
+    renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+
+    await user.press(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL }));
+
+    expect(await screen.findByLabelText("Your photo")).toBeOnTheScreen();
+    await user.press(screen.getByRole("button", { name: REMOVE_PHOTO_LABEL }));
+    expect(screen.queryByLabelText("Your photo")).toBeNull();
+    expect(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL })).toBeOnTheScreen();
   });
 
   test("Send is disabled while a photo is still preparing", async () => {

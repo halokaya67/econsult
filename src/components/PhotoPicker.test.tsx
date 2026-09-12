@@ -42,6 +42,19 @@ describe("PhotoPicker", () => {
     expect(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL })).toBeOnTheScreen();
   });
 
+  test("is usable when the caller says nothing about being disabled", () => {
+    const handlers = { onPickStarted: jest.fn(), onPickReady: jest.fn(), onRemove: jest.fn() };
+
+    render(<PhotoPicker photo={null} {...handlers} />);
+
+    expect(
+      screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL, disabled: false }),
+    ).toBeOnTheScreen();
+    expect(
+      screen.getByRole("button", { name: TAKE_PHOTO_LABEL, disabled: false }),
+    ).toBeOnTheScreen();
+  });
+
   test("hides the camera with a note when there is no camera", () => {
     jest.replaceProperty(Device, "isDevice", false);
 
