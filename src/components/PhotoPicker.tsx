@@ -110,6 +110,29 @@ function PickNote({ note }: { note: Note }) {
   );
 }
 
+function SourceButtons({
+  disabled,
+  onPick,
+}: {
+  disabled: boolean;
+  onPick: (source: Source) => void;
+}) {
+  return (
+    <>
+      {Device.isDevice ? (
+        <TextButton label={TAKE_PHOTO_LABEL} disabled={disabled} onPress={() => onPick("camera")} />
+      ) : (
+        <Text style={text.muted}>{CAMERA_UNAVAILABLE_NOTE}</Text>
+      )}
+      <TextButton
+        label={CHOOSE_PHOTO_LABEL}
+        disabled={disabled}
+        onPress={() => onPick("library")}
+      />
+    </>
+  );
+}
+
 export function PhotoPicker({
   photo,
   disabled = false,
@@ -152,20 +175,7 @@ export function PhotoPicker({
   return (
     <View style={styles.stack}>
       <Text style={text.body}>{PHOTO_HINT}</Text>
-      {Device.isDevice ? (
-        <TextButton
-          label={TAKE_PHOTO_LABEL}
-          disabled={disabled}
-          onPress={() => void pick("camera")}
-        />
-      ) : (
-        <Text style={text.muted}>{CAMERA_UNAVAILABLE_NOTE}</Text>
-      )}
-      <TextButton
-        label={CHOOSE_PHOTO_LABEL}
-        disabled={disabled}
-        onPress={() => void pick("library")}
-      />
+      <SourceButtons disabled={disabled} onPick={(source) => void pick(source)} />
       {note ? <PickNote note={note} /> : null}
     </View>
   );
