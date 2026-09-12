@@ -1,12 +1,37 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { announce } from "@/lib/announce";
+import { announce, type Focusable } from "@/lib/announce";
 import { useIsOffline } from "@/lib/network";
 import { colors, spacing } from "@/theme/tokens";
 import { BACK_ONLINE_MESSAGE, OFFLINE_MESSAGE, OfflineBanner } from "./OfflineBanner";
 
 type Props = { children: ReactNode; action?: ReactNode; testID?: string };
+
+export type ScrollToField = (node: Focusable | null) => void;
+
+const ScrollToFieldContext = createContext<ScrollToField>(() => {});
+
+// Large text can push a validation error far above the viewport, where moving screen-reader focus
+// to it leaves the screen looking untouched. Only components rendered inside the scaffold reach
+// its scroll view, so a screen reads this from its action rather than from itself.
+export function useScrollToField(): ScrollToField {
+  return useContext(ScrollToFieldContext);
+}
+
+// getInnerViewRef returns the content view element; it is absent from ScrollView's types.
+type WithInnerViewRef = { getInnerViewRef?: () => Focusable | null };
+
+// Children sit in the scroll view's content view, so their offset within it is the offset to
+// scroll to; the margin keeps the field clear of the top edge. The New Architecture measures only
+// against an element ref, so the node handle from getInnerViewNode is silently ignored.
+function scrollFieldIntoView(scroll: ScrollView, node: Focusable): void {
+  const content = (scroll as ScrollView & WithInnerViewRef).getInnerViewRef?.() ?? null;
+  if (content == null) return;
+  node.measureLayout(content, (_left, top) =>
+    scroll.scrollTo({ x: 0, y: Math.max(0, top - spacing.md), animated: true }),
+  );
+}
 
 // One scroll view per step with the primary action as its last child: no pinned footer, so the
 // keyboard never covers the button and large text simply makes the page longer.
@@ -14,6 +39,7 @@ export function ScreenScaffold({ children, action, testID }: Props) {
   const insets = useSafeAreaInsets();
   const isOffline = useIsOffline();
   const wasOffline = useRef(isOffline);
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     if (isOffline === wasOffline.current) return;
@@ -21,8 +47,13 @@ export function ScreenScaffold({ children, action, testID }: Props) {
     announce(isOffline ? OFFLINE_MESSAGE : BACK_ONLINE_MESSAGE);
   }, [isOffline]);
 
+  const scrollToField = useCallback<ScrollToField>((node) => {
+    if (node && scrollRef.current) scrollFieldIntoView(scrollRef.current, node);
+  }, []);
+
   return (
     <ScrollView
+      ref={scrollRef}
       testID={testID}
       style={styles.scroll}
       keyboardShouldPersistTaps="handled"
@@ -37,9 +68,11 @@ export function ScreenScaffold({ children, action, testID }: Props) {
         },
       ]}
     >
-      {isOffline ? <OfflineBanner /> : null}
-      {children}
-      {action ? <View style={styles.action}>{action}</View> : null}
+      <ScrollToFieldContext.Provider value={scrollToField}>
+        {isOffline ? <OfflineBanner /> : null}
+        {children}
+        {action ? <View style={styles.action}>{action}</View> : null}
+      </ScrollToFieldContext.Provider>
     </ScrollView>
   );
 }
