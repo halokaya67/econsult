@@ -3,6 +3,8 @@ import { renderRouter, screen } from "expo-router/testing-library";
 import { AccessibilityInfo, ScrollView, Text, TextInput } from "react-native";
 import QuestionsScreen from "@/app/econsult/questions";
 import type { Question } from "@/api/contracts";
+import * as choiceGroupSource from "@/components/ChoiceGroup";
+import { accessibleName, labelWithRequirement } from "@/components/TextField";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
 import * as questionSource from "@/features/econsult/useQuestions";
@@ -18,6 +20,16 @@ function MessageProbe() {
       {`message:${draft.answers["q-duration"] ?? ""}:${draft.answers["q-medication"] ?? ""}`}
     </Text>
   );
+}
+
+// A choice group that keeps its label and error but never reports a node, so the screen has
+// nothing to scroll to or focus.
+function NodelessChoiceGroup({
+  label,
+  requirement,
+  error,
+}: React.ComponentProps<typeof choiceGroupSource.ChoiceGroup>) {
+  return <Text>{accessibleName(labelWithRequirement(label, requirement), error)}</Text>;
 }
 
 const DRAFT: DraftState = { ...initialDraft, recipientId: "ct-11" };
@@ -128,6 +140,32 @@ describe("Questions step", () => {
     expect(scrollTo).toHaveBeenCalledWith({ x: 0, y: FIELD_TOP - spacing.md, animated: true });
     expect(measureLayout.mock.contexts).not.toContainEqual(expect.any(TextInput));
     expect(focus).toHaveBeenCalledWith(expect.any(TextInput), "focus");
+  });
+
+  test("a blocked Continue announces the error even when the field reports no node", async () => {
+    jest.spyOn(choiceGroupSource, "ChoiceGroup").mockImplementation(NodelessChoiceGroup);
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    const focus = jest
+      .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
+      .mockImplementation(() => {});
+    getInnerViewRef.mockReturnValue(CONTENT_REF);
+    measureLayout.mockImplementation((_relativeTo, onSuccess) => onSuccess(0, FIELD_TOP, 300, 40));
+    // The preset already mocks these two, so spying hands back one mock shared by the whole file.
+    announce.mockClear();
+    focus.mockClear();
+    const user = userEvent.setup();
+    renderQuestions();
+    await screen.findByText(CHOICE);
+
+    await user.press(screen.getByRole("button", { name: "Continue" }));
+
+    expect(screen.getByText(`${CHOICE}. Error: ${REQUIRED_ERROR}`)).toBeOnTheScreen();
+    expect(announce).toHaveBeenCalledWith(REQUIRED_ERROR);
+    expect(scrollTo).not.toHaveBeenCalled();
+    expect(focus).not.toHaveBeenCalled();
+    expect(screen).toHavePathname("/econsult/questions");
   });
 
   test("answering clears the error and Continue records the answers in the draft", async () => {

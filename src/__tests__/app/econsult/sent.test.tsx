@@ -164,6 +164,23 @@ describe("Sent", () => {
     expect(screen.getByRole("button", { name: "Continue without the photo" })).toBeOnTheScreen();
   });
 
+  test("a retry uploads nothing when the e-consult reference is missing", async () => {
+    const retry = { mutateAsync: jest.fn(), isPending: false, error: null };
+    jest
+      .spyOn(useSubmitModule, "useRetryAttachment")
+      .mockReturnValue(retry as unknown as ReturnType<typeof useSubmitModule.useRetryAttachment>);
+    const user = userEvent.setup();
+    renderSent({ ...SENT, econsultId: null, photo: READY_PHOTO, attachment: "failed" });
+
+    await user.press(await screen.findByRole("button", { name: "Try again" }));
+
+    expect(retry.mutateAsync).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Your message was sent, but the photo could not be attached",
+      { exact: false },
+    );
+  });
+
   test("an attached photo is confirmed", async () => {
     renderSent({ ...SENT, photo: READY_PHOTO, attachment: "attached" });
 
