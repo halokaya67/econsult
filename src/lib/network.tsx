@@ -1,6 +1,11 @@
 import { onlineManager } from "@tanstack/react-query";
 import { useNetworkState } from "expo-network";
-import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, type ReactNode } from "react";
+import { announce } from "./announce";
+
+export const OFFLINE_MESSAGE =
+  "You're offline. You can keep writing, but sending needs a connection.";
+export const BACK_ONLINE_MESSAGE = "You're back online.";
 
 const OfflineContext = createContext<boolean>(false);
 
@@ -18,9 +23,15 @@ export function NetworkProvider({
 }) {
   const state = useNetworkState();
   const isOffline = isLinkDown(state.isConnected, forceOffline);
+  const wasOffline = useRef(isOffline);
 
+  // The one provider for the app announces the transition, so the patient hears it once however
+  // many screens the stack keeps mounted.
   useEffect(() => {
     onlineManager.setOnline(!isOffline);
+    if (isOffline === wasOffline.current) return;
+    wasOffline.current = isOffline;
+    announce(isOffline ? OFFLINE_MESSAGE : BACK_ONLINE_MESSAGE);
   }, [isOffline]);
 
   return <OfflineContext.Provider value={isOffline}>{children}</OfflineContext.Provider>;

@@ -25,8 +25,7 @@ export type DraftAction =
   | { type: "photoRemoved" }
   | { type: "submitStarted"; idempotencyKey: string }
   | { type: "econsultCreated"; econsultId: string }
-  | { type: "attachmentSettled"; attachment: AttachmentStatus }
-  | { type: "reset" };
+  | { type: "attachmentSettled"; attachment: AttachmentStatus };
 
 export const initialDraft: DraftState = {
   recipientId: null,
@@ -68,8 +67,6 @@ export function draftReducer(state: DraftState, action: DraftAction): DraftState
       return { ...state, econsultId: action.econsultId };
     case "attachmentSettled":
       return { ...state, attachment: action.attachment };
-    case "reset":
-      return initialDraft;
   }
 }
 

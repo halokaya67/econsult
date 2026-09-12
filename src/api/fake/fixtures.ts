@@ -2,8 +2,6 @@
 // real response, so the fixtures exercise the schemas instead of bypassing them.
 export const FIXTURE_PRACTICE_IDS = ["prc-0421", "prc-0873", "prc-0000"] as const;
 
-export type FixturePracticeId = (typeof FIXTURE_PRACTICE_IDS)[number];
-
 export const rawPractices: Record<string, unknown> = {
   "prc-0421": {
     practiceId: "prc-0421",

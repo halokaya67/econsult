@@ -1,11 +1,5 @@
+import { handled } from "@/test/handled";
 import { ApiError, isApiError, withTimeout } from "./transport";
-
-// Jest fails a test on an unhandled rejection, and fake timers settle these promises before the
-// assertion attaches, so the rejection is marked handled the moment the work starts.
-function handled<T>(promise: Promise<T>): Promise<T> {
-  promise.catch(() => undefined);
-  return promise;
-}
 
 describe("ApiError", () => {
   test("carries its kind and status and is recognised by isApiError", () => {

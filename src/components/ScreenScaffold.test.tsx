@@ -1,10 +1,10 @@
 import { fireEvent, screen } from "@testing-library/react-native";
 import * as Network from "expo-network";
 import { useRef } from "react";
-import { AccessibilityInfo, Platform, ScrollView, Text } from "react-native";
+import { Platform, ScrollView, Text } from "react-native";
+import { OFFLINE_MESSAGE } from "@/lib/network";
 import { renderWithProviders } from "@/test/providers";
 import { spacing } from "@/theme/tokens";
-import { BACK_ONLINE_MESSAGE, OFFLINE_MESSAGE } from "./OfflineBanner";
 import { ScreenScaffold, useScrollToField } from "./ScreenScaffold";
 
 const mockedState = jest.mocked(Network.useNetworkState);
@@ -58,36 +58,17 @@ describe("ScreenScaffold", () => {
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  test("shows the offline banner and announces it when the link goes down", () => {
-    const announce = jest
-      .spyOn(AccessibilityInfo, "announceForAccessibility")
-      .mockImplementation(() => {});
-    mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
-    const view = renderWithProviders(
-      <ScreenScaffold>
-        <Text>Body</Text>
-      </ScreenScaffold>,
-    );
-
+  // Announcing the transition belongs to NetworkProvider, so it is asserted in network.test.tsx.
+  test("shows the offline banner while the link is down", () => {
     mockedState.mockReturnValue({ isConnected: false, isInternetReachable: false });
-    view.rerender(
+
+    renderWithProviders(
       <ScreenScaffold>
         <Text>Body</Text>
       </ScreenScaffold>,
     );
 
     expect(screen.getByRole("alert")).toHaveTextContent(OFFLINE_MESSAGE);
-    expect(announce).toHaveBeenCalledWith(OFFLINE_MESSAGE);
-
-    mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
-    view.rerender(
-      <ScreenScaffold>
-        <Text>Body</Text>
-      </ScreenScaffold>,
-    );
-
-    expect(screen.queryByRole("alert")).toBeNull();
-    expect(announce).toHaveBeenCalledWith(BACK_ONLINE_MESSAGE);
   });
 
   test("uses drag-to-dismiss on Android and interactive dismissal on iOS", () => {
