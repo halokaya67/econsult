@@ -43,6 +43,22 @@ async function pressHome(user: ReturnType<typeof userEvent.setup>) {
   act(() => router.dismissTo("/"));
 }
 
+function spyOnAlert() {
+  return jest.spyOn(Alert, "alert").mockImplementation(() => {});
+}
+
+function pressDialogButton(alert: ReturnType<typeof spyOnAlert>, text: string) {
+  const button = alert.mock.calls.at(-1)?.[2]?.find((candidate) => candidate.text === text);
+  expect(button).toBeDefined();
+  act(() => button?.onPress?.());
+}
+
+async function startGuardedStepOne(user: ReturnType<typeof userEvent.setup>) {
+  renderFlow({}, { ...initialDraft, message: "My knee hurts" }, "/");
+  await user.press(screen.getByRole("button", { name: "Write to your practice" }));
+  await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" });
+}
+
 describe("Recipient step", () => {
   afterEach(() => jest.restoreAllMocks());
 
@@ -134,11 +150,9 @@ describe("Recipient step", () => {
   });
 
   test("leaving with a typed message asks before discarding", async () => {
-    const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
+    const alert = spyOnAlert();
     const user = userEvent.setup();
-    renderFlow({}, { ...initialDraft, message: "My knee hurts" }, "/");
-    await user.press(screen.getByRole("button", { name: "Write to your practice" }));
-    await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" });
+    await startGuardedStepOne(user);
 
     await pressHome(user);
 
@@ -150,19 +164,44 @@ describe("Recipient step", () => {
     expect(screen).toHavePathname("/econsult/recipient");
   });
 
-  test("choosing Discard in the dialog carries out the blocked back navigation", async () => {
-    const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
+  test("choosing Discard after a blocked back navigation leaves the wizard for home", async () => {
+    const alert = spyOnAlert();
     const user = userEvent.setup();
-    renderFlow({}, { ...initialDraft, message: "My knee hurts" }, "/");
-    await user.press(screen.getByRole("button", { name: "Write to your practice" }));
-    await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" });
-    // Going back is what the guard intercepts; Discard then replays that very action.
+    await startGuardedStepOne(user);
     act(() => router.back());
 
-    const discard = alert.mock.calls[0][2]?.find((button) => button.text === "Discard");
-    act(() => discard?.onPress?.());
+    pressDialogButton(alert, "Discard");
 
     await waitFor(() => expect(screen).toHavePathname("/"));
+    expect(screen.getByRole("button", { name: "Write to your practice" })).toBeOnTheScreen();
+  });
+
+  test("choosing Discard after the header Home button leaves the wizard for home", async () => {
+    const alert = spyOnAlert();
+    const user = userEvent.setup();
+    await startGuardedStepOne(user);
+    await pressHome(user);
+
+    pressDialogButton(alert, "Discard");
+
+    await waitFor(() => expect(screen).toHavePathname("/"));
+    expect(screen.getByRole("button", { name: "Write to your practice" })).toBeOnTheScreen();
+  });
+
+  test("choosing Keep writing stays on step 1 with the draft still guarded", async () => {
+    const alert = spyOnAlert();
+    const user = userEvent.setup();
+    await startGuardedStepOne(user);
+    await pressHome(user);
+
+    pressDialogButton(alert, "Keep writing");
+
+    expect(screen).toHavePathname("/econsult/recipient");
+    expect(screen.getByText("Step 1 of 3")).toBeOnTheScreen();
+    // The guard only still fires while the draft holds the message it would discard.
+    await pressHome(user);
+    expect(alert).toHaveBeenCalledTimes(2);
+    expect(screen).toHavePathname("/econsult/recipient");
   });
 
   test("leaving without content goes home at once", async () => {
