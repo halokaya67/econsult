@@ -21,20 +21,28 @@ function withoutKey(errors: AnswerErrors, key: string): AnswerErrors {
   return rest;
 }
 
+type SetNode = (node: Focusable | null) => void;
+
 type FieldProps = {
   question: Question;
   value: string | null;
   error: string | undefined;
   onChange: (value: string) => void;
-  fieldRef: (node: Focusable | null) => void;
+  // A failed Continue scrolls to the anchor and focuses the focus node. A choice group has no
+  // input, so its label serves as both.
+  anchorRef: SetNode;
+  focusRef: SetNode;
 };
 
-function QuestionField({ question, value, error, onChange, fieldRef }: FieldProps) {
+function QuestionField({ question, value, error, onChange, anchorRef, focusRef }: FieldProps) {
   const requirement = requirementOf(question);
   if (question.type === "choice") {
     return (
       <ChoiceGroup
-        ref={fieldRef}
+        ref={(node) => {
+          anchorRef(node);
+          focusRef(node);
+        }}
         label={question.label}
         requirement={requirement}
         options={question.options}
@@ -46,7 +54,8 @@ function QuestionField({ question, value, error, onChange, fieldRef }: FieldProp
   }
   return (
     <TextField
-      ref={fieldRef}
+      containerRef={anchorRef}
+      ref={focusRef}
       label={question.label}
       requirement={requirement}
       value={value ?? ""}
@@ -63,12 +72,15 @@ function ContinueButton({ onContinue }: { onContinue: (scrollToField: ScrollToFi
   return <PrimaryButton label="Continue" onPress={() => onContinue(scrollToField)} />;
 }
 
+type NodesByQuestion = Map<string, Focusable | null>;
+
 export default function QuestionsScreen() {
   const router = useRouter();
   const { draft, dispatch } = useDraft();
   const questions = useQuestions();
   const [errors, setErrors] = useState<AnswerErrors>({});
-  const fieldRefs = useRef<Map<string, Focusable | null>>(new Map());
+  const anchorNodes = useRef<NodesByQuestion>(new Map());
+  const focusNodes = useRef<NodesByQuestion>(new Map());
 
   function answer(questionId: string, value: string) {
     dispatch({ type: "answerChanged", questionId, value });
@@ -79,14 +91,14 @@ export default function QuestionsScreen() {
     const next = validateAnswers(questions, draft.answers);
     setErrors(next);
     const firstInvalid = questions.find((question) => next[question.id]);
-    if (firstInvalid) {
-      const node = fieldRefs.current.get(firstInvalid.id) ?? null;
-      scrollToField(node);
-      announce(next[firstInvalid.id]);
-      focusForScreenReader(node);
+    if (!firstInvalid) {
+      router.push("/econsult/message");
       return;
     }
-    router.push("/econsult/message");
+    // Scroll before announcing: screen-reader focus alone leaves the screen looking untouched.
+    scrollToField(anchorNodes.current.get(firstInvalid.id) ?? null);
+    announce(next[firstInvalid.id]);
+    focusForScreenReader(focusNodes.current.get(firstInvalid.id) ?? null);
   }
 
   return (
@@ -103,7 +115,8 @@ export default function QuestionsScreen() {
           value={draft.answers[question.id] ?? null}
           error={errors[question.id]}
           onChange={(value) => answer(question.id, value)}
-          fieldRef={(node) => void fieldRefs.current.set(question.id, node)}
+          anchorRef={(node) => void anchorNodes.current.set(question.id, node)}
+          focusRef={(node) => void focusNodes.current.set(question.id, node)}
         />
       ))}
     </ScreenScaffold>

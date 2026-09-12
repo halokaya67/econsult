@@ -1,9 +1,11 @@
 import { userEvent } from "@testing-library/react-native";
 import { renderRouter, screen } from "expo-router/testing-library";
-import { AccessibilityInfo, ScrollView, Text } from "react-native";
+import { AccessibilityInfo, ScrollView, Text, TextInput } from "react-native";
 import QuestionsScreen from "@/app/econsult/questions";
+import type { Question } from "@/api/contracts";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
+import * as questionSource from "@/features/econsult/useQuestions";
 import { REQUIRED_ERROR } from "@/features/econsult/validation";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders } from "@/test/providers";
@@ -21,6 +23,15 @@ function MessageProbe() {
 const DRAFT: DraftState = { ...initialDraft, recipientId: "ct-11" };
 const CHOICE = "How long have you had this problem? (required)";
 const TEXT = "Are you already taking anything for it? (optional)";
+
+// No fixture practice asks a required text question, so this one is stubbed in where it is needed.
+const REQUIRED_TEXT_QUESTION: Question = {
+  id: "q-symptom",
+  label: "What is bothering you?",
+  type: "text",
+  required: true,
+};
+const REQUIRED_TEXT = `${REQUIRED_TEXT_QUESTION.label} (required)`;
 
 function renderQuestions(draft: DraftState = DRAFT) {
   return renderRouter(
@@ -41,11 +52,15 @@ const scrollTo = jest.mocked(ScrollView.prototype.scrollTo);
 const getInnerViewRef = jest.mocked(
   (ScrollView.prototype as ScrollView & { getInnerViewRef: () => unknown }).getInnerViewRef,
 );
+// View, Text and TextInput share one measureLayout mock in the jest preset, so which node was
+// measured is read from the receiver of the call rather than from a per-component mock.
 const measureLayout = jest.mocked(Text.prototype.measureLayout);
 
 // Stands in for the content view element getInnerViewRef returns under the New Architecture.
 const CONTENT_REF = {};
+// The field group starts at its label; a text question's input sits below that label.
 const FIELD_TOP = 620;
+const INPUT_TOP = 700;
 
 describe("Questions step", () => {
   beforeEach(() => {
@@ -93,6 +108,26 @@ describe("Questions step", () => {
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
     expect(scrollTo).toHaveBeenCalledWith({ x: 0, y: FIELD_TOP - spacing.md, animated: true });
+  });
+
+  test("scrolls an empty required text question by its container and focuses its input", async () => {
+    jest.spyOn(questionSource, "useQuestions").mockReturnValue([REQUIRED_TEXT_QUESTION]);
+    const focus = jest
+      .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
+      .mockImplementation(() => {});
+    getInnerViewRef.mockReturnValue(CONTENT_REF);
+    measureLayout.mockImplementation(function (this: unknown, _relativeTo, onSuccess) {
+      onSuccess(0, this instanceof TextInput ? INPUT_TOP : FIELD_TOP, 300, 132);
+    });
+    const user = userEvent.setup();
+    renderQuestions();
+    await screen.findByLabelText(REQUIRED_TEXT);
+
+    await user.press(screen.getByRole("button", { name: "Continue" }));
+
+    expect(scrollTo).toHaveBeenCalledWith({ x: 0, y: FIELD_TOP - spacing.md, animated: true });
+    expect(measureLayout.mock.contexts).not.toContainEqual(expect.any(TextInput));
+    expect(focus).toHaveBeenCalledWith(expect.any(TextInput), "focus");
   });
 
   test("answering clears the error and Continue records the answers in the draft", async () => {
