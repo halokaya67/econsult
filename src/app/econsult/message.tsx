@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -260,6 +260,7 @@ function SendFeedback({
 
 export default function MessageScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const isOffline = useIsOffline();
   const { draft } = useDraft();
   const recipients = useRecipients();
@@ -268,9 +269,11 @@ export default function MessageScreen() {
   const preparing = isPhotoPreparing(draft);
   const isSending = send.submit.isPending;
 
-  // Back, swipe and step 1's Home button wait for the send to settle, so the confirmation can
-  // never land on top of a screen the patient moved to meanwhile.
-  usePreventRemove(isSending, () => {});
+  // Back, swipe and step 1's Home button wait for the send to settle. A replace is re-dispatched
+  // instead, so reaching the confirmation never depends on which render the lock is read from.
+  usePreventRemove(isSending, ({ data }) => {
+    if (data.action.type === "REPLACE") navigation.dispatch(data.action);
+  });
 
   return (
     <ScreenScaffold action={<SendButton send={send} isOffline={isOffline} preparing={preparing} />}>
