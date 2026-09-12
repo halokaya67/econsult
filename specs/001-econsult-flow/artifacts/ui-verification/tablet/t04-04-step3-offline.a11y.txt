@@ -1,0 +1,33 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 29 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Questions"
+    @e5 [navigation-bar] "Questions"
+      @e6 [button] "Questions"
+      @e7 [text] "Message"
+    @e8 [other] "Vertical scroll bar, 1 page"
+      @e9 [other] "You're offline. You can keep writing, but sending needs a connection."
+        @e10 [scroll-area] [scrollable] [same label as parent]
+          @e11 [other] [same label as parent]
+          @e12 [text] "STEP 3 OF 3"
+          @e13 [text] "Your message"
+          @e14 [text] "To: Dr. J. de Vries"
+          @e15 [button] "Change"
+          @e16 [text] "What would you like to ask?"
+          @e17 [text] "What helps your GP: where it is, since when, and what you have already tried."
+          @e18 [other] "What would you like to ask?"
+            @e19 [text-view] [editable] [same label as parent]
+              @e20 [other] "_UITextSelectionRangeAdjustmentContainerView"
+                @e21 [other] "com.apple.text.grabber.leading"
+              @e22 [other] "Vertical scroll bar, 1 page"
+              @e23 [other] "Horizontal scroll bar, 1 page"
+          @e24 [text] "Add a photo if it helps, for example of a rash or a wound."
+          @e25 [text] "The camera isn't available on this device. You can choose a photo from your library."
+          @e26 [button] "Choose from library"
+          @e27 [button] "Send" [disabled]
+          @e28 [other] "Vertical scroll bar, 1 page"
+          @e29 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]

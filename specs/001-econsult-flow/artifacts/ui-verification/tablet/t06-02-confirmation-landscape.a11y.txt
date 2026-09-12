@@ -1,0 +1,20 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 16 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Sent"
+    @e5 [navigation-bar] "Sent"
+      @e6 [text] "Sent"
+    @e7 [other] "Vertical scroll bar, 1 page"
+      @e8 [other] "Message sent"
+        @e9 [scroll-area] "Message sent" [scrollable]
+          @e10 [text] "Message sent"
+          @e11 [text] "Sent to Dr. J. de Vries."
+          @e12 [text] "Your practice usually replies within two working days."
+          @e13 [text] "Reference: ec-1"
+          @e14 [button] "Done"
+          @e15 [other] "Vertical scroll bar, 1 page"
+          @e16 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]

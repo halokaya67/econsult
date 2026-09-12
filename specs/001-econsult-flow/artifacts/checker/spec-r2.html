@@ -1,0 +1,189 @@
+<meta charset="utf-8">
+<title>Spec review, round 2</title>
+<meta name="description" content="Verdict: PASS_WITH_FLAGS. 2 warnings, 2 information items.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · spec round 2</p>
+    <h1>Spec review, round 2</h1>
+    <p class="lede">Verdict: PASS_WITH_FLAGS. 2 warnings, 2 information items.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: ac23b796121707c19
+mode: spec · round: 2 · reviewed head: f39fb58 · previous round: checker/spec-r1.md</p>
+<p>All verification is in. Evidence summary before the report:</p>
+<ul>
+<li><code>useOnAction.js:75</code> — every state-changing action runs <code>shouldPreventRemove</code> before <code>setState</code>; <code>useOnPreventRemove.js</code> — when the parent pops the <code>econsult</code> route, the nested navigator&#39;s keyed listener walks <strong>all</strong> nested routes with <code>nextRoutes = []</code>, so a guard on Sent <em>or</em> on step 1 blocks a root-level unwind.</li>
+<li><code>NativeStackView.native.js:210-219,310-315</code> — <code>preventNativeDismiss</code> is set from the (propagated) prevented map and a cancelled swipe re-enters JS as a <code>pop</code>, so the spec&#39;s &quot;swipe-back → confirmation&quot; claim holds.</li>
+<li><code>imperative-api.js:10-13</code> — <code>router.*</code> calls are queued and flushed in a <code>useEffect</code> after commit; <code>getNavigationAction.js:33-45,91</code> — <code>dismissTo(&#39;/&#39;)</code> targets the divergent (root) navigator, <code>dismissAll</code> only reaches step 1 of the nested stack.</li>
+<li>Decisions log: file absent → empty; no dismissals to honour.</li>
+</ul>
+<h2 id="spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</h2>
+<p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
+<p><strong>Reviewed:</strong> 6/6 files (spec.md, how-it-works.md, <code>case-study-mobile.md</code>, checker/spec-r1.md, package.json, app.json) · diff: n/a (mode spec) · head: f39fb58 (unchanged since round 1; working tree: only <code>specs/</code> untracked) · canon cited: workflow.md (Coding Canon: KISS/YAGNI; Testing bar &quot;numeric thresholds are stack-specific&quot;) · decisions log: file absent → empty, no dismissals · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): <code>PreventRemoveProvider|usePreventRemove</code> in expo-router/build → 20 files (vendored core + native-stack); <code>@react-navigation</code> top-level and nested under expo-router → 0 dirs (vendoring confirmed); <code>shouldPreventRemove</code> in core/useOnAction.js → 1 (line 75); <code>preventRemove|preventNativeDismiss|gestureEnabled|preventedRoutes|onNativeDismissCancelled|onDismissed</code> in native-stack/views/NativeStackView.native.js → 8 lines; <code>dismissTo|dismissAll</code> in global-state/router.d.ts → 4; <code>POP_TO</code> in global-state/<em>.js + link/</em>.js → 3 (router.js:78,87; BaseExpoRouterLink.js:68); <code>routingQueue.run|subscribe</code> in expo-router/build → imperative-api.js:10,12 (flushed in <code>useEffect</code>); <code>event|popTo|findDivergentState|target|replace</code> in global-state/getNavigationAction.js → 7 (root navigator targeted for <code>/deeply/nested → /top-level</code>)</p>
+<div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>W1 — empty state unreachable</td><td>RESOLVED</td><td>spec.md:62 <code>prc-0000</code> (no recipients, no questions); :74 &quot;practice (all three fixtures)&quot;; :91, :202 name it for SC6</td></tr><tr><td>W2 — camera detection vs expo-device removal</td><td>RESOLVED</td><td>spec.md:44 <code>Device.isDevice</code> gate; :81 &quot;expo-device stays&quot;; :124, :184 consistent</td></tr><tr><td>W3 — unquantified read retry</td><td>RESOLVED</td><td>spec.md:40 <code>retry: 1, retryDelay: 1000</code>, mutations never auto-retry; :145 worst case 2×15 s + 1 s = 31 s (arithmetic holds)</td></tr><tr><td>W4 — prefetch vs dev settings, stale data</td><td>RESOLVED</td><td>spec.md:43/:74 apply clears cache + returns home; :101 error shown even with stale data; :71 loading-visibility note; :156 keys include practice id</td></tr><tr><td>W5 — Change row navigation</td><td>RESOLVED</td><td>spec.md:105 <code>router.dismissTo</code> to step 1, draft kept, re-walk; :138 step-1 guard via <code>usePreventRemove</code> — reading (a), judged as written</td></tr><tr><td>W6 — nested stack header ownership</td><td>RESOLVED</td><td>spec.md:39/:70 root <code>headerShown: false</code> for <code>econsult</code>; :72 nested stack owns titles/back, labelled Home header-left, banner inside scaffold below header; :46</td></tr><tr><td>W7 — 100 % everywhere unreachable</td><td>RESOLVED</td><td>spec.md:203 tiered: 100 % st+br on api/features/lib, ≥ 90 % statements on components/app, <code>Platform.OS</code> mocked per test (residual <code>__DEV__</code> point → I2 below, INFO)</td></tr><tr><td>I1 — unpinned values</td><td>RESOLVED</td><td>:144 latencies; :99 greeting fixed; :161 &quot;care team member&quot;; :199 <code>toHaveStyle</code>; :81/:188 zod 4; :83 favicon; :197 &quot;under two minutes&quot;</td></tr><tr><td>I2 — hand-in items</td><td>RESOLVED</td><td>spec.md:18 recording by hand; platform statement + Android checklist in DECISIONS.md</td></tr><tr><td>I3 — inbox preview asserted as fact</td><td>RESOLVED</td><td>spec.md:57 reworded as assumption with client-side fallback</td></tr><tr><td>I4 — no delivery order</td><td>RESOLVED</td><td>spec.md:85-95 five-item order with cut order (tooling first — a different route than suggested, same outcome)</td></tr></tbody></table></div>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>coverage</td><td>spec.md:202</td><td>&quot;Offline before send&quot; is no longer reachable from the panel: Apply clears the cache, forced offline pauses the reads, step 1 never loads</td></tr><tr><td>W2</td><td>WARNING</td><td>consistency</td><td>spec.md:107</td><td>Done cannot unwind the flow as written: Sent&#39;s own guard, and then step 1&#39;s new guard, prevent the root pop of the <code>econsult</code> group</td></tr><tr><td>I1</td><td>INFO</td><td>ambiguity</td><td>spec.md:92</td><td>Delivery-order fallback relies on <code>.env</code> seeds for faults that the spec never declares</td></tr><tr><td>I2</td><td>INFO</td><td>coverage</td><td>spec.md:115</td><td>The <code>__DEV__</code>-gated warning lives in a 100 %-branch tier with no named way to exercise the release branch</td></tr></tbody></table></div>
+<h3>W1 — &quot;Offline before send&quot; is unreachable from the developer settings screen after the cache-clear fix</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> coverage</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:202</code> (also :40, :43, :46, :74, :173)</li>
+<li><strong>Finding:</strong> Fix-delta regression from round-1 W4. The reviewer&#39;s only path to the offline state is: open the panel from home (:99), force offline, Apply — which now clears the query cache and returns home (:43, :74). Query&#39;s online manager is &quot;wired to the same source&quot; (:46, :173), so it reports offline. TanStack Query v5 queries default to <code>networkMode: &#39;online&#39;</code>, under which a query with no cached data does not fire and sits at <code>status: &#39;pending&#39;, fetchStatus: &#39;paused&#39;</code> (training-data recall, not verified — the package is not installed). Step 1 therefore shows the three placeholder cards with the offline banner and never reaches loaded, so step 3 and its disabled Send are never on screen. Before the cache clear, a warm cache from the home prefetch masked this; the round-1 fix removed the mask. Round 1 missed it because it reviewed the prefetch/cache interaction without the forced-offline lever.</li>
+<li><strong>Why:</strong> SC6 promises this state &quot;reachable from the development settings screen and covered by a test&quot;; the recording and the live demo cannot show the one offline state the brief asks for (brief:196). The plan&#39;s coverage matrix would mark SC6 satisfied by a test that fakes the network hook while the app itself cannot get there.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>Line 40 — after "…mutations never retry automatically" add:
+"Reads use `networkMode: 'offlineFirst'`: the first attempt always runs (the fake transport is in-process; a real
+request fails fast) and only the retry pauses until the device is back online. Mutations keep the default `online`
+mode."
+Line 202 — replace "offline before send" with:
+"offline before send (force offline, Apply, enter the flow: step 1 still loads because reads are offline-first;
+step 3 shows the banner and the disabled Send)"</code></pre>
+<pre class="code"><code>new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, retryDelay: 1000, networkMode: 'offlineFirst' },
+    mutations: { retry: 0 },
+  },
+})</code></pre>
+</li>
+<li><strong>Needs user:</strong> yes — this changes the spec&#39;d read semantics (:40 &quot;paused-while-offline&quot;). The alternative that keeps <code>online</code> mode is to exempt the offline toggle from the cache clear and document that the reviewer must enter the flow once online first, which weakens SC6&#39;s wording rather than the behaviour.</li>
+</ul>
+<h3>W2 — Done is blocked by the flow&#39;s own leave guards</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:107</code> (also :39, :130, :138, :139, :172, :181)</li>
+<li><strong>Finding:</strong> Verified in the vendored navigator: <code>core/useOnAction.js:75</code> runs <code>shouldPreventRemove</code> for every state-changing action, and <code>core/useOnPreventRemove.js</code> (<code>useOnPreventRemove</code> → keyed <code>beforeRemove</code> listener) makes a parent pop of the <code>econsult</code> route evaluate <strong>every</strong> route of the nested stack against <code>nextRoutes = []</code>, last screen first. Two consequences the spec does not address. (1) :139/:172 put an unconditional <code>usePreventRemove</code> on Sent; Done&#39;s own unwind (<code>router.dismissTo(&#39;/&#39;)</code>, which <code>getNavigationAction.js:37</code> correctly targets at the root navigator) removes the <code>econsult</code> route, so Sent&#39;s guard swallows Done. (2) Even with Sent lowered, step 1&#39;s new guard from :138 (<code>hasMessage || hasPhoto</code>) is still true because :107 says the draft is cleared <em>by</em> Done and :39/:130 say it dies with the provider — neither happens before the pop — so the patient gets &quot;Discard your message?&quot; on the confirmation screen. Round 1 did not have the step-1 guard (new in W5&#39;s fix) and W6 stopped at header ownership without tracing <code>beforeRemove</code> through the nested navigator. Also unnamed: which call Done uses — <code>router.dismissAll</code> (:181 reuse map) is <code>popToTop</code> on the <em>closest</em> stack (<code>router.d.ts:68-74</code>) and would land on step 1, not home.</li>
+<li><strong>Why:</strong> The confirmation screen is the last thing the recording and the interview demo show; a Done that does nothing, or that asks whether to discard a message that was just sent, fails &quot;a clear confirmation that my message has been sent&quot; and looks like the app is confused about its own state. Both guards are state machines the plan must get right in the same task; the spec needs to say which state lowers them.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>Line 107 — replace "Back navigation is prevented; 'Done' unwinds the flow and returns home with the draft cleared."
+with: "Back navigation is prevented while the screen is showing (`usePreventRemove(!isLeaving)`). Done sets
+`isLeaving`; an effect then calls `router.dismissTo('/')` (not `dismissAll`, which only reaches step 1 of the
+nested stack). Leaving the group unmounts the draft provider, which is what clears the draft."
+Line 138 — replace "(`usePreventRemove`)" with:
+"(`usePreventRemove((hasMessage || hasPhoto) &amp;&amp; econsultId == null)`, so the guard is already down once the
+message has been created and Done can unwind past step 1)"</code></pre>
+<pre class="code"><code>// sent.tsx
+const [isLeaving, setIsLeaving] = useState(false);
+usePreventRemove(!isLeaving, () =&gt; {});
+useEffect(() =&gt; { if (isLeaving) router.dismissTo('/'); }, [isLeaving]);
+// recipient.tsx
+usePreventRemove(hasUnsentContent &amp;&amp; draft.econsultId == null, ({ data }) =&gt;
+  confirmDiscard(() =&gt; navigation.dispatch(data.action)));</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I1 — Delivery-order fallback names <code>.env</code> fault seeds the spec never declares</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> ambiguity</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:92</code> (also :43, :95, :25)</li>
+<li><strong>Finding:</strong> Introduced by the I4 fix. :92 says &quot;Until it exists, <code>.env</code> seeds switch practice and faults&quot; and :95 &quot;the <code>.env</code> seeds remain&quot;, but :43 declares exactly one seed, <code>EXPO_PUBLIC_PRACTICE_ID</code>. If item 4 is cut, the planner has to invent latency/fault variables, and :25&#39;s &quot;injects failures without editing code&quot; becomes &quot;edits <code>.env</code>&quot;.</li>
+<li><strong>Why:</strong> Small fork the plan must guess at; the contingency the spec promises is not actually specified.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>Line 43 — after "`EXPO_PUBLIC_PRACTICE_ID` … seeds the default practice" add:
+"; `EXPO_PUBLIC_LATENCY_MS` and `EXPO_PUBLIC_FAULTS` (comma-separated `request:kind` pairs, e.g. `config:timeout`)
+seed latency and faults the same way"
+— or — Line 92: "Until it exists, `.env` seeds switch practice only; faults need the panel."</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I2 — <code>__DEV__</code>-gated warning sits in a 100 %-branch tier with no named mechanism</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> coverage</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:115</code> (also :76, :203)</li>
+<li><strong>Finding:</strong> Residual of round-1 W7: the fix named <code>Platform.OS</code> but not <code>__DEV__</code>, which W7 also listed. The &quot;development warning&quot; for a <code>recipientIds</code> entry absent from the care team (:115) naturally lives in the hook that merges config and care team (:76, <code>src/features</code>), where SC7 (:203) demands 100 % branches. jest-expo runs with <code>__DEV__ = true</code>, so the release branch of an <code>if (__DEV__)</code> never executes unless a test flips the global (a plain writable global — training-data recall, not verified; jest-expo is not installed).</li>
+<li><strong>Why:</strong> The final gate would fail on a branch that no test can reach by accident, or the implementer moves the warning to a 90 %-tier folder to dodge it. Canon: workflow.md testing bar — thresholds must be reachable.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>Line 203 — append: "; the `__DEV__` guard on the missing-recipient warning is exercised by setting
+`globalThis.__DEV__ = false` in one test (or the guard lives in a single `src/lib/devWarn.ts` helper)"</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<p><strong>Possibly dismissed:</strong> none (decisions log absent)</p>
+<p><strong>Summary:</strong> All eleven round-1 flags are resolved in the current text and the revisions hold together — the three-fixture set, the tiered coverage bar, the pinned latencies and the delivery order all read cleanly. Fix W2 first: it is a verified interaction in the vendored navigator (<code>useOnAction.js:75</code>, <code>useOnPreventRemove.js</code>) between the two guards the spec now carries, and the plan&#39;s navigation task depends on which state lowers each guard; then W1, a regression of the round-1 cache-clear fix that makes SC6&#39;s offline state unreachable from the panel — the user should pick between offline-first reads and a warm-cache caveat at the gate. Done well: the W5/W6 fixes chose a design (<code>dismissTo</code> + nested-stack-owned header + <code>usePreventRemove</code>) that the native-stack sources confirm works for swipe, header back and Android back exactly as claimed.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/spec-r2.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

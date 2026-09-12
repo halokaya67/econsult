@@ -1,0 +1,14 @@
+env: load .env
+env: export EXPO_PUBLIC_FAULTS EXPO_PUBLIC_LATENCY_MS EXPO_PUBLIC_PRACTICE_ID
+Starting project at <repo>
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Starting Metro Bundler
+
+warning: Bundler cache is empty, rebuilding (this may take a minute)
+Waiting on http://localhost:8082
+
+Logs for your project will appear below.
+iOS Bundled 2673ms node_modules/expo-router/entry.js (1483 modules)
+iOS Bundled 34ms node_modules/expo-router/entry.js (1 module)
+iOS Bundled 29ms node_modules/expo-router/entry.js (1 module)

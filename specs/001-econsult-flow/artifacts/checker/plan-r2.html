@@ -1,0 +1,342 @@
+<meta charset="utf-8">
+<title>Plan review, round 2</title>
+<meta name="description" content="Verdict: FAIL. 4 blockers, 4 warnings, 7 information items.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · plan round 2</p>
+    <h1>Plan review, round 2</h1>
+    <p class="lede">Verdict: FAIL. 4 blockers, 4 warnings, 7 information items.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-plan">Spec-Checker Report — mode: plan</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: a0a38b0436bb74636
+mode: plan · round: 2 · reviewed: plan.md revision 2.1 (working tree) · previous round: checker/plan-r1.md · dispatched in the foreground (recorded as completed in flow-dispatches.jsonl)</p>
+<h2 id="spec-checker-report-mode-plan">Spec-Checker Report — mode: plan</h2>
+<p><strong>Verdict:</strong> FAIL</p>
+<p><strong>Reviewed:</strong> 5/5 artifact files (plan.md 6790 lines in full, working tree; spec.md 216 lines, working tree; how-it-works.md; checker/plan-r1.md; research.md by grep) plus repo <code>tsconfig.json</code>, <code>expo/tsconfig.base.json</code>, <code>.expo/types/router.d.ts</code>, <code>assets/</code> listing, <code>git status</code> · diff: n/a (mode plan) · canon cited: workflow.md (Coding Canon: size caps, DRY, Testing bar) · decisions log: 1 entry (spec-gate approval), 0 dismissals · Sourcegraph not configured, local tree only; standalone take-home repo, no cross-repo consumers · searches:</p>
+<ul>
+<li>plan.md: <code>If .* then|fall back</code> → 1 (the T001 BLOCKED clause only); <code>TBD|TODO|similar to Task</code> → 0; <code>git commit|git add</code> → 0; <code>^### Task</code> → 22</li>
+<li>research.md: <code>useNetworkState|NetworkState</code> → 8 (<code>NetworkState</code> fields all optional, :144); <code>randomUUID</code> → 0 (expo-crypto not unpacked; <code>Crypto.randomUUID()</code> in T005 is unverified here, not flagged)</li>
+<li>jest-mock 29.7.0 (packed): <code>build/index.js:958-961</code> <code>restoreAllMocks</code> restores spies only, never resets <code>jest.fn</code> implementations → the plan&#39;s <code>afterEach(restoreAllMocks)</code> is safe; <code>replaceProperty</code> requires an existing configurable property (<code>:800-820</code>)</li>
+<li>RNTL 13.3.3: <code>helpers/accessibility.js:88-100</code> <code>isAccessibilityElement</code> (explicit <code>accessible</code> wins, else host Text/TextInput/Switch); <code>queries/label-text.js:12</code> + <code>helpers/matchers/match-label-text.js</code> + <code>accessibility.js:147-159</code> <code>computeAriaLabel</code> → label queries have no <code>accessible</code> gate; <code>user-event/type/type.js:34</code> appends to the current value; <code>render.d.ts:9</code> <code>wrapper?: React.ComponentType&lt;any&gt;</code></li>
+<li>expo-router 57.0.21: <code>testing-library/index.js:29</code> <code>Object.assign(exports, rnTestingLibrary)</code> (runtime has <code>userEvent</code>) but <code>index.d.ts:9</code> declares only <code>act, cleanup, fireEvent, waitFor, waitForElementToBeRemoved, within, configure, resetToDefaults, isHiddenFromAccessibility, isInaccessible, getDefaultNormalizer, renderHook</code> + <code>export type *</code>; <code>testing-library/expect.d.ts</code> = <code>export {}</code>; <code>grep -rl toHavePathname --include=*.d.ts</code> → 0; <code>react-navigation/routers/StackRouter.js:336-376</code> <code>POP_TO</code> replaces the current route when the target is absent; <code>core/useOnPreventRemove.js</code> nested <code>beforeRemove</code> supported; <code>useScreens.js:73,78</code> extraneous/unknown <code>Stack.Screen</code> → <code>console.warn</code> only</li>
+<li>babel: <code>babel-preset-expo/build/index.js:59-61</code> + <code>common.js:133-150</code> always yield a runtime version → <code>@react-native/babel-preset/src/configs/main.js:194-203</code> enables <code>@babel/plugin-transform-runtime</code> <code>helpers: true</code> → <code>_interopRequireWildcard</code> cache shared, so <code>jest.replaceProperty(Device, &quot;isDevice&quot;, false)</code> reaches <code>PhotoPicker</code>&#39;s <code>Device</code> copy</li>
+<li>jest-expo 57.0.5: <code>src/resolveBabelOptions.js:44-60</code> falls back to <code>babel-preset-expo</code> when no <code>babel.config.js</code> (repo has none); <code>setup.js:189-232</code> no <code>expo-image/mocks</code> → real <code>requireNativeViewManager</code>; <code>@react-native/jest-preset</code> 0.86.3 (packed) <code>jest/setup.js:149-151</code> mocks <code>NativeComponentRegistry.get</code> → <code>mockNativeComponent(name)</code> (<code>mockNativeComponent.js:32</code> renders a host element with all props) so the polyfill&#39;s throwing <code>getViewConfig</code> (<code>expo-modules-core/src/polyfill/dangerous-internal.ts:19-21</code>) is never called and <code>getByLabelText(&quot;Your photo&quot;)</code> matches (<code>expo-image/src/ExpoImage.tsx:104</code> forwards <code>accessibilityLabel</code>)</li>
+<li>expo-image-picker 57.0.17: <code>ImagePicker.types.d.ts:48,230-254,420</code> <code>MediaType</code>, asset <code>uri/width/height</code>, <code>mediaTypes</code> array; <code>ImagePicker.d.ts:35,47,98-99</code> 3-tuple hooks, <code>PermissionResponse</code>/<code>PermissionStatus</code> exported; expo-image-manipulator 57.0.17: <code>ImageManipulatorContext.d.ts:14,49</code>, <code>ImageRef.d.ts:19</code></li>
+<li>@expo/cli (under <code>expo/node_modules</code>): <code>customize/customizeAsync.js:42</code> file args run without prompting; <code>customize/templates.js:93-102</code> → <code>customize/typescript.js</code> bootstraps typed routes; <code>lint/lintAsync.js:90-93</code> <code>DEFAULT_INPUTS = [&#39;src&#39;,&#39;app&#39;,&#39;components&#39;]</code> (root <code>eslint.config.js</code> is not linted); eslint-config-expo 57.0.2 (packed) <code>flat/utils/typescript.js:68-82</code> <code>no-undef: off</code>, <code>@typescript-eslint/no-unused-vars</code> warn with <code>ignoreRestSiblings: true</code></li>
+<li>expo-router <code>package.json</code> peers: gesture-handler, reanimated, react-native-web, react-dom all <code>optional: true</code> (T021 uninstall safe)</li>
+<li>tsc 6.0.3 probes (scratchpad <code>tscheck2</code>, repo tsconfig + overlay, <code>preserveSymlinks</code> so RNTL resolves from expo-router&#39;s d.ts): <strong>fail</strong> — <code>jest.setup.ts</code> manipulator factory (TS7022/TS7024), <code>import { userEvent } from &quot;expo-router/testing-library&quot;</code> (TS1362), <code>expect(screen).toHavePathname</code> (TS2339 on <code>JestMatchers&lt;Screen&gt;</code>), T011 <code>context.renderAsync.mockRejectedValueOnce</code> (TS2339); <strong>compile</strong> — the three fixes below, <code>observed!</code>, <code>let outcome;</code>, <code>withFault</code>/<code>withoutKey</code> computed-key rest, <code>fieldRefs</code> map with <code>Ref&lt;View&gt;</code>/<code>Ref&lt;TextInput&gt;</code> callbacks, <code>ComponentRef&lt;typeof Text&gt;</code> cast to <code>Focusable</code>, <code>Permission</code> tuple from both picker hooks, <code>denied</code> with <code>PermissionStatus.DENIED</code>, <code>Image accessibilityLabel/contentFit</code>, <code>Switch accessible={false}</code>, <code>renderRouter</code> <code>wrapper: ({ children })</code>, <code>applyPhotoReady</code> spread, <code>parseFaults</code> reduce</li>
+</ul>
+<div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>C1 — screen tests inside <code>src/app</code></td><td>RESOLVED</td><td>plan.md:4993-4994, :5276, :5541, :5750, :6133, :6333 create under <code>src/__tests__/app/</code>; :26, :70, :4996 state the rule; :154 excludes it from coverage</td></tr><tr><td>C2 — real layout shadows the test draft</td><td>RESOLVED</td><td>plan.md:5213-5232 <code>flowLayoutWith(draft)</code>; :5304, :5573, :5808, :6160 register it; :2503-2504 <code>DraftProvider</code> takes <code>initial</code></td></tr><tr><td>C3 — hoist-unsafe mock factories</td><td>RESOLVED</td><td>plan.md:173, :194 <code>mockUuidCounter</code>/<code>mockGrantedPermission</code>; the manipulator factory is self-contained (but see new C1)</td></tr><tr><td>C4 — role queries on plain Views</td><td>RESOLVED</td><td>plan.md:4036 OfflineBanner, :4641 ErrorState, :6291 sent warning box carry <code>accessible</code>; :4263, :4281, :5590-5604 use <code>*ByLabelText</code> for the group</td></tr><tr><td>C5 — zod input type</td><td>RESOLVED</td><td>plan.md:1367 <code>parse&lt;S extends z.ZodType&gt;(…): z.output&lt;S&gt;</code> (probe: <code>Services</code> type-checks)</td></tr><tr><td>C6 — <code>PermissionStatus</code> literal, <code>manipulate()</code> arity</td><td>RESOLVED</td><td>plan.md:4722 <code>ImagePicker.PermissionStatus.DENIED</code>; :3512 <code>manipulate(ORIGINAL.uri)</code> (the replacement line has its own type error, new C4)</td></tr><tr><td>W1 — decidable hedges</td><td>RESOLVED</td><td>grep: only the T001 BLOCKED clause remains (:299); :3283 test renamed, <code>options</code> assertion gone; :3741 <code>props.accessibilityHint</code></td></tr><tr><td>W2 — second Home button</td><td>RESOLVED</td><td>plan.md:5499 header-left only; :5313-5318 test-side <code>pressHome</code> fallback</td></tr><tr><td>W3 — guard never exercised</td><td>RESOLVED</td><td>plan.md:6157-6168 starts on <code>/econsult/recipient</code>, pushes <code>sent</code>; :6188 <code>router.back()</code> has a target (different route than suggested, same outcome)</td></tr><tr><td>W4 — Remove unreachable while preparing</td><td>RESOLVED</td><td>plan.md:4909-4921 preparing branch renders Remove; :4804-4813 test; :4696 states the one-photo rule; spec.md:105/:126 aligned</td></tr><tr><td>W5 — <code>__DEV__</code> in screens</td><td>RESOLVED</td><td>plan.md:1749-1751 <code>isDevelopmentBuild</code>; :5177, :6543 branch on it; :5058, :6430 stub it</td></tr><tr><td>W6 — verbatim duplicates</td><td>RESOLVED</td><td>plan.md:2831 <code>recipientNameFor</code> (T008), :462 <code>IDEMPOTENCY_HEADER</code> (T002), :2090-2135 <code>src/test/providers.tsx</code> (T006)</td></tr><tr><td>W7 — missing tests, tautologies</td><td>RESOLVED</td><td>plan.md:2719-2725 care-team error; :5359-5369 preselect; no <code>toBeInstanceOf(ApiError)</code> constructor test, no <code>options?.networkMode</code></td></tr><tr><td>I1 — test counts</td><td>RESOLVED</td><td>recounted every &quot;Expected: PASS, N tests&quot; (T002–T020): all match</td></tr><tr><td>I2 — File Structure</td><td>RESOLVED</td><td>plan.md:48-49, :60, :68</td></tr><tr><td>I3 — <code>.prettierignore</code> fence</td><td>RESOLVED</td><td>plan.md:271-272</td></tr><tr><td>I4 — Switch height, picker while sending</td><td>RESOLVED</td><td>plan.md:6521-6535 <code>OfflineToggle</code> row <code>minHeight: MIN_TOUCH</code>; :4873, :6085 <code>disabled</code></td></tr></tbody></table></div>
+<p>Coverage matrix (spec → tasks): every Screens/Edge Cases/Data model/UX/Non-functional/Integrations item maps to a task (recipient step T016, questions T017, message T018, sent T019, photo lifecycle T007/T011/T014, offline T005/T012/T018, idempotency T003/T004/T007/T018, dev panel T006/T020, cleanup T021, docs T022). Gaps: spec.md:169 radiogroup for recipient cards (W2 below); SC7&#39;s 100 % branch thresholds are unreachable with the listed tests (W1 below). Tasks → spec orphans: none (<code>STALE_TIME_MS</code>, <code>presentation: &quot;modal&quot;</code>, <code>unstable_settings.anchor</code> remain justified as in round 1). TDD order holds in every task; every <code>Files:</code> block has exact paths and a <code>T###</code> id; no commit steps; each scoped verify runs against files that exist at that point in the sequence.</p>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>C1</td><td>CRITICAL</td><td>tests</td><td>plan.md:222-223 (T001 <code>jest.setup.ts</code>)</td><td><code>mockContext</code> references itself in its initializer → TS7022; <code>npm run typecheck</code> fails from T001 Step 7 onward</td></tr><tr><td>C2</td><td>CRITICAL</td><td>tests</td><td>plan.md:5008 (T015), :5287, :5552, :5785, :6144, :6345</td><td><code>userEvent</code> is only a type re-export of <code>expo-router/testing-library</code> → TS1362 in all six screen-test files</td></tr><tr><td>C3</td><td>CRITICAL</td><td>tests</td><td>plan.md:5037 (T015) and 18 more sites</td><td><code>expect(screen).toHavePathname(…)</code> has no shipped type augmentation → TS2339 in all six screen-test files</td></tr><tr><td>C4</td><td>CRITICAL</td><td>tests</td><td>plan.md:3512-3513 (T011 test)</td><td><code>context.renderAsync.mockRejectedValueOnce</code> on the un-mocked return type → TS2339; T011 typecheck fails</td></tr><tr><td>W1</td><td>WARNING</td><td>tests</td><td>plan.md:1083, :1098, :1149, :1155, :2859-2862</td><td>Six branches no listed test reaches; the 100 % branch thresholds on <code>src/api</code> and <code>src/features</code> (:156-158, SC7) fail at the finish-phase coverage run</td></tr><tr><td>W2</td><td>WARNING</td><td>spec-compliance</td><td>plan.md:5448-5462 (T016 <code>RecipientList</code>)</td><td>Recipient cards are not wrapped in a radio group (spec.md:169)</td></tr><tr><td>W3</td><td>WARNING</td><td>standards</td><td>plan.md:5992-6100 (<code>MessageScreen</code>)</td><td>109-line function; four more at 52-61 lines against the plan&#39;s own &quot;functions under 50 lines&quot; (:23)</td></tr><tr><td>W4</td><td>WARNING</td><td>reuse</td><td>plan.md:5185-5186, :6304-6305, :6585-6586, :4956, :4655-4656, :4092-4097</td><td>The same <code>body</code>/<code>title</code> text styles are copied into six files</td></tr><tr><td>I1</td><td>INFO</td><td>consistency</td><td>plan.md:3461 (T011 Produces)</td><td><code>resizeTargetFor</code> signature omits <code>| null</code> that the implementation (:3573) and tests (:3491) use</td></tr><tr><td>I2</td><td>INFO</td><td>consistency</td><td>plan.md:6738, :5</td><td>AI-USAGE hard-codes &quot;three rounds&quot;/&quot;two&quot;; the spec had five checker rounds, the plan at least two</td></tr><tr><td>I3</td><td>INFO</td><td>consistency</td><td>spec.md:62 vs plan.md:653-658</td><td>Spec says the care team fixture holds five members; prc-0421 ships four</td></tr><tr><td>I4</td><td>INFO</td><td>tests</td><td>plan.md:2120, :5227, :5203-5206</td><td><code>TestProviders</code> builds a new <code>QueryClient</code> on every render; <code>flowLayoutWith</code>/<code>EConsultLayout</code> declare screens absent from test route maps (warn noise)</td></tr><tr><td>I5</td><td>INFO</td><td>tests</td><td>plan.md:4789-4791 (T014)</td><td><code>mockReturnValue</code> on the library-permission mock outlives the test (<code>restoreAllMocks</code> does not reset it); later tests pass only by order</td></tr><tr><td>I6</td><td>INFO</td><td>tests</td><td>plan.md:6203-6214 (T019)</td><td>The &quot;Try again&quot; test cannot observe a successful retry; the <code>attached</code>-after-retry path is screen-untested</td></tr><tr><td>I7</td><td>INFO</td><td>standards</td><td>plan.md:6568, :6576 (T020)</td><td><code>option as LatencyOption</code> / <code>as FaultOption</code> casts where a <code>string</code>-keyed lookup needs none</td></tr></tbody></table></div>
+<h3>C1 — <code>jest.setup.ts</code> mock factory does not type-check</h3>
+<ul>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:217-231 (self-reference at :222-223)</li>
+<li><strong>Finding:</strong> <code>const mockContext = { resize: jest.fn(() =&gt; mockContext), … }</code> is a self-referential initializer; under <code>strict</code> tsc 6.0.3 reports TS7022 (<code>&#39;mockContext&#39; implicitly has type &#39;any&#39; because … referenced directly or indirectly in its own initializer</code>) and TS7024 on the arrow. <code>tsconfig.json</code> includes <code>**/*.ts</code>, so <code>npm run typecheck</code> (T001 Step 7) exits non-zero and every later task&#39;s verify inherits the failure. Round 1 missed it because C3 checked the hoisting rule, not the type-check of the setup file; the factory was not among C3&#39;s rewritten lines.</li>
+<li><strong>Why:</strong> The first verify of the whole plan fails; the implementer would hunt in the wrong place (the plan blames only the RNTL pin in its BLOCKED clause).</li>
+<li><strong>Suggested fix:</strong> (probe compiled)<pre class="code"><code>jest.mock("expo-image-manipulator", () =&gt; {
+  const mockImage = {
+    saveAsync: jest.fn(async () =&gt; ({ uri: "file:///cache/processed.jpg", width: 1600, height: 1200 })),
+    release: jest.fn(),
+  };
+  const mockContext: { resize: jest.Mock; renderAsync: jest.Mock; release: jest.Mock } = {
+    resize: jest.fn(() =&gt; mockContext),
+    renderAsync: jest.fn(async () =&gt; mockImage),
+    release: jest.fn(),
+  };
+  return {
+    SaveFormat: { JPEG: "jpeg", PNG: "png", WEBP: "webp" },
+    ImageManipulator: { manipulate: jest.fn(() =&gt; mockContext) },
+  };
+});</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>C2 — <code>userEvent</code> is not a value export of <code>expo-router/testing-library</code></h3>
+<ul>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:5008 (T015 <code>index.test.tsx</code>), :5287 (T016), :5552 (T017), :5785 (T018), :6144 (T019), :6345 (T020)</li>
+<li><strong>Finding:</strong> <code>node_modules/expo-router/build/testing-library/index.d.ts:9</code> declares only <code>act, cleanup, fireEvent, waitFor, waitForElementToBeRemoved, within, configure, resetToDefaults, isHiddenFromAccessibility, isInaccessible, getDefaultNormalizer, renderHook</code> as values; everything else comes through <code>export type * from &#39;@testing-library/react-native&#39;</code>. Probe: <code>import { … userEvent … } from &quot;expo-router/testing-library&quot;</code> → TS1362 &quot;&#39;userEvent&#39; cannot be used as a value because it was exported using &#39;export type&#39;&quot;. The runtime works (<code>index.js:29</code> <code>Object.assign(exports, rnTestingLibrary)</code>), so jest passes and only <code>npm run typecheck</code> fails — in every task from T015 on. Round 1 read the d.ts for <code>renderRouter</code>&#39;s option shape and did not compile the named imports.</li>
+<li><strong>Why:</strong> Six tasks&#39; scoped verify (<code>npm run typecheck</code>) fail; SC7 (&quot;type-check … pass&quot;) cannot be met.</li>
+<li><strong>Suggested fix:</strong> In all six test files:<pre class="code"><code>import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
+import { userEvent } from "@testing-library/react-native";</code></pre>
+(same module instance under jest; <code>screen</code> from expo-router is a live getter onto RNTL&#39;s, so mixing is safe.)</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>C3 — <code>toHavePathname</code> has no type declaration</h3>
+<ul>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:5037, :5054, :5345, :5356, :5395, :5406, :5607, :5621, :5632, :5831, :5844, :5867, :5879, :5891, :5905, :6190, :6200, :6424, :6433</li>
+<li><strong>Finding:</strong> expo-router 57.0.21 registers the matchers at runtime (<code>testing-library/expect.js:19 expect.extend({ toHavePathname… })</code>) but ships no augmentation: <code>expect.d.ts</code> is <code>export {}</code> and no <code>.d.ts</code> in the package mentions <code>toHavePathname</code>. With <code>@types/jest</code> 29.5.14 the probe gives TS2339 &quot;Property &#39;toHavePathname&#39; does not exist on type &#39;JestMatchers<Screen>&#39;&quot; (with RNTL correctly resolved; <code>preserveSymlinks</code> probe). Nineteen assertions across T015–T020 fail <code>tsc</code>. Same miss as C2.</li>
+<li><strong>Why:</strong> Same as C2; together they make every screen task&#39;s verify red.</li>
+<li><strong>Suggested fix:</strong> Add one ambient file in T015 (Files: <code>Create: src/test/expo-router-matchers.d.ts</code>; File Structure row; it is a <code>.d.ts</code>, so <code>collectCoverageFrom</code>&#39;s <code>!src/test/**</code> and <code>moduleDetection: &quot;force&quot;</code> are unaffected — probe compiled with the repo tsconfig):<pre class="code"><code>// expo-router registers these matchers at runtime (testing-library/expect.js) but ships no types.
+declare namespace jest {
+  interface Matchers&lt;R&gt; {
+    toHavePathname(pathname: string): R;
+    toHavePathnameWithParams(pathname: string): R;
+    toHaveSegments(segments: string[]): R;
+    toHaveSearchParams(params: Record&lt;string, string | string[]&gt;): R;
+    toHaveRouterState(state: unknown): R;
+  }
+}</code></pre>
+Alternative without the file: <code>expect(view.getPathname()).toBe(&quot;/…&quot;)</code> on the <code>renderRouter</code> result, which is typed.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>C4 — T011 failure test calls a mock method on a plain type</h3>
+<ul>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:3512-3513 (<code>photo.test.ts</code>)</li>
+<li><strong>Finding:</strong> <code>jest.mocked(fn)</code> (deep by default in @types/jest 29, <code>index.d.ts:248</code>) types the <em>function</em> as a mock, but a call still returns <code>ReturnType&lt;typeof manipulate&gt;</code> = <code>ImageManipulatorContext</code>; <code>context.renderAsync.mockRejectedValueOnce</code> → TS2339 &quot;Property &#39;mockRejectedValueOnce&#39; does not exist on type &#39;() =&gt; Promise<ImageRef>&#39;&quot; (probe). Round 1&#39;s own C6 suggestion introduced this line without type-probing it.</li>
+<li><strong>Why:</strong> T011&#39;s <code>npm run typecheck</code> fails; the coverage of the failure branch depends on this test.</li>
+<li><strong>Suggested fix:</strong> (probe compiled; the shared-context mock makes this the same object <code>processPhoto</code> receives)<pre class="code"><code>const context = jest.mocked(manipulate(ORIGINAL.uri));
+context.renderAsync.mockRejectedValueOnce(new Error("decode failed"));</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W1 — Six branches without a test; the 100 % branch thresholds fail</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:1083 (<code>delay</code> pre-aborted signal), :1098 (<code>hangUntilAborted</code> pre-aborted signal), :1149 (<code>postJson</code> unknown path), :1155 (<code>uploadPhoto</code> unknown path), :2859-2862 (<code>combineRecipients.retry</code>: config-ok/team-error arms); thresholds :156-158</li>
+<li><strong>Finding:</strong> Every fake-transport test aborts <em>after</em> the call starts, so both <code>if (signal.aborted) return reject(…)</code> arms stay false; no test posts or uploads to a wrong path; <code>retry</code> is only invoked with a config error (:2666-2677), so <code>if (config.isError)</code> false and <code>if (team.isError)</code> true are never executed. <code>coverageThreshold</code> demands 100 % branches on <code>./src/api/</code> and <code>./src/features/</code>, so <code>npm run test:coverage</code> (SC7, run in the flow&#39;s finish phase) exits non-zero. Round 1 did not walk branch coverage.</li>
+<li><strong>Why:</strong> SC7 is unattainable as planned and surfaces only at the end of the flow.</li>
+<li><strong>Suggested fix:</strong> T003 <code>fakeTransport.test.ts</code> (count → 18):<pre class="code"><code>test("a request started with an already-aborted signal rejects at once", async () =&gt; {
+  const transport = createFakeTransport();
+  const controller = new AbortController();
+  controller.abort();
+  await expect(transport.getJson("/practices/prc-0421/care-team", controller.signal)).rejects.toMatchObject({ name: "AbortError" });
+  const hanging = createFakeTransport({ faults: { config: "timeout" } });
+  await expect(hanging.getJson("/practices/prc-0421/econsult-config", controller.signal)).rejects.toMatchObject({ name: "AbortError" });
+});
+test("posting or uploading to an unknown path is a 404 server error", async () =&gt; {
+  const transport = createFakeTransport({ latencyMs: 0 });
+  await expect(transport.postJson("/nope", {}, key("k"), signal())).rejects.toMatchObject({ kind: "server", status: 404 });
+  await expect(transport.uploadPhoto("/nope", PHOTO, signal())).rejects.toMatchObject({ kind: "server", status: 404 });
+});</code></pre>
+T008 <code>useRecipients.test.tsx</code> (count → 21):<pre class="code"><code>test("retry refetches only the care team when that is the failed request", () =&gt; {
+  const refetch = jest.fn();
+  const result = combineRecipients([fakeResult&lt;PracticeEConsultConfig&gt;({ data: CONFIG }), fakeResult&lt;CareTeamMember[]&gt;({ isError: true, refetch })]);
+  if (result.status === "error") result.retry();
+  expect(refetch).toHaveBeenCalled();
+});</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W2 — Recipient cards are not in a radio group</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> spec-compliance</li>
+<li><strong>Location:</strong> plan.md:5448-5462 (<code>RecipientList</code> returns a fragment), spec.md:169</li>
+<li><strong>Finding:</strong> The spec&#39;s screen-reader rule says &quot;Recipient cards are grouped as radio buttons in a radio group with <code>checked</code> state&quot;; <code>ChoiceGroup</code> has the <code>radiogroup</code> container (:4483), the recipient step does not. Round 1 saw these lines but concentrated on the environment blockers.</li>
+<li><strong>Why:</strong> VoiceOver/TalkBack lose the &quot;1 of 3&quot; group context on the first step, the step the spec singles out for radio semantics.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>&lt;View accessibilityRole="radiogroup" accessibilityLabel={STEP_TITLES.recipient} style={styles.list}&gt;
+  {result.recipients.map(/* unchanged */)}
+&lt;/View&gt;
+// styles: list: { gap: spacing.md }
+// recipient.test.tsx, first test: expect(screen.getByLabelText(STEP_TITLES.recipient)).toBeOnTheScreen();</code></pre>
+(Do not add <code>accessible</code>; the group must stay a container, see :25.)</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W3 — Functions over the plan&#39;s own 50-line cap</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> standards</li>
+<li><strong>Location:</strong> plan.md:5992-6100 <code>MessageScreen</code> (109 lines); :4891-4951 <code>PhotoPicker</code> (61); :1109-1163 <code>createFakeTransport</code> (55); :5670-5724 <code>QuestionsScreen</code> (55); :5464-5515 <code>RecipientScreen</code> (52)</li>
+<li><strong>Finding:</strong> Global Constraints (:23) and canon (workflow.md &quot;functions &lt; 50 lines&quot;) set the cap; the message screen is more than double it. A final-mode review would flag the same lines.</li>
+<li><strong>Why:</strong> Canon: size caps.</li>
+<li><strong>Suggested fix:</strong> In <code>message.tsx</code>, move send state into a local hook and the feedback into a child, both in the same file (stays under the <code>src/app</code> 90 % statement tier, no new Files entry):<pre class="code"><code>function useSend(/* draft, dispatch, photo, session, router */) {
+  // messageError, status, submit, onMessageChange, onSend  (lines 5999-6048 verbatim)
+  return { messageError, status, submit, onMessageChange, onSend, messageRef };
+}
+function SendFeedback({ status, submit, onRetry }: …) {
+  return (&lt;&gt;{status ? &lt;Text accessibilityLiveRegion="polite" style={styles.status}&gt;{status}&lt;/Text&gt; : null}
+    {submit.isError ? &lt;ErrorState title={ERROR_TITLE} body={sendErrorCopy(submit.error)} onRetry={onRetry} /&gt; : null}&lt;/&gt;);
+}</code></pre>
+For the four marginal ones, extract <code>PreparingPhoto</code>/<code>ReadyPhoto</code> views from <code>PhotoPicker</code>, hoist <code>create()</code> out of <code>createFakeTransport</code> (pass <code>state</code>), and pull the <code>questions.map</code> renderer into <code>QuestionField</code>.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W4 — Text styles copied into six files</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> reuse</li>
+<li><strong>Location:</strong> plan.md:5185-5186 (<code>index.tsx</code>), :6304-6305 (<code>sent.tsx</code>), :6585-6586 (<code>dev-settings.tsx</code>), :4956 (<code>PhotoPicker</code>), :4655-4656 (<code>StatusViews</code>), :4092-4097 (<code>StepHeader</code>)</li>
+<li><strong>Finding:</strong> <code>body: { color: colors.text, fontSize: fontSize.body, lineHeight: lineHeight.body }</code> appears five times and the <code>title</code> object four times, character for character. Canon DRY (&quot;extract only real repetition&quot;): this is real, cross-task repetition.</li>
+<li><strong>Why:</strong> A type-scale change has six homes.</li>
+<li><strong>Suggested fix:</strong> T012 <code>Create: src/theme/text.ts</code> (add to Files and File Structure):<pre class="code"><code>import { StyleSheet } from "react-native";
+import { colors, fontSize, lineHeight } from "./tokens";
+export const text = StyleSheet.create({
+  title: { color: colors.text, fontSize: fontSize.title, lineHeight: lineHeight.title, fontWeight: "700" },
+  heading: { color: colors.text, fontSize: fontSize.heading, lineHeight: lineHeight.heading, fontWeight: "700" },
+  body: { color: colors.text, fontSize: fontSize.body, lineHeight: lineHeight.body },
+  muted: { color: colors.muted, fontSize: fontSize.body, lineHeight: lineHeight.body },
+});</code></pre>
+and <code>style={text.body}</code> / <code>style={text.title}</code> at the six sites.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I1 — Stale interface line for <code>resizeTargetFor</code></h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> plan.md:3461</li>
+<li><strong>Finding:</strong> The Produces block still reads <code>: { width: number } | { height: number }</code>; the implementation (:3573) and tests (:3491) return <code>| null</code>.</li>
+<li><strong>Why:</strong> The implementer is told the block is the contract.</li>
+<li><strong>Suggested fix:</strong> <code>export function resizeTargetFor(width: number, height: number): { width: number } | { height: number } | null;</code></li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I2 — Document counts fixed in the plan text</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> plan.md:6738 (AI-USAGE &quot;a spec checker over three rounds and a plan checker over two&quot;); plan.md:5 (header cites round 4 only)</li>
+<li><strong>Finding:</strong> <code>checker/</code> holds spec-r1..r5 and plan-r1 (this is plan round 2); AI-USAGE must be &quot;truthful to how this repository was actually produced&quot;.</li>
+<li><strong>Why:</strong> The hand-in would misstate the process.</li>
+<li><strong>Suggested fix:</strong> Replace the numbers with &quot;as many rounds as <code>specs/001-econsult-flow/checker/</code> records (five for the spec, N for the plan)&quot;, to be filled by the T022 implementer from the folder; extend the header to &quot;rounds 4 and 5&quot;.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I3 — &quot;Five members&quot; versus a four-member fixture</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> spec.md:62; plan.md:653-658</li>
+<li><strong>Finding:</strong> Spec: &quot;The care team fixture holds five members with roles&quot;; the prc-0421 team has four (<code>ct-11</code>, <code>ct-12</code>, <code>ct-19</code>, <code>ct-20</code>), prc-0873 two.</li>
+<li><strong>Why:</strong> Minor spec/plan drift.</li>
+<li><strong>Suggested fix:</strong> Either amend spec.md:62 to &quot;four members (one not writable)&quot; or add <code>{ id: &quot;ct-21&quot;, displayName: &quot;R. de Groot&quot;, role: &quot;other&quot; }</code> to prc-0421 (exercises the <code>other</code> → &quot;Care team member&quot; label in the app; also keep it out of <code>recipientIds</code>).</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I4 — Test-infrastructure hygiene</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:2120 (<code>client ?? testClient()</code>), :5227 (<code>flowLayoutWith</code> declares <code>sent</code>), :5203-5206 (<code>EConsultLayout</code> declares four screens)</li>
+<li><strong>Finding:</strong> <code>TestProviders</code> calls <code>testClient()</code> during render, so any <code>rerender</code> (T012 uses one) swaps the <code>QueryClient</code>; harmless today, a trap later. <code>useScreens.js:73,78</code> prints <code>console.warn</code> for every <code>Stack.Screen</code> whose route is missing from a test route map (T015 <code>_layout.test.tsx</code>, T016, T017).</li>
+<li><strong>Why:</strong> Silent cache resets and warning noise.</li>
+<li><strong>Suggested fix:</strong> <code>const [fallback] = useState(testClient); … client={client ?? fallback}</code>; in <code>flowLayoutWith</code>, keep the <code>sent</code> screen options only when tests register that route, or accept the noise and say so in the file comment.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I5 — T014 denied-permission mock outlives its test</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:4789-4791</li>
+<li><strong>Finding:</strong> jest-mock 29.7 <code>restoreAllMocks</code> (<code>build/index.js:958-961</code>) restores spies only; <code>jest.mocked(useMediaLibraryPermissions).mockReturnValue([denied…])</code> persists for the file&#39;s remaining tests, which pass only because none of them picks.</li>
+<li><strong>Why:</strong> Reordering the tests breaks &quot;a library pick starts a preparing photo&quot;.</li>
+<li><strong>Suggested fix:</strong> <code>jest.spyOn(ImagePicker, &quot;useMediaLibraryPermissions&quot;).mockReturnValue([denied, jest.fn(async () =&gt; denied), jest.fn(async () =&gt; denied)]);</code> — a spy, which <code>restoreAllMocks</code> does undo (same typing as today).</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I6 — Retry success is not observable at screen level</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> tests</li>
+<li><strong>Location:</strong> plan.md:6203-6214</li>
+<li><strong>Finding:</strong> The fake transport inside <code>TestProviders</code> has no e-consult <code>ec-1</code>, so &quot;Try again&quot; can only ever resolve <code>failed</code>; <code>waitFor(() =&gt; expect(screen.getByRole(&quot;alert&quot;)).toBeOnTheScreen())</code> cannot fail. The <code>attached</code> outcome after a retry (spec.md:107, :156) is covered only by the hook test in T010.</li>
+<li><strong>Why:</strong> Testing bar: the assertion does not distinguish a retry that ran from one that did not.</li>
+<li><strong>Suggested fix:</strong> Add a sibling test that stubs the hook: <code>jest.spyOn(useSubmitModule, &quot;useRetryAttachment&quot;).mockReturnValue({ mutateAsync: jest.fn(async () =&gt; &quot;attached&quot;), isPending: false } as unknown as ReturnType&lt;typeof useRetryAttachment&gt;)</code>, press &quot;Try again&quot;, then <code>expect(await screen.findByText(&quot;Your photo was attached.&quot;)).toBeOnTheScreen()</code>.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I7 — Narrowing casts in the developer settings screen</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> standards</li>
+<li><strong>Location:</strong> plan.md:6568, :6576</li>
+<li><strong>Finding:</strong> <code>latencyFor(option as LatencyOption)</code> and <code>faultFor(option as FaultOption)</code> cast a <code>string</code> because <code>ChoiceGroup.onChange</code> yields <code>string</code>.</li>
+<li><strong>Why:</strong> Canon: no unjustified casts.</li>
+<li><strong>Suggested fix:</strong> Type the lookups on <code>string</code>: <code>const LATENCY_BY_OPTION: Record&lt;string, number | null&gt; = { Default: null, None: 0, &quot;Slow (5 seconds)&quot;: SLOW_LATENCY_MS }; export function latencyFor(option: string) { return LATENCY_BY_OPTION[option] ?? null; }</code> and the same for <code>FAULT_BY_OPTION: Record&lt;string, FaultKind | undefined&gt;</code>; the helper tests keep working.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<p><strong>Possibly dismissed:</strong> none</p>
+<p><strong>Summary:</strong> Every round-1 flag is genuinely fixed and the revision 2.1 edits (signal-based <code>withTimeout</code>, the null resize target, the decisions text) match the current spec, including the T014 preview styling. The plan still fails on four type-check facts the fixes did not probe: the manipulator mock factory&#39;s self-reference in <code>jest.setup.ts</code> (C1, breaks T001&#39;s verify), <code>userEvent</code> and <code>toHavePathname</code> having no types in <code>expo-router/testing-library</code> (C2, C3, break T015–T020), and the T011 failure test&#39;s un-mocked context (C4); fix C1 first because every later verify depends on it. Beyond that, add the six missing branch tests before the coverage thresholds bite (W1) and wrap the recipient cards in a radio group (W2); the reducer, transport, services, hooks and the test-only flow layout are sound, and the jest environment facts I checked (spy-only <code>restoreAllMocks</code>, shared babel-runtime helpers for <code>replaceProperty</code>, the mocked native-component registry for the expo-image preview, non-interactive <code>expo customize</code>, <code>expo lint</code> inputs) all support the tests as written.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/plan-r2.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

@@ -1,0 +1,177 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 174 nodes
+{"label":"Expo Go","rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Application","enabled":true,"hittable":false,"index":0,"depth":0,"ref":"e1"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Window","enabled":true,"hittable":true,"index":1,"depth":1,"parentIndex":0,"ref":"e2"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":2,"depth":2,"parentIndex":1,"ref":"e3"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":3,"depth":3,"parentIndex":2,"ref":"e4"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":4,"depth":4,"parentIndex":3,"ref":"e5"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":5,"depth":5,"parentIndex":4,"ref":"e6"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":6,"depth":6,"parentIndex":5,"ref":"e7"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":7,"depth":7,"parentIndex":6,"ref":"e8"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":8,"depth":8,"parentIndex":7,"ref":"e9"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":9,"depth":9,"parentIndex":8,"ref":"e10"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":10,"depth":10,"parentIndex":9,"ref":"e11"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":11,"depth":11,"parentIndex":10,"ref":"e12"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":12,"depth":12,"parentIndex":11,"ref":"e13"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":13,"depth":13,"parentIndex":12,"ref":"e14"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":14,"depth":14,"parentIndex":13,"ref":"e15"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":15,"depth":15,"parentIndex":14,"ref":"e16"}
+{"rect":{"width":834,"height":1210,"x":0,"y":0},"type":"Other","enabled":true,"hittable":true,"index":16,"depth":16,"parentIndex":15,"ref":"e17"}
+{"depth":17,"label":"Questions","enabled":true,"hittable":true,"index":17,"type":"Other","parentIndex":16,"rect":{"width":834,"height":1210,"x":0,"y":0},"ref":"e18"}
+{"depth":18,"label":"Questions","enabled":true,"hittable":true,"index":18,"type":"Other","parentIndex":17,"rect":{"width":834,"height":1210,"x":0,"y":0},"ref":"e19"}
+{"depth":19,"label":"Questions","enabled":true,"hittable":true,"index":19,"type":"Other","parentIndex":18,"rect":{"width":834,"height":1210,"x":0,"y":0},"ref":"e20"}
+{"depth":20,"label":"Questions","enabled":true,"hittable":true,"index":20,"type":"NavigationBar","identifier":"Message","parentIndex":19,"rect":{"width":834,"height":54,"x":0,"y":32},"ref":"e21"}
+{"depth":21,"label":"Questions","enabled":true,"hittable":true,"index":21,"type":"Button","identifier":"BackButton","parentIndex":20,"rect":{"width":44,"height":44,"x":10,"y":32},"ref":"e22"}
+{"depth":21,"label":"Message","enabled":true,"hittable":true,"index":22,"type":"StaticText","parentIndex":20,"rect":{"width":71.5,"height":21,"x":381,"y":43.5},"ref":"e23"}
+{"depth":20,"enabled":true,"hittable":true,"index":23,"type":"Other","parentIndex":19,"rect":{"width":834,"height":1210,"x":0,"y":0},"ref":"e24"}
+{"depth":21,"enabled":true,"hittable":true,"index":24,"type":"Other","parentIndex":23,"rect":{"y":0,"width":834,"height":1210,"x":0},"ref":"e25"}
+{"depth":22,"enabled":true,"hittable":true,"index":25,"type":"Other","parentIndex":24,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e26"}
+{"depth":23,"label":"Vertical scroll bar, 2 pages","enabled":true,"hittable":true,"index":26,"type":"Other","parentIndex":25,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e27"}
+{"depth":24,"label":"Vertical scroll bar, 2 pages","enabled":true,"hittable":true,"index":27,"type":"Other","parentIndex":26,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e28"}
+{"depth":25,"label":"STEP 3 OF 3","enabled":true,"hittable":true,"index":28,"type":"Other","parentIndex":27,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e29"}
+{"depth":26,"label":"STEP 3 OF 3","enabled":true,"hittable":true,"index":29,"type":"ScrollView","parentIndex":28,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e30"}
+{"depth":27,"label":"STEP 3 OF 3","enabled":true,"hittable":true,"index":30,"type":"Other","parentIndex":29,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e31"}
+{"depth":28,"label":"STEP 3 OF 3","enabled":true,"hittable":true,"index":31,"type":"Other","parentIndex":30,"rect":{"y":86,"width":834,"height":1124,"x":0},"ref":"e32"}
+{"depth":29,"label":"STEP 3 OF 3","enabled":true,"hittable":true,"index":32,"type":"StaticText","parentIndex":31,"rect":{"y":102,"width":89.5,"height":17,"x":16},"ref":"e33"}
+{"depth":30,"label":"STEP 3 OF 3","enabled":true,"hittable":true,"index":33,"type":"StaticText","parentIndex":32,"rect":{"y":102,"width":89.5,"height":17,"x":16},"ref":"e34"}
+{"depth":29,"label":"Your message","enabled":true,"hittable":true,"index":34,"type":"StaticText","parentIndex":31,"rect":{"y":127,"width":802,"height":36,"x":16},"ref":"e35"}
+{"depth":30,"label":"Your message","enabled":true,"hittable":true,"index":35,"type":"StaticText","parentIndex":34,"rect":{"y":127,"width":802,"height":36,"x":16},"ref":"e36"}
+{"depth":29,"label":"To: Dr. J. de Vries","enabled":true,"hittable":true,"index":36,"type":"StaticText","parentIndex":31,"rect":{"y":191.5,"width":131.5,"height":23,"x":16},"ref":"e37"}
+{"depth":30,"label":"To: Dr. J. de Vries","enabled":true,"hittable":true,"index":37,"type":"StaticText","parentIndex":36,"rect":{"y":191.5,"width":131.5,"height":23,"x":16},"ref":"e38"}
+{"enabled":true,"index":38,"type":"Button","parentIndex":31,"hittable":true,"label":"Change","depth":29,"rect":{"y":179,"width":74.5,"height":48,"x":155.5},"ref":"e39"}
+{"enabled":true,"index":39,"type":"StaticText","parentIndex":31,"hittable":true,"label":"What would you like to ask?","depth":29,"rect":{"y":243,"width":802,"height":30.5,"x":16},"ref":"e40"}
+{"enabled":true,"index":40,"type":"StaticText","parentIndex":39,"hittable":true,"label":"What would you like to ask?","depth":30,"rect":{"y":243,"width":802,"height":30.5,"x":16},"ref":"e41"}
+{"enabled":true,"index":41,"type":"StaticText","parentIndex":31,"hittable":true,"label":"What helps your GP: where it is, since when, and what you have already tried.","depth":29,"rect":{"y":277.5,"width":802,"height":23,"x":16},"ref":"e42"}
+{"enabled":true,"index":42,"type":"StaticText","parentIndex":41,"hittable":true,"label":"What helps your GP: where it is, since when, and what you have already tried.","depth":30,"rect":{"y":277.5,"width":802,"height":23,"x":16},"ref":"e43"}
+{"enabled":true,"index":43,"type":"Other","parentIndex":31,"hittable":true,"label":"What would you like to ask?","depth":29,"rect":{"y":304.5,"width":802,"height":124.5,"x":16},"ref":"e44"}
+{"enabled":true,"index":44,"type":"TextView","parentIndex":43,"hittable":true,"label":"What would you like to ask?","value":"My knee has hurt for two weeks after a fall","rect":{"y":306.5,"width":798,"height":120.5,"x":18},"focused":true,"depth":30,"ref":"e45"}
+{"enabled":true,"index":45,"type":"Other","parentIndex":44,"hittable":false,"identifier":"_UITextSelectionRangeAdjustmentContainerView","depth":31,"rect":{"y":306.5,"width":0,"height":0,"x":18},"ref":"e46"}
+{"enabled":true,"index":46,"type":"Other","parentIndex":45,"hittable":false,"identifier":"com.apple.text.grabber.leading","depth":32,"rect":{"x":18,"y":306.5,"height":0,"width":0},"ref":"e47"}
+{"enabled":true,"index":47,"type":"Other","parentIndex":46,"hittable":true,"depth":33,"rect":{"width":16.5,"height":16.5,"x":10.75,"y":293},"ref":"e48"}
+{"enabled":true,"index":48,"type":"Other","parentIndex":46,"hittable":false,"depth":33,"rect":{"width":2,"x":18,"y":306.5,"height":0},"ref":"e49"}
+{"enabled":true,"index":49,"type":"Other","parentIndex":45,"hittable":false,"identifier":"com.apple.text.grabber.leading","depth":32,"rect":{"width":0,"x":18,"y":306.5,"height":0},"ref":"e50"}
+{"enabled":true,"index":50,"type":"Other","parentIndex":49,"hittable":true,"depth":33,"rect":{"width":16.5,"x":10.75,"y":293,"height":16.5},"ref":"e51"}
+{"enabled":true,"index":51,"type":"Other","parentIndex":49,"hittable":false,"depth":33,"rect":{"width":2,"x":18,"y":306.5,"height":0},"ref":"e52"}
+{"enabled":true,"index":52,"type":"Other","parentIndex":44,"hittable":true,"label":"Vertical scroll bar, 1 page","value":"0%","rect":{"width":30,"x":783,"y":306.5,"height":120.5},"depth":31,"ref":"e53"}
+{"enabled":true,"index":53,"type":"Other","parentIndex":52,"hittable":true,"depth":32,"rect":{"width":3,"x":810,"y":391,"height":33},"ref":"e54"}
+{"enabled":true,"index":54,"type":"Other","parentIndex":44,"hittable":true,"label":"Horizontal scroll bar, 1 page","value":"0%","rect":{"height":30,"y":394,"x":18,"width":798},"depth":31,"ref":"e55"}
+{"enabled":true,"index":55,"type":"Other","parentIndex":54,"hittable":true,"depth":32,"rect":{"height":3,"y":421,"x":21,"width":792},"ref":"e56"}
+{"enabled":true,"index":56,"type":"StaticText","parentIndex":31,"hittable":true,"label":"Add a photo if it helps, for example of a rash or a wound.","depth":29,"rect":{"height":23,"y":444.5,"x":16,"width":802},"ref":"e57"}
+{"enabled":true,"index":57,"type":"StaticText","parentIndex":56,"hittable":true,"label":"Add a photo if it helps, for example of a rash or a wound.","depth":30,"rect":{"height":23,"y":444.5,"x":16,"width":802},"ref":"e58"}
+{"enabled":true,"index":58,"type":"StaticText","parentIndex":31,"hittable":true,"label":"The camera isn't available on this device. You can choose a photo from your library.","depth":29,"rect":{"height":23,"y":475.5,"x":16,"width":802},"ref":"e59"}
+{"parentIndex":58,"hittable":true,"enabled":true,"type":"StaticText","label":"The camera isn't available on this device. You can choose a photo from your library.","rect":{"height":23,"y":475.5,"x":16,"width":802},"index":59,"depth":30,"ref":"e60"}
+{"parentIndex":31,"hittable":true,"enabled":true,"type":"Button","label":"Choose from library","rect":{"height":48,"y":506.5,"x":16,"width":802},"index":60,"depth":29,"ref":"e61"}
+{"parentIndex":31,"hittable":true,"enabled":true,"type":"Button","label":"Send","rect":{"height":48,"y":578.5,"x":16,"width":802},"index":61,"depth":29,"ref":"e62"}
+{"depth":27,"parentIndex":29,"hittable":true,"enabled":true,"type":"Other","label":"Vertical scroll bar, 2 pages","rect":{"height":764,"y":86,"x":801,"width":30},"index":62,"value":"0%","ref":"e63"}
+{"parentIndex":62,"hittable":true,"enabled":true,"type":"Other","rect":{"height":582,"y":89,"x":828,"width":3},"index":63,"depth":28,"ref":"e64"}
+{"depth":27,"parentIndex":29,"hittable":true,"enabled":true,"type":"Other","label":"Horizontal scroll bar, 1 page","rect":{"height":30,"y":1177,"x":32,"width":772},"index":64,"value":"0%","ref":"e65"}
+{"parentIndex":64,"hittable":true,"enabled":true,"type":"Other","rect":{"height":3,"y":1204,"x":35,"width":766},"index":65,"depth":28,"ref":"e66"}
+{"depth":27,"parentIndex":29,"hittable":true,"enabled":true,"type":"Other","label":"Vertical scroll bar, 2 pages","rect":{"height":764,"y":86,"x":801,"width":30},"index":66,"value":"0%","ref":"e67"}
+{"parentIndex":66,"hittable":true,"enabled":true,"type":"Other","rect":{"height":582,"y":89,"x":828,"width":3},"index":67,"depth":28,"ref":"e68"}
+{"depth":27,"parentIndex":29,"hittable":true,"enabled":true,"type":"Other","label":"Horizontal scroll bar, 1 page","rect":{"height":30,"y":1177,"x":32,"width":772},"index":68,"value":"0%","ref":"e69"}
+{"parentIndex":68,"hittable":true,"enabled":true,"type":"Other","rect":{"height":3,"y":1204,"x":35,"width":766},"index":69,"depth":28,"ref":"e70"}
+{"parentIndex":19,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":70,"depth":20,"ref":"e71"}
+{"parentIndex":70,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":71,"depth":21,"ref":"e72"}
+{"parentIndex":12,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":72,"depth":13,"ref":"e73"}
+{"parentIndex":72,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":73,"depth":14,"ref":"e74"}
+{"parentIndex":9,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":74,"depth":10,"ref":"e75"}
+{"parentIndex":74,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":75,"depth":11,"ref":"e76"}
+{"parentIndex":75,"hittable":true,"enabled":true,"type":"Other","rect":{"height":1210,"y":0,"x":0,"width":834},"index":76,"depth":12,"ref":"e77"}
+{"parentIndex":0,"hittable":true,"enabled":true,"type":"Window","rect":{"height":1210,"y":0,"x":0,"width":834},"index":77,"depth":1,"ref":"e78"}
+{"parentIndex":77,"hittable":true,"enabled":true,"type":"Other","rect":{"x":0,"height":1210,"y":0,"width":834},"index":78,"depth":2,"ref":"e79"}
+{"parentIndex":78,"hittable":true,"enabled":true,"type":"Other","rect":{"width":834,"x":0,"y":0,"height":1210},"index":79,"depth":3,"ref":"e80"}
+{"rect":{"width":834,"x":0,"y":870,"height":340},"hittable":true,"parentIndex":78,"depth":3,"index":80,"enabled":true,"type":"Other","ref":"e81"}
+{"type":"Other","rect":{"width":834,"x":0,"y":870,"height":340},"parentIndex":80,"depth":4,"index":81,"identifier":"inputView","enabled":true,"hittable":true,"ref":"e82"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":0,"depth":1,"index":82,"enabled":true,"type":"Window","ref":"e83"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":82,"depth":2,"index":83,"enabled":true,"type":"Other","ref":"e84"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":83,"label":"gearshape.fill","depth":3,"index":84,"enabled":true,"type":"Other","ref":"e85"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":84,"label":"gearshape.fill","depth":4,"index":85,"enabled":true,"type":"Other","ref":"e86"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":85,"label":"gearshape.fill","depth":5,"index":86,"enabled":true,"type":"Other","ref":"e87"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":86,"label":"gearshape.fill","depth":6,"index":87,"enabled":true,"type":"Other","ref":"e88"}
+{"rect":{"width":26,"x":776,"y":41,"height":26},"hittable":true,"parentIndex":87,"label":"gearshape.fill","depth":7,"index":88,"identifier":"gearshape.fill","enabled":true,"type":"Image","ref":"e89"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":0,"label":"Type English and Dutch","depth":1,"index":89,"enabled":true,"type":"Window","ref":"e90"}
+{"rect":{"width":834,"x":0,"y":0,"height":1210},"hittable":true,"parentIndex":89,"label":"Type English and Dutch","depth":2,"index":90,"enabled":true,"type":"Other","ref":"e91"}
+{"rect":{"width":834,"x":0,"y":870,"height":340},"hittable":true,"parentIndex":90,"label":"Type English and Dutch","depth":3,"index":91,"enabled":true,"type":"Other","ref":"e92"}
+{"rect":{"width":834,"x":0,"y":870,"height":55},"hittable":true,"parentIndex":91,"label":"Typing Predictions","depth":4,"index":92,"identifier":"SystemInputAssistantView","enabled":true,"type":"Other","ref":"e93"}
+{"rect":{"width":834,"x":0,"y":870,"height":55},"hittable":true,"parentIndex":92,"label":"Typing Predictions","depth":5,"index":93,"enabled":true,"type":"Other","ref":"e94"}
+{"rect":{"width":185,"x":0,"y":870,"height":49},"hittable":true,"parentIndex":93,"label":"undo","depth":6,"index":94,"identifier":"LeftButtonBar","enabled":true,"type":"Other","ref":"e95"}
+{"rect":{"width":157,"x":28,"y":870,"height":49},"hittable":true,"parentIndex":94,"label":"undo","depth":7,"index":95,"enabled":true,"type":"Other","ref":"e96"}
+{"rect":{"width":114,"x":28,"y":871,"height":49},"hittable":true,"parentIndex":95,"label":"undo","depth":8,"index":96,"enabled":true,"type":"Other","ref":"e97"}
+{"rect":{"width":22,"x":28,"y":871,"height":49},"hittable":true,"parentIndex":96,"label":"undo","depth":9,"index":97,"enabled":true,"type":"Other","ref":"e98"}
+{"rect":{"width":22,"x":28,"y":871,"height":49},"hittable":true,"parentIndex":97,"label":"undo","depth":10,"index":98,"identifier":"assistantUndo","enabled":true,"type":"Button","ref":"e99"}
+{"rect":{"width":22,"x":74,"y":871,"height":49},"hittable":true,"parentIndex":96,"label":"Redo","depth":9,"index":99,"enabled":true,"type":"Other","ref":"e100"}
+{"rect":{"width":22,"x":74,"y":871,"height":49},"hittable":false,"parentIndex":99,"label":"Redo","depth":10,"index":100,"identifier":"assistantRedo","enabled":false,"type":"Button","ref":"e101"}
+{"enabled":true,"parentIndex":96,"hittable":true,"label":"Paste","type":"Other","depth":9,"rect":{"width":22,"x":120,"y":871,"height":49},"index":101,"ref":"e102"}
+{"enabled":false,"identifier":"assistantPaste:forEvent:","parentIndex":101,"hittable":false,"label":"Paste","type":"Button","depth":10,"rect":{"width":22,"x":120,"y":871,"height":49},"index":102,"ref":"e103"}
+{"enabled":true,"identifier":"CenterPageView","parentIndex":93,"hittable":true,"label":"Typing Predictions","type":"Other","depth":6,"rect":{"width":464,"x":185,"y":876,"height":49},"index":103,"ref":"e104"}
+{"enabled":true,"parentIndex":103,"hittable":true,"depth":7,"type":"Other","rect":{"width":464,"x":185,"y":276,"height":1249},"index":104,"ref":"e105"}
+{"enabled":true,"parentIndex":104,"hittable":true,"depth":8,"type":"ScrollView","rect":{"width":464,"x":185,"y":876,"height":49},"index":105,"ref":"e106"}
+{"enabled":true,"parentIndex":103,"hittable":true,"label":"Typing Predictions","type":"Other","depth":7,"rect":{"width":464,"x":185,"y":876,"height":49},"index":106,"ref":"e107"}
+{"enabled":true,"parentIndex":106,"hittable":true,"label":"Typing Predictions","type":"Other","depth":8,"rect":{"width":464,"x":185,"y":876,"height":49},"index":107,"ref":"e108"}
+{"enabled":true,"parentIndex":107,"hittable":true,"label":"“M”","type":"Other","depth":9,"rect":{"width":464,"x":185,"y":876,"height":49},"index":108,"ref":"e109"}
+{"enabled":true,"parentIndex":108,"hittable":true,"label":"“M”","type":"Other","depth":10,"rect":{"width":464,"x":185,"y":876,"height":49},"index":109,"ref":"e110"}
+{"enabled":true,"parentIndex":109,"hittable":true,"label":"“M”","type":"Other","depth":11,"rect":{"width":154.66666666666663,"x":185,"y":876,"height":49},"index":110,"ref":"e111"}
+{"enabled":true,"parentIndex":109,"hittable":true,"label":"My","type":"Other","depth":11,"rect":{"width":154.66666666666669,"x":339.6666666666667,"y":876,"height":49},"index":111,"ref":"e112"}
+{"enabled":true,"parentIndex":109,"hittable":true,"label":"Me","type":"Other","depth":11,"rect":{"width":154.66666666666669,"x":494.3333333333333,"y":876,"height":49},"index":112,"ref":"e113"}
+{"enabled":true,"identifier":"RightButtonBar","parentIndex":93,"hittable":true,"depth":6,"type":"Other","rect":{"width":185,"x":649,"y":870,"height":49},"index":113,"ref":"e114"}
+{"enabled":true,"parentIndex":113,"hittable":true,"depth":7,"type":"Other","rect":{"width":157,"x":649,"y":870,"height":49},"index":114,"ref":"e115"}
+{"enabled":true,"parentIndex":91,"hittable":true,"depth":4,"type":"Other","rect":{"width":834,"x":0,"y":870,"height":340},"index":115,"ref":"e116"}
+{"enabled":true,"parentIndex":115,"hittable":true,"depth":5,"type":"Other","rect":{"y":870,"height":340,"x":0,"width":834},"index":116,"ref":"e117"}
+{"enabled":true,"parentIndex":116,"hittable":true,"depth":6,"type":"Other","rect":{"y":870,"height":340,"x":0,"width":834},"index":117,"ref":"e118"}
+{"enabled":true,"parentIndex":91,"hittable":true,"label":"Type English and Dutch","type":"Other","depth":4,"rect":{"y":870,"height":340,"x":0,"width":834},"index":118,"ref":"e119"}
+{"enabled":true,"parentIndex":118,"hittable":true,"depth":5,"type":"Other","rect":{"y":870,"height":340,"x":0,"width":834},"index":119,"ref":"e120"}
+{"enabled":true,"parentIndex":119,"hittable":true,"depth":6,"type":"Other","rect":{"y":870,"height":340,"x":0,"width":834},"index":120,"ref":"e121"}
+{"enabled":true,"parentIndex":118,"hittable":true,"depth":5,"type":"Other","rect":{"y":940.5,"height":150,"x":125,"width":584},"index":121,"ref":"e122"}
+{"hittable":true,"type":"Image","index":122,"identifier":"memoji_VI1","rect":{"y":955.5,"height":50,"x":367,"width":50},"depth":6,"parentIndex":121,"enabled":true,"ref":"e123"}
+{"hittable":true,"type":"Other","index":123,"depth":6,"rect":{"y":955.5,"height":39,"x":407,"width":148},"parentIndex":121,"enabled":true,"ref":"e124"}
+{"hittable":true,"type":"Other","index":124,"depth":6,"rect":{"y":1025.5,"height":39,"x":279,"width":148},"parentIndex":121,"enabled":true,"ref":"e125"}
+{"hittable":true,"type":"Image","index":125,"identifier":"memoji_TH2","rect":{"y":1025.5,"height":50,"x":417,"width":50},"depth":6,"parentIndex":121,"enabled":true,"ref":"e126"}
+{"hittable":true,"type":"StaticText","index":126,"rect":{"y":1096.5,"height":19.5,"x":328,"width":178},"label":"Type English and Dutch","depth":5,"parentIndex":118,"enabled":true,"ref":"e127"}
+{"hittable":true,"type":"StaticText","index":127,"rect":{"y":1122,"height":17,"x":41.5,"width":751},"label":"Type both languages on the same keyboard. Customize in Settings.","depth":5,"parentIndex":118,"enabled":true,"ref":"e128"}
+{"hittable":true,"type":"Button","index":128,"rect":{"y":1154,"height":21,"x":125,"width":584},"label":"Continue","depth":5,"parentIndex":118,"enabled":true,"ref":"e129"}
+{"hittable":true,"type":"StaticText","index":129,"rect":{"y":1153.5,"height":22,"x":380.5,"width":73},"label":"Continue","depth":6,"parentIndex":128,"enabled":true,"ref":"e130"}
+{"hittable":true,"type":"Other","index":130,"rect":{"y":925,"height":282,"x":0,"width":834},"label":"Tab","depth":4,"parentIndex":91,"enabled":true,"ref":"e131"}
+{"hittable":true,"type":"Keyboard","index":131,"rect":{"y":925,"height":282,"x":0,"width":834},"label":"Tab","depth":5,"parentIndex":130,"enabled":true,"ref":"e132"}
+{"hittable":true,"type":"Other","index":132,"rect":{"y":925,"height":282,"x":0,"width":834},"label":"Tab","depth":6,"parentIndex":131,"enabled":true,"ref":"e133"}
+{"type":"Other","hittable":true,"index":133,"identifier":"UIKeyboardLayoutStar Preview","rect":{"y":925,"height":282,"x":0,"width":834},"label":"Tab","depth":7,"parentIndex":132,"enabled":true,"ref":"e134"}
+{"type":"Button","hittable":true,"index":134,"identifier":"tab","rect":{"y":932,"height":64.5,"x":6,"width":82.5},"label":"Tab","depth":8,"parentIndex":133,"enabled":true,"ref":"e135"}
+{"hittable":true,"type":"Key","index":135,"rect":{"y":932,"height":64.5,"x":88.5,"width":66},"label":"Q","depth":8,"parentIndex":133,"enabled":true,"ref":"e136"}
+{"hittable":true,"type":"Key","index":136,"rect":{"y":932,"height":64.5,"x":154.5,"width":66.5},"label":"W","depth":8,"parentIndex":133,"enabled":true,"ref":"e137"}
+{"hittable":true,"type":"Key","index":137,"rect":{"y":932,"height":64.5,"x":221,"width":66},"label":"E","depth":8,"parentIndex":133,"enabled":true,"ref":"e138"}
+{"hittable":true,"type":"Key","index":138,"rect":{"y":932,"height":64.5,"x":287,"width":66},"label":"R","depth":8,"parentIndex":133,"enabled":true,"ref":"e139"}
+{"hittable":true,"type":"Key","index":139,"rect":{"y":932,"height":64.5,"x":353,"width":66},"label":"T","depth":8,"parentIndex":133,"enabled":true,"ref":"e140"}
+{"hittable":true,"type":"Key","index":140,"rect":{"y":932,"height":64.5,"x":419,"width":66},"label":"Y","depth":8,"parentIndex":133,"enabled":true,"ref":"e141"}
+{"hittable":true,"type":"Key","index":141,"rect":{"y":932,"height":64.5,"x":485,"width":66},"label":"U","depth":8,"parentIndex":133,"enabled":true,"ref":"e142"}
+{"hittable":true,"type":"Key","index":142,"rect":{"y":932,"height":64.5,"x":551,"width":66},"label":"I","depth":8,"parentIndex":133,"enabled":true,"ref":"e143"}
+{"depth":8,"label":"O","type":"Key","parentIndex":133,"rect":{"y":932,"height":64.5,"x":617,"width":66.5},"hittable":true,"index":143,"enabled":true,"ref":"e144"}
+{"depth":8,"label":"P","type":"Key","parentIndex":133,"rect":{"y":932,"height":64.5,"x":683.5,"width":66},"hittable":true,"index":144,"enabled":true,"ref":"e145"}
+{"depth":8,"label":"delete","type":"Key","parentIndex":133,"identifier":"delete","rect":{"y":932,"height":64.5,"x":749.5,"width":82.5},"hittable":true,"index":145,"enabled":true,"ref":"e146"}
+{"depth":8,"label":"Caps Lock","type":"Key","parentIndex":133,"identifier":"caps-lock","rect":{"y":996.5,"height":64.5,"x":6,"width":102.5},"hittable":true,"index":146,"enabled":true,"ref":"e147"}
+{"depth":8,"label":"A","type":"Key","parentIndex":133,"rect":{"y":996.5,"height":64.5,"x":108.5,"width":66},"hittable":true,"index":147,"enabled":true,"ref":"e148"}
+{"depth":8,"label":"S","type":"Key","parentIndex":133,"rect":{"y":996.5,"height":64.5,"x":174.5,"width":66},"hittable":true,"index":148,"enabled":true,"ref":"e149"}
+{"depth":8,"label":"D","type":"Key","parentIndex":133,"rect":{"y":996.5,"height":64.5,"x":240.5,"width":66},"hittable":true,"index":149,"enabled":true,"ref":"e150"}
+{"depth":8,"label":"F","type":"Key","parentIndex":133,"hittable":true,"rect":{"width":66,"y":996.5,"x":306.5,"height":64.5},"index":150,"enabled":true,"ref":"e151"}
+{"depth":8,"label":"G","type":"Key","parentIndex":133,"rect":{"width":66.5,"x":372.5,"y":996.5,"height":64.5},"hittable":true,"index":151,"enabled":true,"ref":"e152"}
+{"depth":8,"label":"H","type":"Key","parentIndex":133,"rect":{"x":439,"width":66,"height":64.5,"y":996.5},"hittable":true,"index":152,"enabled":true,"ref":"e153"}
+{"depth":8,"label":"J","type":"Key","parentIndex":133,"rect":{"x":505,"width":66,"height":64.5,"y":996.5},"hittable":true,"index":153,"enabled":true,"ref":"e154"}
+{"depth":8,"label":"K","type":"Key","parentIndex":133,"rect":{"x":571,"width":66,"height":64.5,"y":996.5},"hittable":true,"index":154,"enabled":true,"ref":"e155"}
+{"depth":8,"label":"L","type":"Key","parentIndex":133,"rect":{"x":637,"width":66,"height":64.5,"y":996.5},"hittable":true,"index":155,"enabled":true,"ref":"e156"}
+{"depth":8,"label":"return","type":"Button","parentIndex":133,"identifier":"Return","rect":{"x":703,"width":129,"height":64.5,"y":996.5},"hittable":true,"index":156,"enabled":true,"ref":"e157"}
+{"depth":8,"label":"shift","type":"Button","parentIndex":133,"identifier":"shift","rect":{"x":6,"width":132,"height":64.5,"y":1061},"selected":true,"hittable":true,"index":157,"enabled":true,"ref":"e158"}
+{"depth":8,"label":"Z","type":"Key","parentIndex":133,"rect":{"x":138,"width":66,"height":64.5,"y":1061},"hittable":true,"index":158,"enabled":true,"ref":"e159"}
+{"depth":8,"label":"X","type":"Key","parentIndex":133,"rect":{"x":204,"width":66.5,"height":64.5,"y":1061},"hittable":true,"index":159,"enabled":true,"ref":"e160"}
+{"depth":8,"label":"C","type":"Key","parentIndex":133,"rect":{"x":270.5,"width":66,"height":64.5,"y":1061},"hittable":true,"index":160,"enabled":true,"ref":"e161"}
+{"depth":8,"label":"V","type":"Key","parentIndex":133,"rect":{"x":336.5,"width":66,"height":64.5,"y":1061},"hittable":true,"index":161,"enabled":true,"ref":"e162"}
+{"depth":8,"label":"B","type":"Key","parentIndex":133,"rect":{"x":402.5,"width":66,"height":64.5,"y":1061},"hittable":true,"index":162,"enabled":true,"ref":"e163"}
+{"depth":8,"label":"N","type":"Key","parentIndex":133,"rect":{"x":468.5,"width":66,"height":64.5,"y":1061},"hittable":true,"index":163,"enabled":true,"ref":"e164"}
+{"hittable":true,"rect":{"x":534.5,"width":66,"height":64.5,"y":1061},"parentIndex":133,"index":164,"enabled":true,"label":"M","depth":8,"type":"Key","ref":"e165"}
+{"hittable":true,"rect":{"x":600.5,"width":66.5,"height":64.5,"y":1061},"parentIndex":133,"index":165,"enabled":true,"label":",","depth":8,"type":"Key","ref":"e166"}
+{"hittable":true,"rect":{"x":667,"width":66,"height":64.5,"y":1061},"parentIndex":133,"index":166,"enabled":true,"label":".","depth":8,"type":"Key","ref":"e167"}
+{"hittable":true,"rect":{"x":733,"width":99,"height":64.5,"y":1061},"parentIndex":133,"index":167,"enabled":true,"label":"shift","depth":8,"selected":true,"type":"Key","ref":"e168"}
+{"hittable":true,"rect":{"x":6,"width":69.5,"height":64.5,"y":1125.5},"identifier":"emoji","parentIndex":133,"index":168,"enabled":true,"label":"Next keyboard","depth":8,"type":"Button","value":"English & Nederlands","ref":"e169"}
+{"hittable":true,"rect":{"x":75.5,"width":70,"height":64.5,"y":1125.5},"identifier":"more","parentIndex":133,"index":169,"enabled":true,"label":"numbers","depth":8,"type":"Key","ref":"e170"}
+{"hittable":true,"rect":{"x":145.5,"width":69.5,"height":64.5,"y":1125.5},"identifier":"dictation","parentIndex":133,"index":170,"enabled":true,"label":"Dictate","depth":8,"type":"Button","ref":"e171"}
+{"hittable":true,"rect":{"x":215,"width":419,"height":64.5,"y":1125.5},"parentIndex":133,"index":171,"enabled":true,"depth":8,"type":"Key","ref":"e172"}
+{"hittable":true,"rect":{"x":634,"width":99,"height":64.5,"y":1125.5},"identifier":"more","parentIndex":133,"index":172,"enabled":true,"label":"numbers","depth":8,"type":"Key","ref":"e173"}
+{"hittable":true,"rect":{"x":733,"width":99,"height":64.5,"y":1125.5},"parentIndex":133,"index":173,"enabled":true,"label":"Hide keyboard","depth":8,"type":"Button","ref":"e174"}
