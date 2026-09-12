@@ -1,0 +1,19 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 15 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Your practice"
+    @e5 [navigation-bar] "Your practice"
+      @e6 [text] "Your practice"
+    @e7 [other] "Vertical scroll bar, 1 page"
+      @e8 [other] "Hello, Ria de Boer."
+        @e9 [scroll-area] "Hello, Ria de Boer." [scrollable]
+          @e10 [text] "Hello, Ria de Boer."
+          @e11 [text] "Ask your GP practice a non-urgent question. They usually reply within two working days."
+          @e12 [button] "Developer settings"
+          @e13 [button] "Write to your practice"
+          @e14 [other] "Vertical scroll bar, 1 page"
+          @e15 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]

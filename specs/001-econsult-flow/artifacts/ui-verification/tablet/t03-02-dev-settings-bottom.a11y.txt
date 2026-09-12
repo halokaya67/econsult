@@ -1,0 +1,37 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 33 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Cancel"
+    @e5 [navigation-bar] "Cancel"
+      @e6 [button] "Cancel"
+      @e7 [text] "Developer settings"
+    @e8 [other] "Vertical scroll bar, 2 pages"
+      @e9 [other] [same label as parent]
+        @e10 [other] "Developer settings"
+          @e11 [scroll-area] "Developer settings" [scrollable]
+            [content above scroll-area hidden]
+            @e12 [other] "Developer settings"
+              @e13 [other] "Server"
+              @e14 [other] "Timeout"
+              @e15 [text] "Fail: Care team"
+              @e16 [other] "None"
+              @e17 [other] "Network"
+              @e18 [other] "Server"
+              @e19 [other] "Timeout"
+              @e20 [text] "Fail: Create message"
+              @e21 [other] "None"
+              @e22 [other] "Network"
+              @e23 [other] "Server"
+              @e24 [other] "Timeout"
+              @e25 [text] "Fail: Upload photo"
+              @e26 [other] "None"
+              @e27 [other] "Network"
+              @e28 [other] "Server"
+              @e29 [other] "Timeout"
+              @e30 [switch] "Force offline"
+              @e31 [button] "Apply and go home"
+            @e32 [other] "Vertical scroll bar, 2 pages"
+            @e33 [other] "Horizontal scroll bar, 1 page"

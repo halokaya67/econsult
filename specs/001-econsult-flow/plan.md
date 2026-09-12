@@ -6930,3 +6930,115 @@ Expected: both exit 0 (the documents are prettier-formatted markdown).
 - 2026-09-12, during T019 — the simulator preview of the confirmation showed that a failed "Try again" on the photo changes nothing on screen: `retryAttachment` resolves the status `failed` for every transport error by design (the partial failure is an outcome, not an exception), so the mutation error state the screen rendered could never appear. Lead decision: the send pipeline stays as it is; the confirmation treats a retry that resolves `failed` as a visible outcome of its own, with a line inside the alert saying the photo still could not be attached and an announcement, while the mutation error path stays for genuine rejections. No fence change.
 - 2026-09-12, during T020 — the simulator preview of the developer settings screen found the Force offline row overflowing at the largest text size (the label kept its single-line width and pushed the native switch past the screen edge), the switch sitting high of its label, and no way to leave the modal without applying. Lead decision: the label takes the remaining row width and wraps, the switch sits in a centred container, and a Cancel header button dismisses the modal without applying. No fence change.
 - 2026-09-12, before T021 — the template's `.gitignore` ignores only `.env*.local`, so a reviewer's `.env` (the README tells them to copy `env.example` to it) and the `coverage/` directory that `npm run test:coverage` writes would both show up as untracked files. Lead decision: T021 also adds `.env` and `coverage/` to `.gitignore`; its fence gains `.gitignore`.
+
+## Execution log
+
+Recorded at the end of the flow (2026-09-13). Base `f39fb58`; the branch `feat/econsult-flow` holds the commits below. The full decisions log, dispatch records and verification logs are archived beside the flow state.
+
+| Step | Commit | Amendment | Visual / UI outcome |
+| --- | --- | --- | --- |
+| spec | 32db7de | five checker rounds | — |
+| plan | 0120caa | three checker rounds, revision 3.1 | — |
+| T001 tooling | 069cc8b | user saved the step with three concerns | none |
+| T002 contracts and fixtures | ec9c899 | — | none |
+| T003 transport and fake | 0d94335 | — | none |
+| T004 services | 9fe5ae0 | — | none |
+| T005 lib | b761a9c | — | none |
+| T006 developer settings and providers | 1460d1c | env.example instead of .env (user decision) | none |
+| T007 draft state | 5ab9122 | — | none |
+| T008 queries and hooks | ef27167 | test client gcTime 0 for queries | none |
+| T009 validation and steps | b04f195 | — | none |
+| T010 submit and mutations | a2498d1 | test client gcTime 0 for mutations | none |
+| T011 photo processing | 85eb838 | — | none |
+| T012 tokens and base components | 784f954 | — | none |
+| T013 form components and status views | 661bb83 | — | none |
+| T014 photo picker | 78a57de | — | none |
+| T015 app shell | e4670dd | — | simulator preview, one flag carried to T016 |
+| T016 recipient step | 1ebffcc | header font-scale cap, hint only while disabled | preview failed once, re-check passed |
+| T017 questions step | 422b8b5 | scroll-to-field hook, error under the label, measureLayout element ref | preview failed, three re-checks to pass |
+| T018 message step | f98768b | TextField container anchor, scaled multiline height, offline state deferred to T020 | preview failed once, re-check passed |
+| T019 confirmation | bc031c9 | failed retry reported inside the alert | preview failed once, re-check passed |
+| T020 developer settings | 97588da | switch row wraps and centres, Cancel added | preview failed once, re-check passed |
+| T021 cleanup and guidance | 3efdcaa | .gitignore added to the fence | none |
+| T022 hand-in documents | 0d46de5 | — | none |
+| finish: coverage | a04aede | tests only, every source file at 100 % | — |
+| finish: final review round 1 fixes | 8ecfbb7 | navigation lock while sending, one offline announcement, picker error path, size and comment caps, dead code, shared test helper, Retry disabled offline | — |
+| finish: final review round 2 fixes | bfe019d | lock re-dispatches its own replace, PhotoPicker split, AI-USAGE count | — |
+| finish: UI walkthrough fix | 48896ef | Discard on step 1 leaves the flow | phone re-drive passed |
+| finish: polish | 179934a | three review rounds recorded, README pointer, act warning | — |
+
+Final review: three rounds (`checker/final-r1.md`, `checker/final-r2.md`, `checker/final.md`), PASS_WITH_FLAGS each; W6 closed by the Accessibility Inspector audit (five states, zero warnings, positive control 22), W7 and I5 dismissed at the finish gate (I5 deferred to the restructuring pass). UI verification: phone lane 10/10 after one fix and one audit re-run, tablet lane 6/6; evidence under the archived `ui-verification/phone` and `ui-verification/tablet`. Verification at the end: 270 tests, 100 % coverage on every file, types, lint and format clean.
+
+### Decision index
+
+One line per entry of the decisions log (`timestamp · step · question or record · answer or note`).
+
+```text
+2026-09-11T17:30 · spec · Spec gate · {"Spec gate":"Approve the spec"}
+2026-09-11T21:10 · plan · Plan gate · {"Plan gate":"What are the tooling?  For state, data, etc.?"}
+2026-09-11T21:13 · plan · Plan gate · {"Plan gate":"Approve the plan (Recommended)"}
+2026-09-11T21:26 · T001 · auto · visual_skip — declared none at plan gate
+2026-09-11T21:32 · T001 · Step T001 · {"Step T001":"Save this step and continue (Recommended)"}
+2026-09-11T21:37 · T002 · auto · visual_skip — declared none at plan gate
+2026-09-11T21:37 · T002 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T21:45 · T003 · auto · visual_skip — declared none at plan gate
+2026-09-11T21:45 · T003 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T21:50 · T004 · auto · visual_skip — declared none at plan gate
+2026-09-11T21:50 · T004 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T21:56 · T005 · auto · visual_skip — declared none at plan gate
+2026-09-11T21:56 · T005 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T22:02 · T006 · auto · visual_skip — declared none at plan gate
+2026-09-11T22:06 · T006 · Step T006 · {"Step T006":"What's needed in the file, then create a template version"}
+2026-09-11T22:10 · T006 · auto · step_auto_pass — verify green after the user-approved env.example amendment, visual none, fence resp
+2026-09-11T22:12 · T007 · auto · user_local_file — the user created .env by hand after T006 was committed; agents cannot read or stag
+2026-09-11T22:15 · T007 · auto · visual_skip — declared none at plan gate
+2026-09-11T22:15 · T007 · auto · step_auto_pass — verify green, visual clean, fence respected (the user-created local .env excluded p
+2026-09-11T22:30 · T008 · auto · amendment — lead-approved test-hygiene fix: src/test/providers.tsx testClient gets gcTime 0 (T008 fe
+2026-09-11T22:33 · T008 · auto · visual_skip — declared none at plan gate
+2026-09-11T22:33 · T008 · auto · step_auto_pass — verify green after the lead-approved gcTime amendment, visual none, fence respected
+2026-09-11T22:37 · T009 · auto · visual_skip — declared none at plan gate
+2026-09-11T22:37 · T009 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T23:00 · T010 · auto · amendment — lead-approved test-hygiene fix: src/test/providers.tsx testClient also sets mutations gc
+2026-09-11T23:02 · T010 · auto · visual_skip — declared none at plan gate
+2026-09-11T23:02 · T010 · auto · step_auto_pass — verify green after the lead-approved mutation gcTime amendment, visual none, fence 
+2026-09-11T23:07 · T011 · auto · visual_skip — declared none at plan gate
+2026-09-11T23:07 · T011 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T23:14 · T012 · auto · visual_skip — declared none at plan gate
+2026-09-11T23:14 · T012 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T23:20 · T013 · auto · visual_skip — declared none at plan gate
+2026-09-11T23:20 · T013 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T23:34 · T014 · auto · visual_skip — declared none at plan gate
+2026-09-11T23:34 · T014 · auto · step_auto_pass — verify green, visual clean, fence respected
+2026-09-11T23:50 · T015 · auto · visual_flag_carried — T015 visual (ui-verifier) flagged: placeholder first step has no back control.
+2026-09-11T23:50 · T015 · auto · step_auto_pass — verify green, visual published (https://claude.ai/code/artifact/c87c35ef-fcc0-4147-
+2026-09-11T23:59 · T016 · auto · concerns_judged — T016 implementer DONE_WITH_CONCERNS: two test-side adaptations (toHaveTextContent 
+2026-09-12T00:12 · T016 · auto · visual_defect_fix — T016 visual (https://claude.ai/code/artifact/e4fe882d-1554-4a0b-957d-e5d4e82bbae
+2026-09-12T00:22 · T016 · auto · step_auto_pass — T016 verify green after the header font-cap fix; visual re-check published (https:/
+2026-09-12T00:43 · T017 · auto · visual_defect_fix — T017 visual (https://claude.ai/code/artifact/14d3e13e-8536-446f-93bf-2c6aa881e27
+2026-09-12T06:42 · T017 · auto · visual_recheck_fail — T017 re-check (https://claude.ai/code/artifact/e842dba6-1d2e-40ef-a031-8d8f7aa
+2026-09-12T07:05 · T017 · auto · visual_recheck2 — scroll fix verified to the pixel (label lands spacing.md below the viewport top, n
+2026-09-12T08:37 · T017 · auto · step_auto_pass — T017 verify green (jest 57/57 in scope, full suite green earlier, typecheck, lint),
+2026-09-12T08:53 · T018 · auto · visual_scope — T018 visual runs five of its six declared states now (pristine, keyboard open, photo 
+2026-09-12T09:42 · T018 · auto · visual_defect_fix — T018 visual (https://claude.ai/code/artifact/3c7818b1-2d44-40f7-81b2-7254f2a2761
+2026-09-12T10:09 · T018 · auto · step_auto_pass — T018 verify green (jest 137/137 in scope, typecheck, lint), fence respected (widene
+2026-09-12T10:45 · T019 · auto · visual_defect_fix — T019 visual (https://claude.ai/code/artifact/05062e28-f7c6-4474-9c7a-17264f5f5ac
+2026-09-12T11:04 · T019 · auto · step_auto_pass — T019 verify green (jest 39/39 in scope, typecheck, lint), fence respected, simulato
+2026-09-12T11:39 · T020 · auto · visual_defect_fix — T020 visual (https://claude.ai/code/artifact/a6fc325b-8c89-4c46-bab1-c2ab976527b
+2026-09-12T12:01 · T020 · auto · step_auto_pass — T020 verify green (jest 47/47 in scope, typecheck, lint), fence respected, simulato
+2026-09-12T12:02 · T021 · auto · fence_amend — T021 gains .gitignore: the user keeps a local .env (created by hand after T006) and co
+2026-09-12T12:11 · T021 · auto · step_auto_pass — T021 verify green (typecheck, lint, format:check, npm test 251/251, npx expo config
+2026-09-12T12:23 · T022 · auto · step_auto_pass — T022 verify green (format:check, lint), fence respected (README.md, DECISIONS.md, A
+2026-09-12T12:43 · finish:verify · auto · verify_fix_commit — src/__tests__/app/_layout.test.tsx, src/__tests__/app/dev-settings.test.tsx, src
+2026-09-12T13:30 · finish:verify · auto · verify_fix_commit — final checker round 1 fixes W1 W2 W3 W4 W5 I1 I2 I3 I4 (21 files: message screen
+2026-09-12T14:05 · finish:verify · auto · verify_fix_commit — final checker round 2 fixes W8 W9 I7 (message.tsx lock re-dispatches its own REP
+2026-09-12T14:18 · finish:ui-verify · auto · final_checker_closed — three final rounds (checker/final-r1.md, final-r2.md, final.md = round 3): PA
+2026-09-12T14:50 · finish:ui-verify · auto · ui_lane_phone_fail — phone lane (iPhone 17, 53 evidence files under ui-verification/phone): 9/10 sce
+2026-09-12T14:55 · finish:ui-verify · auto · verify_fix_commit — finish:ui-verify fix for the step-1 Discard no-op (src/app/econsult/recipient.ts
+2026-09-12T15:02 · finish:ui-verify · auto · ui_lane_phone_redrive — scenario 7 (Discard via Home and via back) PASS after 48896ef: Discard lands
+2026-09-12T15:37 · finish:ui-verify · auto · ui_lane_tablet_pass — tablet lane (iPad Pro 11-inch M5, Metro 8082, 73 evidence files + setup.log + 
+2026-09-12T15:43 · finish:ui-verify · auto · verify_fix_commit — finish polish (AI-USAGE.md three-round count and simulator-found discard defect,
+2026-09-12T21:08 · finish:ui-verify · Finish gate · {"Finish gate":"I think I've alrready granted the orca the permission, what app should I give the pe
+2026-09-12T21:36 · finish:ui-verify · Inspector · {"Inspector":"Set, go ahead (Recommended)"}
+2026-09-12T22:00 · finish:ui-verify · auto · ui_pass — phone lane 10/10 (scenario 7 after 48896ef, scenario 10 after the Accessibility Inspector 
+2026-09-12T22:00 · finish:ui-verify · auto · finish_gate — the user answered the finish gate with "Set, go ahead" (select the Inspector target, t
+```

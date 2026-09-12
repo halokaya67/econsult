@@ -1,0 +1,237 @@
+win0 role=AXWindow rd=dialog desc=dialog subrole=AXDialog pos=1010,-1351 size=770,1101
+  [0]AXButton role=AXButton rd=button name=Run Audit title=Run Audit desc=button enabled=true pos=1353,-1256 size=85,26
+  [1]AXButton role=AXButton rd=button name=Options title=Options desc=button enabled=true pos=1707,-1252 size=54,18
+  [2]AXSplitGroup role=AXSplitGroup rd=split group desc=split group pos=1010,-1222 size=770,946
+    [0]AXScrollArea role=AXScrollArea rd=scroll area desc=scroll area pos=1020,-1212 size=750,827
+      [0]AXOutline role=AXOutline rd=outline desc=outline enabled=true pos=1019,-1213 size=765,829
+        [0]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1212 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-1212 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 7 desc=text value=Audit 7 enabled=true pos=1034,-1211 size=45,18
+            [1]AXStaticText role=AXStaticText rd=text name=8 Clipped Text, 3 Contrast, 10 Dynamic Type, 1 Element Description desc=text value=8 Clipped Text, 3 Contrast, 10 Dynamic Type, 1 Element Description enabled=true pos=1077,-1211 size=701,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-1212 size=15,20
+        [1]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1192 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Contrast nearly passed desc=cell enabled=true pos=1020,-1192 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1189 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Contrast nearly passed desc=text value=Contrast nearly passed enabled=true pos=1064,-1191 size=143,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1188 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1191 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1192 size=15,20
+        [2]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1172 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Contrast failed desc=cell enabled=true pos=1020,-1172 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1169 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Contrast failed desc=text value=Contrast failed enabled=true pos=1064,-1171 size=91,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1168 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1171 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1172 size=15,20
+        [3]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1152 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Contrast failed desc=cell enabled=true pos=1020,-1152 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1149 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Contrast failed desc=text value=Contrast failed enabled=true pos=1064,-1151 size=91,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1148 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1151 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1152 size=15,20
+        [4]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1132 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1132 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1129 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1131 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1128 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1131 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1132 size=15,20
+        [5]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1112 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1112 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1109 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1111 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1108 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1111 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1112 size=15,20
+        [6]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1092 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1092 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1089 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1091 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1088 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1091 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1092 size=15,20
+        [7]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1072 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1072 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1069 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1071 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1068 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1071 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1072 size=15,20
+        [8]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1052 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1052 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1049 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1051 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1048 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1051 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1052 size=15,20
+        [9]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1032 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1032 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1029 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1031 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1028 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1031 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1032 size=15,20
+        [10]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-1012 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-1012 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-1009 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-1011 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-1008 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-1011 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-1012 size=15,20
+        [11]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-992 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-992 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-989 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-991 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-988 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-991 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-992 size=15,20
+        [12]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-972 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-972 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-969 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-971 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-968 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-971 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-972 size=15,20
+        [13]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-952 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Dynamic Type font sizes are unsupported desc=cell enabled=true pos=1020,-952 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-949 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Dynamic Type font sizes are unsupported desc=text value=Dynamic Type font sizes are unsupported enabled=true pos=1064,-951 size=254,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-948 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-951 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-952 size=15,20
+        [14]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-932 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-932 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-929 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-931 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-928 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-931 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-932 size=15,20
+        [15]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-912 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-912 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-909 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-911 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-908 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-911 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-912 size=15,20
+        [16]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-892 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-892 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-889 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-891 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-888 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-891 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-892 size=15,20
+        [17]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-872 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-872 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-869 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-871 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-868 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-871 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-872 size=15,20
+        [18]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-852 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-852 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-849 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-851 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-848 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-851 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-852 size=15,20
+        [19]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-832 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-832 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-829 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-831 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-828 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-831 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-832 size=15,20
+        [20]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-812 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-812 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-809 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-811 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-808 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-811 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-812 size=15,20
+        [21]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-792 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Text clipped desc=cell enabled=true pos=1020,-792 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-789 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Text clipped desc=text value=Text clipped enabled=true pos=1064,-791 size=76,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-788 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-791 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-792 size=15,20
+        [22]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-772 size=763,20
+          [0]AXCell role=AXCell rd=cell name=Element has no description, looks like: Up Arrow desc=cell enabled=true pos=1020,-772 size=763,20
+            [0]AXImage role=AXImage rd=image desc=Warning enabled=true pos=1047,-769 size=14,13
+            [1]AXStaticText role=AXStaticText rd=text name=Element has no description, looks like: Up Arrow desc=text value=Element has no description, looks like: Up Arrow enabled=true pos=1064,-771 size=294,18
+            [2]AXButton role=AXButton rd=button desc=quicklook enabled=true pos=1735,-768 size=23,11
+            [3]AXButton role=AXButton rd=button desc=Information enabled=true pos=1758,-771 size=17,17
+            [4]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=0 enabled=true pos=1034,-772 size=15,20
+        [23]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-752 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-752 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 6 desc=text value=Audit 6 enabled=true pos=1034,-751 size=46,18
+            [1]AXStaticText role=AXStaticText rd=text name=0 warnings, 0 duplicates desc=text value=0 warnings, 0 duplicates enabled=true pos=1078,-751 size=700,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-752 size=15,20
+        [24]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-732 size=763,20
+          [0]AXCell role=AXCell rd=cell name=No Warnings desc=cell enabled=true pos=1020,-732 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=No Warnings desc=text value=No Warnings enabled=true pos=1049,-731 size=727,18
+        [25]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-712 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-712 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 5 desc=text value=Audit 5 enabled=true pos=1034,-711 size=46,18
+            [1]AXStaticText role=AXStaticText rd=text name=0 warnings, 0 duplicates desc=text value=0 warnings, 0 duplicates enabled=true pos=1078,-711 size=700,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-712 size=15,20
+        [26]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-692 size=763,20
+          [0]AXCell role=AXCell rd=cell name=No Warnings desc=cell enabled=true pos=1020,-692 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=No Warnings desc=text value=No Warnings enabled=true pos=1049,-691 size=727,18
+        [27]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-672 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-672 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 4 desc=text value=Audit 4 enabled=true pos=1034,-671 size=46,18
+            [1]AXStaticText role=AXStaticText rd=text name=0 warnings, 0 duplicates desc=text value=0 warnings, 0 duplicates enabled=true pos=1078,-671 size=700,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-672 size=15,20
+        [28]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-652 size=763,20
+          [0]AXCell role=AXCell rd=cell name=No Warnings desc=cell enabled=true pos=1020,-652 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=No Warnings desc=text value=No Warnings enabled=true pos=1049,-651 size=727,18
+        [29]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-632 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-632 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 3 desc=text value=Audit 3 enabled=true pos=1034,-631 size=46,18
+            [1]AXStaticText role=AXStaticText rd=text name=0 warnings, 0 duplicates desc=text value=0 warnings, 0 duplicates enabled=true pos=1078,-631 size=700,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-632 size=15,20
+        [30]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-612 size=763,20
+          [0]AXCell role=AXCell rd=cell name=No Warnings desc=cell enabled=true pos=1020,-612 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=No Warnings desc=text value=No Warnings enabled=true pos=1049,-611 size=727,18
+        [31]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-592 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-592 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 2 desc=text value=Audit 2 enabled=true pos=1034,-591 size=45,18
+            [1]AXStaticText role=AXStaticText rd=text name=0 warnings, 0 duplicates desc=text value=0 warnings, 0 duplicates enabled=true pos=1077,-591 size=701,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-592 size=15,20
+        [32]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-572 size=763,20
+          [0]AXCell role=AXCell rd=cell name=No Warnings desc=cell enabled=true pos=1020,-572 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=No Warnings desc=text value=No Warnings enabled=true pos=1049,-571 size=727,18
+        [33]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-552 size=763,20
+          [0]AXCell role=AXCell rd=cell desc=cell enabled=true pos=1020,-552 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=Audit 1 desc=text value=Audit 1 enabled=true pos=1034,-551 size=44,18
+            [1]AXStaticText role=AXStaticText rd=text name=0 warnings, 0 duplicates desc=text value=0 warnings, 0 duplicates enabled=true pos=1076,-551 size=702,18
+            [2]AXDisclosureTriangle role=AXDisclosureTriangle rd=disclosure triangle desc=disclosure triangle value=1 enabled=true pos=1021,-552 size=15,20
+        [34]AXRow role=AXRow rd=outline row desc=outline row subrole=AXOutlineRow pos=1020,-532 size=763,20
+          [0]AXCell role=AXCell rd=cell name=No Warnings desc=cell enabled=true pos=1020,-532 size=763,20
+            [0]AXStaticText role=AXStaticText rd=text name=No Warnings desc=text value=No Warnings enabled=true pos=1049,-531 size=727,18
+        [35]AXColumn role=AXColumn rd=column desc=column pos=1020,-1212 size=763,827
+      [1]AXScrollBar role=AXScrollBar rd=scroll bar desc=scroll bar value=0 enabled=true pos=1019,-403 size=752,19
+        [0]AXValueIndicator role=AXValueIndicator rd=value indicator desc=value indicator value=0 pos=1023,-394 size=731,6
+        [1]AXButton role=AXButton rd=increment arrow button desc=increment arrow button subrole=AXIncrementArrow pos=1020,-402 size=0,0
+        [2]AXButton role=AXButton rd=decrement arrow button desc=decrement arrow button subrole=AXDecrementArrow pos=1020,-402 size=0,0
+        [3]AXButton role=AXButton rd=increment page button desc=increment page button subrole=AXIncrementPage pos=1755,-394 size=12,6
+        [4]AXButton role=AXButton rd=decrement page button desc=decrement page button subrole=AXDecrementPage pos=1023,-394 size=0,6
+    [1]AXSplitter role=AXSplitter rd=splitter desc=splitter value=847 pos=1010,-375 size=770,1
+    [2]AXImage role=AXImage rd=image desc=screenshot enabled=true pos=1314,-357 size=162,82
+  [3]AXStaticText role=AXStaticText rd=text name=22 warnings desc=text value=22 warnings enabled=true pos=1715,-270 size=56,13
+  [4]AXButton role=AXButton rd=button name=Clear Warnings title=Clear Warnings desc=button enabled=true pos=1029,-272 size=85,18
+  [5]AXToolbar role=AXToolbar rd=toolbar desc=toolbar pos=1010,-1319 size=770,44
+    [0]AXList role=AXList rd=list desc=Device Target enabled=true pos=1014,-1319 size=186,44
+    [1]AXGroup role=AXGroup rd=group desc=group pos=1658,-1319 size=118,44
+      [0]AXRadioGroup role=AXRadioGroup rd=radio group desc=radio group enabled=true pos=1661,-1316 size=112,30
+        [0]AXRadioButton role=AXRadioButton rd=radio button desc=inspector value=0 subrole=AXSegment enabled=true pos=1668,-1315 size=32,28
+        [1]AXRadioButton role=AXRadioButton rd=radio button desc=audit value=1 subrole=AXSegment enabled=true pos=1701,-1315 size=32,28
+        [2]AXRadioButton role=AXRadioButton rd=radio button desc=settings value=0 subrole=AXSegment enabled=true pos=1734,-1315 size=32,28
+  [6]AXButton role=AXButton rd=close button desc=close button subrole=AXCloseButton enabled=true pos=1018,-1343 size=16,16
+  [7]AXButton role=AXButton rd=zoom button desc=zoom button subrole=AXZoomButton enabled=true pos=1064,-1343 size=16,16
+    [0]AXGroup role=AXGroup rd=group desc=group pos=1065,-1342 size=14,14
+      [0]AXGroup role=AXGroup rd=group desc=group pos=1065,-1342 size=14,14
+  [8]AXButton role=AXButton rd=minimize button desc=minimize button subrole=AXMinimizeButton enabled=true pos=1041,-1343 size=16,16
+  [9]AXStaticText role=AXStaticText rd=text desc=text enabled=true pos=1092,-1343 size=10,16

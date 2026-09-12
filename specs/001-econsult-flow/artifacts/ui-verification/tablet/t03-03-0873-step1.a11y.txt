@@ -1,0 +1,21 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 17 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Home"
+    @e5 [navigation-bar] "Home"
+      @e6 [button] "Home"
+      @e7 [text] "Recipient"
+    @e8 [other] "Vertical scroll bar, 1 page"
+      @e9 [other] "STEP 1 OF 2"
+        @e10 [scroll-area] "STEP 1 OF 2" [scrollable]
+          @e11 [text] "STEP 1 OF 2"
+          @e12 [text] "Who are you writing to?"
+          @e13 [other] "Dr. A. Visser, GP"
+          @e14 [other] "L. Smit, Practice nurse"
+          @e15 [button] "Continue" [disabled]
+          @e16 [other] "Vertical scroll bar, 1 page"
+          @e17 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]

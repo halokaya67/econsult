@@ -1,0 +1,24 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 20 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Recipient"
+    @e5 [navigation-bar] "Recipient"
+      @e6 [button] "Recipient"
+      @e7 [text] "Questions"
+    @e8 [other] "Vertical scroll bar, 2 pages"
+      @e9 [other] "STEP 2 OF 3"
+        @e10 [scroll-area] "STEP 2 OF 3" [scrollable]
+          @e11 [other] "STEP 2 OF 3"
+            @e12 [text] "STEP 2 OF 3"
+            @e13 [text] "A few questions from your practice"
+            @e14 [text] "How long have you had this problem? (required). Error: This question is required"
+            @e15 [text] "This question is required"
+            @e16 [other] "Less than a week"
+            @e17 [other] "1 to 4 weeks"
+            @e18 [other] "Longer than a month"
+          @e19 [other] "Vertical scroll bar, 2 pages"
+          @e20 [other] "Horizontal scroll bar, 1 page"
+          [content below scroll-area hidden]

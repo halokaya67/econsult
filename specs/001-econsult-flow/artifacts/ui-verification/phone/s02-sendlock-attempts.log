@@ -1,0 +1,39 @@
+--- T0 press Send ---
+16:25:50.240308000
+Tapped (201, 699)
+--- attempt 1: tap Change (201,233) ---
+16:25:50.878564000
+Tapped (201, 233)
+--- attempt 2: tap header back arrow (38,84) ---
+16:25:51.531108000
+Tapped (38, 84)
+--- attempt 3: back swipe ---
+16:25:52.188403000
+Panned (5, 450) by (320, 0)
+--- state during/after ---
+16:25:53.115260000
+  @e23 [scroll-area] [scrollable]
+    @e24 [text] "STEP 3 OF 3"
+      @e25 [text] "STEP 3 OF 3"
+    @e26 [text] "Your message"
+      @e27 [text] "Your message"
+    @e28 [button] "Change" [disabled]
+    @e29 [text] "To: Dr. J. de Vries"
+      @e30 [text] "To: Dr. J. de Vries"
+    @e31 [text] "What would you like to ask?"
+      @e32 [text] [same label as parent]
+    @e33 [text] "What helps your GP: where it is, since when, and what you have already tried."
+      @e34 [text] [same label as parent]
+    @e35 [text-view] "Send lock test message" [editable]
+      @e36 [other] "_UITextSelectionRangeAdjustmentContainerView"
+        @e37 [other] "com.apple.text.grabber.leading"
+        @e38 [other] "com.apple.text.grabber.leading"
+    @e41 [text] "Add a photo if it helps, for example of a rash or a wound."
+      @e42 [text] [same label as parent]
+    @e43 [text] "The camera isn't available on this device. You can choose a photo from your library."
+      @e44 [text] [same label as parent]
+    @e45 [button] "Choose from library" [disabled]
+    @e46 [text] "Sending your message"
+      @e47 [text] "Sending your message"
+    @e48 [button] "Sending" [disabled]
+    [content below scroll-area hidden]

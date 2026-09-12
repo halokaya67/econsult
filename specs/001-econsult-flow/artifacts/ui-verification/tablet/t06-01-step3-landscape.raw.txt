@@ -1,0 +1,83 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 80 nodes
+{"enabled":true,"label":"Expo Go","rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Application","depth":0,"index":0,"hittable":false,"ref":"e1"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Window","parentIndex":0,"depth":1,"index":1,"hittable":true,"ref":"e2"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":1,"depth":2,"index":2,"hittable":true,"ref":"e3"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":2,"depth":3,"index":3,"hittable":true,"ref":"e4"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":3,"depth":4,"index":4,"hittable":true,"ref":"e5"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":4,"depth":5,"index":5,"hittable":true,"ref":"e6"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":5,"depth":6,"index":6,"hittable":true,"ref":"e7"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":6,"depth":7,"index":7,"hittable":true,"ref":"e8"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":7,"depth":8,"index":8,"hittable":true,"ref":"e9"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":8,"depth":9,"index":9,"hittable":true,"ref":"e10"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":9,"depth":10,"index":10,"hittable":true,"ref":"e11"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":10,"depth":11,"index":11,"hittable":true,"ref":"e12"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":11,"depth":12,"index":12,"hittable":true,"ref":"e13"}
+{"enabled":true,"rect":{"x":0,"height":834,"width":1210,"y":0},"type":"Other","parentIndex":12,"depth":13,"index":13,"hittable":true,"ref":"e14"}
+{"enabled":true,"rect":{"width":1210,"x":0,"height":834,"y":0},"type":"Other","parentIndex":13,"depth":14,"index":14,"hittable":true,"ref":"e15"}
+{"enabled":true,"rect":{"x":0,"y":0,"width":1210,"height":834},"type":"Other","parentIndex":14,"depth":15,"index":15,"hittable":true,"ref":"e16"}
+{"depth":16,"parentIndex":15,"type":"Other","rect":{"width":1210,"x":0,"height":834,"y":0},"hittable":true,"index":16,"enabled":true,"ref":"e17"}
+{"depth":17,"label":"Questions","type":"Other","parentIndex":16,"rect":{"width":1210,"x":0,"height":834,"y":0},"hittable":true,"index":17,"enabled":true,"ref":"e18"}
+{"depth":18,"label":"Questions","type":"Other","parentIndex":17,"rect":{"width":1210,"x":0,"height":834,"y":0},"hittable":true,"index":18,"enabled":true,"ref":"e19"}
+{"depth":19,"label":"Questions","type":"Other","parentIndex":18,"rect":{"width":1210,"x":0,"height":834,"y":0},"hittable":true,"index":19,"enabled":true,"ref":"e20"}
+{"depth":20,"label":"Questions","type":"NavigationBar","parentIndex":19,"identifier":"Message","rect":{"width":1210,"x":0,"height":54,"y":32},"hittable":true,"index":20,"enabled":true,"ref":"e21"}
+{"depth":21,"label":"Questions","type":"Button","parentIndex":20,"identifier":"BackButton","rect":{"width":44,"x":10,"height":44,"y":32},"hittable":true,"index":21,"enabled":true,"ref":"e22"}
+{"depth":21,"label":"Message","type":"StaticText","parentIndex":20,"rect":{"width":71.5,"x":569,"height":21,"y":43.5},"hittable":true,"index":22,"enabled":true,"ref":"e23"}
+{"depth":20,"parentIndex":19,"type":"Other","rect":{"width":1210,"x":0,"height":834,"y":0},"hittable":true,"index":23,"enabled":true,"ref":"e24"}
+{"depth":21,"parentIndex":23,"type":"Other","rect":{"width":1210,"x":0,"height":834,"y":0},"hittable":true,"index":24,"enabled":true,"ref":"e25"}
+{"depth":22,"parentIndex":24,"type":"Other","rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":25,"enabled":true,"ref":"e26"}
+{"depth":23,"label":"Vertical scroll bar, 1 page","type":"Other","parentIndex":25,"rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":26,"enabled":true,"ref":"e27"}
+{"depth":24,"label":"Vertical scroll bar, 1 page","type":"Other","parentIndex":26,"rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":27,"enabled":true,"ref":"e28"}
+{"depth":25,"label":"STEP 3 OF 3","type":"Other","parentIndex":27,"rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":28,"enabled":true,"ref":"e29"}
+{"depth":26,"label":"STEP 3 OF 3","type":"ScrollView","parentIndex":28,"rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":29,"enabled":true,"ref":"e30"}
+{"depth":27,"label":"STEP 3 OF 3","type":"Other","parentIndex":29,"rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":30,"enabled":true,"ref":"e31"}
+{"depth":28,"label":"STEP 3 OF 3","type":"Other","parentIndex":30,"rect":{"width":1210,"x":0,"height":748,"y":86},"hittable":true,"index":31,"enabled":true,"ref":"e32"}
+{"depth":29,"label":"STEP 3 OF 3","type":"StaticText","parentIndex":31,"rect":{"width":89.5,"x":16,"height":17,"y":102},"hittable":true,"index":32,"enabled":true,"ref":"e33"}
+{"depth":30,"label":"STEP 3 OF 3","type":"StaticText","parentIndex":32,"rect":{"width":89.5,"x":16,"height":17,"y":102},"hittable":true,"index":33,"enabled":true,"ref":"e34"}
+{"depth":29,"label":"Your message","type":"StaticText","parentIndex":31,"rect":{"width":1178,"x":16,"height":36,"y":127},"hittable":true,"index":34,"enabled":true,"ref":"e35"}
+{"depth":30,"label":"Your message","type":"StaticText","parentIndex":34,"rect":{"width":1178,"x":16,"height":36,"y":127},"hittable":true,"index":35,"enabled":true,"ref":"e36"}
+{"depth":29,"label":"To: Dr. J. de Vries","type":"StaticText","parentIndex":31,"rect":{"width":131.5,"x":16,"height":23,"y":191.5},"hittable":true,"index":36,"enabled":true,"ref":"e37"}
+{"depth":30,"label":"To: Dr. J. de Vries","enabled":true,"hittable":true,"index":37,"type":"StaticText","parentIndex":36,"rect":{"width":131.5,"x":16,"height":23,"y":191.5},"ref":"e38"}
+{"depth":29,"label":"Change","enabled":true,"hittable":true,"index":38,"type":"Button","parentIndex":31,"rect":{"width":74.5,"x":155.5,"height":48,"y":179},"ref":"e39"}
+{"depth":29,"label":"What would you like to ask?","enabled":true,"hittable":true,"index":39,"type":"StaticText","parentIndex":31,"rect":{"width":1178,"x":16,"height":30.5,"y":243},"ref":"e40"}
+{"depth":30,"label":"What would you like to ask?","enabled":true,"hittable":true,"index":40,"type":"StaticText","parentIndex":39,"rect":{"width":1178,"x":16,"height":30.5,"y":243},"ref":"e41"}
+{"depth":29,"label":"What helps your GP: where it is, since when, and what you have already tried.","enabled":true,"hittable":true,"index":41,"type":"StaticText","parentIndex":31,"rect":{"width":1178,"x":16,"height":23,"y":277.5},"ref":"e42"}
+{"depth":30,"label":"What helps your GP: where it is, since when, and what you have already tried.","enabled":true,"hittable":true,"index":42,"type":"StaticText","parentIndex":41,"rect":{"width":1178,"x":16,"height":23,"y":277.5},"ref":"e43"}
+{"depth":29,"label":"What would you like to ask?","enabled":true,"hittable":true,"index":43,"type":"Other","parentIndex":31,"rect":{"width":1178,"x":16,"height":124.5,"y":304.5},"ref":"e44"}
+{"depth":30,"label":"What would you like to ask?","enabled":true,"hittable":true,"index":44,"type":"TextView","parentIndex":43,"rect":{"width":1174,"x":18,"height":120.5,"y":306.5},"ref":"e45"}
+{"depth":31,"label":"Vertical scroll bar, 1 page","enabled":true,"hittable":true,"index":45,"value":"0%","type":"Other","parentIndex":44,"rect":{"width":30,"x":1159,"height":120.5,"y":306.5},"ref":"e46"}
+{"depth":32,"enabled":true,"hittable":true,"index":46,"type":"Other","parentIndex":45,"rect":{"width":3,"x":1186,"height":17,"y":407},"ref":"e47"}
+{"depth":31,"label":"Horizontal scroll bar, 1 page","enabled":true,"hittable":true,"index":47,"value":"0%","type":"Other","parentIndex":44,"rect":{"width":1174,"x":18,"height":30,"y":394},"ref":"e48"}
+{"depth":32,"enabled":true,"hittable":true,"index":48,"type":"Other","parentIndex":47,"rect":{"width":792,"x":21,"height":3,"y":421},"ref":"e49"}
+{"depth":29,"label":"Add a photo if it helps, for example of a rash or a wound.","enabled":true,"hittable":true,"index":49,"type":"StaticText","parentIndex":31,"rect":{"width":1178,"x":16,"height":23,"y":444.5},"ref":"e50"}
+{"depth":30,"label":"Add a photo if it helps, for example of a rash or a wound.","enabled":true,"hittable":true,"index":50,"type":"StaticText","parentIndex":49,"rect":{"width":1178,"x":16,"height":23,"y":444.5},"ref":"e51"}
+{"depth":29,"label":"The camera isn't available on this device. You can choose a photo from your library.","enabled":true,"hittable":true,"index":51,"type":"StaticText","parentIndex":31,"rect":{"width":1178,"x":16,"y":475.5,"height":23},"ref":"e52"}
+{"depth":30,"label":"The camera isn't available on this device. You can choose a photo from your library.","enabled":true,"hittable":true,"index":52,"type":"StaticText","parentIndex":51,"rect":{"width":1178,"x":16,"y":475.5,"height":23},"ref":"e53"}
+{"depth":29,"label":"Choose from library","enabled":true,"hittable":true,"index":53,"type":"Button","parentIndex":31,"rect":{"width":1178,"x":16,"y":506.5,"height":48},"ref":"e54"}
+{"depth":29,"label":"Send","enabled":true,"hittable":true,"index":54,"type":"Button","parentIndex":31,"rect":{"width":1178,"x":16,"y":578.5,"height":48},"ref":"e55"}
+{"depth":27,"label":"Vertical scroll bar, 1 page","enabled":true,"hittable":true,"index":55,"type":"Other","value":"0%","parentIndex":29,"rect":{"width":30,"x":1177,"y":97,"height":707},"ref":"e56"}
+{"depth":28,"enabled":true,"hittable":true,"index":56,"type":"Other","parentIndex":55,"rect":{"width":3,"x":1204,"y":89,"height":1184},"ref":"e57"}
+{"depth":27,"label":"Horizontal scroll bar, 1 page","enabled":true,"hittable":true,"index":57,"type":"Other","value":"0%","parentIndex":29,"rect":{"width":1150,"x":30,"y":781,"height":30},"ref":"e58"}
+{"enabled":true,"index":58,"type":"Other","parentIndex":57,"hittable":true,"depth":28,"rect":{"width":828,"x":3,"y":808,"height":3},"ref":"e59"}
+{"enabled":true,"index":59,"type":"Other","parentIndex":29,"hittable":true,"label":"Vertical scroll bar, 1 page","value":"0%","rect":{"width":30,"x":1177,"y":97,"height":707},"depth":27,"ref":"e60"}
+{"enabled":true,"index":60,"type":"Other","parentIndex":59,"hittable":true,"depth":28,"rect":{"width":3,"x":1204,"y":89,"height":1184},"ref":"e61"}
+{"enabled":true,"index":61,"type":"Other","parentIndex":29,"hittable":true,"label":"Horizontal scroll bar, 1 page","value":"0%","rect":{"width":1150,"x":30,"y":781,"height":30},"depth":27,"ref":"e62"}
+{"enabled":true,"index":62,"type":"Other","parentIndex":61,"hittable":true,"depth":28,"rect":{"width":828,"x":3,"y":808,"height":3},"ref":"e63"}
+{"enabled":true,"index":63,"type":"Other","parentIndex":19,"hittable":true,"depth":20,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e64"}
+{"enabled":true,"index":64,"type":"Other","parentIndex":63,"hittable":true,"depth":21,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e65"}
+{"enabled":true,"index":65,"type":"Other","parentIndex":12,"hittable":true,"depth":13,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e66"}
+{"enabled":true,"index":66,"type":"Other","parentIndex":65,"hittable":true,"depth":14,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e67"}
+{"enabled":true,"index":67,"type":"Other","parentIndex":9,"hittable":true,"depth":10,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e68"}
+{"enabled":true,"index":68,"type":"Other","parentIndex":67,"hittable":true,"depth":11,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e69"}
+{"enabled":true,"index":69,"type":"Other","parentIndex":68,"hittable":true,"depth":12,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e70"}
+{"enabled":true,"index":70,"type":"Window","parentIndex":0,"hittable":true,"depth":1,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e71"}
+{"enabled":true,"index":71,"type":"Other","parentIndex":70,"hittable":true,"depth":2,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e72"}
+{"enabled":true,"index":72,"type":"Other","parentIndex":71,"hittable":true,"depth":3,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e73"}
+{"enabled":true,"index":73,"type":"Window","parentIndex":0,"hittable":true,"depth":1,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e74"}
+{"enabled":true,"index":74,"type":"Other","parentIndex":73,"hittable":true,"depth":2,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e75"}
+{"enabled":true,"index":75,"type":"Other","parentIndex":74,"hittable":true,"label":"gearshape.fill","depth":3,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e76"}
+{"enabled":true,"index":76,"type":"Other","parentIndex":75,"hittable":true,"label":"gearshape.fill","depth":4,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e77"}
+{"enabled":true,"index":77,"type":"Other","parentIndex":76,"hittable":true,"label":"gearshape.fill","depth":5,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e78"}
+{"enabled":true,"index":78,"type":"Other","parentIndex":77,"hittable":true,"label":"gearshape.fill","depth":6,"rect":{"width":1210,"x":0,"y":0,"height":834},"ref":"e79"}
+{"depth":7,"parentIndex":78,"hittable":true,"enabled":true,"label":"gearshape.fill","type":"Image","identifier":"gearshape.fill","index":79,"rect":{"width":26,"x":1152,"y":41,"height":26},"ref":"e80"}

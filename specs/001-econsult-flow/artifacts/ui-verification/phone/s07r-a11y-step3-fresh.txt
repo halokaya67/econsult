@@ -1,0 +1,35 @@
+Page: host.exp.Exponent
+App: host.exp.Exponent
+Snapshot: 29 visible nodes
+iOS snapshot acquisition does not provide hittability evidence; regular snapshots omit unverified hittability while raw snapshots preserve supplied facts.
+Warning: possible repeated nav subtree detected.
+@e1 [application] "Expo Go"
+  @e2 [navigation-bar] "Message"
+    @e3 [button] "Questions"
+    @e4 [text] "Message"
+  @e5 [scroll-area] [scrollable]
+    @e6 [text] "STEP 3 OF 3"
+      @e7 [text] "STEP 3 OF 3"
+    @e8 [text] "Your message"
+      @e9 [text] "Your message"
+    @e10 [button] "Change"
+    @e11 [text] "To: Dr. J. de Vries"
+      @e12 [text] "To: Dr. J. de Vries"
+    @e13 [text] "What would you like to ask?"
+      @e14 [text] [same label as parent]
+    @e15 [text] "What helps your GP: where it is, since when, and what you have already tried."
+      @e16 [text] [same label as parent]
+    @e17 [text-view] "What would you like to ask?" [editable]
+      @e18 [other] "Vertical scroll bar, 1 page" [scrollable]
+      @e19 [other] "Horizontal scroll bar, 1 page" [scrollable]
+    @e20 [text] "Add a photo if it helps, for example of a rash or a wound."
+      @e21 [text] [same label as parent]
+    @e22 [text] "The camera isn't available on this device. You can choose a photo from your library."
+      @e23 [text] [same label as parent]
+    @e24 [button] "Choose from library"
+    @e25 [button] "Send"
+    @e26 [other] "Vertical scroll bar, 1 page" [scrollable]
+    @e27 [other] "Horizontal scroll bar, 1 page" [scrollable]
+    @e28 [other] "Vertical scroll bar, 1 page" [scrollable]
+    @e29 [other] "Horizontal scroll bar, 1 page" [scrollable]
+    [content below scroll-area hidden]

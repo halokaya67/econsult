@@ -1,0 +1,184 @@
+<meta charset="utf-8">
+<title>Spec review, round 4</title>
+<meta name="description" content="Verdict: PASS_WITH_FLAGS. 2 warnings, 2 information items.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Checker · spec round 4</p>
+    <h1>Spec review, round 4</h1>
+    <p class="lede">Verdict: PASS_WITH_FLAGS. 2 warnings, 2 information items.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
+  </aside>
+  <main>
+<p>agent_id: a1d4098bff5172cf9
+mode: spec · round: 4 · reviewed head: 32db7de (working tree) · previous rounds: checker/spec-r1.md, checker/spec-r2.md, checker/spec-r3.md</p>
+<p>All verification is in; no further reads are needed. Evidence summary before the report:</p>
+<ul>
+<li>Round-3 fixes hold against the runtime: <code>runtime.native.ts:41-52</code> installs <code>expo/fetch</code> unless <code>EXPO_PUBLIC_USE_RN_FETCH</code>; <code>convertFormData.ts:35,77</code> rejects the <code>{ uri }</code> part and (<code>:71-75</code>) accepts a <code>Blob</code> or a <code>bytes()</code>-bearing <code>File</code>; <code>AbortSignal.ts:9-14</code> patches <code>timeout</code>/<code>any</code>; expo-file-system 57.0.7 comes from <code>expo/package.json:85</code> and <code>File.d.ts:145</code> declares <code>createUploadTask</code>; <code>abort-controller</code> 3.0.0 is what <code>setUpXHR.js:38-43</code> installs.</li>
+<li>One clause the W1 fix introduced is wrong for the path that matters: the abort-controller 3.0.0 polyfill has no <code>reason</code> property (0 hits), Expo&#39;s patch sets <code>reason</code> only for its own <code>timeout()</code>/<code>any()</code> (<code>AbortSignal.ts:108-114</code>), and a mid-flight abort goes through <code>fetch.ts:83</code> → <code>FetchResponse.ts:183-189</code>, which errors the body read with a <code>DOMException(..., &#39;AbortError&#39;)</code> — Expo&#39;s own test asserts exactly that (<code>FetchResponse-test.ts:146-153</code>) — while a pre-header cancel surfaces as <code>FetchError(&#39;fetch failed: Fetch request has been canceled&#39;)</code> with <code>cause</code> undefined (<code>ios/Fetch/FetchExceptions.swift:11-13</code>, <code>android/.../NativeResponse.kt:78-79</code>, wrapped at <code>fetch.ts:90</code>).</li>
+<li>Decisions log: 1 entry (2026-09-11T17:30:19Z, phase <code>spec</code>, &quot;Spec gate&quot; approval); <code>grep -in dismiss</code> → 0. HEAD 32db7de; spec.md and how-it-works.md modified in the working tree (reviewed as instructed); <code>git diff --stat f39fb58..HEAD -- . &#39;:!specs&#39;</code> is empty, so the how-it-works snapshot is still the current app.</li>
+</ul>
+<h2 id="spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</h2>
+<p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
+<p><strong>Reviewed:</strong> 6/6 in-scope files read in full (spec.md and how-it-works.md from the working tree, checker/spec-r3.md, <code>case-study-mobile.md</code>, package.json, .gitignore; spec-r1/r2 not opened, history not needed; plan.md not opened, out of scope for mode spec) · diff: n/a (mode spec) · head: 32db7de, working tree: <code>M specs/001-econsult-flow/spec.md</code>, <code>M specs/001-econsult-flow/how-it-works.md</code> (+2 html, 4 untracked plan/checker files) · canon cited: workflow.md (Coding Canon &quot;Errors &amp; inputs — handle errors explicitly at every level&quot;; KISS/YAGNI) · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): decisions log <code>dismiss</code> → 0, entries → 1; <code>installAbortSignalPatch|useRnFetch|install(&#39;fetch&#39;</code> in expo/src/winter/runtime.native.ts → 5 (:10, :35, :41, :44, :52); <code>uri. is not supported|Unsupported FormDataPart</code> in winter/fetch/convertFormData.ts → 2 (:35, :77); <code>aborted|abort(|FetchError</code> in winter/fetch/fetch.ts → 6 (:77-78 pre-aborted branch, :83 <code>response.abort(signal?.reason)</code>, :90 <code>createFromError</code>); winter/fetch/FetchErrors.ts read whole → prefixes <code>fetch failed: </code>; <code>abort|reject|cause</code> in winter/fetch/FetchResponse.ts → 12 (<code>abort()</code> :183-199); <code>reason</code> in abort-controller/dist/abort-controller.js → 0; <code>reason</code> in winter/AbortSignal.ts → 7 (:23 TimeoutError, :108-114 <code>abortWithReason</code> for <code>timeout</code>/<code>any</code> only); <code>cancel</code> in expo/ios/Fetch → 12 (FetchExceptions.swift:11-13, NativeRequest.swift:34-36); <code>cancel</code> in expo/android/.../fetch → 13 (NativeResponse.kt:78-79); <code>abort</code> in winter/fetch/<strong>tests</strong> → 14 (FetchResponse-test.ts:146-153, :178-184); expo-file-system version → 57.0.7, <code>&quot;expo-file-system&quot;</code> in expo/package.json → 1 (:85 <code>~57.0.7</code>), <code>createUploadTask</code> in expo-file-system/build/File.d.ts → 2 (:145 decl); abort-controller version → 3.0.0, <code>AbortController|abort-controller</code> in react-native/Libraries/Core/setUpXHR.js → 3 (:38-43); expo-router peerDependenciesMeta → gesture-handler, reanimated, react-native-web, react-dom all <code>optional: true</code> (the :81 removals are safe); <code>getSize</code> in react-native/Libraries/Image → 12 (Image.ios.js:33-38, Image.android.js:44-49); research.md <code>width: 1600|upscal|may be 0</code> → 5 (:1224 fallback, :1275 upscaling unverified); <code>preparing|pick time|on confirm</code> → 4 (:1221 &quot;runs once on confirm&quot;); <code>remove photo|supersed|pickId</code> → 2 (neither about the photo); <code>change photo|retake|preview.*remove</code> → 1 (:935); <code>git diff --stat f39fb58..HEAD -- . &#39;:!specs&#39;</code> → empty</p>
+<div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>r3 W1 — how-it-works.md:86 / spec.md:146 stale against the Expo 57 runtime</td><td>RESOLVED</td><td>how-it-works.md:86-87 now name <code>expo/fetch</code> as the global (<code>runtime.native.ts:41-52</code> confirmed), the <code>{ uri, name, type }</code> rejection (<code>convertFormData.ts:35,77</code>), <code>File.createUploadTask</code> (<code>File.d.ts:145</code>; 57.0.7 via <code>expo/package.json:85</code>), the <code>AbortSignal.timeout</code>/<code>any</code> patch (<code>AbortSignal.ts:9-14</code>), abort-controller 3.0.0 (<code>setUpXHR.js:38-43</code>); Sources :110-111 list the files; spec.md:147 carries the TimeoutError-reason rationale. One clause of the new text is over-specific for the timeout path — new W1 below.</td></tr><tr><td>r3 W2 — Send, Remove, draft and leave guard undefined while preparing</td><td>RESOLVED</td><td>spec.md:105 and :126 define <code>DraftPhoto</code> as <code>preparing</code>/<code>ready</code> with <code>pickId</code>, Send disabled with reason, Remove discarding the pending result, newer pick superseding, pickId-matched results; :140 guard uses <code>hasPhoto</code>, which :105 makes true from the pick. Consistent with the Contract (app-internal, no contract change), SC2/SC7 and the Reuse Map (<code>processPhoto</code> in <code>src/lib</code>). Which controls the Preparing block shows is still unstated — new W2 below.</td></tr><tr><td>r3 I1 — no guard for the picker&#39;s 0 width/height</td><td>RESOLVED</td><td>spec.md:128 names the fallback <code>{ width: 1600 }</code> as a branch of <code>processPhoto</code>. The fallback relies on library behaviour the research marks unverified — new I2 below.</td></tr></tbody></table></div>
+<div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>consistency</td><td>how-it-works.md:86</td><td>&quot;FetchError with cause = signal.reason, not a DOMException&quot; describes only the pre-aborted branch; a mid-flight abort (the timeout) yields an <code>AbortError</code> DOMException or a FetchError with no cause, and spec.md:59 builds the real-transport mapping on the wrong claim</td></tr><tr><td>W2</td><td>WARNING</td><td>ambiguity</td><td>spec.md:105</td><td>The &quot;Preparing photo&quot; block&#39;s controls are unstated: the first sentence attaches Remove to the preview, the second needs Remove and both source actions during preparation</td></tr><tr><td>I1</td><td>INFO</td><td>ambiguity</td><td>spec.md:126</td><td>The union has no failed member and no line says where a failed result lands (<code>ready</code> with the original asset is the only consistent reading)</td></tr><tr><td>I2</td><td>INFO</td><td>coverage</td><td>spec.md:128</td><td>The <code>{ width: 1600 }</code> fallback is the one path that can ask the manipulator to upscale; research.md:1275 marks that behaviour unverified</td></tr></tbody></table></div>
+<h3>W1 — expo/fetch abort shape is mis-stated for the mid-flight (timeout) path</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> consistency</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/how-it-works.md:86</code> (also <code>spec.md:59</code>)</li>
+<li><strong>Finding:</strong> The bullet says expo/fetch &quot;honours <code>AbortSignal</code> but rejects an aborted request with a <code>FetchError</code> (..., <code>cause</code> set to the signal&#39;s reason), not a DOMException&quot;, and spec.md:59 turns that into the real-transport rule (&quot;a real HTTP transport would map that onto the same timeout error&quot;). That is <code>fetch.ts:77-78</code> only — the signal already aborted before the call. A timeout aborts mid-flight, which is <code>fetch.ts:83-84</code>: <code>response.abort(signal?.reason)</code> then <code>request.cancel()</code>. On device <code>AbortController</code> is abort-controller 3.0.0 (<code>setUpXHR.js:38-43</code>), which defines no <code>reason</code> (0 hits in <code>dist/abort-controller.js</code>); Expo&#39;s patch sets <code>reason</code> only inside its own <code>timeout()</code>/<code>any()</code> (<code>AbortSignal.ts:108-114</code>), so a plain <code>controller.abort()</code> leaves <code>signal.reason</code> undefined. <code>FetchResponse.ts:183-189</code> then errors the body read with <code>new DOMException(&#39;The operation was aborted.&#39;, &#39;AbortError&#39;)</code>, and Expo&#39;s own test asserts <code>rejects.toMatchObject({ name: &#39;AbortError&#39; })</code> (<code>FetchResponse-test.ts:146-153</code>). If the cancel lands before headers, the native side emits <code>FetchRequestCanceledException</code> (&quot;Fetch request has been canceled&quot;, <code>ios/Fetch/FetchExceptions.swift:11-13</code>, <code>android/.../fetch/NativeResponse.kt:78-79</code>), which <code>fetch.ts:90</code> wraps as <code>FetchError(&#39;fetch failed: Fetch request has been canceled&#39;)</code> with <code>cause</code> undefined. Neither shape has <code>cause === signal.reason</code>, and one of them is precisely the DOMException the sentence rules out. The same bullet cites the throw at <code>convertFormData.ts:76</code>; it is at <code>:77</code>.</li>
+<li><strong>Why:</strong> Doc and code disagree; the doc is the wrong side. The sentence is headed for DECISIONS.md (the reviewer reads it before the session), and a transport written from it (<code>err instanceof FetchError &amp;&amp; err.cause === signal.reason</code>) misses both real shapes, so a timeout surfaces as a generic network error while :155 distinguishes the two. Round 3 missed it because it verified <code>fetch.ts:77-83</code> (the pre-aborted branch) and did not follow <code>response.abort()</code> into <code>FetchResponse.ts</code> or <code>request.cancel()</code> into the native exception. (canon: workflow.md &quot;handle errors explicitly at every level&quot;)</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>how-it-works.md:86 — replace "It honours `AbortSignal` but rejects an aborted request with a `FetchError`
+("fetch failed: The operation was aborted.", `cause` set to the signal's reason), not a DOMException." with:
+"It honours `AbortSignal`, but the rejection's shape depends on timing: a signal already aborted before the
+call throws `FetchError('fetch failed: The operation was aborted.', { cause: signal.reason })`
+(`expo/src/winter/fetch/fetch.ts:77-78`); an abort while the request is in flight cancels the native task,
+which rejects a pending `start()` as `FetchError('fetch failed: Fetch request has been canceled')` with no
+`cause`, or, once headers have arrived, rejects the body read with `signal.reason` if set and otherwise a
+`DOMException` named `AbortError` (`FetchResponse.ts:183-189`, asserted by Expo's own tests). The
+abort-controller 3.0.0 polyfill has no `signal.reason`; only Expo's `timeout()`/`any()` set one."
+Same bullet: `convertFormData.ts:35-36,76` → `convertFormData.ts:35-36,77`.
+
+spec.md:59 — replace "Expo's `fetch` rejects an aborted request with a `FetchError` whose `cause` is the
+signal's reason, so a real HTTP transport would map that onto the same timeout error the fake produces." with:
+"Expo's `fetch` surfaces an abort as a `FetchError` or, mid-body, as an `AbortError` DOMException depending on
+timing, so a real HTTP transport decides on `signal.aborted` in its catch, not on the error's class or
+`cause`, and maps any rejection under an aborted timeout signal onto the same timeout error the fake produces."</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>W2 — What the &quot;Preparing photo&quot; block shows is unstated, and the two sentences at :105 pull apart</h3>
+<ul>
+<li><strong>Severity:</strong> WARNING</li>
+<li><strong>Category:</strong> ambiguity</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:105</code> (also :44, :125)</li>
+<li><strong>Finding:</strong> The first sentence reads &quot;shows &#39;Preparing photo&#39; while the image is downscaled, then the preview with a labelled &#39;Remove photo&#39; button&quot; — Remove arrives with the preview. The next sentence needs it earlier: &quot;Remove during preparation discards the result when it arrives; a newer pick supersedes an older one&quot; is reachable only if the Remove button and both source actions (&quot;Take a photo&quot;, &quot;Choose from library&quot;) stay on screen while preparing. Whether the source actions remain visible once a photo is <code>ready</code> is not stated anywhere either (:125 describes only pick → remove → pick). Same sentence: &quot;<code>hasPhoto</code> is true from the first tap&quot; — the tap opens the picker, and :122 says a cancelled picker leaves the draft unchanged, so the record point is the picker returning an asset, not the tap.</li>
+<li><strong>Why:</strong> Two valid builds: (a) the Preparing block is a label only and the source actions hide while a photo exists — then &quot;Remove during preparation&quot; and &quot;a newer pick supersedes&quot; are reducer-only behaviours with no UI path, and the AC4 screen tests cannot exercise them; (b) the block keeps Remove and the source actions. SC3&#39;s accessibility-first queries (<code>getByRole(&#39;button&#39;, { name: &#39;Remove photo&#39; })</code>) need one answer per state. Round 3 introduced the overlapping-pick window; before it there was no state in which a second pick could overlap a first, so this is a fix-delta gap rather than one the earlier rounds saw.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>spec.md:105 — replace "shows 'Preparing photo' while the image is downscaled, then the preview with a
+labelled 'Remove photo' button. The draft records the photo as soon as it is picked, with status `preparing`,
+so `hasPhoto` is true from the first tap;" with:
+"while the image is downscaled the block shows 'Preparing photo' in place of the preview, and once it is
+ready, the preview; in both states a labelled 'Remove photo' button and the two source actions stay
+available, so a patient can replace a photo without removing it first. The draft records the photo as soon
+as the picker returns an asset, with status `preparing`, so `hasPhoto` is true before processing finishes;"</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I1 — Where a failed processing result lands is implied, not stated</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> ambiguity</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:126</code> (also :127, :44)</li>
+<li><strong>Finding:</strong> :126 defines <code>photo</code> as <code>preparing | ready</code> and says &quot;a ready or failed result is ignored unless its <code>pickId</code> matches&quot;; :127 and :44 say that on failure &quot;the original asset is kept&quot;. The union has no failed member, so the only consistent reading is that a failed result transitions to <code>ready</code> carrying the picker&#39;s original <code>uri</code>, <code>width</code>, <code>height</code> — but no line says so, and the reducer test for the failed action (100 % branches on <code>src/features</code>, SC7) needs its expected state written down.</li>
+<li><strong>Why:</strong> A planner may add a third status to distinguish &quot;original kept&quot; from &quot;downscaled&quot;, which changes the preview, the Send hint and the upload path for no spec&#39;d reason.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>spec.md:127 — "Photo processing fails: the draft moves to `ready` with the picker's original `uri`, `width`
+and `height` (there is no failed status), and a development warning is logged."</code></pre>
+</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<h3>I2 — The 0-dimension fallback is the one path that can upscale</h3>
+<ul>
+<li><strong>Severity:</strong> INFO</li>
+<li><strong>Category:</strong> coverage</li>
+<li><strong>Location:</strong> <code>specs/001-econsult-flow/spec.md:128</code> (also research.md:1224, :1275)</li>
+<li><strong>Finding:</strong> <code>{ width: 1600 }</code> on an image whose real width is below 1600 asks the manipulator to enlarge it. research.md:1275 marks &quot;whether resize() upscales&quot; as unverified and says the <code>Math.min(1600, asset.width)</code> guard &quot;sidesteps this rather than relying on library behaviour&quot;; the :128 fallback is exactly the branch that does rely on it. Whether expo-image-manipulator upscales is training-data recall, not verified (the package is not installed).</li>
+<li><strong>Why:</strong> On the rare 0-dimension picker result, a small photo could come back larger than it went in — the opposite of the step&#39;s purpose. Low stakes, so INFO; stated here because the research&#39;s own caveat contradicts the line.</li>
+<li><strong>Suggested fix:</strong><pre class="code"><code>spec.md:128 — replace "the long edge is unknown and the resize passes `{ width: 1600 }`." with:
+"the long edge is unknown; `processPhoto` reads the real dimensions with React Native's `Image.getSize(uri)`
+and applies the same long-edge rule, and if that read fails it takes the processing-failure path (original
+kept, development warning)."</code></pre>
+<code>Image.getSize</code> is present in RN 0.86.3 (<code>Libraries/Image/Image.ios.js:33-38</code>, <code>Image.android.js:44-49</code>); that it resolves <code>file://</code> URIs from the picker is training-data recall, not verified here. Alternative with no new code: keep <code>{ width: 1600 }</code> and add &quot;may enlarge a small image on this path&quot; so the trade-off is on record.</li>
+<li><strong>Needs user:</strong> no</li>
+</ul>
+<p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
+<p><strong>Summary:</strong> All three round-3 flags are resolved in the working-tree text, and the fixes are consistent with the Contract, the step-3 description, the Success Criteria and the Reuse Map. The one regression the fix-delta introduced is W1: the new runtime sentence generalises the pre-aborted branch of expo/fetch to the timeout path, where the real shapes are an <code>AbortError</code> DOMException or a cause-less <code>FetchError</code> — correct it first, since it is headed for DECISIONS.md, then pin down the Preparing block&#39;s controls (W2) so the AC4 screen tests have one state to assert. Done well: the fake rejecting with its own <code>AbortError</code> (:42, :147) is exactly right, because the device polyfill has no <code>signal.reason</code> while jest&#39;s Node <code>AbortController</code> does, so nothing in the shipped path depends on either.</p>
+
+  </main>
+  <footer class="foot">Generated from <code>checker/spec-r4.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

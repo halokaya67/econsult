@@ -1,0 +1,209 @@
+<meta charset="utf-8">
+<title>UI verification — tablet lane</title>
+<meta name="description" content="The same app on an iPad Pro 11-inch simulator: six scenarios, all passing, with one layout observation about the full-width content column.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Finish phase · tablet</p>
+    <h1>Finish-phase UI verification — tablet lane</h1>
+    <p class="lede">The same app on an iPad Pro 11-inch simulator: six scenarios, all passing, with one layout observation about the full-width content column.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#verdict">Verdict</a></li><li><a href="#scenarios">Scenarios</a></li><li><a href="#form-factor-checklist-tablet">Form-factor checklist (tablet)</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#evidence">Evidence</a></li></ol>
+  </aside>
+  <main>
+<style>
+main > .shots{max-width:none}
+.shots{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 26px}
+.shots figure{margin:0;width:148px}
+.shots a{display:block}
+.shots img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.shots figcaption{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
+.dumps code{font-size:12px}
+</style>
+<p>Device: iPad Pro 11-inch (M5) simulator (udid 1D65286A-2499-4E02-A229-FC82D9AF559A), Expo Go 57.0.9 installed from the iPhone lane&#39;s bundle, Metro port 8082. Head: <code>48896ef</code>.
+Driver: agent-device 0.21.0. Text size: medium unless stated. Portrait unless stated.</p>
+<h2 id="verdict">Verdict</h2>
+<p>All six scenarios PASS. No functional or visual defect. One non-failing layout observation: the form column runs 802 pt wide in an 834 pt portrait canvas (1178 pt of 1210 pt in landscape), so body copy and the full-width buttons stretch nearly edge to edge; a centred max-width column of roughly 560 to 680 pt would read better on iPad and would not change phone rendering.</p>
+<h2 id="scenarios">Scenarios</h2>
+<h3>1. Happy path with photo (prc-0421), portrait — PASS</h3>
+<ol>
+<li>Home: &quot;Hello, Ria de Boer.&quot;, &quot;Write to your practice&quot;, &quot;Developer settings&quot;; content 802 pt wide, buttons 802 × 48 pt.</li>
+<li>Write → &quot;STEP 1 OF 3&quot;, three recipients, Continue <code>[disabled]</code>; recipient rows 802 × 93.5 pt.</li>
+<li>Picked Dr. J. de Vries → &quot;radio button, checked&quot;, Continue enabled.</li>
+<li>Continue → &quot;STEP 2 OF 3&quot;, required choice (three options) plus the optional text field.</li>
+<li>Answered &quot;1 to 4 weeks&quot; → checked.</li>
+<li>Continue → &quot;STEP 3 OF 3&quot;, &quot;To: Dr. J. de Vries&quot; plus Change, message field, photo section, &quot;Choose from library&quot;, Send.</li>
+<li>Typed the message; the keyboard occupied y 925–1207 while the field sat at y 306–427 and Send at y 578–627, so neither was covered.</li>
+<li>Choose from library → the photo-library permission alert; granted; the picker presented as an iPad sheet with the Photos sidebar and thumbnails.</li>
+<li>Picked the first photo (coordinate tap) → &quot;Your photo&quot; preview 802 × 200 pt, &quot;Remove photo&quot; 802 × 48 pt, Send; &quot;Choose from library&quot; replaced.</li>
+<li>Send → confirmation: &quot;Message sent&quot;, &quot;Sent to Dr. J. de Vries.&quot;, the reply-time line, &quot;Reference: ec-1&quot;, &quot;Your photo was attached.&quot;, Done.</li>
+<li>Done → Home with the root title and no back button (stack unwound).
+Evidence: t01-01 … t01-11 (png, a11y and raw dumps).</li>
+</ol>
+<div class="shots">
+  <figure><a href="tablet/t01-01-home.png"><img src="tablet/t01-01-home.png" alt="t01-01-home.png" loading="lazy"></a><figcaption>t01-01-home.png</figcaption></figure>
+  <figure><a href="tablet/t01-02-step1.png"><img src="tablet/t01-02-step1.png" alt="t01-02-step1.png" loading="lazy"></a><figcaption>t01-02-step1.png</figcaption></figure>
+  <figure><a href="tablet/t01-03-step1-selected.png"><img src="tablet/t01-03-step1-selected.png" alt="t01-03-step1-selected.png" loading="lazy"></a><figcaption>t01-03-step1-selected.png</figcaption></figure>
+  <figure><a href="tablet/t01-04-step2.png"><img src="tablet/t01-04-step2.png" alt="t01-04-step2.png" loading="lazy"></a><figcaption>t01-04-step2.png</figcaption></figure>
+  <figure><a href="tablet/t01-05-step2-answered.png"><img src="tablet/t01-05-step2-answered.png" alt="t01-05-step2-answered.png" loading="lazy"></a><figcaption>t01-05-step2-answered.png</figcaption></figure>
+  <figure><a href="tablet/t01-06-step3.png"><img src="tablet/t01-06-step3.png" alt="t01-06-step3.png" loading="lazy"></a><figcaption>t01-06-step3.png</figcaption></figure>
+  <figure><a href="tablet/t01-07-step3-typed-keyboard.png"><img src="tablet/t01-07-step3-typed-keyboard.png" alt="t01-07-step3-typed-keyboard.png" loading="lazy"></a><figcaption>t01-07-step3-typed-keyboard.png</figcaption></figure>
+  <figure><a href="tablet/t01-08-photo-picker.png"><img src="tablet/t01-08-photo-picker.png" alt="t01-08-photo-picker.png" loading="lazy"></a><figcaption>t01-08-photo-picker.png</figcaption></figure>
+  <figure><a href="tablet/t01-09-step3-photo.png"><img src="tablet/t01-09-step3-photo.png" alt="t01-09-step3-photo.png" loading="lazy"></a><figcaption>t01-09-step3-photo.png</figcaption></figure>
+  <figure><a href="tablet/t01-10-confirmation.png"><img src="tablet/t01-10-confirmation.png" alt="t01-10-confirmation.png" loading="lazy"></a><figcaption>t01-10-confirmation.png</figcaption></figure>
+  <figure><a href="tablet/t01-11-home-after-done.png"><img src="tablet/t01-11-home-after-done.png" alt="t01-11-home-after-done.png" loading="lazy"></a><figcaption>t01-11-home-after-done.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/t01-01-home.a11y.txt"><code>t01-01-home.a11y.txt</code></a>, <a href="tablet/t01-01-home.raw.txt"><code>t01-01-home.raw.txt</code></a>, <a href="tablet/t01-02-step1.a11y.txt"><code>t01-02-step1.a11y.txt</code></a>, <a href="tablet/t01-02-step1.raw.txt"><code>t01-02-step1.raw.txt</code></a>, <a href="tablet/t01-03-step1-selected.a11y.txt"><code>t01-03-step1-selected.a11y.txt</code></a>, <a href="tablet/t01-03-step1-selected.raw.txt"><code>t01-03-step1-selected.raw.txt</code></a>, <a href="tablet/t01-04-step2.a11y.txt"><code>t01-04-step2.a11y.txt</code></a>, <a href="tablet/t01-06-step3.a11y.txt"><code>t01-06-step3.a11y.txt</code></a>, <a href="tablet/t01-07-step3-typed.raw.txt"><code>t01-07-step3-typed.raw.txt</code></a>, <a href="tablet/t01-09-step3-photo.a11y.txt"><code>t01-09-step3-photo.a11y.txt</code></a>, <a href="tablet/t01-09-step3-photo.raw.txt"><code>t01-09-step3-photo.raw.txt</code></a>, <a href="tablet/t01-10-confirmation.a11y.txt"><code>t01-10-confirmation.a11y.txt</code></a>, <a href="tablet/t01-11-home-after-done.a11y.txt"><code>t01-11-home-after-done.a11y.txt</code></a></p><h3>2. Validation — PASS</h3>
+<p>Fresh flow (state from scenario 1 did not leak: recipient reset, Continue disabled). Step 2 Continue unanswered → &quot;This question is required&quot; under the label, label&#39;s accessible name carries the error, route unchanged (&quot;Questions&quot;, &quot;STEP 2 OF 3&quot;). Step 3 Send empty → &quot;Please write your question before sending&quot; under the field, field&#39;s accessible name carries the error, route unchanged (&quot;Message&quot;, &quot;STEP 3 OF 3&quot;). Evidence: t02-01 … t02-03.</p>
+<div class="shots">
+  <figure><a href="tablet/t02-01-step2-required-error.png"><img src="tablet/t02-01-step2-required-error.png" alt="t02-01-step2-required-error.png" loading="lazy"></a><figcaption>t02-01-step2-required-error.png</figcaption></figure>
+  <figure><a href="tablet/t02-02-step3-pristine.png"><img src="tablet/t02-02-step3-pristine.png" alt="t02-02-step3-pristine.png" loading="lazy"></a><figcaption>t02-02-step3-pristine.png</figcaption></figure>
+  <figure><a href="tablet/t02-03-step3-empty-error.png"><img src="tablet/t02-03-step3-empty-error.png" alt="t02-03-step3-empty-error.png" loading="lazy"></a><figcaption>t02-03-step3-empty-error.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/t02-01-step2-required-error.a11y.txt"><code>t02-01-step2-required-error.a11y.txt</code></a>, <a href="tablet/t02-03-step3-empty-error.a11y.txt"><code>t02-03-step3-empty-error.a11y.txt</code></a></p><h3>3. prc-0873 and prc-0000 — PASS</h3>
+<p>Developer settings opened as a full-width top-inset sheet (y 42–1210) with Cancel (68.5 × 48 pt) in the header, Practice / Latency / four Fail groups, Force offline and &quot;Apply and go home&quot; reachable by scrolling. prc-0873 → Apply → Write → &quot;STEP 1 OF 2&quot; with exactly two recipients (Dr. A. Visser GP, L. Smit Practice nurse) → pick → Continue → &quot;STEP 2 OF 2&quot; message step, &quot;To: Dr. A. Visser&quot; (questions skipped). prc-0000 → Apply → Write → the empty state with &quot;Back to start&quot; → Home. prc-0421 restored and verified. Evidence: t03-01 … t03-06.</p>
+<div class="shots">
+  <figure><a href="tablet/t03-01-dev-settings-modal.png"><img src="tablet/t03-01-dev-settings-modal.png" alt="t03-01-dev-settings-modal.png" loading="lazy"></a><figcaption>t03-01-dev-settings-modal.png</figcaption></figure>
+  <figure><a href="tablet/t03-02-dev-settings-bottom.png"><img src="tablet/t03-02-dev-settings-bottom.png" alt="t03-02-dev-settings-bottom.png" loading="lazy"></a><figcaption>t03-02-dev-settings-bottom.png</figcaption></figure>
+  <figure><a href="tablet/t03-03-0873-step1.png"><img src="tablet/t03-03-0873-step1.png" alt="t03-03-0873-step1.png" loading="lazy"></a><figcaption>t03-03-0873-step1.png</figcaption></figure>
+  <figure><a href="tablet/t03-04-0873-step2.png"><img src="tablet/t03-04-0873-step2.png" alt="t03-04-0873-step2.png" loading="lazy"></a><figcaption>t03-04-0873-step2.png</figcaption></figure>
+  <figure><a href="tablet/t03-05-0000-empty.png"><img src="tablet/t03-05-0000-empty.png" alt="t03-05-0000-empty.png" loading="lazy"></a><figcaption>t03-05-0000-empty.png</figcaption></figure>
+  <figure><a href="tablet/t03-06-back-to-start-home.png"><img src="tablet/t03-06-back-to-start-home.png" alt="t03-06-back-to-start-home.png" loading="lazy"></a><figcaption>t03-06-back-to-start-home.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/t03-01-dev-settings-modal.a11y.txt"><code>t03-01-dev-settings-modal.a11y.txt</code></a>, <a href="tablet/t03-01-dev-settings-modal.raw.txt"><code>t03-01-dev-settings-modal.raw.txt</code></a>, <a href="tablet/t03-02-dev-settings-bottom.a11y.txt"><code>t03-02-dev-settings-bottom.a11y.txt</code></a>, <a href="tablet/t03-03-0873-step1.a11y.txt"><code>t03-03-0873-step1.a11y.txt</code></a>, <a href="tablet/t03-04-0873-step2.a11y.txt"><code>t03-04-0873-step2.a11y.txt</code></a>, <a href="tablet/t03-05-0000-empty.a11y.txt"><code>t03-05-0000-empty.a11y.txt</code></a></p><h3>4. Offline — PASS</h3>
+<p>Force offline switch 0 → 1 → Apply → Home shows the offline banner; step 1 and step 3 show it; Send <code>[disabled]</code> on step 3. Force offline back to 0 → Apply → banner gone and the Home tree matched the pre-offline baseline. Evidence: t04-01 … t04-05.
+Note: a selector press at the row&#39;s horizontal centre did not flip the toggle on the first off-attempt while pressing the switch by ref did; standard iOS switch hit-area behaviour, not an app defect.</p>
+<div class="shots">
+  <figure><a href="tablet/t04-01-dev-force-offline-on.png"><img src="tablet/t04-01-dev-force-offline-on.png" alt="t04-01-dev-force-offline-on.png" loading="lazy"></a><figcaption>t04-01-dev-force-offline-on.png</figcaption></figure>
+  <figure><a href="tablet/t04-02-home-offline.png"><img src="tablet/t04-02-home-offline.png" alt="t04-02-home-offline.png" loading="lazy"></a><figcaption>t04-02-home-offline.png</figcaption></figure>
+  <figure><a href="tablet/t04-03-step1-offline.png"><img src="tablet/t04-03-step1-offline.png" alt="t04-03-step1-offline.png" loading="lazy"></a><figcaption>t04-03-step1-offline.png</figcaption></figure>
+  <figure><a href="tablet/t04-04-step3-offline.png"><img src="tablet/t04-04-step3-offline.png" alt="t04-04-step3-offline.png" loading="lazy"></a><figcaption>t04-04-step3-offline.png</figcaption></figure>
+  <figure><a href="tablet/t04-05-home-online-restored.png"><img src="tablet/t04-05-home-online-restored.png" alt="t04-05-home-online-restored.png" loading="lazy"></a><figcaption>t04-05-home-online-restored.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/t04-02-home-offline.a11y.txt"><code>t04-02-home-offline.a11y.txt</code></a>, <a href="tablet/t04-03-step1-offline.a11y.txt"><code>t04-03-step1-offline.a11y.txt</code></a>, <a href="tablet/t04-04-step3-offline.a11y.txt"><code>t04-04-step3-offline.a11y.txt</code></a>, <a href="tablet/t04-05-home-online-restored.a11y.txt"><code>t04-05-home-online-restored.a11y.txt</code></a></p><h3>5. Largest text size sweep (accessibility-extra-extra-extra-large) — PASS</h3>
+<p>Set before a relaunch. Home: heading 271.5 pt tall, body 257.5 pt, both actions on screen without scrolling. Step 1: content 1271 pt in a 1124 pt viewport, Continue below the fold, reachable and enabled after scrolling. Step 2 with the required error: error under the wrapped label, no clipping. Step 3 pristine: every element wrapped and unclipped, photo controls and Send reachable by scrolling. Confirmation: all lines and Done visible. Restored medium; Home frames returned to the baseline. Evidence: t05-01 … t05-06.</p>
+<div class="shots">
+  <figure><a href="tablet/t05-01-home-axxxl.png"><img src="tablet/t05-01-home-axxxl.png" alt="t05-01-home-axxxl.png" loading="lazy"></a><figcaption>t05-01-home-axxxl.png</figcaption></figure>
+  <figure><a href="tablet/t05-02-step1-axxxl.png"><img src="tablet/t05-02-step1-axxxl.png" alt="t05-02-step1-axxxl.png" loading="lazy"></a><figcaption>t05-02-step1-axxxl.png</figcaption></figure>
+  <figure><a href="tablet/t05-03-step1-axxxl-scrolled.png"><img src="tablet/t05-03-step1-axxxl-scrolled.png" alt="t05-03-step1-axxxl-scrolled.png" loading="lazy"></a><figcaption>t05-03-step1-axxxl-scrolled.png</figcaption></figure>
+  <figure><a href="tablet/t05-04-step2-error-axxxl.png"><img src="tablet/t05-04-step2-error-axxxl.png" alt="t05-04-step2-error-axxxl.png" loading="lazy"></a><figcaption>t05-04-step2-error-axxxl.png</figcaption></figure>
+  <figure><a href="tablet/t05-05-step3-pristine-axxxl.png"><img src="tablet/t05-05-step3-pristine-axxxl.png" alt="t05-05-step3-pristine-axxxl.png" loading="lazy"></a><figcaption>t05-05-step3-pristine-axxxl.png</figcaption></figure>
+  <figure><a href="tablet/t05-06-confirmation-axxxl.png"><img src="tablet/t05-06-confirmation-axxxl.png" alt="t05-06-confirmation-axxxl.png" loading="lazy"></a><figcaption>t05-06-confirmation-axxxl.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/t05-01-home-axxxl.raw.txt"><code>t05-01-home-axxxl.raw.txt</code></a>, <a href="tablet/t05-02-step1-axxxl.raw.txt"><code>t05-02-step1-axxxl.raw.txt</code></a>, <a href="tablet/t05-04-step2-error-axxxl.a11y.txt"><code>t05-04-step2-error-axxxl.a11y.txt</code></a>, <a href="tablet/t05-05-step3-pristine-axxxl.a11y.txt"><code>t05-05-step3-pristine-axxxl.a11y.txt</code></a>, <a href="tablet/t05-06-confirmation-axxxl.a11y.txt"><code>t05-06-confirmation-axxxl.a11y.txt</code></a></p><h3>6. Landscape spot check — PASS (informational)</h3>
+<p>Orientation set to landscape-left through the driver: the app re-laid out to a 1210 × 834 viewport. Step 3 pristine: every element inside the 834 pt height, Send (1178 × 48 pt) reachable without scrolling. Sent in landscape → confirmation with all lines and Done at y 279. Rotated back → 834 × 1210 and the Home frames identical to the portrait baseline. Evidence: t06-01 … t06-03.
+Caveats: the on-disk landscape screenshots show the content rotated 90 degrees because the Simulator window did not re-orient when the orientation was set programmatically; the verdict rests on the measured accessibility frames plus a desktop screenshot. The Simulator&#39;s rotate menu could not be clicked because an Accessibility Inspector helper overlaid that screen region. app.json declares <code>&quot;orientation&quot;: &quot;portrait&quot;</code>, so a standalone build is portrait-locked; Expo Go does not enforce it, which is how landscape was reachable.</p>
+<div class="shots">
+  <figure><a href="tablet/t06-01-step3-landscape.png"><img src="tablet/t06-01-step3-landscape.png" alt="t06-01-step3-landscape.png" loading="lazy"></a><figcaption>t06-01-step3-landscape.png</figcaption></figure>
+  <figure><a href="tablet/t06-01b-landscape-raw.png"><img src="tablet/t06-01b-landscape-raw.png" alt="t06-01b-landscape-raw.png" loading="lazy"></a><figcaption>t06-01b-landscape-raw.png</figcaption></figure>
+  <figure><a href="tablet/t06-01b-step3-landscape-rotated-buffer.png"><img src="tablet/t06-01b-step3-landscape-rotated-buffer.png" alt="t06-01b-step3-landscape-rotated-buffer.png" loading="lazy"></a><figcaption>t06-01b-step3-landscape-rotated-buffer.png</figcaption></figure>
+  <figure><a href="tablet/t06-02-confirmation-landscape.png"><img src="tablet/t06-02-confirmation-landscape.png" alt="t06-02-confirmation-landscape.png" loading="lazy"></a><figcaption>t06-02-confirmation-landscape.png</figcaption></figure>
+  <figure><a href="tablet/t06-03-portrait-restored-home.png"><img src="tablet/t06-03-portrait-restored-home.png" alt="t06-03-portrait-restored-home.png" loading="lazy"></a><figcaption>t06-03-portrait-restored-home.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/t06-01-step3-landscape.raw.txt"><code>t06-01-step3-landscape.raw.txt</code></a>, <a href="tablet/t06-02-confirmation-landscape.a11y.txt"><code>t06-02-confirmation-landscape.a11y.txt</code></a>, <a href="tablet/t06-02-confirmation-landscape.raw.txt"><code>t06-02-confirmation-landscape.raw.txt</code></a>, <a href="tablet/t06-03-portrait-restored.raw.txt"><code>t06-03-portrait-restored.raw.txt</code></a></p><h2 id="form-factor-checklist-tablet">Form-factor checklist (tablet)</h2>
+<ul>
+<li>Content width: OBSERVATION, not a failure. 802 pt of 834 pt in portrait (16 pt gutters), 1178 pt of 1210 pt in landscape. Body copy runs a single line nearly edge to edge and the primary buttons read as oversized; a centred max-width column would help on iPad without affecting phones.</li>
+<li>Touch targets ≥ 48 pt: PASS (buttons 48 pt, recipient rows 93.5 pt, option rows 48 pt; the system nav back button is 44 × 44 pt; at the largest size buttons grow to 86–102 pt).</li>
+<li>Safe-area clearance: PASS (nav bar from y 32, content from y 86, deepest content at y 1159 of 1210).</li>
+<li>Developer settings as an iPad sheet with Cancel reachable: PASS, presented as a full-width top-inset sheet rather than a centred card; Cancel works and dismisses without applying.</li>
+<li>Keyboard does not cover the edited field: PASS.</li>
+<li>Photo picker on iPad: PASS (proper iPad sheet with sidebar; returns cleanly with the preview shown).</li>
+</ul>
+<h2 id="logs-and-crashes">Logs and crashes</h2>
+<p>None. setup.log has no error, red box or exception; the only warning is Metro&#39;s empty-cache notice. No LogBox node in any tree. Reference ids read &quot;ec-1&quot; on each send because each was the first send after a relaunch (per-session counter in the fake).</p>
+<h2 id="evidence">Evidence</h2>
+<p>73 files plus setup.log in this directory (t00 boot check, t01 … t06 scenarios, t99 final state).</p>
+<p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the Metro log:</p>
+<div class="shots">
+  <figure><a href="tablet/t00-01-boot-check.png"><img src="tablet/t00-01-boot-check.png" alt="t00-01-boot-check.png" loading="lazy"></a><figcaption>t00-01-boot-check.png</figcaption></figure>
+  <figure><a href="tablet/t99-final-home.png"><img src="tablet/t99-final-home.png" alt="t99-final-home.png" loading="lazy"></a><figcaption>t99-final-home.png</figcaption></figure>
+</div>
+<p class="dumps">Text evidence: <a href="tablet/setup.log"><code>setup.log</code></a>, <a href="tablet/t99-dev-settings-final-state.raw.txt"><code>t99-dev-settings-final-state.raw.txt</code></a></p>
+
+  </main>
+  <footer class="foot">Generated from <code>tablet/report.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  function renderPending(){
+    if (!window.mermaid) return;
+    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
+    if (!nodes.length) return;
+    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
+    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
+  }
+  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
+})();
+</script>

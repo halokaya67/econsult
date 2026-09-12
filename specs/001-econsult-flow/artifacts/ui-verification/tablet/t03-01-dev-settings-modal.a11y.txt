@@ -1,0 +1,39 @@
+Page: Expo Go
+App: host.exp.Exponent
+Snapshot: 35 visible nodes
+@e1 [application] "Expo Go"
+  @e2 [other] "gearshape.fill"
+    @e3 [image] "gearshape.fill" [covered]
+  @e4 [other] "Cancel"
+    @e5 [navigation-bar] "Cancel"
+      @e6 [button] "Cancel"
+      @e7 [text] "Developer settings"
+    @e8 [other] "Vertical scroll bar, 2 pages"
+      @e9 [other] [same label as parent]
+        @e10 [other] "Developer settings"
+          @e11 [scroll-area] "Developer settings" [scrollable]
+            @e12 [other] "Developer settings"
+              @e13 [text] "Developer settings"
+              @e14 [text] "Development builds only. Applying clears cached practice data and returns home."
+              @e15 [text] "Practice"
+              @e16 [other] "prc-0421: three recipients, two questions"
+              @e17 [other] "prc-0873: two recipients, no questions"
+              @e18 [other] "prc-0000: no recipients, no questions"
+              @e19 [text] "Latency"
+              @e20 [other] "Default"
+              @e21 [other] "None"
+              @e22 [other] "Slow (5 seconds)"
+              @e23 [text] "Fail: Practice config"
+              @e24 [other] "None"
+              @e25 [other] "Network"
+              @e26 [other] "Server"
+              @e27 [other] "Timeout"
+              @e28 [text] "Fail: Care team"
+              @e29 [other] "None"
+              @e30 [other] "Network"
+              @e31 [other] "Server"
+              @e32 [other] "Timeout"
+              @e33 [text] "Fail: Create message"
+            @e34 [other] "Vertical scroll bar, 2 pages"
+            @e35 [other] "Horizontal scroll bar, 1 page"
+            [content below scroll-area hidden]
