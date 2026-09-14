@@ -29,7 +29,9 @@ fault map, so every state in the flow is reachable without editing code.
 
 ### Developer settings
 
-The home screen shows a **Developer settings** link in development builds:
+The home screen shows a **Developer settings** link in development mode (`__DEV__`, which is what
+`npx expo start` gives you, Expo Go included); a production bundle hides the link and the screen
+redirects home:
 
 | Control       | What it does                                                                                                                                                               |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -79,23 +81,25 @@ npm run format:check   # prettier --check .
 ```
 
 Coverage is enforced per area: 100 % of statements, branches, functions and lines on `src/api`,
-`src/features` and `src/lib`, and at least 90 % of statements on `src/components` and `src/app`.
+`src/features`, `src/lib` and `src/providers`, and at least 90 % of statements on `src/components`
+and `src/app`.
 
 ## Source layout
 
-| Path                       | What lives there                                                                                                    |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `src/api`                  | zod contracts, the `Transport` interface, the timeout helper, and the typed services                                |
-| `src/api/fake`             | The in-process fake transport (latency, faults, abort, idempotency) and the three fixtures                          |
-| `src/providers`            | The provider stack the app and the tests share: developer settings, services, network, the faked session            |
-| `src/features/econsult`    | The draft reducer and provider, validation, the step model, the send path, the hooks screens call, the photo picker |
-| `src/features/devSettings` | The option tables and helpers behind the developer-settings screen                                                  |
-| `src/lib`                  | Query client, network state, announcements, ids, photo processing, developer-settings parsing                       |
-| `src/components`           | The accessible building blocks: scaffold, buttons, text field, choice group                                         |
-| `src/theme`                | Colour, spacing, type-scale and touch-target tokens, plus the shared text styles                                    |
-| `src/app`                  | The expo-router routes: home, developer settings, and the four flow screens                                         |
-| `src/__tests__/app`        | The screen tests, mirroring the route paths                                                                         |
-| `src/test`                 | Test-only helpers: the provider wrapper and a flow layout that presets a draft                                      |
+| Path                               | What lives there                                                                                                                          |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/api`                          | zod contracts, the `Transport` interface, the timeout helper, and the typed services                                                      |
+| `src/api/fake`                     | The in-process fake transport (latency, faults, abort, idempotency) and the three fixtures                                                |
+| `src/providers`                    | The provider stack the app and the tests share: developer settings, services, network, the faked session                                  |
+| `src/features/econsult`            | The draft reducer and provider, validation, the step model, the send path, the hooks screens call                                         |
+| `src/features/econsult/components` | The components only this flow uses: the photo picker                                                                                      |
+| `src/features/devSettings`         | The option tables and helpers behind the developer-settings screen                                                                        |
+| `src/lib`                          | Query client, network state, announcements, `devWarn`/`isDevelopmentBuild`, ids, photo processing, developer-settings parsing             |
+| `src/components`                   | The accessible building blocks: scaffold, buttons, text field, choice group, and the shared field-label helpers                           |
+| `src/theme`                        | Colour, spacing, type-scale and touch-target tokens, plus the shared text styles                                                          |
+| `src/app`                          | The expo-router routes: home, developer settings, and the four flow screens                                                               |
+| `src/__tests__/app`                | The screen tests, mirroring the route paths                                                                                               |
+| `src/test`                         | Test-only helpers: the provider wrapper, a flow layout that presets a draft, a handled-rejection helper and the expo-router matcher types |
 
 Unit tests sit next to the code they cover. Screen tests are the exception: expo-router treats every
 `.tsx` under `src/app` as a route and requires each one at start-up in development, so a test file

@@ -68,6 +68,12 @@ const getInnerViewRef = jest.mocked(
 // measured is read from the receiver of the call rather than from a per-component mock.
 const measureLayout = jest.mocked(Text.prototype.measureLayout);
 
+// StepHeader announces its own title on mount and the announcement mock is shared by the whole
+// file, so "announced once" is counted over the calls that carry the error itself.
+function announcementsOf(calls: [string][], message: string): [string][] {
+  return calls.filter(([announced]) => announced === message);
+}
+
 // Stands in for the content view element getInnerViewRef returns under the New Architecture.
 const CONTENT_REF = {};
 // The field group starts at its label; a text question's input sits below that label.
@@ -98,6 +104,8 @@ describe("Questions step", () => {
     const focus = jest
       .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
       .mockImplementation(() => {});
+    // The mock is shared by the file, so clearing keeps the count below to this test's own calls.
+    announce.mockClear();
     const user = userEvent.setup();
     renderQuestions();
     await screen.findByLabelText(CHOICE);
@@ -105,7 +113,7 @@ describe("Questions step", () => {
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
     expect(screen.getByLabelText(`${CHOICE}. Error: ${REQUIRED_ERROR}`)).toBeOnTheScreen();
-    expect(announce).toHaveBeenCalledWith(REQUIRED_ERROR);
+    expect(announcementsOf(announce.mock.calls, REQUIRED_ERROR)).toHaveLength(1);
     expect(focus).toHaveBeenCalledWith(expect.anything(), "focus");
     expect(screen).toHavePathname("/econsult/questions");
   });
@@ -162,7 +170,7 @@ describe("Questions step", () => {
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
     expect(screen.getByText(`${CHOICE}. Error: ${REQUIRED_ERROR}`)).toBeOnTheScreen();
-    expect(announce).toHaveBeenCalledWith(REQUIRED_ERROR);
+    expect(announcementsOf(announce.mock.calls, REQUIRED_ERROR)).toHaveLength(1);
     expect(scrollTo).not.toHaveBeenCalled();
     expect(focus).not.toHaveBeenCalled();
     expect(screen).toHavePathname("/econsult/questions");

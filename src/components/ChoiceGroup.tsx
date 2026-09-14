@@ -1,13 +1,21 @@
 import type { Ref } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors, fontSize, lineHeight, MIN_TOUCH, radius, spacing } from "@/theme/tokens";
+import {
+  borderWidth,
+  colors,
+  fontSize,
+  lineHeight,
+  MIN_TOUCH,
+  radius,
+  spacing,
+} from "@/theme/tokens";
 import { accessibleName, labelWithRequirement, type Requirement } from "./fieldLabel";
 
-type Props = {
+type Props<T extends string> = {
   label: string;
-  options: readonly string[];
-  value: string | null;
-  onChange: (value: string) => void;
+  options: readonly T[];
+  value: T | null;
+  onChange: (value: T) => void;
   requirement?: Requirement;
   error?: string | null;
   ref?: Ref<Text>;
@@ -18,7 +26,15 @@ const DOT_SIZE = 24;
 // The group View carries role and name for TalkBack but is not `accessible`, which would swallow
 // its radios; iOS has no group element, so the label Text folds in the error and takes the ref.
 // The error sits between label and radios so it stays visible when a tall label is scrolled to.
-export function ChoiceGroup({ label, options, value, onChange, requirement, error, ref }: Props) {
+export function ChoiceGroup<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+  requirement,
+  error,
+  ref,
+}: Props<T>) {
   const visibleLabel = labelWithRequirement(label, requirement);
   return (
     <View style={styles.wrap}>
@@ -29,11 +45,7 @@ export function ChoiceGroup({ label, options, value, onChange, requirement, erro
       >
         {visibleLabel}
       </Text>
-      {error ? (
-        <Text accessibilityLiveRegion="polite" style={styles.error}>
-          {error}
-        </Text>
-      ) : null}
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <View accessibilityRole="radiogroup" accessibilityLabel={visibleLabel} style={styles.group}>
         {options.map((option) => {
           const checked = option === value;
@@ -72,7 +84,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    borderWidth: 2,
+    borderWidth,
     borderColor: colors.border,
     borderRadius: radius,
     backgroundColor: colors.background,
@@ -82,7 +94,7 @@ const styles = StyleSheet.create({
     width: DOT_SIZE,
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
-    borderWidth: 2,
+    borderWidth,
     borderColor: colors.border,
   },
   dotChecked: { borderColor: colors.primary, backgroundColor: colors.primary },

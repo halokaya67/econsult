@@ -6,6 +6,9 @@ import type { Transport } from "./transport";
 
 const PHOTO = { uri: "file:///cache/a.jpg", name: "photo.jpg", type: "image/jpeg" };
 const REQUEST = { patientId: "pat-1", recipientId: "ct-11", body: "My knee hurts", answers: [] };
+// The documented create budget, spelled out rather than imported: sharing the read constant would
+// let a change to the read budget move the create budget unnoticed.
+const CREATE_BUDGET_MS = 15_000;
 
 function malformedTransport(payload: unknown): Transport {
   return {
@@ -91,6 +94,23 @@ describe("createServices", () => {
     await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS);
 
     await expect(pending).rejects.toMatchObject({ kind: "timeout" });
+  });
+
+  test("a create that hangs is aborted at the 15 second create budget", async () => {
+    const services = createServices(createFakeTransport({ faults: { create: "timeout" } }));
+    const startedAt = Date.now();
+    const rejectedAfter = jest.fn();
+    const pending = handled(
+      services.createEConsult(REQUEST, "key-timeout").catch((error: unknown) => {
+        rejectedAfter(Date.now() - startedAt);
+        throw error;
+      }),
+    );
+
+    await jest.advanceTimersByTimeAsync(CREATE_BUDGET_MS * 2);
+
+    await expect(pending).rejects.toMatchObject({ kind: "timeout" });
+    expect(rejectedAfter).toHaveBeenCalledWith(CREATE_BUDGET_MS);
   });
 
   test("an upload that exceeds the upload timeout is a timeout ApiError", async () => {

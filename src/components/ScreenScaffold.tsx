@@ -34,7 +34,9 @@ function scrollFieldIntoView(scroll: ScrollView, node: Focusable): void {
 }
 
 // One scroll view per step with the primary action as its last child: no pinned footer, so the
-// keyboard never covers the button and large text simply makes the page longer.
+// keyboard never covers the button and large text simply makes the page longer. The horizontal
+// insets are 0 in portrait, but they are read rather than hard-coded away so a sideways or larger
+// device keeps its content out of the cut-out.
 export function ScreenScaffold({ children, action, testID }: Props) {
   const insets = useSafeAreaInsets();
   const isOffline = useIsOffline();

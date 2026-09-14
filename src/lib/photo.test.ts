@@ -46,14 +46,17 @@ describe("processPhoto", () => {
     expect(context.release).toHaveBeenCalled();
   });
 
-  test("keeps the original and warns when processing fails", async () => {
+  test("keeps the original, releases the context and warns when processing fails", async () => {
     const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
     const context = jest.mocked(manipulate(ORIGINAL.uri));
     context.renderAsync.mockRejectedValueOnce(new Error("decode failed"));
+    // One context mock is shared by the whole file, so the count only means this call's release.
+    context.release.mockClear();
 
     const result = await processPhoto(ORIGINAL);
 
     expect(result).toEqual(ORIGINAL);
+    expect(context.release).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("decode failed"));
     warn.mockRestore();
   });

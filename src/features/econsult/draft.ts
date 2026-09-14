@@ -47,14 +47,24 @@ function applyPhotoReady(
   return { ...state, photo: { status: "ready", ...photo } };
 }
 
+// The key stands for one payload, so an edit before the e-consult exists retires it and the next
+// Send mints a fresh one; once the create has landed the key belongs to it and nothing may reuse it.
+function keyAfterEdit(state: DraftState): string | null {
+  return state.econsultId === null ? null : state.idempotencyKey;
+}
+
 export function draftReducer(state: DraftState, action: DraftAction): DraftState {
   switch (action.type) {
     case "recipientSelected":
-      return { ...state, recipientId: action.recipientId };
+      return { ...state, recipientId: action.recipientId, idempotencyKey: keyAfterEdit(state) };
     case "answerChanged":
-      return { ...state, answers: { ...state.answers, [action.questionId]: action.value } };
+      return {
+        ...state,
+        answers: { ...state.answers, [action.questionId]: action.value },
+        idempotencyKey: keyAfterEdit(state),
+      };
     case "messageChanged":
-      return { ...state, message: action.message };
+      return { ...state, message: action.message, idempotencyKey: keyAfterEdit(state) };
     case "photoPickStarted":
       return { ...state, photo: { status: "preparing", pickId: action.pickId } };
     case "photoReady":

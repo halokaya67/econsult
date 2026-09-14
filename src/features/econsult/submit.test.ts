@@ -40,6 +40,16 @@ const READY_PHOTO = {
   height: 10,
 } as const;
 
+// Stands in for a bug in the upload path: not an ApiError, so it is not a photo outcome.
+function broken(): Services {
+  return {
+    ...createServices(createFakeTransport({ latencyMs: 0 })),
+    uploadAttachment: async () => {
+      throw new TypeError("bug");
+    },
+  };
+}
+
 describe("idempotencyKeyFor", () => {
   test("reuses the key the draft already carries", () => {
     expect(idempotencyKeyFor({ ...DRAFT, idempotencyKey: "key-9" })).toBe("key-9");
@@ -145,17 +155,16 @@ describe("submitEConsult", () => {
     expect(second.econsultId).toBe(first.econsultId);
   });
 
-  test("an unexpected upload error is not swallowed into a failed attachment", async () => {
-    const broken: Services = {
-      ...services(),
-      uploadAttachment: async () => {
-        throw new TypeError("bug");
-      },
-    };
+  test("an unexpected upload error is the partial outcome, because the message was created", async () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const onCreated = jest.fn();
 
-    await expect(submitEConsult(broken, input({ photo: PHOTO }), jest.fn())).rejects.toBeInstanceOf(
-      TypeError,
-    );
+    const outcome = await submitEConsult(broken(), input({ photo: PHOTO }), onCreated);
+
+    expect(outcome).toEqual({ econsultId: expect.stringMatching(/^ec-/), attachment: "failed" });
+    expect(onCreated).toHaveBeenCalledWith(outcome.econsultId);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("bug"));
+    warn.mockRestore();
   });
 });
 
@@ -174,5 +183,9 @@ describe("retryAttachment", () => {
     const { econsultId } = await submitEConsult(failing, input(), jest.fn());
 
     await expect(retryAttachment(failing, econsultId, PHOTO)).resolves.toBe("failed");
+  });
+
+  test("does not swallow an unexpected error into a failed attachment", async () => {
+    await expect(retryAttachment(broken(), "ec-1", PHOTO)).rejects.toBeInstanceOf(TypeError);
   });
 });

@@ -114,6 +114,37 @@ describe("draftReducer", () => {
     expect(retry.idempotencyKey).toBe("k1");
   });
 
+  test("editing the payload after a failed send drops the key", () => {
+    const failed: DraftState = { ...initialDraft, idempotencyKey: "k1" };
+
+    const typed = draftReducer(failed, { type: "messageChanged", message: "Hi" });
+    const answered = draftReducer(failed, { type: "answerChanged", questionId: "q1", value: "a" });
+    const rerouted = draftReducer(failed, { type: "recipientSelected", recipientId: "ct-12" });
+
+    expect(typed.idempotencyKey).toBeNull();
+    expect(answered.idempotencyKey).toBeNull();
+    expect(rerouted.idempotencyKey).toBeNull();
+  });
+
+  test("the send after an edit mints a new key", () => {
+    const edited = draftReducer(
+      { ...initialDraft, idempotencyKey: "k1" },
+      { type: "messageChanged", message: "Hi" },
+    );
+
+    const next = draftReducer(edited, { type: "submitStarted", idempotencyKey: "k2" });
+
+    expect(next.idempotencyKey).toBe("k2");
+  });
+
+  test("an edit once the e-consult exists keeps the key of the create that made it", () => {
+    const created: DraftState = { ...initialDraft, idempotencyKey: "k1", econsultId: "ec-1" };
+
+    const next = draftReducer(created, { type: "messageChanged", message: "Hi" });
+
+    expect(next.idempotencyKey).toBe("k1");
+  });
+
   test("econsultCreated and attachmentSettled record the outcome", () => {
     const created = draftReducer(initialDraft, { type: "econsultCreated", econsultId: "ec-1" });
     const settled = draftReducer(created, { type: "attachmentSettled", attachment: "failed" });

@@ -14,10 +14,6 @@ import {
   TAKE_PHOTO_LABEL,
 } from "./PhotoPicker";
 
-// Without __esModule, Babel's wildcard interop hands this file and the component separate copies of
-// the module, so replacing isDevice here would never reach the component.
-jest.mock("expo-device", () => ({ __esModule: true, isDevice: true }));
-
 type Photo = React.ComponentProps<typeof PhotoPicker>["photo"];
 
 const ASSET = { uri: "file:///cache/original.jpg", width: 4000, height: 3000 };
@@ -184,7 +180,8 @@ describe("PhotoPicker", () => {
       height: 10,
     });
 
-    expect(screen.getByLabelText("Your photo")).toBeOnTheScreen();
+    // expo-image is only focusable with `accessible`; a label alone is dead on both platforms.
+    expect(screen.getByLabelText("Your photo").props.accessible).toBe(true);
     await user.press(screen.getByRole("button", { name: REMOVE_PHOTO_LABEL }));
 
     expect(handlers.onRemove).toHaveBeenCalledTimes(1);

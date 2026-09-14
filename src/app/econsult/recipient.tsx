@@ -11,7 +11,7 @@ import { TextButton } from "@/components/TextButton";
 import { shouldGuardLeaving, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
 import { roleLabel, type RecipientsResult } from "@/features/econsult/recipients";
-import { stepAfterRecipient, STEP_TITLES, stepCount } from "@/features/econsult/steps";
+import { stepAfterRecipient, STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/steps";
 import { useRecipients } from "@/features/econsult/useRecipients";
 import { HEADER_BUTTON_MAX_FONT_SCALE, spacing } from "@/theme/tokens";
 
@@ -53,6 +53,23 @@ function RecipientList({
         />
       ))}
     </View>
+  );
+}
+
+function ContinueButton({
+  selectedId,
+  onPress,
+}: {
+  selectedId: string | null;
+  onPress: () => void;
+}) {
+  return (
+    <PrimaryButton
+      label="Continue"
+      disabled={selectedId === null}
+      accessibilityHint={selectedId === null ? CONTINUE_HINT : undefined}
+      onPress={onPress}
+    />
   );
 }
 
@@ -119,23 +136,21 @@ export default function RecipientScreen() {
   const onlyRecipient =
     result.status === "ready" && result.recipients.length === 1 ? result.recipients[0] : null;
   useDiscardGuard(draft);
+  // Exactly one writable recipient counts as chosen from the first render; Continue is what writes
+  // that choice to the draft, so no render passes through an unchecked card.
+  const selectedId = draft.recipientId ?? onlyRecipient?.id ?? null;
 
-  // Exactly one writable recipient: preselect so the flow keeps one shape.
-  useEffect(() => {
-    if (onlyRecipient && draft.recipientId === null) {
-      dispatch({ type: "recipientSelected", recipientId: onlyRecipient.id });
+  function onContinue() {
+    if (selectedId !== null && draft.recipientId === null) {
+      dispatch({ type: "recipientSelected", recipientId: selectedId });
     }
-  }, [onlyRecipient, draft.recipientId, dispatch]);
+    router.push(STEP_ROUTES[stepAfterRecipient(hasQuestions)]);
+  }
 
   const goHome = () => router.dismissTo("/");
   const action =
     result.status === "ready" ? (
-      <PrimaryButton
-        label="Continue"
-        disabled={draft.recipientId === null}
-        accessibilityHint={draft.recipientId === null ? CONTINUE_HINT : undefined}
-        onPress={() => router.push(STEP_ROUTES[stepAfterRecipient(hasQuestions)])}
-      />
+      <ContinueButton selectedId={selectedId} onPress={onContinue} />
     ) : undefined;
 
   return (
@@ -144,14 +159,14 @@ export default function RecipientScreen() {
       <ScreenScaffold action={action}>
         {result.status === "ready" ? (
           <StepHeader
-            stepNumber={1}
+            stepNumber={stepNumber("recipient", hasQuestions)}
             stepCount={stepCount(hasQuestions)}
             title={STEP_TITLES.recipient}
           />
         ) : null}
         <RecipientBody
           result={result}
-          selectedId={draft.recipientId}
+          selectedId={selectedId}
           onSelect={(id) => dispatch({ type: "recipientSelected", recipientId: id })}
           goHome={goHome}
         />

@@ -1,6 +1,7 @@
 import type { Answer, CreateEConsultRequest, PatientSession } from "@/api/contracts";
 import type { Services } from "@/api/services";
 import { isApiError, type PhotoFile } from "@/api/transport";
+import { devWarn } from "@/lib/devWarn";
 import { newId } from "@/lib/ids";
 import { photoFileFor } from "@/lib/photo";
 import { readyPhoto, type AttachmentStatus, type DraftState } from "./draft";
@@ -70,6 +71,21 @@ async function uploadOrFail(
   }
 }
 
+// The e-consult exists by now, so the message was sent whatever the upload does: even a bug is the
+// partial outcome here, told to the developer instead of to the patient as "not sent".
+async function attachmentAfterCreate(
+  services: Services,
+  econsultId: string,
+  photo: PhotoFile,
+): Promise<AttachmentStatus> {
+  try {
+    return await uploadOrFail(services, econsultId, photo);
+  } catch (error) {
+    devWarn(`Attachment upload failed after ${econsultId} was created: ${String(error)}`);
+    return "failed";
+  }
+}
+
 export async function submitEConsult(
   services: Services,
   input: SubmitInput,
@@ -81,7 +97,7 @@ export async function submitEConsult(
   );
   onCreated(econsultId);
   if (!input.photo) return { econsultId, attachment: "none" };
-  return { econsultId, attachment: await uploadOrFail(services, econsultId, input.photo) };
+  return { econsultId, attachment: await attachmentAfterCreate(services, econsultId, input.photo) };
 }
 
 export function retryAttachment(
