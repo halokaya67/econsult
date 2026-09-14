@@ -1,0 +1,33 @@
+D1 re-check -- ChoiceGroup label accessible name after a corrected required answer
+Font scale 1.0, practice prc-0421, step 2 of 3, fresh bundle after a force-stop of Expo Go.
+
+1. Pristine, before any Continue
+   [android.widget.TextView] bounds=[42,648][1038,816]
+      text: 'How long have you had this problem? (required)'
+      desc: 'How long have you had this problem? (required)'
+
+   New behaviour: the label is named even with no error. Before the fix the node carried no
+   content-desc at all until the first validation failure.
+
+2. Continue pressed with nothing answered -- the error state (R1a)
+   [android.widget.TextView] bounds=[42,648][1038,816]
+      text: 'How long have you had this problem? (required)'
+      desc: 'How long have you had this problem? (required). Error: This question is required'
+   [android.widget.TextView] bounds=[42,837][1038,900]
+      text: 'This question is required'
+
+3. '1 to 4 weeks' selected -- the corrected state (R1b)
+   [android.widget.TextView] bounds=[42,648][1038,816]
+      text: 'How long have you had this problem? (required)'
+      desc: 'How long have you had this problem? (required)'
+   [android.widget.RadioButton] checked=true desc: '1 to 4 weeks'
+
+   The red 'This question is required' row is gone from the screen and from the tree, and the
+   content-desc is now exactly the visible label. No 'Error:' anywhere.
+
+4. Persistence -- the three perturbations the original defect survived
+   re-dump after 3 s          -> desc: 'How long have you had this problem? (required)'
+   select a different option  -> desc: 'How long have you had this problem? (required)'
+   scroll down and back up    -> desc: 'How long have you had this problem? (required)'
+
+VERDICT: PASS. The stale 'Error: This question is required' no longer survives the correction.

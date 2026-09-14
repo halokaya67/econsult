@@ -92,7 +92,7 @@ describe("Questions step", () => {
   test("renders the practice's questions with their requirement in words", async () => {
     renderQuestions();
 
-    expect(await screen.findByLabelText(CHOICE)).toBeOnTheScreen();
+    expect(await screen.findByText(CHOICE)).toBeOnTheScreen();
     expect(screen.getByLabelText(TEXT)).toBeOnTheScreen();
     expect(screen.getByText("Step 2 of 3")).toBeOnTheScreen();
   });
@@ -108,7 +108,7 @@ describe("Questions step", () => {
     announce.mockClear();
     const user = userEvent.setup();
     renderQuestions();
-    await screen.findByLabelText(CHOICE);
+    await screen.findByText(CHOICE);
 
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
@@ -123,7 +123,7 @@ describe("Questions step", () => {
     measureLayout.mockImplementation((_relativeTo, onSuccess) => onSuccess(0, FIELD_TOP, 300, 40));
     const user = userEvent.setup();
     renderQuestions();
-    await screen.findByLabelText(CHOICE);
+    await screen.findByText(CHOICE);
 
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
@@ -179,7 +179,7 @@ describe("Questions step", () => {
   test("answering clears the error and Continue records the answers in the draft", async () => {
     const user = userEvent.setup();
     renderQuestions();
-    await screen.findByLabelText(CHOICE);
+    await screen.findByText(CHOICE);
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
     await user.press(screen.getByRole("radio", { name: "1 to 4 weeks" }));
@@ -194,7 +194,7 @@ describe("Questions step", () => {
   test("an optional question can be left empty", async () => {
     const user = userEvent.setup();
     renderQuestions({ ...DRAFT, answers: { "q-duration": "Less than a week" } });
-    await screen.findByLabelText(CHOICE);
+    await screen.findByText(CHOICE);
 
     await user.press(screen.getByRole("button", { name: "Continue" }));
 

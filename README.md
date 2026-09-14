@@ -118,17 +118,31 @@ Worth checking by hand:
 
 ## Platform
 
-Verified by hand on the iOS simulator in Expo Go, at the default and the largest accessibility text
-size. Two caveats:
+Verified by hand in Expo Go on both platforms: the iOS simulator at the default and the largest
+accessibility text size, and the Android 16 emulator (Pixel, API 36) at the default font scale and
+at 2.0, with TalkBack enabled.
 
-- The camera action is offered only when `expo-device` reports a real device, so on a simulator the
-  photo block shows a short note and the library path instead. The capture path needs a phone.
-- Android has not been run. What to check there: the system back gesture on the confirmation screen
-  (it must not leave, since Done is the only exit), that a validation error is spoken once with
-  TalkBack, and that the offline banner, the sending status and a failed photo retry are each spoken
-  once too, since every message has one channel and never both, that the emulator shows the camera
-  note and the library path instead, since `expo-device` reports no real device there, and
-  edge-to-edge insets, which SDK 57 applies by default.
+The camera action is offered only when `expo-device` reports a real device, so on a simulator or an
+emulator the photo block shows a short note and the library path instead. The capture path needs a
+phone.
+
+The Android run settled the questions this app needed a device for. The back key and the back
+gesture both hold on the confirmation screen, where Done is the only exit. The emulator shows the
+camera note and the library path, as it should. Edge-to-edge insets, which SDK 57 applies by
+default, are respected on every screen. And each message with a single spoken channel — the offline
+banner, the sending status, a validation error, a failed photo retry — was spoken exactly once.
+
+It also found three accessibility defects, all since fixed. A choice question kept its old error in
+its accessible name after being answered, because Android never clears a content description that
+goes back to `undefined`. The not-found screen's only way out was an expo-router `Link`, which
+renders as text with no role and no click action, so TalkBack skipped it; it is a button now. And a
+failed send inserted its error card without scrolling, leaving Try again and Send below the fold;
+the card now scrolls into view and takes screen-reader focus.
+
+What Android has still not shown: the wording of any TalkBack utterance, since the shipped release
+build logs no text and only utterance counts could be captured; the hint spoken on a disabled Send,
+Retry or Continue; the step 1 loading skeleton, which the prefetch always beat to the screen; the
+two read faults and the error state they raise; and photo capture, which needs a real phone.
 
 ## The design record
 

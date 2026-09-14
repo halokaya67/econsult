@@ -1,14 +1,17 @@
-import { Link, Stack } from "expo-router";
-import { StyleSheet, Text } from "react-native";
+import { Stack, useRouter } from "expo-router";
+import { Text } from "react-native";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { TextButton } from "@/components/TextButton";
 import { text } from "@/theme/text";
-import { colors, fontSize, MIN_TOUCH } from "@/theme/tokens";
 
 const TITLE = "Page not found";
 const BODY = "That address isn't part of this app.";
 const HOME_LABEL = "Go to the home screen";
 
+// A button, not a Link: expo-router renders a Link as plain text on Android, with no role and no
+// click action, so the one way off this screen was skipped by TalkBack.
 export default function NotFoundScreen() {
+  const router = useRouter();
   return (
     <>
       <Stack.Screen options={{ title: TITLE }} />
@@ -17,21 +20,8 @@ export default function NotFoundScreen() {
           {TITLE}
         </Text>
         <Text style={text.body}>{BODY}</Text>
-        <Link href="/" style={styles.link}>
-          {HOME_LABEL}
-        </Link>
+        <TextButton label={HOME_LABEL} onPress={() => router.dismissTo("/")} />
       </ScreenScaffold>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  // The line box is the link's touch target, so it is the 48-point minimum rather than a reading
-  // line height.
-  link: {
-    color: colors.primary,
-    fontSize: fontSize.body,
-    lineHeight: MIN_TOUCH,
-    fontWeight: "600",
-  },
-});

@@ -1,0 +1,71 @@
+TalkBack on Pixel_API_36 — what was measured and how
+
+AVAILABILITY
+  adb shell pm list packages | grep -iE "talkback|accessibility"
+    package:com.google.android.marvin.talkback            <-- Android Accessibility Suite IS present
+    package:com.google.android.marvin.talkbackoverlay
+    package:com.google.android.accessibility.switchaccess
+    package:com.google.android.apps.accessibility.voiceaccess
+    package:com.android.systemui.accessibility.accessibilitymenu
+  Enabled with:
+    adb shell settings put secure enabled_accessibility_services \
+      com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService
+    adb shell settings put secure accessibility_enabled 1
+  Verified bound and speaking:
+    dumpsys accessibility -> Bound services:{Service[label=TalkBack, feedbackType[FEEDBACK_SPOKEN,...]]}
+                             touchExplorationEnabled=true, Crashed services:{}
+  Nothing was sideloaded. TalkBack was disabled again and accessibility_enabled reset to 0 at the end.
+
+WHY THE UTTERANCE **TEXT** COULD NOT BE CAPTURED
+  - `adb logcat -s TalkBack` produces nothing: the shipped TalkBack is a release build with its
+    logging stripped. Setting pref_log_level=2 in
+    /data/user_de/0/com.google.android.marvin.talkback/shared_prefs/...xml (as root) and restarting
+    the service changed nothing — zero log lines are emitted from TalkBack's pid.
+  - `adb logcat -b all` over an announcement window contains no occurrence of the spoken string
+    (checked against the distinctive offline copy).
+  - The only observable trace is the TTS engine:
+      I/GoogleTTSServiceImpl: Synthesis request for locale eng-USA and name en-US-language
+    one line per spoken utterance, WITHOUT the text.
+  So: counts are measurable, content is not. Everything below is a count, plus the accessible names
+  read from the accessibility tree, which is where the wording actually lives.
+
+CALIBRATION (needed before the counts mean anything)
+  One announceForAccessibility() call = exactly 1 synthesis request, regardless of sentence count:
+    - offline transition, OFFLINE_MESSAGE (2 sentences) ......................... 1 request
+    - ErrorState create-failure, "Your message wasn't sent. We couldn't reach your
+      practice. Check your connection and try again." (3 sentences) ............. 1 request
+  A TalkBack *focus* event on a composed control is several requests (name / role / hint are
+  separate utterances), e.g. focusing the message EditText = 3 requests.
+
+COUNTS (each measured with `adb logcat -c` immediately before the trigger)
+  1. Offline banner appears (link dropped while on the confirmation)
+       1 utterance.  Expected 1: the provider announces, OfflineBanner is deliberately not a live
+       region. No double-speak.  PASS
+  2. Back online
+       banner removed and Retry re-enabled; BACK_ONLINE_MESSAGE announced.  PASS
+  3. Create-failure error card appears (Fail: Create message = Network, Send)
+       Trigger at 12:25:55.064; the error announcement lands alone at 12:25:58.058 = 1 utterance.
+       Expected 1: ErrorState announces in an effect and the alert View is not a live region.
+       No double-speak.  PASS
+  4. Sending status
+       2 requests at the moment of activation (12:25:55.064 / .077) — one is TalkBack reporting the
+       button's own change to "Sending, busy", one is announce("Sending your message").
+       Not separable without utterance text.  PARTIAL
+  5. Validation error on the message step (Send with an empty field)
+       Focusing the errored field alone (no new validation) ..... 3 requests
+       Full validation (scrollToField + announce + focusForScreenReader) 3 requests
+       Equal totals, so announce() adds no extra pass: TalkBack's focus change collapses the queued
+       announcement. The user hears the error once, as part of the field's accessible name
+       'What would you like to ask?. Error: Please write your question before sending'.
+       Inferred from counts, not from captured text.  PASS (count-based)
+  6. Photo-failed line on the confirmation (Fail: Upload photo = Server, Send with a photo)
+       Whole Send -> confirmation transition = 3 utterances
+       (12:32:58.706 activation/status, 12:32:59.388 "Message sent, adding your photo",
+        12:33:00.479 on the confirmation: heading focus + PHOTO_FAILED).
+       A live region plus an announcement would have produced more. No double-speak.  PASS
+
+NOT MEASURED
+  - The exact wording of any utterance (see above).
+  - accessibilityHint values (the OFFLINE_HINT on a disabled Send/Retry, CONTINUE_HINT on a disabled
+    Continue). uiautomator does not expose android hint text for these nodes and the spoken text is
+    not capturable, so the hints were read from source only, never heard.

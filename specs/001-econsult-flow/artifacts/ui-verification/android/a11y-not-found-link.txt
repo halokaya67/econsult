@@ -1,0 +1,27 @@
+Accessibility-tree evidence — the not-found screen's only action is not an actionable node
+Captured with: adb shell uiautomator dump, Android 16 (API 36), font scale 1.0.
+Screen: src/app/+not-found.tsx, reached with
+  adb shell am start -a android.intent.action.VIEW -d "exp://10.0.2.2:8083/--/nowhere"
+
+Raw node for "Go to the home screen" (an expo-router <Link> styled as text):
+
+  <node index="2"
+     text="Go to the home screen"
+     class="android.view.View"
+     content-desc=""
+     clickable="false"          <-- no click action exposed
+     focusable="true"
+     long-clickable="false"
+     enabled="true"
+     bounds="[42,578][1038,704]" />
+
+Contrast — every other action in the app exposes a role and a click action, e.g. the same screen's
+peers elsewhere:
+
+  <node text="" class="android.widget.Button" content-desc="Back to start" clickable="true" .../>
+  <node text="" class="android.widget.Button" content-desc="Go to the home screen" ... />   (does not exist)
+
+Behaviour: a plain tap at the link's coordinates DOES navigate home, so the screen is not a dead end
+for a sighted touch user. But TalkBack announces it as static text with no role and no
+"double-tap to activate" affordance, and it is skipped by control-only navigation (swiping between
+buttons/links), which on this screen leaves no announced way out.
