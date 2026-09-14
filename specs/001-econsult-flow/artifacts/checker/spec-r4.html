@@ -65,6 +65,45 @@ blockquote p{margin:0}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
 footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <div class="shell">
   <header class="head">
@@ -77,6 +116,15 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The fourth spec round, re-checking the round-3 fixes against the runtime.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">PASS_WITH_FLAGS</span> all four findings fixed in the next revision; round 5 records them RESOLVED.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>2 warnings · 2 information items · 6 of 6 in-scope files read in full · head <code>32db7de</code>.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>One clause of the new wording was wrong for the path that actually matters: the expo/fetch abort shape was mis-stated for the mid-flight timeout.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="spec-r5.html">Round 5</a><a href="index.html">All rounds</a></span></p>
+  </aside>
+
 <p>agent_id: a1d4098bff5172cf9
 mode: spec · round: 4 · reviewed head: 32db7de (working tree) · previous rounds: checker/spec-r1.md, checker/spec-r2.md, checker/spec-r3.md</p>
 <p>All verification is in; no further reads are needed. Evidence summary before the report:</p>
@@ -90,7 +138,7 @@ mode: spec · round: 4 · reviewed head: 32db7de (working tree) · previous roun
 <p><strong>Reviewed:</strong> 6/6 in-scope files read in full (spec.md and how-it-works.md from the working tree, checker/spec-r3.md, <code>case-study-mobile.md</code>, package.json, .gitignore; spec-r1/r2 not opened, history not needed; plan.md not opened, out of scope for mode spec) · diff: n/a (mode spec) · head: 32db7de, working tree: <code>M specs/001-econsult-flow/spec.md</code>, <code>M specs/001-econsult-flow/how-it-works.md</code> (+2 html, 4 untracked plan/checker files) · canon cited: workflow.md (Coding Canon &quot;Errors &amp; inputs — handle errors explicitly at every level&quot;; KISS/YAGNI) · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): decisions log <code>dismiss</code> → 0, entries → 1; <code>installAbortSignalPatch|useRnFetch|install(&#39;fetch&#39;</code> in expo/src/winter/runtime.native.ts → 5 (:10, :35, :41, :44, :52); <code>uri. is not supported|Unsupported FormDataPart</code> in winter/fetch/convertFormData.ts → 2 (:35, :77); <code>aborted|abort(|FetchError</code> in winter/fetch/fetch.ts → 6 (:77-78 pre-aborted branch, :83 <code>response.abort(signal?.reason)</code>, :90 <code>createFromError</code>); winter/fetch/FetchErrors.ts read whole → prefixes <code>fetch failed: </code>; <code>abort|reject|cause</code> in winter/fetch/FetchResponse.ts → 12 (<code>abort()</code> :183-199); <code>reason</code> in abort-controller/dist/abort-controller.js → 0; <code>reason</code> in winter/AbortSignal.ts → 7 (:23 TimeoutError, :108-114 <code>abortWithReason</code> for <code>timeout</code>/<code>any</code> only); <code>cancel</code> in expo/ios/Fetch → 12 (FetchExceptions.swift:11-13, NativeRequest.swift:34-36); <code>cancel</code> in expo/android/.../fetch → 13 (NativeResponse.kt:78-79); <code>abort</code> in winter/fetch/<strong>tests</strong> → 14 (FetchResponse-test.ts:146-153, :178-184); expo-file-system version → 57.0.7, <code>&quot;expo-file-system&quot;</code> in expo/package.json → 1 (:85 <code>~57.0.7</code>), <code>createUploadTask</code> in expo-file-system/build/File.d.ts → 2 (:145 decl); abort-controller version → 3.0.0, <code>AbortController|abort-controller</code> in react-native/Libraries/Core/setUpXHR.js → 3 (:38-43); expo-router peerDependenciesMeta → gesture-handler, reanimated, react-native-web, react-dom all <code>optional: true</code> (the :81 removals are safe); <code>getSize</code> in react-native/Libraries/Image → 12 (Image.ios.js:33-38, Image.android.js:44-49); research.md <code>width: 1600|upscal|may be 0</code> → 5 (:1224 fallback, :1275 upscaling unverified); <code>preparing|pick time|on confirm</code> → 4 (:1221 &quot;runs once on confirm&quot;); <code>remove photo|supersed|pickId</code> → 2 (neither about the photo); <code>change photo|retake|preview.*remove</code> → 1 (:935); <code>git diff --stat f39fb58..HEAD -- . &#39;:!specs&#39;</code> → empty</p>
 <div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>r3 W1 — how-it-works.md:86 / spec.md:146 stale against the Expo 57 runtime</td><td>RESOLVED</td><td>how-it-works.md:86-87 now name <code>expo/fetch</code> as the global (<code>runtime.native.ts:41-52</code> confirmed), the <code>{ uri, name, type }</code> rejection (<code>convertFormData.ts:35,77</code>), <code>File.createUploadTask</code> (<code>File.d.ts:145</code>; 57.0.7 via <code>expo/package.json:85</code>), the <code>AbortSignal.timeout</code>/<code>any</code> patch (<code>AbortSignal.ts:9-14</code>), abort-controller 3.0.0 (<code>setUpXHR.js:38-43</code>); Sources :110-111 list the files; spec.md:147 carries the TimeoutError-reason rationale. One clause of the new text is over-specific for the timeout path — new W1 below.</td></tr><tr><td>r3 W2 — Send, Remove, draft and leave guard undefined while preparing</td><td>RESOLVED</td><td>spec.md:105 and :126 define <code>DraftPhoto</code> as <code>preparing</code>/<code>ready</code> with <code>pickId</code>, Send disabled with reason, Remove discarding the pending result, newer pick superseding, pickId-matched results; :140 guard uses <code>hasPhoto</code>, which :105 makes true from the pick. Consistent with the Contract (app-internal, no contract change), SC2/SC7 and the Reuse Map (<code>processPhoto</code> in <code>src/lib</code>). Which controls the Preparing block shows is still unstated — new W2 below.</td></tr><tr><td>r3 I1 — no guard for the picker&#39;s 0 width/height</td><td>RESOLVED</td><td>spec.md:128 names the fallback <code>{ width: 1600 }</code> as a branch of <code>processPhoto</code>. The fallback relies on library behaviour the research marks unverified — new I2 below.</td></tr></tbody></table></div>
 <div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>consistency</td><td>how-it-works.md:86</td><td>&quot;FetchError with cause = signal.reason, not a DOMException&quot; describes only the pre-aborted branch; a mid-flight abort (the timeout) yields an <code>AbortError</code> DOMException or a FetchError with no cause, and spec.md:59 builds the real-transport mapping on the wrong claim</td></tr><tr><td>W2</td><td>WARNING</td><td>ambiguity</td><td>spec.md:105</td><td>The &quot;Preparing photo&quot; block&#39;s controls are unstated: the first sentence attaches Remove to the preview, the second needs Remove and both source actions during preparation</td></tr><tr><td>I1</td><td>INFO</td><td>ambiguity</td><td>spec.md:126</td><td>The union has no failed member and no line says where a failed result lands (<code>ready</code> with the original asset is the only consistent reading)</td></tr><tr><td>I2</td><td>INFO</td><td>coverage</td><td>spec.md:128</td><td>The <code>{ width: 1600 }</code> fallback is the one path that can ask the manipulator to upscale; research.md:1275 marks that behaviour unverified</td></tr></tbody></table></div>
-<h3>W1 — expo/fetch abort shape is mis-stated for the mid-flight (timeout) path</h3>
+<details class="sec"><summary><h3>W1 — expo/fetch abort shape is mis-stated for the mid-flight (timeout) path</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> consistency</li>
@@ -116,7 +164,7 @@ timing, so a real HTTP transport decides on `signal.aborted` in its catch, not o
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W2 — What the &quot;Preparing photo&quot; block shows is unstated, and the two sentences at :105 pull apart</h3>
+</details><details class="sec"><summary><h3>W2 — What the &quot;Preparing photo&quot; block shows is unstated, and the two sentences at :105 pull apart</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -133,7 +181,7 @@ as the picker returns an asset, with status `preparing`, so `hasPhoto` is true b
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I1 — Where a failed processing result lands is implied, not stated</h3>
+</details><details class="sec"><summary><h3>I1 — Where a failed processing result lands is implied, not stated</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -145,7 +193,7 @@ and `height` (there is no failed status), and a development warning is logged."<
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I2 — The 0-dimension fallback is the one path that can upscale</h3>
+</details><details class="sec"><summary><h3>I2 — The 0-dimension fallback is the one path that can upscale</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> coverage</li>
@@ -159,7 +207,7 @@ kept, development warning)."</code></pre>
 <code>Image.getSize</code> is present in RN 0.86.3 (<code>Libraries/Image/Image.ios.js:33-38</code>, <code>Image.android.js:44-49</code>); that it resolves <code>file://</code> URIs from the picker is training-data recall, not verified here. Alternative with no new code: keep <code>{ width: 1600 }</code> and add &quot;may enlarge a small image on this path&quot; so the trade-off is on record.</li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
+</details><p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
 <p><strong>Summary:</strong> All three round-3 flags are resolved in the working-tree text, and the fixes are consistent with the Contract, the step-3 description, the Success Criteria and the Reuse Map. The one regression the fix-delta introduced is W1: the new runtime sentence generalises the pre-aborted branch of expo/fetch to the timeout path, where the real shapes are an <code>AbortError</code> DOMException or a cause-less <code>FetchError</code> — correct it first, since it is headed for DECISIONS.md, then pin down the Preparing block&#39;s controls (W2) so the AC4 screen tests have one state to assert. Done well: the fake rejecting with its own <code>AbortError</code> (:42, :147) is exactly right, because the device polyfill has no <code>signal.reason</code> while jest&#39;s Node <code>AbortController</code> does, so nothing in the shipped path depends on either.</p>
 
   </main>

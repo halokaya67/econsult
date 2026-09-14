@@ -128,6 +128,11 @@ Decided: one interface with abort support, one fake with latency, faults and rea
 Alternatives: msw (broken on React Native, fights the SDK 57 fetch); a local server (a second terminal, three base URLs).
 Traded off: nothing exercises real HTTP.
 
+**The fake's e-consults outlive a settings change.** Applying developer settings rebuilds the transport, and it must not lose what the patient has already sent.
+Decided: the created e-consults and the id counter live in one state the provider keeps for the app's lifetime, while latency, faults and the practice stay per-transport.
+Alternatives: rebuild the fake with the transport (the photo retry then uploads to an e-consult the new fake never created and gets a 404); persist the fake to disk (a store to migrate for a backend that does not exist).
+Traded off: the fake's memory lives until the app restarts, so only a relaunch clears it.
+
 ## Photo
 
 **Downscale at pick time.** A 12-megapixel capture is hostile on a weak connection.

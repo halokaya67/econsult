@@ -84,6 +84,9 @@ function useKeyboardInset(): number {
 export function ScreenScaffold({ children, action, testID }: Props) {
   const insets = useSafeAreaInsets();
   const keyboardInset = useKeyboardInset();
+  // A text-size change while the app runs repaints the glyphs but leaves every box at the size it
+  // was measured at, so the content is keyed on the scale; what the patient typed is in the draft.
+  const { fontScale } = useWindowDimensions();
   const isOffline = useIsOffline();
   const scrollRef = useRef<ScrollView>(null);
 
@@ -93,6 +96,7 @@ export function ScreenScaffold({ children, action, testID }: Props) {
 
   return (
     <ScrollView
+      key={fontScale}
       ref={scrollRef}
       testID={testID}
       style={styles.scroll}

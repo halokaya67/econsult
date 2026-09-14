@@ -248,6 +248,14 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       <li><a href="ui-verification/index.html">The UI verification overview</a> <span class="note">— screenshots, accessibility-tree dumps and logs behind every lane. Written before the iPad lane was added, so reach <a href="ui-verification/device.html">device.html</a> from here.</span></li>
     </ul>
 
+    <h3>Recordings</h3>
+    <p>Two screen recordings from the iPhone 17 simulator, driven through Expo Go against the in-process fake backend: a minute on the happy path, and one continuous run through every state the flow can reach.</p>
+    <ul class="links">
+      <li><a href="recording/econsult-one-path.mp4">One path through the flow</a> <span class="note">— recipient, questions, message, a photo from the library, send, confirmation (1 minute)</span></li>
+      <li><a href="recording/econsult-showcase.mp4">Every state, in one take</a> <span class="note">— the twelve scenarios in order, from validation and the failure modes to the largest text size (50 minutes)</span></li>
+      <li><a href="recording/chapters.md">Chapters</a> <span class="note">— the time of each scenario in that take, and what a viewer should know about it</span></li>
+    </ul>
+
     <h2 id="after"><span class="num">06</span>Reviews after the implementation</h2>
     <p>Two more reviews followed the flow itself, seven axes each: one before the pull request, one on the delta afterwards. Neither produced a rendered report; what they produced is commits. In branch order, with the subject <code>git log --oneline</code> shows:</p>
     <div class="wide">

@@ -1,5 +1,5 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
-import { createFakeTransport } from "@/api/fake/fakeTransport";
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createFakeState, createFakeTransport } from "@/api/fake/fakeTransport";
 import { createServices, type Services } from "@/api/services";
 import { useDevSettings } from "./DevSettingsProvider";
 
@@ -9,12 +9,15 @@ const ServicesContext = createContext<Services | null>(null);
 // constructed here instead of the fake, and nothing above or below this file would change.
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const { settings } = useDevSettings();
+  // One backend for the app's lifetime: changing latency, faults or the practice rebuilds the
+  // transport, and the photo retry still has to reach the e-consult the create already made.
+  const [fakeState] = useState(createFakeState);
   const services = useMemo(
     () =>
       createServices(
-        createFakeTransport({ latencyMs: settings.latencyMs, faults: settings.faults }),
+        createFakeTransport({ latencyMs: settings.latencyMs, faults: settings.faults }, fakeState),
       ),
-    [settings.latencyMs, settings.faults],
+    [fakeState, settings.latencyMs, settings.faults],
   );
 
   return <ServicesContext.Provider value={services}>{children}</ServicesContext.Provider>;

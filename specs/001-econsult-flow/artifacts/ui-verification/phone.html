@@ -77,6 +77,15 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#verdict">Verdict</a></li><li><a href="#scenarios">Scenarios</a></li><li><a href="#form-factor-checklist-phone">Form-factor checklist (phone)</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#evidence">Evidence</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The full walkthrough on an iPhone 17 simulator, scenario by scenario, with screenshot and accessibility-tree evidence.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-pass">PASS</span> all ten scenarios pass — eight on the first run, the discard guard after a fix.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>10 scenarios · 3 runs (heads <code>bfe019d</code>, <code>48896ef</code>, <code>179934a</code>) · 5 audited states, each 0 warnings and 0 duplicates.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>Scenario 7 failed: Discard only dismissed its dialog and left the draft on step 1. It was fixed and re-driven to PASS, and the audit was checked against a positive control that returned 22 warnings.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="index.html">All lanes</a><a href="tablet.html">Tablet lane</a></span></p>
+  </aside>
+
 <style>
 main > .shots{max-width:none}
 .shots{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 26px}
@@ -86,12 +95,68 @@ main > .shots{max-width:none}
 .shots figcaption{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
 .dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
 .dumps code{font-size:12px}
+
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <p>Device: iPhone 17 simulator, iOS 26.5, Expo Go. Text size: medium unless stated. Three runs: the full walkthrough (scenarios 1–10) at head <code>bfe019d</code>, the re-drive of scenario 7 at head <code>48896ef</code> after the discard fix, and the Accessibility Inspector audit (scenario 10) at head <code>179934a</code>.</p>
 <blockquote><p><strong>Since then.</strong> This lane ran at heads <code>bfe019d</code>, <code>48896ef</code> and <code>179934a</code>; the branch head is <code>b1fb557</code>. The message and questions steps, <code>ChoiceGroup</code>, <code>ErrorState</code>, <code>ScreenScaffold</code>, the photo picker and the announce helper have all changed since, mostly through the Android and real-device fixes, so the screens below are the app as it stood at the time.</p></blockquote>
-<h2 id="verdict">Verdict</h2>
+<details class="sec" open><summary><h2 id="verdict">Verdict</h2></summary>
 <p>All ten scenarios PASS. On the first run eight passed outright and scenario 7 failed (fixed and re-driven to PASS); the Accessibility Inspector audit passed on all five audited states. No crashes, no LogBox, no bundler warnings beyond the cache notice.</p>
-<h2 id="scenarios">Scenarios</h2>
+</details><details class="sec"><summary><h2 id="scenarios">Scenarios</h2></summary>
+<table class="ps-t">
+    <caption>Ten scenarios, all PASS</caption>
+    <thead><tr><th scope="col">#</th><th scope="col">Scenario</th><th scope="col">Result</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Happy path with photo (prc-0421)</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>2</td><td>Send lock while a slow send is in flight</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>3</td><td>Validation on the question and message steps</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>4</td><td>Partial photo failure and retry</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>5</td><td>Create failure</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>6</td><td>Offline</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>7</td><td>Discard guard via Home</td><td><span class="ps-fail">FAIL</span> first run, <span class="ps-pass">PASS</span> on the re-drive</td></tr>
+      <tr><td>8</td><td>The other two practices (prc-0873, prc-0000)</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>9</td><td>Largest text size sweep</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>10</td><td>Accessibility Inspector audit (SC3)</td><td><span class="ps-pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+
 <h3>1. Happy path with photo (prc-0421) — PASS</h3>
 <ol>
 <li>Home → &quot;Write to your practice&quot; → step 1, &quot;STEP 1 OF 3&quot;, three recipients (Dr. J. de Vries GP / M. Bakker Practice nurse / S. Jansen Practice assistant).</li>
@@ -220,7 +285,7 @@ Fault reset and Developer settings verified at defaults. Evidence: s10r-01 … s
   <figure><a href="phone/s10r-06-positive-control-expo-devmenu.png"><img src="phone/s10r-06-positive-control-expo-devmenu.png" alt="s10r-06-positive-control-expo-devmenu.png" loading="lazy"></a><figcaption>s10r-06-positive-control-expo-devmenu.png</figcaption></figure>
   <figure><a href="phone/s10r-06-positive-control-inspector.png"><img src="phone/s10r-06-positive-control-inspector.png" alt="s10r-06-positive-control-inspector.png" loading="lazy"></a><figcaption>s10r-06-positive-control-inspector.png</figcaption></figure>
 </div>
-<p class="dumps">Text evidence: <a href="phone/s10r-audit-results.md"><code>s10r-audit-results.md</code></a>, <a href="phone/s10r-inspector-tree.txt"><code>s10r-inspector-tree.txt</code></a>, <a href="phone/s10r-setup.log"><code>s10r-setup.log</code></a></p><h2 id="form-factor-checklist-phone">Form-factor checklist (phone)</h2>
+<p class="dumps">Text evidence: <a href="phone/s10r-audit-results.md"><code>s10r-audit-results.md</code></a>, <a href="phone/s10r-inspector-tree.txt"><code>s10r-inspector-tree.txt</code></a>, <a href="phone/s10r-setup.log"><code>s10r-setup.log</code></a></p></details><details class="sec"><summary><h2 id="form-factor-checklist-phone">Form-factor checklist (phone)</h2></summary>
 <ul>
 <li>Compact single-column flow: PASS.</li>
 <li>Primary action reachable at the bottom of every step: PASS (scrolling required at the largest size, as expected).</li>
@@ -228,13 +293,13 @@ Fault reset and Developer settings verified at defaults. Evidence: s10r-01 … s
 <li>Safe-area insets respected: PASS.</li>
 <li>Keyboard does not cover the field being edited: PASS, with the nit that the bottom controls sit behind the keyboard until the user scrolls, and the field re-takes focus after the picker.</li>
 </ul>
-<h2 id="logs-and-crashes">Logs and crashes</h2>
+</details><details class="sec"><summary><h2 id="logs-and-crashes">Logs and crashes</h2></summary>
 <p>None. The setup logs hold only &quot;iOS Bundled&quot; lines; no LogBox or red box in any tree; no crash. The scenario-7 defect logged nothing (it failed silently).</p>
-<h2 id="evidence">Evidence</h2>
+</details><details class="sec"><summary><h2 id="evidence">Evidence</h2></summary>
 <p>52 files from the first run (s01 … s10, setup.log), 8 from the scenario-7 re-drive (s07r-<em>) and 15 from the audit (s10r-</em>), all in this directory.</p>
 <p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the bundler log:</p>
 <p class="dumps">Text evidence: <a href="phone/setup.log"><code>setup.log</code></a></p>
 
-  </main>
+  </details></main>
   <footer class="foot">Written up from the phone lane run; its screenshots, dumps and logs are in <code>phone/</code>.</footer>
 </div>
