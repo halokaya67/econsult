@@ -59,7 +59,7 @@ npm run format:check   # prettier --check .
 ```
 
 Coverage is enforced per area: 100 % of statements, branches, functions and lines on `src/api`,
-`src/features`, `src/lib` and `src/providers`, and at least 90 % of statements on `src/components`
+`src/features`, `src/hooks`, `src/lib` and `src/providers`, and at least 90 % of statements on `src/components`
 and `src/app`.
 
 ## Where to find things
@@ -71,11 +71,12 @@ kind, so a feature always has the same shape inside it.
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | A screen                                                      | `src/app` — routes only, nothing else; expo-router requires every file here at start-up                       |
 | The backend contract, the transport, and the fake behind them | `src/api`                                                                                                     |
-| App-wide context and the wiring that mounts it                | `src/providers` — provider files only, each with its context hook                                             |
+| App-wide context and the wiring that mounts it                | `src/providers` — the provider stack and the providers it mounts, each with its context hook                  |
 | Something the patient does, end to end                        | `src/features/<name>`                                                                                         |
 | A UI building block more than one feature uses                | `src/components`                                                                                              |
 | A shared hook that is not a context's accessor                | `src/hooks`                                                                                                   |
 | Shared logic that is not UI                                   | `src/lib`                                                                                                     |
+| Copy more than one screen speaks                              | `src/lib` — the shared constants, such as `retryLabel` for the one retry wording                              |
 | Colour, spacing, type-scale and touch-target tokens           | `src/theme`                                                                                                   |
 | A helper the tests share                                      | `src/test`                                                                                                    |
 | A screen's test                                               | `src/__tests__/app` — unit tests sit beside their code, but a test under `src/app` would be loaded as a route |
@@ -88,16 +89,17 @@ src/features/econsult/
   state/       the draft reducer
   hooks/       what screens call
   components/  UI used here
-  utils/       pure rules, copy
+  utils/       pure rules, and copy with more than one reader
 ```
 
-No loose files at a feature root: everything belongs to one of those five kinds.
+No loose files at a feature root: everything belongs to one of those five kinds. Copy a single
+component or hook owns stays in that file.
 
 A file lives inside a feature only while that feature is its sole owner; the moment a second one
 needs it, it moves out to `src/components` or `src/lib`. Two exceptions are deliberate:
 
-- a generic building block with no domain vocabulary stays in `src/components` even while one
-  feature uses it;
+- a generic building block with no domain vocabulary stays in `src/components` or `src/lib` even
+  while one feature uses it, as the id generator does;
 - a context's accessor hook lives with whatever mounts the context (a provider file or a component).
 
 ## Accessibility
@@ -124,8 +126,9 @@ size. Two caveats:
 - Android has not been run. What to check there: the system back gesture on the confirmation screen
   (it must not leave, since Done is the only exit), that a validation error is spoken once with
   TalkBack, and that the offline banner, the sending status and a failed photo retry are each spoken
-  once too, since every message has one channel and never both, the emulator's virtual-scene camera
-  for the capture path, and edge-to-edge insets, which SDK 57 applies by default.
+  once too, since every message has one channel and never both, that the emulator shows the camera
+  note and the library path instead, since `expo-device` reports no real device there, and
+  edge-to-edge insets, which SDK 57 applies by default.
 
 ## The design record
 

@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { announce } from "@/lib/announce";
 import { RETRY_LABEL } from "@/lib/retryLabel";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
@@ -17,14 +19,15 @@ export function ErrorState({
   onRetry: () => void;
   retryBlockedReason?: string;
 }) {
+  // A live region is Android-only, which left the alert silent on iOS; the announcement speaks it
+  // on both, so the region is gone rather than saying it twice on Android.
+  useEffect(() => {
+    announce(`${title}. ${body}`);
+  }, [title, body]);
+
   return (
     <View style={[styles.stack, styles.errorBox]}>
-      <View
-        accessible
-        accessibilityRole="alert"
-        accessibilityLiveRegion="polite"
-        style={styles.stack}
-      >
+      <View accessible accessibilityRole="alert" style={styles.stack}>
         <Text style={text.heading}>{title}</Text>
         <Text style={text.body}>{body}</Text>
       </View>

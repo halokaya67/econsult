@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { announce } from "@/lib/announce";
+import { runOnce } from "@/lib/inFlight";
 import { readyPhoto } from "../state/draft";
 import { useDraft } from "../state/DraftProvider";
 import { sendErrorCopy } from "../utils/errorCopy";
 import { photoFileFor } from "../utils/photo";
-import { useRetryAttachment } from "./useSubmit";
+import { useRetryAttachment } from "./useRetryAttachment";
 
 export const PHOTO_STILL_FAILED =
   "The photo still couldn't be attached. You can try again or continue without it.";
@@ -22,9 +23,8 @@ export function usePhotoRetry() {
   const { econsultId } = draft;
 
   async function run() {
-    if (isInFlight.current || !photo || !econsultId) return;
+    if (!photo || !econsultId) return;
     setHasRetryFailed(false);
-    isInFlight.current = true;
     try {
       const attachment = await retry.mutateAsync({ econsultId, photo: photoFileFor(photo) });
       dispatch({ type: "attachmentSettled", attachment });
@@ -38,13 +38,11 @@ export function usePhotoRetry() {
       // The alert is already mounted and is not a live region, so announcing is what speaks the
       // new line, once, on both platforms.
       announce(sendErrorCopy(error));
-    } finally {
-      isInFlight.current = false;
     }
   }
 
   return {
-    start: () => void run(),
+    start: () => void runOnce(isInFlight, run),
     isPending: retry.isPending,
     error: retry.error,
     hasRetryFailed,

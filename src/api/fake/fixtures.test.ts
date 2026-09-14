@@ -7,7 +7,9 @@ describe("fixtures", () => {
   });
 
   test("the default practice is one the fixtures carry data for", () => {
-    expect(FIXTURE_PRACTICE_IDS).toContain(DEFAULT_PRACTICE_ID);
+    const result = practiceConfigSchema.safeParse(rawPractices[DEFAULT_PRACTICE_ID]);
+
+    expect(result.success).toBe(true);
   });
 
   test.each(FIXTURE_PRACTICE_IDS)("practice %s parses as a config", (practiceId) => {

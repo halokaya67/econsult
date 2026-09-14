@@ -55,4 +55,4 @@ human asked for a structure review; the tree was regrouped by ownership and the 
 ## What was not delegated
 
 The product decisions, the spec and plan approvals, the final read of the three hand-in documents,
-the local `.env`, and the screen recording.
+and the screen recording.
