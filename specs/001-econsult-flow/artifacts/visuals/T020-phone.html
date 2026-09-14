@@ -1,6 +1,5 @@
 <meta charset="utf-8">
 <title>T020 Developer Settings</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root {
     --ground: #f4f6f4;
@@ -62,7 +61,7 @@
     margin: 0;
     background: var(--ground);
     color: var(--ink);
-    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
@@ -79,7 +78,7 @@
   }
 
   h1, h2, h3 {
-    font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+    font-family: "Avenir Next Condensed", "Arial Narrow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-weight: 600;
     text-wrap: balance;
     margin: 0;
@@ -91,20 +90,20 @@
   p { margin: 0; max-width: 68ch; }
 
   .eyebrow {
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: .72rem;
     letter-spacing: .13em;
     text-transform: uppercase;
     color: var(--muted);
   }
-  code, .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
   code { font-size: .86em; background: var(--sunken); padding: .1em .32em; border-radius: 3px; }
 
   /* ---------- masthead ---------- */
   header.masthead { display: flex; flex-direction: column; gap: 18px; }
   .verdict-line { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
   .verdict {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-family: "Avenir Next Condensed", "Arial Narrow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-weight: 700;
     font-size: 1.05rem;
     letter-spacing: .08em;
@@ -126,7 +125,7 @@
   }
   .runfacts div { background: var(--surface); padding: 12px 14px; }
   .runfacts dt {
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: .68rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -140,7 +139,7 @@
   table { border-collapse: collapse; width: 100%; font-size: .92rem; min-width: 640px; }
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--hair); vertical-align: top; }
   th {
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: .68rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -148,13 +147,13 @@
     font-weight: 500;
     border-bottom: 1px solid var(--ink);
   }
-  td.num { font-family: "IBM Plex Mono", monospace; color: var(--muted); width: 2.4rem; }
-  td.size { font-family: "IBM Plex Mono", monospace; font-size: .82rem; white-space: nowrap; }
-  td.files { font-family: "IBM Plex Mono", monospace; font-size: .78rem; color: var(--muted); }
+  td.num { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; color: var(--muted); width: 2.4rem; }
+  td.size { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: .82rem; white-space: nowrap; }
+  td.files { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: .78rem; color: var(--muted); }
   tr.is-fail td { background: var(--fail-soft); }
   .pill {
     display: inline-block;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: .72rem;
     letter-spacing: .08em;
     padding: 2px 7px;
@@ -185,7 +184,7 @@
   }
   figcaption { font-size: .8rem; color: var(--muted); line-height: 1.4; }
   figcaption b { color: var(--ink); font-weight: 600; display: block; font-size: .82rem; }
-  figcaption .fname { font-family: "IBM Plex Mono", monospace; font-size: .68rem; word-break: break-all; }
+  figcaption .fname { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: .68rem; word-break: break-all; }
   figure.flag img { border-color: var(--fail); border-width: 2px; }
 
   /* ---------- defect ---------- */
@@ -201,7 +200,7 @@
   }
   .defect.minor { border-left-color: var(--warn); }
   .defect .tag {
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: .68rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -225,7 +224,7 @@
     border-radius: 4px;
     padding: 12px 14px;
     overflow-x: auto;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: .76rem;
     line-height: 1.55;
     color: var(--ink);

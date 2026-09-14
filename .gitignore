@@ -48,3 +48,6 @@ example
 
 # agent tooling
 .serena/
+
+# vscode
+.vscode/

@@ -51,7 +51,10 @@ th,td{text-align:left;vertical-align:top;padding:9px 13px;border-bottom:1px soli
 th{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
 tbody tr:last-child td{border-bottom:none}
 td.v{white-space:nowrap;font-weight:700;font-size:12.5px;letter-spacing:.04em}
+td.v .res{display:block;white-space:normal;margin-top:5px;font-weight:400;font-size:13px;letter-spacing:0;color:var(--muted)}
 td.n{white-space:nowrap;font-family:var(--mono);font-size:13px;color:var(--muted)}
+td.closed{font-size:13.5px;color:var(--muted)}
+td.closed code{font-size:.92em}
 .pass{color:var(--accent-ink)}
 .fail{color:var(--warm)}
 ol.tasks{list-style:none;margin:8px 0 12px;padding:0;max-width:none;border-top:1px solid var(--line)}
@@ -78,7 +81,7 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
   <header class="head">
     <p class="eyebrow">Flow record · 001-econsult-flow</p>
     <h1>What the AI workflow did</h1>
-    <p class="lede">The e-consult submission flow was built by AI inside a gated loop, and every gate left a file behind. This page walks the loop in the order it ran and links the evidence for each stage. Everything is local: no network, no server, relative links only.</p>
+    <p class="lede">The e-consult submission flow was built by AI inside a gated loop, and every gate left a file behind. This page walks the loop in the order it ran and links the evidence for each stage. Everything is local: no network, no server, and every link on this page is relative.</p>
   </header>
   <main>
 
@@ -114,38 +117,39 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
     </ul>
 
     <h2 id="spec"><span class="num">02</span>The spec, and its five checker rounds</h2>
-    <p>The spec was written from the brief and the research, then read by a separate checker five times. No round found a blocker; each one traded a plausible claim for a verified one, and the last round left two information items and no warnings.</p>
+    <p>The spec was written from the brief and the research, then read by a separate checker five times. No round found a blocker; each one traded a plausible claim for a verified one, and the last round left two information items and no warnings. <strong>PASS_WITH_FLAGS is the flow's proceed verdict</strong> — only a FAIL blocks a gate — so none of these rounds held the spec up: the flags were tracked, and each round's findings were fixed in the next revision, which the following round re-read and recorded as RESOLVED.</p>
     <div class="wide">
       <table>
-        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Source</th></tr></thead>
+        <thead><tr><th>Round</th><th>Verdict → what happened next</th><th>Raised</th><th>Source</th></tr></thead>
         <tbody>
-          <tr><td><a href="checker/spec-r1.html">Spec review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 4 I</td><td class="n"><a href="../checker/spec-r1.md">spec-r1.md</a></td></tr>
-          <tr><td><a href="checker/spec-r2.html">Spec review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 2 I</td><td class="n"><a href="../checker/spec-r2.md">spec-r2.md</a></td></tr>
-          <tr><td><a href="checker/spec-r3.html">Spec review 3</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 1 I</td><td class="n"><a href="../checker/spec-r3.md">spec-r3.md</a></td></tr>
-          <tr><td><a href="checker/spec-r4.html">Spec review 4</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 2 I</td><td class="n"><a href="../checker/spec-r4.md">spec-r4.md</a></td></tr>
-          <tr><td><a href="checker/spec-r5.html">Spec review 5</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">0 W · 2 I</td><td class="n"><a href="../checker/spec-r5.md">spec-r5.md</a></td></tr>
+          <tr><td><a href="checker/spec-r1.html">Spec review 1</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all eleven fixed in the next revision; round 2 records them RESOLVED</span></td><td class="n">7 W · 4 I</td><td class="n"><a href="../checker/spec-r1.md">spec-r1.md</a></td></tr>
+          <tr><td><a href="checker/spec-r2.html">Spec review 2</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all four fixed in the next revision; round 3 records them RESOLVED</span></td><td class="n">2 W · 2 I</td><td class="n"><a href="../checker/spec-r2.md">spec-r2.md</a></td></tr>
+          <tr><td><a href="checker/spec-r3.html">Spec review 3</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all three fixed in the next revision; round 4 records them RESOLVED</span></td><td class="n">2 W · 1 I</td><td class="n"><a href="../checker/spec-r3.md">spec-r3.md</a></td></tr>
+          <tr><td><a href="checker/spec-r4.html">Spec review 4</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all four fixed in the next revision; round 5 records them RESOLVED</span></td><td class="n">2 W · 2 I</td><td class="n"><a href="../checker/spec-r4.md">spec-r4.md</a></td></tr>
+          <tr><td><a href="checker/spec-r5.html">Spec review 5</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ both fixed in the last spec revision, committed with the plan (<code>cab5de3</code>) before the plan gate</span></td><td class="n">0 W · 2 I</td><td class="n"><a href="../checker/spec-r5.md">spec-r5.md</a></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="src">Verdicts are each report's own <code>**Verdict:**</code> line. The counts are the numbered rows of each report's findings table: <code>W</code> for warnings, <code>I</code> for information items, none of the five rounds raising a <code>C</code> blocker. Totals: 13 warnings, 11 information items, 0 blockers.</p>
+    <p class="src">Verdicts are each report's own <code>**Verdict:**</code> line. The counts are the numbered rows of each report's findings table: <code>W</code> for warnings, <code>I</code> for information items, none of the five rounds raising a <code>C</code> blocker. Totals: 13 warnings, 11 information items, 0 blockers. The resolutions are each following round's own prior-flag table, where every item of the round before it is marked RESOLVED with its evidence. Rounds 1 and 2 came before the spec gate; rounds 3 to 5 ran after it, during planning, and their fixes are the eight changed lines between the spec commit <code>9f6ecac</code> and the plan commit <code>cab5de3</code> — including round 5's two: the timeout rationale that still keyed on the error's identity, and the photo preview's sizing.</p>
     <ul class="links">
       <li><a href="spec.html">The spec</a> <span class="note">— the agreed behaviour, as it stood after round five (<a href="../spec.md">spec.md</a>)</span></li>
       <li>The spec went to a human gate and was approved there; the approval is the first line of the decision index in <a href="plan.html">plan.html</a>.</li>
     </ul>
 
     <h2 id="plan"><span class="num">03</span>The plan, its three rounds, and the twenty-two steps</h2>
-    <p>The plan broke the spec into twenty-two test-first steps, each with the files it was allowed to touch and the commands that would verify it. It failed its checker three times running.</p>
+    <p>The plan broke the spec into twenty-two test-first steps, each with the files it was allowed to touch and the commands that would verify it. It failed its checker three times running. <strong>A FAIL blocks</strong>: no failed revision could reach the plan gate, so each round's blockers were removed in the next revision and re-read by the round after it. What the implementation was executed from is revision 3.1, which the user approved at the gate.</p>
     <div class="wide">
       <table>
-        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Source</th></tr></thead>
+        <thead><tr><th>Round</th><th>Verdict → what happened next</th><th>Raised</th><th>Source</th></tr></thead>
         <tbody>
-          <tr><td><a href="checker/plan-r1.html">Plan review 1</a></td><td class="v fail">FAIL</td><td class="n">6 C · 7 W · 4 I</td><td class="n"><a href="../checker/plan-r1.md">plan-r1.md</a></td></tr>
-          <tr><td><a href="checker/plan-r2.html">Plan review 2</a></td><td class="v fail">FAIL</td><td class="n">4 C · 4 W · 7 I</td><td class="n"><a href="../checker/plan-r2.md">plan-r2.md</a></td></tr>
-          <tr><td><a href="checker/plan-r3.html">Plan review 3</a></td><td class="v fail">FAIL</td><td class="n">2 C · 1 W · 2 I</td><td class="n"><a href="../checker/plan-r3.md">plan-r3.md</a></td></tr>
+          <tr><td><a href="checker/plan-r1.html">Plan review 1</a></td><td class="v fail">FAIL<span class="res">→ six blockers fixed in revision 2; round 2 records them RESOLVED</span></td><td class="n">6 C · 7 W · 4 I</td><td class="n"><a href="../checker/plan-r1.md">plan-r1.md</a></td></tr>
+          <tr><td><a href="checker/plan-r2.html">Plan review 2</a></td><td class="v fail">FAIL<span class="res">→ four blockers fixed in revision 3; round 3 records them RESOLVED</span></td><td class="n">4 C · 4 W · 7 I</td><td class="n"><a href="../checker/plan-r2.md">plan-r2.md</a></td></tr>
+          <tr><td><a href="checker/plan-r3.html">Plan review 3</a></td><td class="v fail">FAIL<span class="res">→ both blockers fixed in revision 3.1, the revision approved at the plan gate</span></td><td class="n">2 C · 1 W · 2 I</td><td class="n"><a href="../checker/plan-r3.md">plan-r3.md</a></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="src">Same source as the spec rounds: each report's <code>**Verdict:**</code> line and the numbered rows of its findings table. Twelve blockers in total, all removed on paper; revision 3.1 is what went to the human gate and was approved.</p>
+    <p>Revision 3.1 was verified by the implementation's own typecheck and tests rather than a fourth round. Round 3's two blockers were a <code>STEP_TITLES</code> use with no import in the recipient screen test and an <code>as const</code> that typed the recipients test's fixture as read-only; both files exist in the tree as revision 3.1 wrote them — <code>src/__tests__/app/econsult/recipient.test.tsx</code> imports <code>STEP_TITLES</code>, <code>src/features/econsult/utils/recipients.test.ts</code> annotates its fixture <code>RecipientsResult</code> — and they compile and pass under <code>npm run typecheck</code> and <code>npm test</code>.</p>
+    <p class="src">Same source as the spec rounds: each report's <code>**Verdict:**</code> line and the numbered rows of its findings table. Twelve blockers in total, all removed on paper; the revisions are the ones named in the revision notes at the top of <a href="../plan.md">plan.md</a>, and each round's header names the revision it read (round 2 revision 2.1, round 3 revision 3). The plan gate approval is the third line of the decision index in <a href="plan.html">plan.html</a>; <code>checker/</code> holds no fourth plan report.</p>
 
     <h3>The twenty-two steps, in the order they were committed</h3>
     <p>One commit per step, tests written first, inside the step's declared file fence. Six steps put a new screen on the device; each of those was driven on an iPhone 17 simulator at the default and the largest accessibility text size before the step was allowed to pass, and re-driven after every fix.</p>
@@ -193,20 +197,27 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
     </ul>
 
     <h2 id="review"><span class="num">04</span>The implementation review</h2>
-    <p>With the last step committed, a checker read the whole change rather than any one step — 132 files across 25 commits at the first round — three times over, re-reading each round's fixes in the next.</p>
+    <p>With the last step committed, a checker read the whole change rather than any one step — 132 files across 25 commits at the first round — three times over, re-reading each round's fixes in the next. All three returned PASS_WITH_FLAGS, the flow's proceed-with-tracked-items verdict: <strong>only a FAIL blocks</strong>, so the change was never held, and the flags were carried to the finish gate instead, where each was closed or accepted by name.</p>
     <div class="wide">
       <table>
-        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Fixed in</th></tr></thead>
+        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Where its flags closed</th></tr></thead>
         <tbody>
-          <tr><td><a href="checker/final-r1.html">Final review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 6 I</td><td class="n">15d0259</td></tr>
-          <tr><td><a href="checker/final-r2.html">Final review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">3 W · 1 I</td><td class="n">ad5dee8</td></tr>
-          <tr><td><a href="checker/final.html">Final review 3, closing</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 4 I</td><td class="n">—</td></tr>
+          <tr><td><a href="checker/final-r1.html">Final review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 6 I</td><td class="closed">The first review-fix commit, <code>15d0259</code> “fix(econsult): lock navigation while sending, announce offline once, surface picker failures” — nine of the thirteen. W6, W7, I5 and I6 were deferred and restated in round 3.</td></tr>
+          <tr><td><a href="checker/final-r2.html">Final review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">3 W · 1 I</td><td class="closed">The second, <code>ad5dee8</code> “fix(econsult): re-dispatch the send's own navigation through the lock” — W8, W9 and I7. W7 was the round-1 warning carried again.</td></tr>
+          <tr><td><a href="checker/final.html">Final review 3, closing</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 4 I</td><td class="closed">Nothing left to fix in the code; this round restated what was still open, and each of the six closed after it — listed below.</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="src">Verdicts and counts read the same way as the earlier rounds, from <a href="../checker/final-r1.md">final-r1.md</a>, <a href="../checker/final-r2.md">final-r2.md</a> and <a href="../checker/final.md">final.md</a>. The fix commits are the ones whose messages name those findings, in branch order. The closing round had no code to fix: its two remaining warnings were the Accessibility Inspector audit having no evidence yet — run afterwards, with zero warnings on five states — and the partial read of the artifact files. <code>e7ab09a</code> is what recorded the three rounds.</p>
+    <ul>
+      <li><strong>W6</strong>, the Accessibility Inspector audit having no evidence — closed by the finish-phase audit: five states, zero warnings, and a positive control that returned 22 (<a href="ui-verification/phone.html">phone lane</a>).</li>
+      <li><strong>I6</strong>, the Home → Discard path never driven — closed by the finish walkthrough, which drove it and found that Discard on step 1 did nothing; fixed in <code>1bc3e88</code> “fix(econsult): make Discard on step 1 leave the flow” and re-driven as scenario 7 of the <a href="ui-verification/phone.html">phone lane</a>.</li>
+      <li><strong>I5</strong>, four structure and ownership observations — closed by the restructuring pass in <a href="#after">section 6</a>; all four are resolved, and three of the paths it named no longer exist.</li>
+      <li><strong>I8</strong> (the AI-USAGE round count going stale) and <strong>I9</strong> (an intermittent <code>act(...)</code> warning) — closed by the docs-polish commit <code>e7ab09a</code> “docs: record the three final review rounds and the offline process record”, which also recorded the three rounds.</li>
+      <li><strong>W7</strong>, thirteen generated and prior-round files not read in full — accepted; the report itself asks for no fix before merge.</li>
+    </ul>
+    <p class="src">Verdicts and counts read the same way as the earlier rounds, from <a href="../checker/final-r1.md">final-r1.md</a>, <a href="../checker/final-r2.md">final-r2.md</a> and <a href="../checker/final.md">final.md</a>. The fix commits are the ones whose messages name those findings, in branch order, matched to each round's own prior-flag table: round 2 read <code>15d0259</code> and marked nine of round 1's items RESOLVED; round 3 read <code>ad5dee8</code> and marked round 2's three RESOLVED. The five closures above are the statuses in <a href="../checker/final.md">final.md</a>'s own “Since then” note, with the commit subjects from <code>git log --oneline</code>; I5's resolution is also recorded in the revision notes of <a href="../plan.md">plan.md</a>.</p>
     <ul class="links">
-      <li><a href="checker/index.html">All eleven checker rounds on one page</a> <span class="note">— five on the spec, three on the plan, three on the finished change, with what each one blocked</span></li>
+      <li><a href="checker/index.html">All eleven checker rounds on one page</a> <span class="note">— five on the spec, three on the plan, three on the finished change, each with what it raised and where those findings closed</span></li>
       <li><code>2e453b1</code> <span class="note">— the coverage commit that preceded round 1: tests only, every source file at 100 %</span></li>
     </ul>
 
@@ -304,13 +315,13 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
 
     <h2 id="notes">Reading notes</h2>
     <ul>
-      <li>Every link on this page is relative and every file it points at is in the repository. Open it from the file system and the whole record works with no network; <code>npm run showcase</code> does exactly that.</li>
+      <li>Every link on this page is relative and every file it points at is in the repository. The pages style themselves with system fonts and the two diagrams on <a href="how-it-works.html">how it works</a> are pre-rendered SVG, so opening the record from the file system works with no network; <code>npm run showcase</code> does exactly that. The only outward links are the sources the research and review pages cite, and no page needs them to render.</li>
       <li>Pages ending in <code>.html</code> are rendered copies of the markdown the flow wrote at the time — the wording, the evidence lines and the verdicts are unedited. The <code>.md</code> links go to those sources.</li>
       <li>Screenshots are downscaled copies, long edge at most 900 px, so the record stays small enough to live in the repository. The accessibility-tree and speech dumps are the originals.</li>
       <li>The lanes on the two physical devices are the most recent work, and they leave three defects unfixed. They are described where they were found, not hidden: one on the <a href="ui-verification/android.html#real-device">Samsung tablet</a>, recorded as a known limit, and two on the <a href="ui-verification/device.html#defects">iPad</a> that stand as observations — a layout condition that could not be reproduced, and a UIKit affordance a React Native view does not inherit.</li>
     </ul>
 
   </main>
-  <footer class="foot">Process record for <code>specs/001-econsult-flow</code>. Every page in this folder is a local copy; nothing here needs a network.</footer>
+  <footer class="foot">Process record for <code>specs/001-econsult-flow</code>. Every page in this folder is a local copy; nothing here needs a network to render.</footer>
 </div>
 </html>

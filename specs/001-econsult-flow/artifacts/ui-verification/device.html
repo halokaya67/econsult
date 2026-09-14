@@ -1,8 +1,6 @@
 <meta charset="utf-8">
 <title>iPad Accessibility Verification</title>
 <meta name="description" content="Accessibility verification of the e-consult flow on a physical iPad Air: accessible names, text scaling, layout and VoiceOver across every state of the flow, re-checked twice after the VoiceOver fixes, with every VoiceOver event now passing.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
   --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
@@ -23,7 +21,7 @@
   --code-bg:#1B292D; --shadow:none; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
 a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
 .shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
@@ -50,7 +48,7 @@ li{margin:0 0 6px}
 li > p{margin:0}
 strong{font-weight:700}
 em{color:var(--muted);font-style:italic}
-code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
 pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
 pre.code code{background:none;padding:0;font-size:inherit}
 .band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
@@ -85,7 +83,7 @@ main > .shots{max-width:none}
 .shots figure{margin:0;width:148px}
 .shots a{display:block}
 .shots img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
-.shots figcaption{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.shots figcaption{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
 .sev{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:999px;vertical-align:2px;margin-right:8px}
 .sev-high{background:#F6DDD8;color:#7C2D17}
 .sev-med{background:var(--warm-soft);color:var(--warm)}
