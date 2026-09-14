@@ -71,9 +71,10 @@ kind, so a feature always has the same shape inside it.
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | A screen                                                      | `src/app` — routes only, nothing else; expo-router requires every file here at start-up                       |
 | The backend contract, the transport, and the fake behind them | `src/api`                                                                                                     |
-| App-wide context and the wiring that mounts it                | `src/providers`                                                                                               |
+| App-wide context and the wiring that mounts it                | `src/providers` — provider files only, each with its context hook                                             |
 | Something the patient does, end to end                        | `src/features/<name>`                                                                                         |
 | A UI building block more than one feature uses                | `src/components`                                                                                              |
+| A shared hook that is not a provider's context accessor       | `src/hooks`                                                                                                   |
 | Shared logic that is not UI                                   | `src/lib`                                                                                                     |
 | Colour, spacing, type-scale and touch-target tokens           | `src/theme`                                                                                                   |
 | A helper the tests share                                      | `src/test`                                                                                                    |

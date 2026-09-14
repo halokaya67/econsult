@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 import type { DevSettings } from "@/features/devSettings/utils/settings";
-import { DevSettingsProvider } from "./DevSettingsProvider";
-import { useSession } from "./session";
+import { DevSettingsProvider } from "@/providers/DevSettingsProvider";
+import { useSession } from "./useSession";
 
 const SETTINGS: DevSettings = {
   practiceId: "prc-0873",

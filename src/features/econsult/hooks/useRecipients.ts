@@ -1,7 +1,7 @@
 import { useQueries, type UseQueryResult } from "@tanstack/react-query";
 import type { CareTeamMember, PracticeEConsultConfig } from "@/api/contracts";
+import { useSession } from "@/hooks/useSession";
 import { useServices } from "@/providers/ServicesProvider";
-import { useSession } from "@/providers/session";
 import { careTeamQuery, configQuery } from "../api/queries";
 import { joinRecipients, type RecipientsResult } from "../utils/recipients";
 
