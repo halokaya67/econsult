@@ -4,7 +4,7 @@ import { AccessibilityInfo, ScrollView, Text, TextInput } from "react-native";
 import QuestionsScreen from "@/app/econsult/questions";
 import type { Question } from "@/api/contracts";
 import * as choiceGroupSource from "@/components/ChoiceGroup";
-import { accessibleName, labelWithRequirement } from "@/components/TextField";
+import { accessibleName, labelWithRequirement } from "@/components/fieldLabel";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
 import * as questionSource from "@/features/econsult/useQuestions";

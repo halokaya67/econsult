@@ -57,7 +57,6 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!src/**/*.test.{ts,tsx}",
-      "!src/smoke.test.tsx",
       "!src/test/**",
       "!src/__tests__/**"
     ],
@@ -75,6 +74,12 @@
         "lines": 100
       },
       "./src/lib/": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      },
+      "./src/providers/": {
         "statements": 100,
         "branches": 100,
         "functions": 100,

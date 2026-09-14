@@ -1,7 +1,9 @@
 import type { Answer, CreateEConsultRequest, PatientSession } from "@/api/contracts";
 import type { Services } from "@/api/services";
 import { isApiError, type PhotoFile } from "@/api/transport";
-import type { AttachmentStatus } from "./draft";
+import { newId } from "@/lib/ids";
+import { photoFileFor } from "@/lib/photo";
+import { readyPhoto, type AttachmentStatus, type DraftState } from "./draft";
 
 export type SubmitInput = {
   session: PatientSession;
@@ -13,6 +15,29 @@ export type SubmitInput = {
 };
 
 export type SubmitOutcome = { econsultId: string; attachment: AttachmentStatus };
+
+// The first send allocates the key; every retry reuses the one the reducer kept, so a retry can
+// never create a second e-consult.
+export function idempotencyKeyFor(draft: DraftState): string {
+  return draft.idempotencyKey ?? newId();
+}
+
+export function submitInputFor(
+  draft: DraftState,
+  session: PatientSession,
+  recipientId: string,
+  idempotencyKey: string,
+): SubmitInput {
+  const photo = readyPhoto(draft);
+  return {
+    session,
+    recipientId,
+    message: draft.message,
+    answers: draft.answers,
+    photo: photo ? photoFileFor(photo) : null,
+    idempotencyKey,
+  };
+}
 
 export function toAnswers(answers: Readonly<Record<string, string>>): Answer[] {
   return Object.entries(answers)

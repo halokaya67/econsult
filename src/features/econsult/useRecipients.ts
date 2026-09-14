@@ -1,14 +1,9 @@
 import { useQueries, type UseQueryResult } from "@tanstack/react-query";
-import type { CareTeamMember, PracticeEConsultConfig, Question } from "@/api/contracts";
-import { useServices, useSession } from "@/lib/devSettings";
+import type { CareTeamMember, PracticeEConsultConfig } from "@/api/contracts";
+import { useServices } from "@/providers/ServicesProvider";
+import { useSession } from "@/providers/session";
 import { careTeamQuery, configQuery } from "./queries";
-import { joinRecipients, type Recipient } from "./recipients";
-
-export type RecipientsResult =
-  | { status: "loading" }
-  | { status: "error"; retry: () => void }
-  | { status: "empty" }
-  | { status: "ready"; recipients: Recipient[]; questions: Question[] };
+import { joinRecipients, type RecipientsResult } from "./recipients";
 
 type Results = [UseQueryResult<PracticeEConsultConfig>, UseQueryResult<CareTeamMember[]>];
 

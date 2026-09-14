@@ -10,9 +10,9 @@ import { StepHeader } from "@/components/StepHeader";
 import { TextButton } from "@/components/TextButton";
 import { shouldGuardLeaving, type DraftState } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
-import { roleLabel } from "@/features/econsult/recipients";
-import { routeAfterRecipient, STEP_TITLES, stepCount } from "@/features/econsult/steps";
-import { useRecipients, type RecipientsResult } from "@/features/econsult/useRecipients";
+import { roleLabel, type RecipientsResult } from "@/features/econsult/recipients";
+import { stepAfterRecipient, STEP_TITLES, stepCount } from "@/features/econsult/steps";
+import { useRecipients } from "@/features/econsult/useRecipients";
 import { HEADER_BUTTON_MAX_FONT_SCALE, spacing } from "@/theme/tokens";
 
 const LOADING_LABEL = "Loading your practice's care team";
@@ -23,6 +23,7 @@ const ERROR_TITLE = "We couldn't load your practice's details";
 const ERROR_BODY = "Check your connection and try again.";
 const DISCARD_TITLE = "Discard your message?";
 const DISCARD_BODY = "Your message and photo will be lost.";
+const STEP_ROUTES = { questions: "/econsult/questions", message: "/econsult/message" } as const;
 
 type ReadyResult = Extract<RecipientsResult, { status: "ready" }>;
 
@@ -133,7 +134,7 @@ export default function RecipientScreen() {
         label="Continue"
         disabled={draft.recipientId === null}
         accessibilityHint={draft.recipientId === null ? CONTINUE_HINT : undefined}
-        onPress={() => router.push(routeAfterRecipient(hasQuestions))}
+        onPress={() => router.push(STEP_ROUTES[stepAfterRecipient(hasQuestions)])}
       />
     ) : undefined;
 

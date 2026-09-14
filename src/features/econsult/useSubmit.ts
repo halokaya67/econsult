@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { PhotoFile } from "@/api/transport";
-import { useServices } from "@/lib/devSettings";
+import { useServices } from "@/providers/ServicesProvider";
 import type { AttachmentStatus } from "./draft";
 import { retryAttachment, submitEConsult, type SubmitInput, type SubmitOutcome } from "./submit";
 

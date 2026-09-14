@@ -3,24 +3,20 @@ import { userEvent } from "@testing-library/react-native";
 import { router, Stack } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Text } from "react-native";
-import DevSettingsScreen, {
-  faultFor,
-  faultOptionFor,
-  latencyFor,
-  latencyOptionFor,
-  practiceIdFor,
-  practiceLabelFor,
-  withFault,
-} from "@/app/dev-settings";
-import type { FaultKind } from "@/api/fake/fakeTransport";
-import { useDevSettings } from "@/lib/devSettings";
+import DevSettingsScreen from "@/app/dev-settings";
+import { practiceLabelFor } from "@/features/devSettings/options";
+import { DEFAULT_PRACTICE_ID } from "@/lib/devSettings";
 import * as devWarn from "@/lib/devWarn";
+import { useIsOffline } from "@/lib/network";
+import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { TestProviders } from "@/test/providers";
 
+// Reads the network context as well as the settings, so Apply with Force offline is observable.
 function HomeProbe() {
   const { settings } = useDevSettings();
+  const isOffline = useIsOffline();
   return (
-    <Text>{`home:${settings.practiceId}:${settings.latencyMs}:${settings.faults.config ?? "-"}:${settings.forceOffline}`}</Text>
+    <Text>{`home:${settings.practiceId}:${settings.latencyMs}:${settings.faults.config ?? "-"}:${settings.forceOffline}:${isOffline}`}</Text>
   );
 }
 
@@ -38,49 +34,6 @@ function renderDevSettings(client = new QueryClient(), initialUrl = "/dev-settin
     },
   );
 }
-
-describe("helpers", () => {
-  test("latency options round-trip", () => {
-    expect(latencyFor(latencyOptionFor(null))).toBeNull();
-    expect(latencyFor(latencyOptionFor(0))).toBe(0);
-    expect(latencyFor(latencyOptionFor(5000))).toBe(5000);
-    expect(latencyOptionFor(1234)).toBe("Default");
-  });
-
-  test("fault options round-trip", () => {
-    expect(faultFor(faultOptionFor(undefined))).toBeUndefined();
-    expect(faultFor(faultOptionFor("network"))).toBe("network");
-    expect(faultFor(faultOptionFor("server"))).toBe("server");
-    expect(faultFor(faultOptionFor("timeout"))).toBe("timeout");
-  });
-
-  test("a fault kind with no matching option falls back to None", () => {
-    // The cast stands in for a kind the transport gains before this screen lists it.
-    const unlistedKind = "gateway" as string as FaultKind;
-
-    expect(faultOptionFor(unlistedKind)).toBe("None");
-  });
-
-  test("withFault sets and clears one request's fault without mutating", () => {
-    const faults = { config: "server" } as const;
-
-    const set = withFault(faults, "upload", "timeout");
-    const cleared = withFault(set, "config", undefined);
-
-    expect(set).toEqual({ config: "server", upload: "timeout" });
-    expect(cleared).toEqual({ upload: "timeout" });
-    expect(faults).toEqual({ config: "server" });
-  });
-
-  test("practice labels round-trip and unknown labels fall back to the default practice", () => {
-    expect(practiceIdFor(practiceLabelFor("prc-0873"))).toBe("prc-0873");
-    expect(practiceIdFor("nonsense")).toBe("prc-0421");
-  });
-
-  test("a practice without a description is labelled with its own id", () => {
-    expect(practiceLabelFor("prc-1234")).toBe("prc-1234");
-  });
-});
 
 describe("Developer settings screen", () => {
   // Applying forceOffline can leave react-query's shared online manager offline, which would pause
@@ -103,7 +56,7 @@ describe("Developer settings screen", () => {
     await user.press(screen.getByRole("button", { name: "Apply and go home" }));
 
     await waitFor(() => expect(screen).toHavePathname("/"));
-    expect(screen.getByText("home:prc-0873:5000:server:true")).toBeOnTheScreen();
+    expect(screen.getByText("home:prc-0873:5000:server:true:true")).toBeOnTheScreen();
     expect(clear).toHaveBeenCalled();
   });
 
@@ -119,7 +72,7 @@ describe("Developer settings screen", () => {
     await user.press(screen.getByRole("button", { name: "Cancel" }));
 
     await waitFor(() => expect(screen).toHavePathname("/"));
-    expect(screen.getByText("home:prc-0421:0:-:false")).toBeOnTheScreen();
+    expect(screen.getByText(`home:${DEFAULT_PRACTICE_ID}:0:-:false:false`)).toBeOnTheScreen();
     expect(clear).not.toHaveBeenCalled();
   });
 

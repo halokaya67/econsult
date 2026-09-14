@@ -3,6 +3,7 @@ import { act, renderRouter, screen, waitFor } from "expo-router/testing-library"
 import { router } from "expo-router";
 import { AccessibilityInfo, Text } from "react-native";
 import SentScreen from "@/app/econsult/sent";
+import { RETRY_LABEL } from "@/components/StatusViews";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import * as submitModule from "@/features/econsult/submit";
 import * as useSubmitModule from "@/features/econsult/useSubmit";
@@ -88,7 +89,7 @@ describe("Sent", () => {
       "Your message was sent, but the photo could not be attached",
       { exact: false },
     );
-    await user.press(screen.getByRole("button", { name: "Try again" }));
+    await user.press(screen.getByRole("button", { name: RETRY_LABEL }));
     await waitFor(() => expect(screen.getByRole("alert")).toBeOnTheScreen());
 
     await user.press(screen.getByRole("button", { name: "Continue without the photo" }));
@@ -104,7 +105,7 @@ describe("Sent", () => {
     const user = userEvent.setup();
     renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
 
-    await user.press(await screen.findByRole("button", { name: "Try again" }));
+    await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 
     expect(retry.mutateAsync).toHaveBeenCalledWith({
       econsultId: "ec-1",
@@ -129,7 +130,7 @@ describe("Sent", () => {
     const user = userEvent.setup();
     renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
 
-    await user.press(await screen.findByRole("button", { name: "Try again" }));
+    await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 
     await waitFor(() =>
       expect(screen.getByRole("alert")).toHaveTextContent(
@@ -140,7 +141,7 @@ describe("Sent", () => {
     expect(spoken).toHaveBeenCalledWith(
       "The photo still couldn't be attached. You can try again or continue without it.",
     );
-    expect(screen.getByRole("button", { name: "Try again" })).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: RETRY_LABEL })).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Continue without the photo" })).toBeOnTheScreen();
   });
 
@@ -152,7 +153,7 @@ describe("Sent", () => {
     const user = userEvent.setup();
     renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
 
-    await user.press(await screen.findByRole("button", { name: "Try again" }));
+    await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 
     await waitFor(() =>
       expect(screen.getByRole("alert")).toHaveTextContent("Something went wrong at our end", {
@@ -160,7 +161,7 @@ describe("Sent", () => {
       }),
     );
     expect(spoken).toHaveBeenCalledWith("Something went wrong at our end. Please try again.");
-    expect(screen.getByRole("button", { name: "Try again" })).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: RETRY_LABEL })).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Continue without the photo" })).toBeOnTheScreen();
   });
 
@@ -172,7 +173,7 @@ describe("Sent", () => {
     const user = userEvent.setup();
     renderSent({ ...SENT, econsultId: null, photo: READY_PHOTO, attachment: "failed" });
 
-    await user.press(await screen.findByRole("button", { name: "Try again" }));
+    await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 
     expect(retry.mutateAsync).not.toHaveBeenCalled();
     expect(screen.getByRole("alert")).toHaveTextContent(
