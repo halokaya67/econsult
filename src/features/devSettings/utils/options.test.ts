@@ -1,3 +1,4 @@
+import { DEFAULT_PRACTICE_ID } from "@/api/fake/fixtures";
 import {
   faultFor,
   faultOptionFor,
@@ -7,7 +8,6 @@ import {
   practiceLabelFor,
   withFault,
 } from "./options";
-import { DEFAULT_PRACTICE_ID } from "./settings";
 
 describe("developer settings options", () => {
   test("latency options round-trip", () => {

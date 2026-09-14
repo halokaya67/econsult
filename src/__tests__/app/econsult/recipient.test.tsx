@@ -4,13 +4,13 @@ import { act, renderRouter, screen, waitFor } from "expo-router/testing-library"
 import { Alert, Text } from "react-native";
 import RecipientScreen from "@/app/econsult/recipient";
 import HomeScreen from "@/app/index";
-import { RETRY_LABEL } from "@/components/StatusViews";
 import * as useRecipientsModule from "@/features/econsult/hooks/useRecipients";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { STEP_TITLES } from "@/features/econsult/utils/steps";
+import { RETRY_LABEL } from "@/lib/retryLabel";
 import { flowLayoutWith } from "@/test/flowLayout";
-import { TestProviders, type ProviderOptions } from "@/test/providers";
+import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 
 const Stub = (label: string) =>
   function StubScreen() {

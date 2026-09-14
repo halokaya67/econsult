@@ -1,13 +1,13 @@
 import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
 import { StyleSheet, Text, View } from "react-native";
+import { ErrorState } from "@/components/ErrorState";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold } from "@/components/ScreenScaffold";
-import { ErrorState } from "@/components/StatusViews";
-import { StepHeader } from "@/components/StepHeader";
+import { ScreenScaffold, useScrollToField } from "@/components/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { TextField } from "@/components/TextField";
 import { PhotoPicker } from "@/features/econsult/components/PhotoPicker";
+import { StepHeader } from "@/features/econsult/components/StepHeader";
 import {
   useMessageSend,
   type Send,
@@ -21,7 +21,6 @@ import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
 import { isMessageThin } from "@/features/econsult/utils/validation";
-import { useScrollToField } from "@/hooks/useScrollToField";
 import { useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
-import type { ScrollToField } from "@/hooks/useScrollToField";
+import type { ScrollToField } from "@/components/ScreenScaffold";
 import { useSession } from "@/hooks/useSession";
 import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
 import { devWarn } from "@/lib/devWarn";

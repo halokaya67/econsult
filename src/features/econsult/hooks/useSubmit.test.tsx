@@ -1,6 +1,6 @@
 import { onlineManager } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react-native";
-import { hookWrapper } from "@/test/providers";
+import { hookWrapper } from "@/test/renderWithProviders";
 import { useRetryAttachment, useSubmit } from "./useSubmit";
 
 const PHOTO = { uri: "file:///cache/a.jpg", name: "photo.jpg", type: "image/jpeg" };

@@ -74,7 +74,7 @@ kind, so a feature always has the same shape inside it.
 | App-wide context and the wiring that mounts it                | `src/providers` — provider files only, each with its context hook                                             |
 | Something the patient does, end to end                        | `src/features/<name>`                                                                                         |
 | A UI building block more than one feature uses                | `src/components`                                                                                              |
-| A shared hook that is not a provider's context accessor       | `src/hooks`                                                                                                   |
+| A shared hook that is not a context's accessor                | `src/hooks`                                                                                                   |
 | Shared logic that is not UI                                   | `src/lib`                                                                                                     |
 | Colour, spacing, type-scale and touch-target tokens           | `src/theme`                                                                                                   |
 | A helper the tests share                                      | `src/test`                                                                                                    |
@@ -94,7 +94,11 @@ src/features/econsult/
 No loose files at a feature root: everything belongs to one of those five kinds.
 
 A file lives inside a feature only while that feature is its sole owner; the moment a second one
-needs it, it moves out to `src/components` or `src/lib`.
+needs it, it moves out to `src/components` or `src/lib`. Two exceptions are deliberate:
+
+- a generic building block with no domain vocabulary stays in `src/components` even while one
+  feature uses it;
+- a context's accessor hook lives with whatever mounts the context (a provider file or a component).
 
 ## Accessibility
 

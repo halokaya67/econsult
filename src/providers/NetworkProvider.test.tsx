@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { AccessibilityInfo } from "react-native";
 import {
   BACK_ONLINE_MESSAGE,
-  isLinkDown,
   NetworkProvider,
   OFFLINE_MESSAGE,
   useIsOffline,
@@ -18,17 +17,6 @@ function wrapperWith(forceOffline: boolean) {
     return <NetworkProvider forceOffline={forceOffline}>{children}</NetworkProvider>;
   };
 }
-
-describe("isLinkDown", () => {
-  test.each([
-    [true, false, false],
-    [undefined, false, false],
-    [false, false, true],
-    [true, true, true],
-  ])("isConnected=%s forceOffline=%s -> %s", (isConnected, forceOffline, expected) => {
-    expect(isLinkDown(isConnected, forceOffline)).toBe(expected);
-  });
-});
 
 describe("NetworkProvider", () => {
   afterEach(() => {
