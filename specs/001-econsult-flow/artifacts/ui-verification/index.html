@@ -4,13 +4,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Finish-phase UI verification — 001-econsult-flow</title>
 <meta name="description" content="The finished e-consult flow driven end to end on a phone simulator, a tablet simulator and an Android emulator: seventy-two scenarios and checks, with every defect found along the way fixed and re-verified.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{--ground:#F6F8F8;--surface:#FFFFFF;--ink:#16262B;--muted:#55686D;--line:#D6DFE1;--accent:#0F6B75;--accent-soft:#E3F1F2;--accent-ink:#0B4E56;--warm:#A8681A;--warm-soft:#FBF1E3;--code-bg:#EEF3F4;--shadow:0 1px 0 rgba(22,38,43,.06);color-scheme:light}
 @media (prefers-color-scheme:dark){:root{--ground:#0F1719;--surface:#152124;--ink:#E4ECED;--muted:#9BB0B4;--line:#263539;--accent:#66C7D0;--accent-soft:#16333A;--accent-ink:#A7E3E8;--warm:#E0A650;--warm-soft:#2E2515;--code-bg:#1B292D;--shadow:none;color-scheme:dark}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
 .shell{max-width:940px;margin:0 auto}
 a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
 a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
@@ -23,7 +21,7 @@ h3{font-size:18px;font-weight:700;margin:28px 0 8px}
 p{margin:0 0 14px;max-width:72ch}
 ul{padding-left:1.3em;margin:0 0 16px;max-width:72ch}
 li{margin:0 0 6px}
-code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
 .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:8px 0 28px;padding:0;list-style:none;max-width:none}
 .lane{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);margin:0}
 .lane a{display:block;padding:18px 20px;color:inherit;text-decoration:none;border-radius:8px;height:100%}

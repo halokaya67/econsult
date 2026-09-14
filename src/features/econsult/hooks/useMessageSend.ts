@@ -7,11 +7,11 @@ import { useSession } from "@/hooks/useSession";
 import { announce, focusForScreenReader, focusOrAnnounce, type Focusable } from "@/lib/announce";
 import { devWarn } from "@/lib/devWarn";
 import { runOnce } from "@/lib/inFlight";
+import { useSubmit } from "./useSubmit";
 import { idempotencyKeyFor, submitInputFor } from "../api/submit";
 import { readyPhoto } from "../state/draft";
 import { useDraft } from "../state/DraftProvider";
 import { validateMessage } from "../utils/validation";
-import { useSubmit } from "./useSubmit";
 
 const SENDING_STATUS = "Sending your message";
 const SENT_STATUS = "Message sent";

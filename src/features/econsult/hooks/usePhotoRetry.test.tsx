@@ -2,10 +2,10 @@ import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 import { AccessibilityInfo } from "react-native";
 import { TestProviders } from "@/test/renderWithProviders";
+import { usePhotoRetry } from "./usePhotoRetry";
 import * as submitModule from "../api/submit";
 import { initialDraft, type DraftState } from "../state/draft";
 import { DraftProvider } from "../state/DraftProvider";
-import { usePhotoRetry } from "./usePhotoRetry";
 
 const READY_PHOTO = {
   status: "ready",
