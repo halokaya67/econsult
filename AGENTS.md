@@ -11,7 +11,7 @@ Read the versioned Expo docs at https://docs.expo.dev/versions/v57.0.0/ before w
 - `src/lib`: query client, network state, announcements, `devWarn` and `isDevelopmentBuild`, ids, developer-settings parsing and its env seeds, photo processing.
 - `src/components`: small accessible building blocks; `src/app`: expo-router screens that compose them.
 - Screen tests live under `src/__tests__/app/`: every `.tsx` under `src/app` is a route, so no test may sit there.
-- `env.example` documents the three `EXPO_PUBLIC_*` seeds; copy it to `.env` to change them. Developer settings (a modal from the home screen in development builds) override them at runtime.
+- `env.example` documents the three `EXPO_PUBLIC_*` seeds; copy it to `.env` to change them. Developer settings (a modal from the home screen in development mode, `__DEV__`) override them at runtime.
 
 ## Rules
 

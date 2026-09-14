@@ -1,10 +1,12 @@
 import { render, screen, userEvent } from "@testing-library/react-native";
 import { createRef } from "react";
 import type { Text } from "react-native";
-import { MIN_TOUCH } from "@/theme/tokens";
+import { borderWidth, MIN_TOUCH } from "@/theme/tokens";
 import { ChoiceGroup } from "./ChoiceGroup";
 
 const OPTIONS = ["Less than a week", "1 to 4 weeks"];
+const SIZES = ["Small", "Large"] as const;
+type Size = (typeof SIZES)[number];
 
 type Instance = ReturnType<typeof render>["root"];
 
@@ -28,6 +30,7 @@ describe("ChoiceGroup", () => {
     expect(screen.getByLabelText("How long? (required)")).toBeOnTheScreen();
     expect(screen.getByRole("radio", { name: "1 to 4 weeks", checked: true })).toHaveStyle({
       minHeight: MIN_TOUCH,
+      borderWidth,
     });
     expect(
       screen.getByRole("radio", { name: "Less than a week", checked: false }),
@@ -44,7 +47,7 @@ describe("ChoiceGroup", () => {
     expect(onChange).toHaveBeenCalledWith("Less than a week");
   });
 
-  test("folds an error into the label's accessible name and shows it in a live region", () => {
+  test("folds an error into the label's accessible name", () => {
     render(
       <ChoiceGroup
         label="How long?"
@@ -56,9 +59,42 @@ describe("ChoiceGroup", () => {
     );
 
     expect(screen.getByLabelText("How long?. Error: This question is required")).toBeOnTheScreen();
-    expect(screen.getByText("This question is required").props.accessibilityLiveRegion).toBe(
-      "polite",
+  });
+
+  // The screen announces the error and moves focus to the label, whose name carries it. A live
+  // region here would make TalkBack say it a second time.
+  test("shows the error text without announcing it a second time", () => {
+    render(
+      <ChoiceGroup
+        label="How long?"
+        options={OPTIONS}
+        value={null}
+        onChange={() => {}}
+        error="This question is required"
+      />,
     );
+
+    const error = screen.getByText("This question is required");
+
+    expect(error).toBeOnTheScreen();
+    expect(error.props.accessibilityLiveRegion).toBeUndefined();
+  });
+
+  test("reports the chosen option with the caller's own literal type", async () => {
+    const chosen: Size[] = [];
+    const user = userEvent.setup();
+    render(
+      <ChoiceGroup
+        label="Size"
+        options={SIZES}
+        value={null}
+        onChange={(size) => chosen.push(size)}
+      />,
+    );
+
+    await user.press(screen.getByRole("radio", { name: "Large" }));
+
+    expect(chosen).toEqual(["Large"]);
   });
 
   test("renders the error between the label and the options, so a long label scrolls with it", () => {

@@ -1,3 +1,4 @@
+import { onlineManager } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 import { hookWrapper } from "@/test/providers";
 import { useRetryAttachment, useSubmit } from "./useSubmit";
@@ -12,6 +13,9 @@ const INPUT = {
   photo: PHOTO,
   idempotencyKey: "key-1",
 };
+
+// NetworkProvider drives the shared onlineManager, so a forced-offline render must not leak.
+afterEach(() => onlineManager.setOnline(true));
 
 describe("useSubmit", () => {
   test("resolves the outcome and reports the created id", async () => {
@@ -30,14 +34,16 @@ describe("useSubmit", () => {
     expect(onCreated).toHaveBeenCalled();
   });
 
-  test("exposes the error when the create fails instead of pausing", async () => {
+  test("runs offline and exposes the failed create instead of pausing the send", async () => {
     const { result } = renderHook(() => useSubmit(jest.fn()), {
-      wrapper: hookWrapper({ settings: { faults: { create: "server" } } }),
+      wrapper: hookWrapper({ settings: { forceOffline: true, faults: { create: "server" } } }),
     });
+    expect(onlineManager.isOnline()).toBe(false);
 
     act(() => result.current.mutate(INPUT));
 
     await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.isPaused).toBe(false);
     expect(result.current.error).toMatchObject({ kind: "server" });
   });
 });

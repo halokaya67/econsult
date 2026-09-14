@@ -26,6 +26,10 @@ import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { text } from "@/theme/text";
 import { HEADER_BUTTON_MAX_FONT_SCALE, MIN_TOUCH, spacing } from "@/theme/tokens";
 
+const TITLE = "Developer settings";
+const INTRO = "Development mode only. Applying clears cached practice data and returns home.";
+const PRACTICE_OPTIONS = FIXTURE_PRACTICE_IDS.map(practiceLabelFor);
+
 // The whole row toggles, so the target is 48 points tall even though the native switch is smaller.
 function OfflineToggle({ value, onChange }: { value: boolean; onChange: (next: boolean) => void }) {
   return (
@@ -99,14 +103,12 @@ export default function DevSettingsScreen() {
       />
       <ScreenScaffold action={<PrimaryButton label="Apply and go home" onPress={onApply} />}>
         <Text accessibilityRole="header" style={text.title}>
-          Developer settings
+          {TITLE}
         </Text>
-        <Text style={text.body}>
-          Development builds only. Applying clears cached practice data and returns home.
-        </Text>
+        <Text style={text.body}>{INTRO}</Text>
         <ChoiceGroup
           label="Practice"
-          options={FIXTURE_PRACTICE_IDS.map(practiceLabelFor)}
+          options={PRACTICE_OPTIONS}
           value={practiceLabelFor(next.practiceId)}
           onChange={(label) => setNext({ ...next, practiceId: practiceIdFor(label) })}
         />

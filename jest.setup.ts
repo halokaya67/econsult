@@ -13,16 +13,12 @@ jest.mock("expo-crypto", () => ({
   }),
 }));
 
-jest.mock("expo-device", () => ({ isDevice: true }));
+// `__esModule` keeps Babel's wildcard interop from handing a test and its component different
+// copies, so `jest.replaceProperty(Device, "isDevice", false)` reaches the component.
+jest.mock("expo-device", () => ({ __esModule: true, isDevice: true }));
 
 jest.mock("expo-network", () => ({
   useNetworkState: jest.fn(() => ({ isConnected: true, isInternetReachable: true, type: "WIFI" })),
-  addNetworkStateListener: jest.fn(() => ({ remove: jest.fn() })),
-  getNetworkStateAsync: jest.fn(async () => ({
-    isConnected: true,
-    isInternetReachable: true,
-    type: "WIFI",
-  })),
 }));
 
 const mockGrantedPermission = {

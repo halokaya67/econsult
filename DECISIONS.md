@@ -3,7 +3,7 @@
 ## Assumptions
 
 - The patient is signed in and their practice id arrives with the session. That session is faked in
-  `src/lib/devSettings.tsx` — one patient plus the selected fixture practice — and is the only thing
+  `src/providers/session.ts` — one patient plus the selected fixture practice — and is the only thing
   developer settings really switch.
 - The practice inbox can derive a preview from the first line of the message, so the patient is never
   asked for a subject.
@@ -22,15 +22,18 @@ where the keyboard fights the photo block and errors sit far above the fold.
 **The app owns the contract.** `Question.type` became a discriminated union (`choice` with at least
 two options, or `text`) with an unknown type coerced to `text`. `CareTeamMember` gained a `role`,
 unknown roles coerced to `other`, because a patient cannot choose between two names without knowing
-who the GP is. `subject` was removed. The create call carries an `Idempotency-Key`, generated once per
-draft and reused on every retry, since creating an e-consult is not idempotent. Attachments are
-`POST /econsults/{id}/attachments` with one file part named `photo`. The attachment note carries a
-runtime fact: on SDK 57 Expo's own `fetch` is the global one and rejects React Native's classic
-`{ uri, name, type }` form-data part, so a real client uploads through expo-file-system's
-`File.createUploadTask`, which streams from disk. For the same reason `withTimeout`
-(`src/api/transport.ts`) decides on its own aborted signal in the catch rather than on the error's
-class: an abort surfaces as a `FetchError` or an `AbortError` depending on timing, and neither shape
-is worth depending on.
+who the GP is. `subject` was removed. The create call carries an `Idempotency-Key`, generated once
+per draft and reused on every retry of the same payload, since creating an e-consult is not
+idempotent; editing the message, an answer or the recipient after a failed send starts a new key,
+because a retry whose body no longer matches the key is answered by a real backend with the original
+e-consult or rejected outright. The trade is the rare double create when a create that timed out had
+in fact succeeded. Attachments are `POST /econsults/{id}/attachments` with one file part named
+`photo`. The attachment note carries a runtime fact: on SDK 57 Expo's own `fetch` is the global one
+and rejects React Native's classic `{ uri, name, type }` form-data part, so a real client uploads
+through expo-file-system's `File.createUploadTask`, which streams from disk. For the same reason
+`withTimeout` (`src/api/transport.ts`) decides on its own aborted signal in the catch rather than on
+the error's class: an abort surfaces as a `FetchError` or an `AbortError` depending on timing, and
+neither shape is worth depending on.
 
 **An in-process fake behind a `Transport` interface.** Three methods, each taking an `AbortSignal`,
 with one shipped implementation: configurable latency, a per-request fault map and real abort
@@ -69,6 +72,32 @@ Both were found by running the app at the largest accessibility text size, with 
   options, which alone exceed the viewport at the largest text size, so a scrolled-to label never
   showed its error. The text field keeps its error under the short input and exposes a container ref
   as the scroll anchor, so the label scrolls into view while screen-reader focus lands on the input.
+
+## Source layout
+
+**Grouped by ownership first, by kind second.** `src/features/<feature>` holds everything one
+feature owns: its reducer, hooks, providers, helpers, copy and feature-only components, whether
+those files are hooks or plain functions. Only code with no owner but "everyone" is grouped by kind:
+`src/components` for shared primitives, `src/lib` for helpers with no app knowledge (announcements,
+development warnings, ids), `src/theme` for tokens, `src/api` for the contract and transport layer,
+`src/providers` for the one provider stack. Routes under `src/app` stay thin: copy, single-use
+presentational pieces and the screen itself; orchestration hooks live with the feature. Types sit
+with the code that owns them, inferred from the zod contracts where a wire type is involved; there
+is no `types/`, `constants/`, `utils/` or `hooks/` bucket and no barrel files.
+
+Rejected: the common type-based layout (`components/`, `hooks/`, `context/`, `services/`, `store/`,
+`types/`, `utils/`). It answers "where do files of this kind go" and fails the two questions asked
+far more often. Deleting a feature means hunting through six folders instead of removing one;
+reading a feature means opening six folders instead of one, and a `hooks/` folder with fifteen hooks
+from five features says nothing about which belong to what. Each bucket also drifts into a dumping
+ground, which is where the "everything is all over the place" feeling comes from.
+
+What was traded away: newcomers who expect the type-based layout have to learn the ownership rule,
+and the test for `src/lib` (would this file still make sense in a different app?) needs judgement.
+Kind subfolders return inside a feature once it grows; the e-consult feature has `components/` for
+that reason and gets a `hooks/` folder only when the hooks outnumber four or five. Route groups
+(`(auth)`, `(tabs)`) are the right tool once such groups exist; the `econsult/` segment is a real
+path, so it stays a plain folder.
 
 ## What was traded away
 

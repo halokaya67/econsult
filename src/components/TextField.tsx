@@ -1,7 +1,15 @@
 import type { Ref } from "react";
 import { StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { text } from "@/theme/text";
-import { colors, fontSize, lineHeight, MIN_TOUCH, radius, spacing } from "@/theme/tokens";
+import {
+  borderWidth,
+  colors,
+  fontSize,
+  lineHeight,
+  MIN_TOUCH,
+  radius,
+  spacing,
+} from "@/theme/tokens";
 import { accessibleName, labelWithRequirement, type Requirement } from "./fieldLabel";
 
 type Props = {
@@ -55,11 +63,7 @@ export function TextField({
         style={[styles.input, multiline && multilineStyle, Boolean(error) && styles.inputError]}
         testID={testID}
       />
-      {error ? (
-        <Text accessibilityLiveRegion="polite" style={styles.error}>
-          {error}
-        </Text>
-      ) : null}
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
@@ -74,7 +78,7 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: MIN_TOUCH + spacing.sm,
-    borderWidth: 2,
+    borderWidth,
     borderColor: colors.border,
     borderRadius: radius,
     paddingHorizontal: spacing.md,
