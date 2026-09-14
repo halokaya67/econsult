@@ -12,7 +12,7 @@ All verification is in. Evidence summary before the report:
 
 **Verdict:** PASS_WITH_FLAGS
 
-**Reviewed:** 6/6 files (spec.md, how-it-works.md, `/Users/halilibrahimkaya/Documents/case-study-mobile.md`, checker/spec-r1.md, package.json, app.json) · diff: n/a (mode spec) · head: f39fb58 (unchanged since round 1; working tree: only `specs/` untracked) · canon cited: workflow.md (Coding Canon: KISS/YAGNI; Testing bar "numeric thresholds are stack-specific") · decisions log: file absent → empty, no dismissals · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): `PreventRemoveProvider|usePreventRemove` in expo-router/build → 20 files (vendored core + native-stack); `@react-navigation` top-level and nested under expo-router → 0 dirs (vendoring confirmed); `shouldPreventRemove` in core/useOnAction.js → 1 (line 75); `preventRemove|preventNativeDismiss|gestureEnabled|preventedRoutes|onNativeDismissCancelled|onDismissed` in native-stack/views/NativeStackView.native.js → 8 lines; `dismissTo|dismissAll` in global-state/router.d.ts → 4; `POP_TO` in global-state/*.js + link/*.js → 3 (router.js:78,87; BaseExpoRouterLink.js:68); `routingQueue.run|subscribe` in expo-router/build → imperative-api.js:10,12 (flushed in `useEffect`); `event|popTo|findDivergentState|target|replace` in global-state/getNavigationAction.js → 7 (root navigator targeted for `/deeply/nested → /top-level`)
+**Reviewed:** 6/6 files (spec.md, how-it-works.md, the brief `case-study-mobile.md`, checker/spec-r1.md, package.json, app.json) · diff: n/a (mode spec) · head: f39fb58 (unchanged since round 1; working tree: only `specs/` untracked) · canon cited: workflow.md (Coding Canon: KISS/YAGNI; Testing bar "numeric thresholds are stack-specific") · decisions log: file absent → empty, no dismissals · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): `PreventRemoveProvider|usePreventRemove` in expo-router/build → 20 files (vendored core + native-stack); `@react-navigation` top-level and nested under expo-router → 0 dirs (vendoring confirmed); `shouldPreventRemove` in core/useOnAction.js → 1 (line 75); `preventRemove|preventNativeDismiss|gestureEnabled|preventedRoutes|onNativeDismissCancelled|onDismissed` in native-stack/views/NativeStackView.native.js → 8 lines; `dismissTo|dismissAll` in global-state/router.d.ts → 4; `POP_TO` in global-state/*.js + link/*.js → 3 (router.js:78,87; BaseExpoRouterLink.js:68); `routingQueue.run|subscribe` in expo-router/build → imperative-api.js:10,12 (flushed in `useEffect`); `event|popTo|findDivergentState|target|replace` in global-state/getNavigationAction.js → 7 (root navigator targeted for `/deeply/nested → /top-level`)
 
 | Prior flag | Status | Evidence |
 |------------|--------|----------|
@@ -38,7 +38,7 @@ All verification is in. Evidence summary before the report:
 ### W1 — "Offline before send" is unreachable from the developer settings screen after the cache-clear fix
 - **Severity:** WARNING
 - **Category:** coverage
-- **Location:** `/Users/halilibrahimkaya/Documents/econsult/feat-econsult-flow/specs/001-econsult-flow/spec.md:202` (also :40, :43, :46, :74, :173)
+- **Location:** `specs/001-econsult-flow/spec.md:202` (also :40, :43, :46, :74, :173)
 - **Finding:** Fix-delta regression from round-1 W4. The reviewer's only path to the offline state is: open the panel from home (:99), force offline, Apply — which now clears the query cache and returns home (:43, :74). Query's online manager is "wired to the same source" (:46, :173), so it reports offline. TanStack Query v5 queries default to `networkMode: 'online'`, under which a query with no cached data does not fire and sits at `status: 'pending', fetchStatus: 'paused'` (training-data recall, not verified — the package is not installed). Step 1 therefore shows the three placeholder cards with the offline banner and never reaches loaded, so step 3 and its disabled Send are never on screen. Before the cache clear, a warm cache from the home prefetch masked this; the round-1 fix removed the mask. Round 1 missed it because it reviewed the prefetch/cache interaction without the forced-offline lever.
 - **Why:** SC6 promises this state "reachable from the development settings screen and covered by a test"; the recording and the live demo cannot show the one offline state the brief asks for (brief:196). The plan's coverage matrix would mark SC6 satisfied by a test that fakes the network hook while the app itself cannot get there.
 - **Suggested fix:**
@@ -64,7 +64,7 @@ All verification is in. Evidence summary before the report:
 ### W2 — Done is blocked by the flow's own leave guards
 - **Severity:** WARNING
 - **Category:** consistency
-- **Location:** `/Users/halilibrahimkaya/Documents/econsult/feat-econsult-flow/specs/001-econsult-flow/spec.md:107` (also :39, :130, :138, :139, :172, :181)
+- **Location:** `specs/001-econsult-flow/spec.md:107` (also :39, :130, :138, :139, :172, :181)
 - **Finding:** Verified in the vendored navigator: `core/useOnAction.js:75` runs `shouldPreventRemove` for every state-changing action, and `core/useOnPreventRemove.js` (`useOnPreventRemove` → keyed `beforeRemove` listener) makes a parent pop of the `econsult` route evaluate **every** route of the nested stack against `nextRoutes = []`, last screen first. Two consequences the spec does not address. (1) :139/:172 put an unconditional `usePreventRemove` on Sent; Done's own unwind (`router.dismissTo('/')`, which `getNavigationAction.js:37` correctly targets at the root navigator) removes the `econsult` route, so Sent's guard swallows Done. (2) Even with Sent lowered, step 1's new guard from :138 (`hasMessage || hasPhoto`) is still true because :107 says the draft is cleared *by* Done and :39/:130 say it dies with the provider — neither happens before the pop — so the patient gets "Discard your message?" on the confirmation screen. Round 1 did not have the step-1 guard (new in W5's fix) and W6 stopped at header ownership without tracing `beforeRemove` through the nested navigator. Also unnamed: which call Done uses — `router.dismissAll` (:181 reuse map) is `popToTop` on the *closest* stack (`router.d.ts:68-74`) and would land on step 1, not home.
 - **Why:** The confirmation screen is the last thing the recording and the interview demo show; a Done that does nothing, or that asks whether to discard a message that was just sent, fails "a clear confirmation that my message has been sent" and looks like the app is confused about its own state. Both guards are state machines the plan must get right in the same task; the spec needs to say which state lowers them.
 - **Suggested fix:**
@@ -91,7 +91,7 @@ All verification is in. Evidence summary before the report:
 ### I1 — Delivery-order fallback names `.env` fault seeds the spec never declares
 - **Severity:** INFO
 - **Category:** ambiguity
-- **Location:** `/Users/halilibrahimkaya/Documents/econsult/feat-econsult-flow/specs/001-econsult-flow/spec.md:92` (also :43, :95, :25)
+- **Location:** `specs/001-econsult-flow/spec.md:92` (also :43, :95, :25)
 - **Finding:** Introduced by the I4 fix. :92 says "Until it exists, `.env` seeds switch practice and faults" and :95 "the `.env` seeds remain", but :43 declares exactly one seed, `EXPO_PUBLIC_PRACTICE_ID`. If item 4 is cut, the planner has to invent latency/fault variables, and :25's "injects failures without editing code" becomes "edits `.env`".
 - **Why:** Small fork the plan must guess at; the contingency the spec promises is not actually specified.
 - **Suggested fix:**
@@ -106,7 +106,7 @@ All verification is in. Evidence summary before the report:
 ### I2 — `__DEV__`-gated warning sits in a 100 %-branch tier with no named mechanism
 - **Severity:** INFO
 - **Category:** coverage
-- **Location:** `/Users/halilibrahimkaya/Documents/econsult/feat-econsult-flow/specs/001-econsult-flow/spec.md:115` (also :76, :203)
+- **Location:** `specs/001-econsult-flow/spec.md:115` (also :76, :203)
 - **Finding:** Residual of round-1 W7: the fix named `Platform.OS` but not `__DEV__`, which W7 also listed. The "development warning" for a `recipientIds` entry absent from the care team (:115) naturally lives in the hook that merges config and care team (:76, `src/features`), where SC7 (:203) demands 100 % branches. jest-expo runs with `__DEV__ = true`, so the release branch of an `if (__DEV__)` never executes unless a test flips the global (a plain writable global — training-data recall, not verified; jest-expo is not installed).
 - **Why:** The final gate would fail on a branch that no test can reach by accident, or the implementer moves the warning to a 90 %-tier folder to dodge it. Canon: workflow.md testing bar — thresholds must be reachable.
 - **Suggested fix:**
