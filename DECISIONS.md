@@ -5,7 +5,7 @@ Each entry: what the question was, what was decided, and what that trades away.
 ## Assumptions
 
 - The patient is signed in and the practice id comes with the session. The session is faked in
-  `src/providers/session.ts`.
+  `src/hooks/useSession.ts`.
 - The practice can preview a message from its first line, so there is no subject field.
 - The brief's sample data is English, so the app is English.
 - Reviewers run it in Expo Go from a clean clone, with no development build and no local server.
@@ -92,11 +92,17 @@ Traded off: the error is above the options instead of where a sighted user might
 folders scatters one feature across six places.
 Decided: the first layer groups by responsibility and the second by kind — inside a feature every
 file sits in `api`, `state`, `hooks`, `components` or `utils`, never loose at its root; app-wide
-context lives in `src/providers`; shared components go in `src/components`, shared logic with no
-single owner in `src/lib`; routes under `src/app` stay thin; types sit with the code that owns them;
-no barrel files.
+context lives in `src/providers`; shared hooks in `src/hooks`, a provider's own context hook stays
+in its provider file; shared components go in `src/components`, shared logic with no single owner in
+`src/lib`; routes under `src/app` stay thin; types sit with the code that owns them; no barrel files.
 Traded off: newcomers expecting the type-based layout have to learn the ownership rule, and screen
 tests live under `src/__tests__/app` because expo-router treats every file under `src/app` as a route.
+
+**No types folder.** A type kept apart from the code that gives it meaning drifts.
+Decided: wire types are inferred from the zod schemas in the contracts module, so validation and
+type are one definition; every other type sits with its owner (the reducer, the settings module, the
+component), and a shared type would get a `types.ts` inside the feature that owns it.
+Traded off: no single place to browse all types; a reader follows the import instead.
 
 ## Left out
 
