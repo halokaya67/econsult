@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { seedsFromEnv, type DevSettings } from "@/features/devSettings/utils/settings";
+import { DEFAULT_DEV_SETTINGS, type DevSettings } from "@/features/devSettings/utils/settings";
 
 type DevSettingsContextValue = { settings: DevSettings; apply: (next: DevSettings) => void };
 
 const DevSettingsContext = createContext<DevSettingsContextValue | null>(null);
 
-// The runtime store for the developer settings; the environment only seeds its first value.
+// The runtime store for the developer settings; the developer-settings screen is what changes it.
 export function DevSettingsProvider({
   children,
   initial,
@@ -13,7 +13,7 @@ export function DevSettingsProvider({
   children: ReactNode;
   initial?: DevSettings;
 }) {
-  const [settings, setSettings] = useState<DevSettings>(() => initial ?? seedsFromEnv());
+  const [settings, setSettings] = useState<DevSettings>(initial ?? DEFAULT_DEV_SETTINGS);
   const apply = useCallback((next: DevSettings) => setSettings(next), []);
   const value = useMemo(() => ({ settings, apply }), [settings, apply]);
 
