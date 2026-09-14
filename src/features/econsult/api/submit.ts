@@ -3,8 +3,8 @@ import type { Services } from "@/api/services";
 import { isApiError, type PhotoFile } from "@/api/transport";
 import { devWarn } from "@/lib/devWarn";
 import { newId } from "@/lib/ids";
-import { photoFileFor } from "@/lib/photo";
-import { readyPhoto, type AttachmentStatus, type DraftState } from "./draft";
+import { readyPhoto, type AttachmentStatus, type DraftState } from "../state/draft";
+import { photoFileFor } from "../utils/photo";
 
 export type SubmitInput = {
   session: PatientSession;

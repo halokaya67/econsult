@@ -6,13 +6,13 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { RETRY_LABEL } from "@/components/StatusViews";
 import { TextButton } from "@/components/TextButton";
-import { useDraft } from "@/features/econsult/DraftProvider";
-import { sendErrorCopy } from "@/features/econsult/errorCopy";
-import { recipientNameFor } from "@/features/econsult/recipients";
-import { PHOTO_STILL_FAILED, usePhotoRetry } from "@/features/econsult/usePhotoRetry";
-import { useRecipients } from "@/features/econsult/useRecipients";
+import { PHOTO_STILL_FAILED, usePhotoRetry } from "@/features/econsult/hooks/usePhotoRetry";
+import { useRecipients } from "@/features/econsult/hooks/useRecipients";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
+import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
+import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { focusForScreenReader, type Focusable } from "@/lib/announce";
-import { useIsOffline } from "@/lib/network";
+import { useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
 
@@ -25,7 +25,8 @@ const OFFLINE_HINT = "You're offline. Sending needs a connection.";
 const RETRY_BUSY_LABEL = "Attaching your photo";
 const CONTINUE_WITHOUT_PHOTO = "Continue without the photo";
 
-// The alert groups only the text, so the two buttons stay separately focusable elements.
+// The alert groups only the text, so the two buttons stay separately focusable elements. It is not
+// a live region: the retry hook announces every line it adds, and both would speak it on Android.
 function PhotoOutcome() {
   const { draft, dispatch } = useDraft();
   const isOffline = useIsOffline();
@@ -35,12 +36,7 @@ function PhotoOutcome() {
   if (draft.attachment !== "failed") return null;
   return (
     <View style={styles.warning}>
-      <View
-        accessible
-        accessibilityRole="alert"
-        accessibilityLiveRegion="polite"
-        style={styles.stack}
-      >
+      <View accessible accessibilityRole="alert" style={styles.stack}>
         <Text style={text.body}>{PHOTO_FAILED}</Text>
         {retry.hasRetryFailed ? <Text style={text.body}>{PHOTO_STILL_FAILED}</Text> : null}
         {retry.error ? <Text style={text.body}>{sendErrorCopy(retry.error)}</Text> : null}

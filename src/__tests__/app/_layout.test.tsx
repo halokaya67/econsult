@@ -1,11 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { renderRouter, screen } from "expo-router/testing-library";
 import { Text } from "react-native";
-import RootLayout from "@/app/_layout";
 import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
-import { useIsOffline } from "@/lib/network";
-import { STALE_TIME_MS } from "@/lib/queryClient";
+import RootLayout from "@/app/_layout";
 import { useDevSettings } from "@/providers/DevSettingsProvider";
+import { useIsOffline } from "@/providers/NetworkProvider";
+import { STALE_TIME_MS } from "@/providers/queryClient";
 import { flowLayoutWith } from "@/test/flowLayout";
 
 // Reads every context the root layout is meant to provide, so a missing provider fails the render.

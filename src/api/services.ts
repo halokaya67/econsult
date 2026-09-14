@@ -14,6 +14,7 @@ import {
 import { ApiError, withTimeout, type PhotoFile, type Transport } from "./transport";
 
 export const READ_TIMEOUT_MS = 15_000;
+export const CREATE_TIMEOUT_MS = 15_000;
 export const UPLOAD_TIMEOUT_MS = 45_000;
 
 export type Services = {
@@ -53,7 +54,7 @@ export function createServices(transport: Transport): Services {
         ),
       ),
     createEConsult: (request, idempotencyKey) =>
-      withTimeout(READ_TIMEOUT_MS, async (signal) =>
+      withTimeout(CREATE_TIMEOUT_MS, async (signal) =>
         parse(
           createEConsultResponseSchema,
           await transport.postJson(

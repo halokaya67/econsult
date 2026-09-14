@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-native";
 import type { ReactNode } from "react";
-import type { DevSettings } from "@/lib/devSettings";
+import type { DevSettings } from "@/features/devSettings/utils/settings";
 import { DevSettingsProvider } from "./DevSettingsProvider";
 import { useSession } from "./session";
 

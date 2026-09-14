@@ -1,6 +1,11 @@
-import type { FaultKind, Faults, RequestName } from "@/api/fake/fakeTransport";
+import {
+  FAULT_KINDS,
+  type FaultKind,
+  type Faults,
+  type RequestName,
+} from "@/api/fake/fakeTransport";
 import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
-import { DEFAULT_PRACTICE_ID } from "@/lib/devSettings";
+import { DEFAULT_PRACTICE_ID } from "./settings";
 
 export const LATENCY_OPTIONS = ["Default", "None", "Slow (5 seconds)"] as const;
 export const FAULT_OPTIONS = ["None", "Network", "Server", "Timeout"] as const;
@@ -22,17 +27,18 @@ export const REQUEST_LABELS: Record<RequestName, string> = {
   upload: "Upload photo",
 };
 
-// Keyed by string because ChoiceGroup reports the chosen label as a plain string.
-const LATENCY_BY_OPTION: Record<string, number | null> = {
+const LATENCY_BY_OPTION: Record<LatencyOption, number | null> = {
   Default: null,
   None: 0,
   "Slow (5 seconds)": SLOW_LATENCY_MS,
 };
-const FAULT_BY_OPTION: Record<string, FaultKind | undefined> = {
-  None: undefined,
-  Network: "network",
-  Server: "server",
-  Timeout: "timeout",
+
+// Keyed by kind, so a kind the transport gains stops compiling here instead of quietly reading as
+// "None" on the screen. The reverse direction is a search rather than a second table.
+const OPTION_BY_FAULT: Record<FaultKind, FaultOption> = {
+  network: "Network",
+  server: "Server",
+  timeout: "Timeout",
 };
 
 export function practiceLabelFor(practiceId: string): string {
@@ -49,16 +55,16 @@ export function latencyOptionFor(latencyMs: number | null): LatencyOption {
   return "Default";
 }
 
-export function latencyFor(option: string): number | null {
-  return LATENCY_BY_OPTION[option] ?? null;
+export function latencyFor(option: LatencyOption): number | null {
+  return LATENCY_BY_OPTION[option];
 }
 
 export function faultOptionFor(kind: FaultKind | undefined): FaultOption {
-  return FAULT_OPTIONS.find((option) => FAULT_BY_OPTION[option] === kind) ?? "None";
+  return kind === undefined ? "None" : OPTION_BY_FAULT[kind];
 }
 
-export function faultFor(option: string): FaultKind | undefined {
-  return FAULT_BY_OPTION[option];
+export function faultFor(option: FaultOption): FaultKind | undefined {
+  return FAULT_KINDS.find((kind) => OPTION_BY_FAULT[kind] === option);
 }
 
 export function withFault(faults: Faults, name: RequestName, kind: FaultKind | undefined): Faults {

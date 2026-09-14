@@ -5,7 +5,7 @@ import { Text } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
-import { careTeamQuery, configQuery } from "@/features/econsult/queries";
+import { careTeamQuery, configQuery } from "@/features/econsult/api/queries";
 import { isDevelopmentBuild } from "@/lib/devWarn";
 import { useServices } from "@/providers/ServicesProvider";
 import { useSession } from "@/providers/session";

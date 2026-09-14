@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useRef, type ReactNode } from "
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { Focusable } from "@/lib/announce";
-import { useIsOffline } from "@/lib/network";
+import { useIsOffline } from "@/providers/NetworkProvider";
 import { colors, spacing } from "@/theme/tokens";
 import { OfflineBanner } from "./OfflineBanner";
 

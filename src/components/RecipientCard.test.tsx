@@ -1,4 +1,5 @@
 import { render, screen, userEvent } from "@testing-library/react-native";
+import { borderWidth } from "@/theme/tokens";
 import { RecipientCard } from "./RecipientCard";
 
 describe("RecipientCard", () => {
@@ -10,7 +11,7 @@ describe("RecipientCard", () => {
     const card = screen.getByRole("radio", { name: "Dr. J. de Vries, GP", checked: false });
     await user.press(card);
 
-    expect(card).toHaveStyle({ minHeight: 64 });
+    expect(card).toHaveStyle({ minHeight: 64, borderWidth });
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 

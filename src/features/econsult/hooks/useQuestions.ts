@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Question } from "@/api/contracts";
 import { useServices } from "@/providers/ServicesProvider";
 import { useSession } from "@/providers/session";
-import { configQuery } from "./queries";
+import { configQuery } from "../api/queries";
 
 const NO_QUESTIONS: Question[] = [];
 

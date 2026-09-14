@@ -3,7 +3,7 @@ import { userEvent } from "@testing-library/react-native";
 import { renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Text } from "react-native";
 import HomeScreen from "@/app/index";
-import { practiceKeys } from "@/features/econsult/queries";
+import { practiceKeys } from "@/features/econsult/api/queries";
 import * as devWarn from "@/lib/devWarn";
 import { TestProviders } from "@/test/providers";
 

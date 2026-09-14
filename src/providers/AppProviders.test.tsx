@@ -1,10 +1,10 @@
 import { onlineManager, QueryClient, useQueryClient } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react-native";
 import { Text } from "react-native";
-import type { DevSettings } from "@/lib/devSettings";
-import { useIsOffline } from "@/lib/network";
+import type { DevSettings } from "@/features/devSettings/utils/settings";
 import { AppProviders } from "./AppProviders";
 import { useDevSettings } from "./DevSettingsProvider";
+import { useIsOffline } from "./NetworkProvider";
 import { useServices } from "./ServicesProvider";
 import { useSession } from "./session";
 
