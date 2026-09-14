@@ -7010,20 +7010,20 @@ One line per entry of the decisions log (`timestamp · step · question or recor
 2026-09-11T23:34 · T014 · auto · visual_skip — declared none at plan gate
 2026-09-11T23:34 · T014 · auto · step_auto_pass — verify green, visual clean, fence respected
 2026-09-11T23:50 · T015 · auto · visual_flag_carried — T015 visual (ui-verifier) flagged: placeholder first step has no back control.
-2026-09-11T23:50 · T015 · auto · step_auto_pass — verify green, visual published (https://claude.ai/code/artifact/c87c35ef-fcc0-4147-
+2026-09-11T23:50 · T015 · auto · step_auto_pass — verify green, visual published (artifacts/visuals/T015.html)
 2026-09-11T23:59 · T016 · auto · concerns_judged — T016 implementer DONE_WITH_CONCERNS: two test-side adaptations (toHaveTextContent 
-2026-09-12T00:12 · T016 · auto · visual_defect_fix — T016 visual (https://claude.ai/code/artifact/e4fe882d-1554-4a0b-957d-e5d4e82bbae
+2026-09-12T00:12 · T016 · auto · visual_defect_fix — T016 visual (artifacts/visuals/T016.html)
 2026-09-12T00:22 · T016 · auto · step_auto_pass — T016 verify green after the header font-cap fix; visual re-check published (https:/
-2026-09-12T00:43 · T017 · auto · visual_defect_fix — T017 visual (https://claude.ai/code/artifact/14d3e13e-8536-446f-93bf-2c6aa881e27
-2026-09-12T06:42 · T017 · auto · visual_recheck_fail — T017 re-check (https://claude.ai/code/artifact/e842dba6-1d2e-40ef-a031-8d8f7aa
+2026-09-12T00:43 · T017 · auto · visual_defect_fix — T017 visual (artifacts/visuals/T017.html)
+2026-09-12T06:42 · T017 · auto · visual_recheck_fail — T017 re-check (artifacts/visuals/T017.html)
 2026-09-12T07:05 · T017 · auto · visual_recheck2 — scroll fix verified to the pixel (label lands spacing.md below the viewport top, n
 2026-09-12T08:37 · T017 · auto · step_auto_pass — T017 verify green (jest 57/57 in scope, full suite green earlier, typecheck, lint),
 2026-09-12T08:53 · T018 · auto · visual_scope — T018 visual runs five of its six declared states now (pristine, keyboard open, photo 
-2026-09-12T09:42 · T018 · auto · visual_defect_fix — T018 visual (https://claude.ai/code/artifact/3c7818b1-2d44-40f7-81b2-7254f2a2761
+2026-09-12T09:42 · T018 · auto · visual_defect_fix — T018 visual (artifacts/visuals/T018.html)
 2026-09-12T10:09 · T018 · auto · step_auto_pass — T018 verify green (jest 137/137 in scope, typecheck, lint), fence respected (widene
-2026-09-12T10:45 · T019 · auto · visual_defect_fix — T019 visual (https://claude.ai/code/artifact/05062e28-f7c6-4474-9c7a-17264f5f5ac
+2026-09-12T10:45 · T019 · auto · visual_defect_fix — T019 visual (artifacts/visuals/T019.html)
 2026-09-12T11:04 · T019 · auto · step_auto_pass — T019 verify green (jest 39/39 in scope, typecheck, lint), fence respected, simulato
-2026-09-12T11:39 · T020 · auto · visual_defect_fix — T020 visual (https://claude.ai/code/artifact/a6fc325b-8c89-4c46-bab1-c2ab976527b
+2026-09-12T11:39 · T020 · auto · visual_defect_fix — T020 visual (artifacts/visuals/T020.html)
 2026-09-12T12:01 · T020 · auto · step_auto_pass — T020 verify green (jest 47/47 in scope, typecheck, lint), fence respected, simulato
 2026-09-12T12:02 · T021 · auto · fence_amend — T021 gains .gitignore: the user keeps a local .env (created by hand after T006) and co
 2026-09-12T12:11 · T021 · auto · step_auto_pass — T021 verify green (typecheck, lint, format:check, npm test 251/251, npx expo config
