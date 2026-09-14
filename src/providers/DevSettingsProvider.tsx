@@ -1,5 +1,21 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { DEFAULT_DEV_SETTINGS, type DevSettings } from "@/features/devSettings/utils/settings";
+import { type Faults } from "@/api/fake/fakeTransport";
+import { DEFAULT_PRACTICE_ID } from "@/api/fake/fixtures";
+
+export type DevSettings = {
+  practiceId: string;
+  latencyMs: number | null;
+  faults: Faults;
+  forceOffline: boolean;
+};
+
+// The single source for the state the app starts with; developer settings change it at runtime.
+export const DEFAULT_DEV_SETTINGS: DevSettings = {
+  practiceId: DEFAULT_PRACTICE_ID,
+  latencyMs: null,
+  faults: {},
+  forceOffline: false,
+};
 
 type DevSettingsContextValue = { settings: DevSettings; apply: (next: DevSettings) => void };
 

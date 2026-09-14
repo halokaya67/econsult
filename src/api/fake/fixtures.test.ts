@@ -1,9 +1,13 @@
 import { careTeamMemberSchema, practiceConfigSchema } from "../contracts";
-import { FIXTURE_PRACTICE_IDS, rawCareTeams, rawPractices } from "./fixtures";
+import { DEFAULT_PRACTICE_ID, FIXTURE_PRACTICE_IDS, rawCareTeams, rawPractices } from "./fixtures";
 
 describe("fixtures", () => {
   test("ships exactly the three spec practices", () => {
     expect(FIXTURE_PRACTICE_IDS).toEqual(["prc-0421", "prc-0873", "prc-0000"]);
+  });
+
+  test("the default practice is one the fixtures carry data for", () => {
+    expect(FIXTURE_PRACTICE_IDS).toContain(DEFAULT_PRACTICE_ID);
   });
 
   test.each(FIXTURE_PRACTICE_IDS)("practice %s parses as a config", (practiceId) => {

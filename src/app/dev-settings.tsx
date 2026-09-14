@@ -20,9 +20,8 @@ import {
   REQUEST_LABELS,
   withFault,
 } from "@/features/devSettings/utils/options";
-import type { DevSettings } from "@/features/devSettings/utils/settings";
 import { isDevelopmentBuild } from "@/lib/devWarn";
-import { useDevSettings } from "@/providers/DevSettingsProvider";
+import { useDevSettings, type DevSettings } from "@/providers/DevSettingsProvider";
 import { text } from "@/theme/text";
 import { HEADER_BUTTON_MAX_FONT_SCALE, MIN_TOUCH, spacing } from "@/theme/tokens";
 

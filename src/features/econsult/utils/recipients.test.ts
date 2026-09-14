@@ -1,5 +1,7 @@
+import type { UseQueryResult } from "@tanstack/react-query";
 import type { CareTeamMember, PracticeEConsultConfig } from "@/api/contracts";
 import {
+  combineRecipients,
   joinRecipients,
   recipientNameFor,
   roleLabel,
@@ -15,6 +17,10 @@ const TEAM: CareTeamMember[] = [
 
 function config(recipientIds: string[]): PracticeEConsultConfig {
   return { practiceId: "prc-0421", recipientIds, questions: [] };
+}
+
+function fakeResult<T>(overrides: Partial<UseQueryResult<T>>): UseQueryResult<T> {
+  return { isError: false, data: undefined, refetch: jest.fn(), ...overrides } as UseQueryResult<T>;
 }
 
 describe("joinRecipients", () => {
@@ -36,6 +42,62 @@ describe("joinRecipients", () => {
 
   test("returns nothing when the practice lists no recipients", () => {
     expect(joinRecipients(config([]), TEAM)).toEqual([]);
+  });
+});
+
+describe("combineRecipients", () => {
+  const CONFIG = config(["ct-11"]);
+
+  test("is loading while either request has no data", () => {
+    const result = combineRecipients([
+      fakeResult<PracticeEConsultConfig>({ data: CONFIG }),
+      fakeResult<CareTeamMember[]>({}),
+    ]);
+
+    expect(result.status).toBe("loading");
+  });
+
+  test("is an error when either request failed, even with stale data, and retry refetches the failed one", () => {
+    const refetch = jest.fn();
+    const config = fakeResult<PracticeEConsultConfig>({ data: CONFIG, isError: true, refetch });
+    const team = fakeResult<CareTeamMember[]>({ data: TEAM });
+
+    const result = combineRecipients([config, team]);
+
+    expect(result.status).toBe("error");
+    if (result.status === "error") result.retry();
+    expect(refetch).toHaveBeenCalled();
+    expect(team.refetch).not.toHaveBeenCalled();
+  });
+
+  test("retry refetches only the care team when that is the failed request", () => {
+    const refetch = jest.fn();
+    const config = fakeResult<PracticeEConsultConfig>({ data: CONFIG });
+    const team = fakeResult<CareTeamMember[]>({ isError: true, refetch });
+
+    const result = combineRecipients([config, team]);
+
+    if (result.status === "error") result.retry();
+    expect(refetch).toHaveBeenCalled();
+    expect(config.refetch).not.toHaveBeenCalled();
+  });
+
+  test("is empty when no recipient id matches the care team", () => {
+    const result = combineRecipients([
+      fakeResult<PracticeEConsultConfig>({ data: config([]) }),
+      fakeResult<CareTeamMember[]>({ data: TEAM }),
+    ]);
+
+    expect(result.status).toBe("empty");
+  });
+
+  test("is ready with the joined recipients and the questions", () => {
+    const result = combineRecipients([
+      fakeResult<PracticeEConsultConfig>({ data: CONFIG }),
+      fakeResult<CareTeamMember[]>({ data: TEAM }),
+    ]);
+
+    expect(result).toEqual({ status: "ready", recipients: [TEAM[0]], questions: [] });
   });
 });
 

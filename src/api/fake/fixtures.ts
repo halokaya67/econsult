@@ -2,6 +2,9 @@
 // real response, so the fixtures exercise the schemas instead of bypassing them.
 export const FIXTURE_PRACTICE_IDS = ["prc-0421", "prc-0873", "prc-0000"] as const;
 
+// Derived from the fixtures so the default is always a practice the app has data for.
+export const DEFAULT_PRACTICE_ID: string = FIXTURE_PRACTICE_IDS[0];
+
 export const rawPractices: Record<string, unknown> = {
   "prc-0421": {
     practiceId: "prc-0421",

@@ -3,7 +3,7 @@ import { renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, Text } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { flowLayoutWith } from "@/test/flowLayout";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 import * as submitModule from "../api/submit";
 import { initialDraft, type DraftState } from "../state/draft";
 import { useMessageSend } from "./useMessageSend";

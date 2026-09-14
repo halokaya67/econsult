@@ -3,13 +3,13 @@ import { userEvent } from "@testing-library/react-native";
 import { router, Stack } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Text } from "react-native";
+import { DEFAULT_PRACTICE_ID } from "@/api/fake/fixtures";
 import DevSettingsScreen from "@/app/dev-settings";
 import { practiceLabelFor } from "@/features/devSettings/utils/options";
-import { DEFAULT_PRACTICE_ID } from "@/features/devSettings/utils/settings";
 import * as devWarn from "@/lib/devWarn";
 import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { useIsOffline } from "@/providers/NetworkProvider";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 
 // Reads the network context as well as the settings, so Apply with Force offline is observable.
 function HomeProbe() {

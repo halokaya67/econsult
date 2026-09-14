@@ -1,7 +1,6 @@
 import { renderHook } from "@testing-library/react-native";
 import type { ReactNode } from "react";
-import type { DevSettings } from "@/features/devSettings/utils/settings";
-import { DevSettingsProvider } from "./DevSettingsProvider";
+import { DevSettingsProvider, type DevSettings } from "./DevSettingsProvider";
 import { ServicesProvider, useServices } from "./ServicesProvider";
 
 const SETTINGS: DevSettings = {

@@ -5,7 +5,7 @@ import { Text } from "react-native";
 import HomeScreen from "@/app/index";
 import { practiceKeys } from "@/features/econsult/api/queries";
 import * as devWarn from "@/lib/devWarn";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 
 const Stub = () => <Text>stub</Text>;
 

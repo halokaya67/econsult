@@ -1,3 +1,4 @@
+import type { UseQueryResult } from "@tanstack/react-query";
 import type {
   CareTeamMember,
   CareTeamRole,
@@ -40,6 +41,25 @@ export function joinRecipients(
     devWarn(`Recipient ${id} is not in the care team of ${config.practiceId}`);
     return [];
   });
+}
+
+type Results = [UseQueryResult<PracticeEConsultConfig>, UseQueryResult<CareTeamMember[]>];
+
+// Error wins over stale data: a failed refetch must show the error, not last time's list.
+export function combineRecipients([config, team]: Results): RecipientsResult {
+  if (config.isError || team.isError) {
+    return {
+      status: "error",
+      retry: () => {
+        if (config.isError) void config.refetch();
+        if (team.isError) void team.refetch();
+      },
+    };
+  }
+  if (!config.data || !team.data) return { status: "loading" };
+  const recipients = joinRecipients(config.data, team.data);
+  if (recipients.length === 0) return { status: "empty" };
+  return { status: "ready", recipients, questions: config.data.questions };
 }
 
 export function recipientNameFor(result: RecipientsResult, recipientId: string | null): string {

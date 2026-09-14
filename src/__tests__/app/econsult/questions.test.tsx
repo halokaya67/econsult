@@ -10,7 +10,7 @@ import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { REQUIRED_ERROR } from "@/features/econsult/utils/validation";
 import { accessibleName, labelWithRequirement } from "@/lib/fieldLabel";
 import { flowLayoutWith } from "@/test/flowLayout";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
 
 function MessageProbe() {

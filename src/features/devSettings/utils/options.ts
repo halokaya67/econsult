@@ -4,8 +4,7 @@ import {
   type Faults,
   type RequestName,
 } from "@/api/fake/fakeTransport";
-import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
-import { DEFAULT_PRACTICE_ID } from "./settings";
+import { DEFAULT_PRACTICE_ID, FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
 
 export const LATENCY_OPTIONS = ["Default", "None", "Slow (5 seconds)"] as const;
 export const FAULT_OPTIONS = ["None", "Network", "Server", "Timeout"] as const;
