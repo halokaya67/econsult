@@ -22,6 +22,9 @@ export const lineHeight = { body: 24, heading: 32, title: 38 } as const;
 
 export const radius = 12;
 
+// The border weight of every selectable surface, so the controls cannot drift apart.
+export const borderWidth = 2;
+
 // 48 satisfies Android's 48 dp guidance and exceeds Apple's 44 pt.
 export const MIN_TOUCH = 48;
 

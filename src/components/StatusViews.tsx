@@ -66,9 +66,7 @@ export function ErrorState({
         accessibilityLiveRegion="polite"
         style={styles.stack}
       >
-        <Text accessibilityRole="header" style={text.heading}>
-          {title}
-        </Text>
+        <Text style={text.heading}>{title}</Text>
         <Text style={text.body}>{body}</Text>
       </View>
       <PrimaryButton

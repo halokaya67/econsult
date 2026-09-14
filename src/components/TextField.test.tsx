@@ -1,5 +1,6 @@
 import { render, screen, userEvent } from "@testing-library/react-native";
 import { Dimensions, TextInput, View } from "react-native";
+import { borderWidth, colors } from "@/theme/tokens";
 import { MULTILINE_MIN_HEIGHT, TextField } from "./TextField";
 
 // A window at the largest accessibility text size; useWindowDimensions reads it from Dimensions.
@@ -43,7 +44,7 @@ describe("TextField", () => {
     expect(screen.getByText("Where, since when")).toBeOnTheScreen();
   });
 
-  test("folds an error into the accessible name and shows it in a live region", () => {
+  test("folds an error into the accessible name and marks the box as failed", () => {
     render(
       <TextField
         label="Your message"
@@ -53,11 +54,28 @@ describe("TextField", () => {
       />,
     );
 
-    expect(
-      screen.getByLabelText("Your message. Error: Please write your question"),
-    ).toBeOnTheScreen();
+    expect(screen.getByLabelText("Your message. Error: Please write your question")).toHaveStyle({
+      borderWidth,
+      borderColor: colors.error,
+    });
+  });
+
+  // The screen announces the error and moves focus to the box, whose name carries it. A live region
+  // here would make TalkBack say it a second time.
+  test("shows the error text without announcing it a second time", () => {
+    render(
+      <TextField
+        label="Your message"
+        value=""
+        onChangeText={() => {}}
+        error="Please write your question"
+      />,
+    );
+
     const error = screen.getByText("Please write your question");
-    expect(error.props.accessibilityLiveRegion).toBe("polite");
+
+    expect(error).toBeOnTheScreen();
+    expect(error.props.accessibilityLiveRegion).toBeUndefined();
   });
 
   test("becomes read-only when editable is false", () => {

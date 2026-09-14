@@ -77,11 +77,13 @@ function PreparingPhotoView({ disabled, onRemove }: PhotoStateProps) {
 }
 
 // Fixed height and cover: the preview never sizes itself from the draft's width and height.
+// expo-image defaults `accessible` to false, so without it the label would never be spoken.
 function ReadyPhotoView({ uri, disabled, onRemove }: PhotoStateProps & { uri: string }) {
   return (
     <View style={styles.stack}>
       <Image
         source={{ uri }}
+        accessible
         accessibilityLabel="Your photo"
         contentFit="cover"
         style={styles.preview}
@@ -144,10 +146,12 @@ export function PhotoPicker({
   const [libraryStatus, requestLibrary] = ImagePicker.useMediaLibraryPermissions();
   const [note, setNote] = useState<Note | null>(null);
 
+  // The permission choice stays out of the try block: a value expression inside try/catch makes the
+  // React Compiler bail out of the whole component, and the ternary cannot throw anyway.
   async function pick(source: Source) {
+    const permission: Permission =
+      source === "camera" ? [cameraStatus, requestCamera] : [libraryStatus, requestLibrary];
     try {
-      const permission: Permission =
-        source === "camera" ? [cameraStatus, requestCamera] : [libraryStatus, requestLibrary];
       if (!(await ensureGranted(permission))) return setNote({ kind: "denied", source });
       setNote(null);
       const result = await launch(source);

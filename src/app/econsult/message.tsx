@@ -1,27 +1,23 @@
 import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
-import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold, useScrollToField, type ScrollToField } from "@/components/ScreenScaffold";
+import { ScreenScaffold, useScrollToField } from "@/components/ScreenScaffold";
 import { ErrorState } from "@/components/StatusViews";
 import { StepHeader } from "@/components/StepHeader";
 import { TextButton } from "@/components/TextButton";
 import { TextField } from "@/components/TextField";
 import { PhotoPicker } from "@/features/econsult/components/PhotoPicker";
-import { isPhotoPreparing, readyPhoto } from "@/features/econsult/draft";
+import { isPhotoPreparing } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
 import { sendErrorCopy } from "@/features/econsult/errorCopy";
 import { recipientNameFor } from "@/features/econsult/recipients";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/steps";
-import { idempotencyKeyFor, submitInputFor } from "@/features/econsult/submit";
+import { useMessageSend, type Send, type SendState } from "@/features/econsult/useMessageSend";
 import { useQuestions } from "@/features/econsult/useQuestions";
 import { useRecipients } from "@/features/econsult/useRecipients";
-import { useSubmit } from "@/features/econsult/useSubmit";
-import { isMessageThin, validateMessage } from "@/features/econsult/validation";
-import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
+import { isMessageThin } from "@/features/econsult/validation";
 import { useIsOffline } from "@/lib/network";
-import { useSession } from "@/providers/session";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";
 
@@ -32,108 +28,22 @@ const THIN_NUDGE =
 const CHANGE_HINT = "Choose a different person";
 const OFFLINE_HINT = "You're offline. Sending needs a connection.";
 const PREPARING_HINT = "Wait for the photo to finish preparing";
-const SENDING_STATUS = "Sending your message";
-const SENT_STATUS = "Message sent";
-const SENT_WITH_PHOTO_STATUS = "Message sent, adding your photo";
 const ERROR_TITLE = "Your message wasn't sent";
 
-// Scroll to the field's container but focus its input: the anchor keeps the label and hint on
-// screen, which the input alone would not at large text sizes.
-function useFieldNodes() {
-  const anchor = useRef<Focusable | null>(null);
-  const focus = useRef<Focusable | null>(null);
-
-  function setAnchor(node: Focusable | null) {
-    anchor.current = node;
-  }
-
-  function setFocus(node: Focusable | null) {
-    focus.current = node;
-  }
-
-  // Scroll before announcing: screen-reader focus alone leaves the screen looking untouched.
-  function reportProblem(error: string, scrollToField: ScrollToField) {
-    scrollToField(anchor.current);
-    announce(error);
-    focusForScreenReader(focus.current);
-  }
-
-  return { setAnchor, setFocus, reportProblem };
-}
-
-type Send = (scrollToField: ScrollToField) => Promise<void>;
-
-// The status line is a live region, so every change to it is also spoken once.
-function useAnnouncedStatus() {
-  const [status, setStatus] = useState("");
-
-  useEffect(() => {
-    if (status) announce(status);
-  }, [status]);
-
-  return [status, setStatus] as const;
-}
-
-function useSend() {
-  const router = useRouter();
-  const session = useSession();
-  const { draft, dispatch } = useDraft();
-  const [messageError, setMessageError] = useState<string | null>(null);
-  const [status, setStatus] = useAnnouncedStatus();
-  const { setAnchor, setFocus, reportProblem } = useFieldNodes();
-  const hasPhoto = readyPhoto(draft) !== null;
-  const submit = useSubmit((econsultId) => {
-    dispatch({ type: "econsultCreated", econsultId });
-    setStatus(hasPhoto ? SENT_WITH_PHOTO_STATUS : SENT_STATUS);
-  });
-
-  function onMessageChange(message: string) {
-    dispatch({ type: "messageChanged", message });
-    if (messageError) setMessageError(null);
-  }
-
-  const onSend: Send = async (scrollToField) => {
-    const error = validateMessage(draft.message);
-    setMessageError(error);
-    if (error) {
-      reportProblem(error, scrollToField);
-      return;
-    }
-    if (!draft.recipientId) return;
-    const idempotencyKey = idempotencyKeyFor(draft);
-    dispatch({ type: "submitStarted", idempotencyKey });
-    setStatus(SENDING_STATUS);
-    try {
-      const outcome = await submit.mutateAsync(
-        submitInputFor(draft, session, draft.recipientId, idempotencyKey),
-      );
-      dispatch({ type: "attachmentSettled", attachment: outcome.attachment });
-      router.replace("/econsult/sent");
-    } catch {
-      // The mutation's own error state renders the failure; this only drops the status line.
-      setStatus("");
-    }
-  };
-
-  return { submit, status, messageError, setAnchor, setFocus, onMessageChange, onSend };
-}
-
-type SendState = ReturnType<typeof useSend>;
-
-function sendHint(isOffline: boolean, preparing: boolean): string | undefined {
+function sendHint(isOffline: boolean, isPreparing: boolean): string | undefined {
   if (isOffline) return OFFLINE_HINT;
-  return preparing ? PREPARING_HINT : undefined;
+  return isPreparing ? PREPARING_HINT : undefined;
 }
 
 // Rendered inside the scaffold, so unlike the screen itself it can reach the scroll view.
 function SendButton({
   send,
   isOffline,
-  preparing,
+  isPreparing,
 }: {
   send: SendState;
   isOffline: boolean;
-  preparing: boolean;
+  isPreparing: boolean;
 }) {
   const scrollToField = useScrollToField();
   return (
@@ -141,8 +51,8 @@ function SendButton({
       label="Send"
       busyLabel="Sending"
       busy={send.submit.isPending}
-      disabled={isOffline || preparing}
-      accessibilityHint={sendHint(isOffline, preparing)}
+      disabled={isOffline || isPreparing}
+      accessibilityHint={sendHint(isOffline, isPreparing)}
       onPress={() => void send.onSend(scrollToField)}
     />
   );
@@ -170,17 +80,19 @@ function ToRow({
   );
 }
 
+// The two wrappers look redundant but are not: reading a ref setter during render trips the
+// compiler's react-hooks/refs rule, so the node is handed over from inside the callback instead.
 function MessageField({ send, message }: { send: SendState; message: string }) {
   return (
     <>
       <TextField
-        containerRef={(node) => send.setAnchor(node)}
-        ref={(node) => send.setFocus(node)}
+        containerRef={(node) => send.field.setAnchor(node)}
+        ref={(node) => send.field.setFocus(node)}
         label={FIELD_LABEL}
         hint={FIELD_HINT}
         value={message}
         onChangeText={send.onMessageChange}
-        error={send.messageError}
+        error={send.field.error}
         editable={!send.submit.isPending}
         multiline
       />
@@ -245,8 +157,8 @@ export default function MessageScreen() {
   const { draft } = useDraft();
   const recipients = useRecipients();
   const hasQuestions = useQuestions().length > 0;
-  const send = useSend();
-  const preparing = isPhotoPreparing(draft);
+  const send = useMessageSend();
+  const isPreparing = isPhotoPreparing(draft);
   const isSending = send.submit.isPending;
 
   // Back, swipe and step 1's Home button wait for the send to settle. A replace is re-dispatched
@@ -256,7 +168,9 @@ export default function MessageScreen() {
   });
 
   return (
-    <ScreenScaffold action={<SendButton send={send} isOffline={isOffline} preparing={preparing} />}>
+    <ScreenScaffold
+      action={<SendButton send={send} isOffline={isOffline} isPreparing={isPreparing} />}
+    >
       <StepHeader
         stepNumber={stepNumber("message", hasQuestions)}
         stepCount={stepCount(hasQuestions)}

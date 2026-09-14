@@ -7,6 +7,7 @@ import { RETRY_LABEL } from "@/components/StatusViews";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
 import * as submitModule from "@/features/econsult/submit";
 import * as useSubmitModule from "@/features/econsult/useSubmit";
+import * as networkModule from "@/lib/network";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders } from "@/test/providers";
 
@@ -26,6 +27,8 @@ const SENT: DraftState = {
   econsultId: "ec-1",
   attachment: "none",
 };
+
+const FAILED: DraftState = { ...SENT, photo: READY_PHOTO, attachment: "failed" };
 
 // Start on step 1 and push the confirmation on top of it so that "back" has a real target to be
 // blocked from.
@@ -83,18 +86,29 @@ describe("Sent", () => {
 
   test("a failed photo upload is shown with a retry and a way to continue without it", async () => {
     const user = userEvent.setup();
-    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
+    renderSent(FAILED);
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Your message was sent, but the photo could not be attached",
       { exact: false },
     );
+    // The fake knows no "ec-1", so the real upload comes back as another failure.
     await user.press(screen.getByRole("button", { name: RETRY_LABEL }));
-    await waitFor(() => expect(screen.getByRole("alert")).toBeOnTheScreen());
+    expect(await screen.findByText(/The photo still couldn't be attached/)).toBeOnTheScreen();
 
     await user.press(screen.getByRole("button", { name: "Continue without the photo" }));
 
     expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  test("Try again is disabled with a spoken reason while offline", async () => {
+    // The provider reads the network mock once per mount, so the link is flipped at the hook.
+    jest.spyOn(networkModule, "useIsOffline").mockReturnValue(true);
+    renderSent(FAILED);
+
+    const retry = await screen.findByRole("button", { name: RETRY_LABEL, disabled: true });
+
+    expect(retry.props.accessibilityHint).toBe("You're offline. Sending needs a connection.");
   });
 
   test("a successful retry confirms the photo", async () => {
@@ -103,7 +117,7 @@ describe("Sent", () => {
       .spyOn(useSubmitModule, "useRetryAttachment")
       .mockReturnValue(retry as unknown as ReturnType<typeof useSubmitModule.useRetryAttachment>);
     const user = userEvent.setup();
-    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
+    renderSent(FAILED);
 
     await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 
@@ -128,7 +142,7 @@ describe("Sent", () => {
       .spyOn(useSubmitModule, "useRetryAttachment")
       .mockReturnValue(retry as unknown as ReturnType<typeof useSubmitModule.useRetryAttachment>);
     const user = userEvent.setup();
-    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
+    renderSent(FAILED);
 
     await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 
@@ -151,7 +165,7 @@ describe("Sent", () => {
       .mockImplementation(() => {});
     jest.spyOn(submitModule, "retryAttachment").mockRejectedValue(new Error("boom"));
     const user = userEvent.setup();
-    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "failed" });
+    renderSent(FAILED);
 
     await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
 

@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
+import * as servicesModule from "@/api/services";
 import MessageScreen from "@/app/econsult/message";
 import { RETRY_LABEL } from "@/components/StatusViews";
 import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/features/econsult/components/PhotoPicker";
@@ -70,6 +71,17 @@ const SEND_LATENCY_MS = 120;
 const FIELD_TOP = 540;
 const INPUT_TOP = 620;
 
+// Only an ApiError comes out of the fake transport, so a plain bug in the upload is injected here.
+function breakTheUpload() {
+  const createServices = servicesModule.createServices;
+  jest.spyOn(servicesModule, "createServices").mockImplementation((transport) => ({
+    ...createServices(transport),
+    uploadAttachment: async () => {
+      throw new TypeError("bug");
+    },
+  }));
+}
+
 describe("Message step", () => {
   beforeEach(() => {
     scrollTo.mockClear();
@@ -99,6 +111,8 @@ describe("Message step", () => {
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
+    // The preset already mocks the announcer, so the spy is the mock every earlier test wrote to.
+    announce.mockClear();
     const focus = jest
       .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
       .mockImplementation(() => {});
@@ -109,7 +123,8 @@ describe("Message step", () => {
     await user.press(screen.getByRole("button", { name: "Send" }));
 
     expect(screen.getByLabelText(`${FIELD}. Error: ${EMPTY_MESSAGE_ERROR}`)).toBeOnTheScreen();
-    expect(announce).toHaveBeenCalledWith(EMPTY_MESSAGE_ERROR);
+    // Filtered, so the StepHeader's own mount announcement stays out of the count.
+    expect(announce.mock.calls.filter(([line]) => line === EMPTY_MESSAGE_ERROR)).toHaveLength(1);
     expect(focus).toHaveBeenCalledWith(expect.anything(), "focus");
     expect(screen).toHavePathname("/econsult/message");
   });
@@ -144,7 +159,8 @@ describe("Message step", () => {
     expect(screen.queryByText(EMPTY_MESSAGE_ERROR)).toBeNull();
   });
 
-  test("Send sends nothing while the draft has no recipient", async () => {
+  test("Send sends nothing while the draft has no recipient, and says so in development", async () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
     const user = userEvent.setup();
     renderMessage({}, { ...initialDraft, message: "My knee has hurt for two weeks" });
     await screen.findByText("To: your practice");
@@ -153,6 +169,7 @@ describe("Message step", () => {
 
     expect(screen.queryByText("Sending your message")).toBeNull();
     expect(screen).toHavePathname("/econsult/message");
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("no recipient"));
   });
 
   test("a short message gets a nudge that never blocks sending", async () => {
@@ -231,6 +248,21 @@ describe("Message step", () => {
 
     await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
     expect(screen.getByText(/^sent:ec-\d+:failed$/)).toBeOnTheScreen();
+  });
+
+  test("an upload that fails unexpectedly still reaches the confirmation, marked as failed", async () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    breakTheUpload();
+    const user = userEvent.setup();
+    renderMessage({}, { ...DRAFT, photo: READY_PHOTO });
+    await screen.findByText("To: Dr. J. de Vries");
+
+    await user.type(screen.getByLabelText(FIELD), "Rash on my arm");
+    await user.press(screen.getByRole("button", { name: "Send" }));
+
+    await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
+    expect(screen.getByText(/^sent:ec-\d+:failed$/)).toBeOnTheScreen();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("bug"));
   });
 
   test("a failed create shows a plain-language error with retry and stays on the step", async () => {

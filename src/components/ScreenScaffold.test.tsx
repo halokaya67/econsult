@@ -1,7 +1,8 @@
 import { fireEvent, screen } from "@testing-library/react-native";
 import * as Network from "expo-network";
 import { useRef } from "react";
-import { Platform, ScrollView, Text } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { OFFLINE_MESSAGE } from "@/lib/network";
 import { renderWithProviders } from "@/test/providers";
 import { spacing } from "@/theme/tokens";
@@ -22,6 +23,13 @@ const measureLayout = jest.mocked(Text.prototype.measureLayout);
 // Stands in for the content view element getInnerViewRef returns under the New Architecture.
 const CONTENT_REF = {};
 const FIELD_TOP = 480;
+
+// A notched device on its side: the cut-out and the home indicator inset the sides, not only the
+// bottom. The test wrapper's own metrics are portrait, where all three horizontal insets are 0.
+const SIDEWAYS_METRICS = {
+  insets: { top: 0, bottom: 21, left: 59, right: 59 },
+  frame: { x: 0, y: 0, width: 852, height: 393 },
+};
 
 function FieldProbe({ withNode = true }: { withNode?: boolean }) {
   const scrollToField = useScrollToField();
@@ -69,6 +77,22 @@ describe("ScreenScaffold", () => {
     );
 
     expect(screen.getByRole("alert")).toHaveTextContent(OFFLINE_MESSAGE);
+  });
+
+  test("keeps its content clear of the safe area on every edge it can be inset on", () => {
+    renderWithProviders(
+      <SafeAreaProvider initialMetrics={SIDEWAYS_METRICS}>
+        <ScreenScaffold testID="scaffold">
+          <Text>Body</Text>
+        </ScreenScaffold>
+      </SafeAreaProvider>,
+    );
+
+    const content = StyleSheet.flatten(screen.getByTestId("scaffold").props.contentContainerStyle);
+
+    expect(content.paddingLeft).toBe(spacing.md + SIDEWAYS_METRICS.insets.left);
+    expect(content.paddingRight).toBe(spacing.md + SIDEWAYS_METRICS.insets.right);
+    expect(content.paddingBottom).toBe(spacing.lg + SIDEWAYS_METRICS.insets.bottom);
   });
 
   test("uses drag-to-dismiss on Android and interactive dismissal on iOS", () => {

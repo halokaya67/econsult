@@ -6,6 +6,7 @@ import HomeScreen from "@/app/index";
 import RecipientScreen from "@/app/econsult/recipient";
 import { RETRY_LABEL } from "@/components/StatusViews";
 import { initialDraft, type DraftState } from "@/features/econsult/draft";
+import { useDraft } from "@/features/econsult/DraftProvider";
 import { STEP_TITLES } from "@/features/econsult/steps";
 import * as useRecipientsModule from "@/features/econsult/useRecipients";
 import { flowLayoutWith } from "@/test/flowLayout";
@@ -15,6 +16,11 @@ const Stub = (label: string) =>
   function StubScreen() {
     return <Text>{label}</Text>;
   };
+
+function MessageProbe() {
+  const { draft } = useDraft();
+  return <Text>{`message:${draft.recipientId ?? "none"}`}</Text>;
+}
 
 function renderFlow(
   options: ProviderOptions = {},
@@ -27,7 +33,7 @@ function renderFlow(
       "econsult/_layout": flowLayoutWith(draft),
       "econsult/recipient": RecipientScreen,
       "econsult/questions": Stub("questions"),
-      "econsult/message": Stub("message"),
+      "econsult/message": MessageProbe,
     },
     {
       initialUrl,
@@ -37,10 +43,7 @@ function renderFlow(
 }
 
 async function pressHome(user: ReturnType<typeof userEvent.setup>) {
-  const header = screen.queryByRole("button", { name: "Home" });
-  if (header) return user.press(header);
-  // The native header is not always part of the test tree; drive the same navigation directly.
-  act(() => router.dismissTo("/"));
+  await user.press(screen.getByRole("button", { name: "Home" }));
 }
 
 function spyOnAlert() {
@@ -114,18 +117,21 @@ describe("Recipient step", () => {
     expect(screen).toHavePathname("/econsult/message");
   });
 
-  test("preselects the only writable recipient", async () => {
+  test("preselects the only writable recipient and Continue writes it to the draft", async () => {
     jest.spyOn(useRecipientsModule, "useRecipients").mockReturnValue({
       status: "ready",
       questions: [],
       recipients: [{ id: "ct-44", displayName: "Dr. A. Visser", role: "gp" }],
     });
+    const user = userEvent.setup();
     renderFlow();
 
     expect(
       await screen.findByRole("radio", { name: "Dr. A. Visser, GP", checked: true }),
     ).toBeOnTheScreen();
-    expect(screen.getByRole("button", { name: "Continue", disabled: false })).toBeOnTheScreen();
+    await user.press(screen.getByRole("button", { name: "Continue", disabled: false }));
+
+    expect(await screen.findByText("message:ct-44")).toBeOnTheScreen();
   });
 
   test("shows an error with retry when the practice details fail to load", async () => {
