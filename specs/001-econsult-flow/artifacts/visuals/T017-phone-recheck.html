@@ -145,10 +145,13 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
     <div class="meta">
       <span><b>Device</b> iPhone 17 simulator</span>
       <span><b>Text size</b> AX3XL</span>
-      <span><b>Driver</b> agent-device 0.21.0</span>
       <span><b>Date</b> 12 Sep 2026</span>
     </div>
   </header>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> What a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
+
 
   <div class="verdict-bar">
     <div class="stamp">FAIL</div>
@@ -254,7 +257,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
 
   <section>
     <h2>Why it fails</h2>
-    <p class="lede">Metro logged the throw the moment Continue was tapped. The callback that would
+    <p class="lede">The log recorded the throw the moment Continue was tapped. The callback that would
     have called <code>scrollTo</code> is never reached.</p>
     <div class="codewrap">
       <div class="codecap">setup.log &middot; line 14</div>
@@ -345,7 +348,7 @@ unchanged siblings
       <li>
         <span class="sev unver">Not verified</span>
         <h3>Announcement and screen-reader focus</h3>
-        <p>VoiceOver was not running and the driver exposes no focus or announcement channel.
+        <p>VoiceOver was not running, and neither focus nor announcements could be captured here.
         Neither was confirmed nor refuted here; it needs a VoiceOver pass.</p>
       </li>
     </ul>

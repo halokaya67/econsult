@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { useRef, useState, type RefObject } from "react";
 import type { Question } from "@/api/contracts";
 import { ChoiceGroup } from "@/components/ChoiceGroup";
 import { PrimaryButton } from "@/components/PrimaryButton";
@@ -10,7 +10,8 @@ import { useQuestions } from "@/features/econsult/hooks/useQuestions";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
 import { validateAnswers, type AnswerErrors } from "@/features/econsult/utils/validation";
-import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
+import { useFocusAfterCommit } from "@/hooks/useFocusAfterCommit";
+import { focusOrAnnounce, type Focusable } from "@/lib/announce";
 
 function requirementOf(question: Question) {
   return question.required ? "required" : "optional";
@@ -74,6 +75,20 @@ function ContinueButton({ onContinue }: { onContinue: (scrollToField: ScrollToFi
 
 type NodesByQuestion = Map<string, Focusable | null>;
 
+// Scroll before moving focus: screen-reader focus alone leaves the screen looking untouched. The
+// focus waits for the commit that folds the error into the field's name, or it speaks the old one.
+function useRevealInvalidQuestion(
+  anchors: RefObject<NodesByQuestion>,
+  focusNodes: RefObject<NodesByQuestion>,
+) {
+  const focusAfterCommit = useFocusAfterCommit();
+
+  return function reveal(questionId: string, error: string, scrollToField: ScrollToField) {
+    scrollToField(anchors.current.get(questionId) ?? null);
+    focusAfterCommit(() => focusOrAnnounce(focusNodes.current.get(questionId) ?? null, error));
+  };
+}
+
 export default function QuestionsScreen() {
   const router = useRouter();
   const { draft, dispatch } = useDraft();
@@ -81,6 +96,7 @@ export default function QuestionsScreen() {
   const [errors, setErrors] = useState<AnswerErrors>({});
   const anchorNodes = useRef<NodesByQuestion>(new Map());
   const focusNodes = useRef<NodesByQuestion>(new Map());
+  const reveal = useRevealInvalidQuestion(anchorNodes, focusNodes);
 
   function answer(questionId: string, value: string) {
     dispatch({ type: "answerChanged", questionId, value });
@@ -95,10 +111,7 @@ export default function QuestionsScreen() {
       router.push("/econsult/message");
       return;
     }
-    // Scroll before announcing: screen-reader focus alone leaves the screen looking untouched.
-    scrollToField(anchorNodes.current.get(firstInvalid.id) ?? null);
-    announce(next[firstInvalid.id]);
-    focusForScreenReader(focusNodes.current.get(firstInvalid.id) ?? null);
+    reveal(firstInvalid.id, next[firstInvalid.id], scrollToField);
   }
 
   return (

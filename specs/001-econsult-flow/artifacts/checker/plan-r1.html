@@ -82,6 +82,13 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
 <p>agent_id: a507214efedc1197c
 mode: plan · round: 1 (preliminary, dispatched before the plan phase transition) · plan reviewed: 6587 lines · spec: after checker rounds 1 to 3</p>
 <h2 id="spec-checker-report-mode-plan">Spec-Checker Report — mode: plan</h2>
+<blockquote>
+<p><strong>Since then.</strong> The plan this round reviewed was executed, and the tree was restructured afterwards. Two things it relies on have changed:</p>
+<ul>
+<li>The paths it names have moved: <code>src/test/providers.tsx</code> is <code>src/test/renderWithProviders.tsx</code>, the flat <code>src/features/econsult/*.ts</code> modules went into <code>api/</code>, <code>state/</code>, <code>hooks/</code> and <code>utils/</code>, and the screen tests it moved out of the route directory live under <code>src/__tests__/app/</code>.</li>
+<li>The <code>accessibilityLiveRegion=&quot;polite&quot;</code> in the <code>OfflineBanner</code>, <code>ErrorState</code> and <code>PhotoPicker</code> code it quotes was removed: an error is spoken once by the focus move to the field, and no error surface is a live region.</li>
+</ul>
+</blockquote>
 <p><strong>Verdict:</strong> FAIL</p>
 <p><strong>Reviewed:</strong> 6/6 artifact files (plan.md 6587 lines in full; spec.md; how-it-works.md; the brief <code>case-study-mobile.md</code>; checker/spec-r3.md; research.md by grep as dispatched) plus package.json, tsconfig.json, app.json, .gitignore, .claude/settings.json, .vscode/settings.json · diff: n/a (mode plan) · canon cited: workflow.md (Coding Canon: DRY, Testing bar, &quot;Errors &amp; inputs&quot;; Commit Policy) · decisions log: 1 entry (spec-gate approval), <code>grep -in dismiss</code> → 0 · Sourcegraph not configured, local Grep only; standalone take-home repo, no cross-repo consumers · searches:</p>
 <ul>

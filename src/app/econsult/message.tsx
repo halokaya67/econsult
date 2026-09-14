@@ -1,5 +1,6 @@
 import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
+import { useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ErrorState } from "@/components/ErrorState";
 import { PrimaryButton } from "@/components/PrimaryButton";
@@ -21,6 +22,7 @@ import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
 import { isMessageThin } from "@/features/econsult/utils/validation";
+import type { Focusable } from "@/lib/announce";
 import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";
@@ -38,7 +40,8 @@ function sendHint(isOffline: boolean, isPreparing: boolean): string | undefined 
   return isPreparing ? PREPARING_HINT : undefined;
 }
 
-// Rendered inside the scaffold, so unlike the screen itself it can reach the scroll view.
+// Rendered inside the scaffold, so unlike the screen itself it can reach the scroll view. At the
+// largest text size the offline banner is a screen above Send, so the reason is repeated here.
 function SendButton({
   send,
   isOffline,
@@ -50,14 +53,19 @@ function SendButton({
 }) {
   const scrollToField = useScrollToField();
   return (
-    <PrimaryButton
-      label="Send"
-      busyLabel="Sending"
-      busy={send.submit.isPending}
-      disabled={isOffline || isPreparing}
-      accessibilityHint={sendHint(isOffline, isPreparing)}
-      onPress={() => void send.onSend(scrollToField)}
-    />
+    <View style={styles.send}>
+      <PrimaryButton
+        label="Send"
+        busyLabel="Sending"
+        busy={send.submit.isPending}
+        disabled={isOffline || isPreparing}
+        accessibilityHint={sendHint(isOffline, isPreparing)}
+        onPress={() => void send.onSend(scrollToField)}
+      />
+      {/* Visible copy only: the provider announces going offline and the button speaks it as its
+          hint, so a live region here would be the third time. */}
+      {isOffline ? <Text style={styles.status}>{OFFLINE_HINT}</Text> : null}
+    </View>
   );
 }
 
@@ -135,7 +143,8 @@ function SendFeedback({
   onSend: Send;
 }) {
   const scrollToField = useScrollToField();
-  const cardRef = useRevealSendError(error, scrollToField);
+  const card = useRef<Focusable | null>(null);
+  const onCardLayout = useRevealSendError(card, scrollToField);
   return (
     <>
       {/* Not a live region: the hook announces the status, and both would speak it on Android. */}
@@ -143,8 +152,9 @@ function SendFeedback({
       {error ? (
         <ErrorState
           ref={(node) => {
-            cardRef.current = node;
+            card.current = node;
           }}
+          onLayout={onCardLayout}
           title={ERROR_TITLE}
           body={sendErrorCopy(error)}
           retryBlockedReason={isOffline ? OFFLINE_HINT : undefined}
@@ -204,6 +214,7 @@ export default function MessageScreen() {
 }
 
 const styles = StyleSheet.create({
+  send: { gap: spacing.sm },
   toRow: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: spacing.sm },
   to: {
     flexShrink: 1,

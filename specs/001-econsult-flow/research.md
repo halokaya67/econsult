@@ -4,6 +4,18 @@ Generated on 2026-09-11 from the research workflow that preceded the specificati
 
 A rendered copy lives at `artifacts/research.html`.
 
+> **Since then.** This is the research as it stood before the specification; the spec accepted some of it and overruled the rest, and the build then overturned one more. Where the app differs from the recommendations below:
+>
+> - `automaticallyAdjustKeyboardInsets` was adopted and then removed: iOS reports the out-of-process photo picker's keyboard frame too, which blanked the message step on a real iPad, so the screen scaffold listens for the keyboard itself and ignores foreign frames.
+> - The Dutch sample copy here — "Volgende", "Versturen", the usage strings and the offline hint — was not used: the app is English, matching the brief's data.
+> - The live-region recipe for errors and for the offline banner was dropped: an error is spoken once by the focus move to the field, and the banner has no live region; only the network provider announces, once per transition.
+> - The service layer shipped as `src/api/{contracts,transport,services}.ts` with `src/api/fake/{fakeTransport,fixtures}.ts` in TypeScript, not as `src/services/*` with JSON fixtures, and the query client sits in `src/api/queryClient.ts`.
+> - No environment layer shipped: no `.env`, no `.env.example` and no `EXPO_PUBLIC_*` variable is read anywhere.
+> - Developer settings are `src/app/dev-settings.tsx`, a modal opened from a visible link gated on `isDevelopmentBuild()`, in English — not a hidden route behind a triple tap.
+> - expo-status-bar was dropped from the keep list after all, and expo-device was kept rather than dropped: it is the source of `Device.isDevice`.
+> - The flow lives at `src/app/econsult/`, a real path segment, rather than in a route group.
+> - The dependency and jest sketches differ from what shipped: `@types/react ~19.2.2` and `@types/jest ^29.5.14`, a jest block with a setup file, coverage collection and seven thresholds, no `test:watch`, and a `typecheck` script that regenerates the typed routes before `tsc`.
+
 ## Topics
 
 - [image-picker](#topic-image-picker) — Photo capture and library selection with expo-image-picker on Expo SDK 57 (Expo Go, iOS simulator / Android emulator, fetch+FormData upload)

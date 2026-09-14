@@ -3,6 +3,8 @@ mode: plan · round: 3 · reviewed: plan.md revision 3 (working tree) · previou
 
 ## Spec-Checker Report — mode: plan
 
+> **Since then.** Two paths this round names have moved: `src/features/econsult/recipients.test.ts` sits in `utils/` beside the module it tests, and `src/test/providers.tsx` is `src/test/renderWithProviders.tsx`.
+
 **Verdict:** FAIL
 
 **Reviewed:** 4/4 artifact files (plan.md revision 3, 6907 lines in full, working tree; spec.md 216 lines, working tree; how-it-works.md 112 lines; checker/plan-r2.md; research.md not re-read — revision 3 touches no platform fact) · diff: n/a (mode plan) · canon cited: workflow.md (Coding Canon: size caps, DRY, Testing bar) · decisions log: 1 entry (spec-gate approval), `dismiss` → 0 · Sourcegraph not configured, local tree only; standalone take-home repo, no cross-repo consumers · searches:

@@ -2,13 +2,19 @@ import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import {
   PHOTO_JPEG_QUALITY,
   PHOTO_MAX_EDGE,
+  PHOTO_MIME_JPEG,
   photoFileFor,
   processPhoto,
   resizeTargetFor,
 } from "./photo";
 
 const manipulate = jest.mocked(ImageManipulator.manipulate);
-const ORIGINAL = { uri: "file:///cache/original.jpg", width: 4000, height: 3000 };
+const ORIGINAL = {
+  uri: "file:///cache/original.jpg",
+  width: 4000,
+  height: 3000,
+  mimeType: PHOTO_MIME_JPEG,
+};
 
 describe("resizeTargetFor", () => {
   test("bounds the width of a landscape photo", () => {
@@ -41,7 +47,12 @@ describe("processPhoto", () => {
       compress: PHOTO_JPEG_QUALITY,
       format: SaveFormat.JPEG,
     });
-    expect(result).toEqual({ uri: "file:///cache/processed.jpg", width: 1600, height: 1200 });
+    expect(result).toEqual({
+      uri: "file:///cache/processed.jpg",
+      width: 1600,
+      height: 1200,
+      mimeType: PHOTO_MIME_JPEG,
+    });
     expect(image.release).toHaveBeenCalled();
     expect(context.release).toHaveBeenCalled();
   });
@@ -76,11 +87,53 @@ describe("processPhoto", () => {
 });
 
 describe("photoFileFor", () => {
-  test("names the upload part as a JPEG", () => {
-    expect(photoFileFor({ uri: "file:///cache/p.jpg", width: 1, height: 1 })).toEqual({
-      uri: "file:///cache/p.jpg",
+  test("names the processed upload part as a JPEG", () => {
+    expect(
+      photoFileFor({
+        uri: "file:///cache/p.jpg",
+        width: 1,
+        height: 1,
+        mimeType: PHOTO_MIME_JPEG,
+      }),
+    ).toEqual({ uri: "file:///cache/p.jpg", name: "photo.jpg", type: "image/jpeg" });
+  });
+
+  test("keeps a kept original's own type and extension", () => {
+    expect(
+      photoFileFor({ uri: "file:///cache/p.png", width: 1, height: 1, mimeType: "image/png" }),
+    ).toEqual({ uri: "file:///cache/p.png", name: "photo.png", type: "image/png" });
+    expect(
+      photoFileFor({ uri: "file:///cache/p.heic", width: 1, height: 1, mimeType: "image/heic" }),
+    ).toEqual({ uri: "file:///cache/p.heic", name: "photo.heic", type: "image/heic" });
+  });
+
+  test("falls back to JPEG when the type is missing or unrecognised", () => {
+    expect(photoFileFor({ uri: "file:///cache/p", width: 1, height: 1 })).toEqual({
+      uri: "file:///cache/p",
       name: "photo.jpg",
       type: "image/jpeg",
     });
+    expect(
+      photoFileFor({ uri: "file:///cache/p", width: 1, height: 1, mimeType: "image/fictional" }),
+    ).toEqual({ uri: "file:///cache/p", name: "photo.jpg", type: "image/jpeg" });
+  });
+
+  test("never carries the patient's own file name", async () => {
+    const context = jest.mocked(manipulate(ORIGINAL.uri));
+    context.renderAsync.mockRejectedValueOnce(new Error("decode failed"));
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    const kept = await processPhoto({
+      ...ORIGINAL,
+      uri: "file:///cache/rash.png",
+      mimeType: "image/png",
+    });
+
+    expect(photoFileFor(kept)).toEqual({
+      uri: "file:///cache/rash.png",
+      name: "photo.png",
+      type: "image/png",
+    });
+    warn.mockRestore();
   });
 });

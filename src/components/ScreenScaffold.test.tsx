@@ -1,7 +1,7 @@
-import { fireEvent, screen } from "@testing-library/react-native";
+import { act, fireEvent, screen } from "@testing-library/react-native";
 import * as Network from "expo-network";
 import { useRef } from "react";
-import { Platform, ScrollView, StyleSheet, Text } from "react-native";
+import { Dimensions, Keyboard, Platform, ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
 import { renderWithProviders } from "@/test/renderWithProviders";
@@ -33,6 +33,61 @@ function FieldProbe({ withNode = true }: { withNode?: boolean }) {
 }
 
 const mockedState = jest.mocked(Network.useNetworkState);
+
+const addKeyboardListener = jest.spyOn(Keyboard, "addListener");
+const removeKeyboardListener = jest.fn();
+
+type KeyboardListener = Parameters<typeof Keyboard.addListener>[1];
+type KeyboardFrame = Parameters<KeyboardListener>[0];
+
+const WINDOW_HEIGHT = Dimensions.get("window").height;
+const WINDOW_WIDTH = Dimensions.get("window").width;
+const KEYBOARD_TOP = Math.round(WINDOW_HEIGHT / 2);
+
+// The frame iOS reports: its top edge in window coordinates, and whose keyboard it is.
+function keyboardFrame(screenY: number, isEventFromThisApp: boolean): KeyboardFrame {
+  return {
+    duration: 250,
+    easing: "keyboard",
+    isEventFromThisApp,
+    startCoordinates: { screenX: 0, screenY: WINDOW_HEIGHT, width: WINDOW_WIDTH, height: 0 },
+    endCoordinates: {
+      screenX: 0,
+      screenY,
+      width: WINDOW_WIDTH,
+      height: WINDOW_HEIGHT - screenY,
+    },
+  };
+}
+
+// What the iPadOS photo picker reports on dismissal: an empty frame at the window origin, from this
+// app, which taken at face value insets the content by a whole window.
+function emptyKeyboardFrame(): KeyboardFrame {
+  return {
+    duration: 250,
+    easing: "keyboard",
+    isEventFromThisApp: true,
+    startCoordinates: { screenX: 0, screenY: 0, width: 0, height: 0 },
+    endCoordinates: { screenX: 0, screenY: 0, width: 0, height: 0 },
+  };
+}
+
+function emitKeyboardEvent(eventType: string, frame: KeyboardFrame): void {
+  const listener = addKeyboardListener.mock.calls
+    .filter(([type]) => type === eventType)
+    .at(-1)?.[1];
+  expect(listener).toBeDefined();
+  act(() => listener?.(frame));
+}
+
+function emitKeyboardFrame(frame: KeyboardFrame): void {
+  emitKeyboardEvent("keyboardWillChangeFrame", frame);
+}
+
+function roomBelowContent(): number {
+  return StyleSheet.flatten(screen.getByTestId("scaffold").props.contentContainerStyle)
+    .paddingBottom;
+}
 
 // A notched device on its side: the cut-out and the home indicator inset the sides, not only the
 // bottom. The test wrapper's own metrics are portrait, where all three horizontal insets are 0.
@@ -100,6 +155,111 @@ describe("ScreenScaffold", () => {
     expect(screen.getByTestId("scaffold").props.keyboardDismissMode).toBe("on-drag");
 
     Platform.OS = original;
+  });
+});
+
+// iOS hands every scroll view the frame of every keyboard on the device, its own app's or another
+// app's; the photo picker's runs out of process and reports a frame that covers the whole screen.
+describe("ScreenScaffold and the keyboard", () => {
+  beforeEach(() => {
+    addKeyboardListener.mockClear();
+    removeKeyboardListener.mockClear();
+    addKeyboardListener.mockReturnValue({
+      remove: removeKeyboardListener,
+    } as unknown as ReturnType<typeof Keyboard.addListener>);
+  });
+
+  test("makes room below the content for the part this app's keyboard covers", () => {
+    renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+    const closed = roomBelowContent();
+
+    emitKeyboardFrame(keyboardFrame(KEYBOARD_TOP, true));
+
+    expect(roomBelowContent()).toBe(closed + WINDOW_HEIGHT - KEYBOARD_TOP);
+  });
+
+  test("leaves the content alone for a keyboard that belongs to another app", () => {
+    renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+    const closed = roomBelowContent();
+
+    emitKeyboardFrame(keyboardFrame(0, false));
+
+    expect(roomBelowContent()).toBe(closed);
+  });
+
+  test("takes the room back when the keyboard goes away", () => {
+    renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+    const closed = roomBelowContent();
+
+    emitKeyboardFrame(keyboardFrame(KEYBOARD_TOP, true));
+    emitKeyboardFrame(keyboardFrame(WINDOW_HEIGHT, true));
+
+    expect(roomBelowContent()).toBe(closed);
+  });
+
+  test("ignores the empty frame the photo picker reports, which covers nothing", () => {
+    renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+    const closed = roomBelowContent();
+
+    emitKeyboardFrame(emptyKeyboardFrame());
+
+    expect(roomBelowContent()).toBe(closed);
+  });
+
+  test("takes the room back when the keyboard is told to hide", () => {
+    renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+    const closed = roomBelowContent();
+
+    emitKeyboardFrame(keyboardFrame(KEYBOARD_TOP, true));
+    emitKeyboardEvent("keyboardWillHide", keyboardFrame(WINDOW_HEIGHT, true));
+
+    expect(roomBelowContent()).toBe(closed);
+  });
+
+  test("leaves the room to the window on Android, which resizes it itself", () => {
+    const original = Platform.OS;
+    Platform.OS = "android";
+
+    renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+
+    expect(addKeyboardListener).not.toHaveBeenCalled();
+    Platform.OS = original;
+  });
+
+  test("stops listening once the screen is gone", () => {
+    const { unmount } = renderWithProviders(
+      <ScreenScaffold testID="scaffold">
+        <Text>Body</Text>
+      </ScreenScaffold>,
+    );
+
+    unmount();
+
+    expect(removeKeyboardListener).toHaveBeenCalled();
   });
 });
 

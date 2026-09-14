@@ -24,7 +24,10 @@ export const CAMERA_DENIED_NOTE =
 export const PICK_FAILED_NOTE = "We couldn't open your photos just now. Please try again.";
 const PHOTO_HINT = "Add a photo if it helps, for example of a rash or a wound.";
 const OPEN_SETTINGS_LABEL = "Open Settings";
-const PREVIEW_HEIGHT = 200;
+export const PREVIEW_HEIGHT = 200;
+
+// A tablet is wide enough to stretch a portrait photo into a band, so the preview stops here.
+export const PREVIEW_MAX_WIDTH = 360;
 
 // quality 1: the manipulator re-encodes anyway, so picker compression would be a wasted lossy pass.
 const PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
@@ -161,7 +164,12 @@ export function PhotoPicker({
       onPickStarted(pickId);
       onPickReady(
         pickId,
-        await processPhoto({ uri: asset.uri, width: asset.width, height: asset.height }),
+        await processPhoto({
+          uri: asset.uri,
+          width: asset.width,
+          height: asset.height,
+          mimeType: asset.mimeType,
+        }),
       );
     } catch (error) {
       devWarn(`Photo pick failed: ${String(error)}`);
@@ -190,7 +198,9 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   preview: {
     width: "100%",
+    maxWidth: PREVIEW_MAX_WIDTH,
     height: PREVIEW_HEIGHT,
+    alignSelf: "flex-start",
     borderRadius: radius,
     backgroundColor: colors.surface,
   },

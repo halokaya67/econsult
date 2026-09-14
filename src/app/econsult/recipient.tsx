@@ -1,4 +1,5 @@
 import { Stack, useRouter } from "expo-router";
+import { useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { EmptyState } from "@/components/EmptyState";
 import { ErrorState } from "@/components/ErrorState";
@@ -18,6 +19,8 @@ import {
   stepCount,
   stepNumber,
 } from "@/features/econsult/utils/steps";
+import { useFocusOnLayout } from "@/hooks/useFocusOnLayout";
+import { focusForScreenReader, type Focusable } from "@/lib/announce";
 import { HEADER_BUTTON_MAX_FONT_SCALE, spacing } from "@/theme/tokens";
 
 const LOADING_LABEL = "Loading your practice's care team";
@@ -86,6 +89,26 @@ function HomeHeaderButton({ onPress }: { onPress: () => void }) {
   );
 }
 
+// The card is the whole step while the load is failed and it says nothing of its own, so the focus
+// move is what speaks it. Fabric holds no view for it in the commit that adds it, which left the
+// move with nothing to land on, so it waits for the card's first layout.
+function LoadErrorCard({ onRetry }: { onRetry: () => void }) {
+  const card = useRef<Focusable | null>(null);
+  const onLayout = useFocusOnLayout(card, focusForScreenReader);
+
+  return (
+    <ErrorState
+      ref={(node) => {
+        card.current = node;
+      }}
+      onLayout={onLayout}
+      title={ERROR_TITLE}
+      body={ERROR_BODY}
+      onRetry={onRetry}
+    />
+  );
+}
+
 function RecipientBody({
   result,
   selectedId,
@@ -98,9 +121,7 @@ function RecipientBody({
   goHome: () => void;
 }) {
   if (result.status === "loading") return <LoadingCards label={LOADING_LABEL} />;
-  if (result.status === "error") {
-    return <ErrorState title={ERROR_TITLE} body={ERROR_BODY} onRetry={result.retry} />;
-  }
+  if (result.status === "error") return <LoadErrorCard onRetry={result.retry} />;
   if (result.status === "empty") {
     return (
       <EmptyState

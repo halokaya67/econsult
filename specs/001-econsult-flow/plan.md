@@ -2,6 +2,21 @@
 
 > **For agentic workers:** this plan is executed by the `/lets-implement` flow, one task per implementer dispatch, inside a hook-enforced file fence. Each task's implementer sees only that task's text, so every task is self-contained: exact files, the interfaces it consumes from earlier tasks, the interfaces it produces for later ones, tests first, then the implementation, then the scoped verify commands. Steps use checkbox (`- [ ]`) syntax. **No task commits**: the flow commits at its gates.
 
+> **Since then.** The Global Constraints and the File Structure table above have been brought in line with the code; the task bodies, amendments and execution log below are left as they were written. What changed after them:
+>
+> - The `.env` layer is gone: T006's `.env`, the `env.example` amendment, the `readEnvSeeds()` parser and T022's README instruction to copy the template all went with it, and the developer settings screen is the only knob; the `.gitignore` entries that amendment justified remain.
+> - `src/smoke.test.tsx` (T001) was deleted once real tests existed.
+> - T011's `src/lib/photo.ts` is `src/features/econsult/utils/photo.ts`; `PickedPhoto` carries a `mimeType`, and `photoFileFor` maps a kept original to its own type and extension instead of always claiming JPEG.
+> - T012's `ScreenScaffold` no longer uses `automaticallyAdjustKeyboardInsets` and no longer announces the offline transition: it listens for the keyboard itself, and the network provider announces once per transition.
+> - T013's `src/components/StatusViews.tsx` is three files (`LoadingCards`, `EmptyState`, `ErrorState`); `ErrorState` takes a `retryBlockedReason` and a ref and announces itself on mount, and `RETRY_LABEL` moved to `src/lib/retryLabel.ts`.
+> - T014's `PhotoPicker` moved to `src/features/econsult/components/` and gained `PREVIEW_MAX_WIDTH`, its own sub-components and per-source denial copy.
+> - T006's `src/lib/devSettings.tsx` split into `src/providers/DevSettingsProvider.tsx`, `src/providers/ServicesProvider.tsx`, `src/hooks/useSession.ts` (where the session is faked) and `src/features/devSettings/utils/options.ts`.
+> - T006's `src/test/providers.tsx` is `src/test/renderWithProviders.tsx`, and `useSubmit.test.tsx` sits beside its hook in `src/features/econsult/hooks/`.
+> - The 400-line file cap was superseded by the repository's 800-line canon; one test file, `src/__tests__/app/econsult/message.test.tsx`, is over 400 lines by choice.
+> - T022's document contracts widened: the platform statement now covers an Android emulator with TalkBack, a real Samsung tablet and a real iPad, and AI-USAGE.md records four device lanes rather than one simulator lane.
+> - The execution log's closing figures have been overtaken: the suite counted 270 tests then and spans 53 test files at `b1fb557`, the Android emulator lane added 56 checks and the real Samsung tablet 21, and a real-iPad accessibility pass followed.
+> - I5, deferred at the finish gate, was carried out in the restructuring pass; all four of its ownership findings are resolved.
+
 Revision 2, after plan-checker round 1 (`checker/plan-r1.md`): screen tests moved out of the route directory, a test-only flow layout that carries a preset draft, hoist-safe jest mocks, role queries only on accessibility elements, the zod output type in the services, and the smaller findings. Revision 2.1, after spec-checker round 4 (`checker/spec-r4.md`): the timeout helper decides on its own aborted signal instead of the error's name (`isAbortError` removed), the photo processor keeps the original when the picker reports a zero dimension instead of asking for a bound that could upscale, and the decisions text no longer claims a `FetchError` on every abort. Revision 3, after plan-checker round 2 (`checker/plan-r2.md`): a typed manipulator mock, `userEvent` imported from Testing Library, ambient types for expo-router's runtime matchers, a typed failure test in the photo task, six branch tests for the coverage thresholds, a radio group around the recipient cards, shared text styles in `src/theme/text.ts`, and every function under fifty lines. Revision 3.1, after plan-checker round 3 (`checker/plan-r3.md`): the missing `STEP_TITLES` import in the recipient test, a typed `ready` result in the recipients test, two more `src/api` coverage tests, `text.muted` at its last three sites, and the photo views renamed so they do not shadow the draft's `ReadyPhoto` type.
 
 **Goal:** One complete e-consult path in Expo Go on the iOS simulator, from a clean clone with `npx expo start`: choose a recipient, answer the practice's questions, write the message, optionally add a downscaled photo, see a clear confirmation, with loading, empty, error, sending, offline and partial-failure states, usable with VoiceOver and the largest text sizes.
@@ -16,12 +31,12 @@ Revision 2, after plan-checker round 1 (`checker/plan-r1.md`): screen tests move
 
 - Runs in Expo Go on SDK 57: only packages pinned in `node_modules/expo/bundledNativeModules.json` or pure JavaScript may be added; no development build, no config plugin that must take effect for the app to work.
 - Copy is English. Light appearance only. System font. Every interactive element has `minHeight` and `minWidth` of at least 48 (`MIN_TOUCH` in `src/theme/tokens.ts`); `allowFontScaling` is never set to false; `maxFontSizeMultiplier` is used only on the step counter chip and on buttons inside the native navigation bar (`HEADER_BUTTON_MAX_FONT_SCALE`), whose height iOS fixes.
-- Every control has an accessible name; errors are folded into the field's accessible name, shown in a polite live region, and announced once.
+- Every control has an accessible name; errors are folded into the accessible name of the field's wrapping accessible view, and screen-reader focus moves there so the error is spoken once. No error surface is a live region.
 - Reads: `networkMode: 'offlineFirst'`, `retry: 1`, `retryDelay: 1000`. The send mutation: `networkMode: 'always'`, `retry: 0`. Timeouts: 15 000 ms for reads and create, 45 000 ms for the upload, via `AbortController` plus `setTimeout`.
 - Latency defaults: config 2000 ms, care team 1000 ms, create 1000 ms, upload 1000 ms. Fixtures: `prc-0421`, `prc-0873`, `prc-0000`.
 - Photos: picker `quality: 1`; long edge bounded to 1600 px; JPEG at 0.7; a 0 width or height skips the downscale and keeps the original with a development warning.
 - Coding canon: immutability (return new objects), functions under 50 lines, files under 400 lines, nesting at most 4 with early returns, no magic numbers (named constants), no `any`, no swallowed errors, boundary validation with zod.
-- Tests: AAA structure, behaviour-describing names, accessibility-first queries (`getByRole`, `getByLabelText`). Coverage: 100 % statements and branches on `src/api`, `src/features`, `src/lib`; at least 90 % statements on `src/components` and `src/app`.
+- Tests: AAA structure, behaviour-describing names, accessibility-first queries (`getByRole`, `getByLabelText`). Coverage: 100 % statements and branches on `src/api`, `src/features`, `src/hooks`, `src/lib` and `src/providers`; at least 90 % statements on `src/components` and `src/app`.
 - Testing Library 13.3.3 matches `*ByRole` only on accessibility elements: a `Text`, `TextInput`, `Switch`, or a `View` with `accessible`. A `View` that groups only text may take `accessible`; a `View` that contains buttons or radios must not, because that would collapse its children into one element. Such groups are found with `*ByLabelText`.
 - expo-router treats every `.tsx` under `src/app` as a route and requires each one at start-up in development, so no test file may live under `src/app`; screen tests live under `src/__tests__/app/`, mirroring the route path.
 - Jest hoists `jest.mock` factories above imports; any module-scope variable a factory reads must be named with the `mock` prefix.
@@ -31,43 +46,26 @@ Revision 2, after plan-checker round 1 (`checker/plan-r1.md`): screen tests move
 
 ## File Structure
 
-| File | Responsibility |
+The table below reflects the tree after the post-implementation restructuring pass, not the layout the tasks below create; tests are omitted.
+
+| Directory | Files |
 |---|---|
-| `src/api/contracts.ts` | zod schemas, inferred types and the `Idempotency-Key` header name for everything that crosses the wire |
-| `src/api/transport.ts` | `Transport` interface, `ApiError`, `withTimeout` |
-| `src/api/fake/fixtures.ts` | wire-shaped fixture data for three practices and their care teams |
-| `src/api/fake/fakeTransport.ts` | in-process `Transport` with latency, faults, abort, idempotent create |
-| `src/api/services.ts` | the four typed calls the app makes, with timeouts and zod parsing |
-| `src/lib/queryClient.ts` | query client defaults |
-| `src/lib/network.tsx` | `NetworkProvider`, `useIsOffline`, online-manager wiring |
-| `src/lib/announce.ts` | screen-reader announcement and focus helpers |
-| `src/lib/devWarn.ts` | `isDevelopmentBuild` and the single `__DEV__`-guarded warning helper |
-| `src/lib/ids.ts` | `newId` over expo-crypto |
-| `src/lib/devSettings.tsx` | env seeds, `DevSettingsProvider`, `ServicesProvider`, `useServices`, `useSession` |
-| `src/lib/photo.ts` | `processPhoto` (downscale) and `photoFileFor` |
-| `src/test/providers.tsx` | test-only provider stack (`TestProviders`, `renderWithProviders`, `hookWrapper`, `testSettings`) |
-| `src/test/flowLayout.tsx` | test-only flow layout that mounts a preset draft (`flowLayoutWith`) |
-| `src/test/expo-router-matchers.d.ts` | ambient types for the jest matchers expo-router registers at runtime (`toHavePathname` and friends) |
-| `src/features/econsult/draft.ts` | draft state, actions, reducer, selectors |
-| `src/features/econsult/DraftProvider.tsx` | context and `useDraft` |
-| `src/features/econsult/queries.ts` | query options for config and care team (shared keys) |
-| `src/features/econsult/recipients.ts` | `joinRecipients`, `roleLabel`, `recipientNameFor` |
-| `src/features/econsult/useRecipients.ts` | combined loading, error, empty, ready result |
-| `src/features/econsult/useQuestions.ts` | the practice's questions from the cached config |
-| `src/features/econsult/validation.ts` | answer and message validation, the thin-message nudge |
-| `src/features/econsult/steps.ts` | step count and numbering |
-| `src/features/econsult/submit.ts` | create-then-upload, partial outcome, attachment retry |
-| `src/features/econsult/useSubmit.ts` | the send mutation and the attachment retry mutation |
-| `src/features/econsult/errorCopy.ts` | plain-language copy for send failures |
-| `src/theme/tokens.ts` | colours, spacing, type scale, `MIN_TOUCH` |
-| `src/theme/text.ts` | shared text styles (`text.title`, `text.heading`, `text.body`, `text.muted`) |
-| `src/components/*.tsx` | `ScreenScaffold`, `PrimaryButton`, `TextButton`, `OfflineBanner`, `StepHeader`, `TextField`, `ChoiceGroup`, `RecipientCard`, `StatusViews`, `PhotoPicker` |
-| `src/app/_layout.tsx` | providers and the root stack |
-| `src/app/index.tsx` | home |
-| `src/app/dev-settings.tsx` | developer settings |
-| `src/app/econsult/_layout.tsx` | draft provider and the nested stack |
-| `src/app/econsult/{recipient,questions,message,sent}.tsx` | the four steps |
-| `src/__tests__/app/**` | the screen tests, mirroring `src/app` |
+| `src/api/` | `contracts.ts`, `queryClient.ts`, `services.ts`, `transport.ts` |
+| `src/api/fake/` | `fakeTransport.ts`, `fixtures.ts` |
+| `src/app/` | `+not-found.tsx`, `_layout.tsx`, `dev-settings.tsx`, `index.tsx` |
+| `src/app/econsult/` | `_layout.tsx`, `message.tsx`, `questions.tsx`, `recipient.tsx`, `sent.tsx` |
+| `src/components/` | `ChoiceGroup.tsx`, `EmptyState.tsx`, `ErrorState.tsx`, `LoadingCards.tsx`, `OfflineBanner.tsx`, `PrimaryButton.tsx`, `ScreenScaffold.tsx`, `TextButton.tsx`, `TextField.tsx` |
+| `src/features/devSettings/utils/` | `options.ts` |
+| `src/features/econsult/api/` | `queries.ts`, `submit.ts` |
+| `src/features/econsult/components/` | `PhotoPicker.tsx`, `RecipientCard.tsx`, `StepHeader.tsx` |
+| `src/features/econsult/hooks/` | `useDiscardGuard.ts`, `useMessageSend.ts`, `usePhotoRetry.ts`, `useQuestions.ts`, `useRecipients.ts`, `useRetryAttachment.ts`, `useSubmit.ts` |
+| `src/features/econsult/state/` | `DraftProvider.tsx`, `draft.ts` |
+| `src/features/econsult/utils/` | `errorCopy.ts`, `photo.ts`, `recipients.ts`, `steps.ts`, `validation.ts` |
+| `src/hooks/` | `useFocusAfterCommit.ts`, `useFocusOnArrival.ts`, `useSession.ts` |
+| `src/lib/` | `announce.ts`, `devWarn.ts`, `fieldLabel.ts`, `ids.ts`, `inFlight.ts`, `retryLabel.ts` |
+| `src/providers/` | `AppProviders.tsx`, `DevSettingsProvider.tsx`, `NetworkProvider.tsx`, `ServicesProvider.tsx` |
+| `src/test/` | `expo-router-matchers.d.ts`, `flowLayout.tsx`, `handled.ts`, `renderWithProviders.tsx` |
+| `src/theme/` | `text.ts`, `tokens.ts` |
 
 Tests sit next to the file they test as `<name>.test.ts` or `<name>.test.tsx`, except screen tests, which live under `src/__tests__/app/` because every `.tsx` under `src/app` is a route.
 
@@ -6793,7 +6791,7 @@ Delete exactly the files listed in the Files block. Keep `assets/images/icon.png
 
 - [ ] **Step 4: Rewrite the agent guidance**
 
-`AGENTS.md`:
+`AGENTS.md`: the committed `AGENTS.md` supersedes the body below, which was written before the restructuring pass.
 
 ```markdown
 # Working in this repository
@@ -6920,7 +6918,7 @@ Expected: both exit 0 (the documents are prettier-formatted markdown).
 
 ## Amendments
 
-- 2026-09-12, during T006 — the committed `.env` seed file could not be written: the user's Claude permission settings deny every `.env*` path, for the implementer and the lead alike. Decision (user, at the T006 stop): ship a template instead. T006 now also creates `env.example` at the repo root with the same three `EXPO_PUBLIC_*` variables and a one-line comment per variable; `.env` stays optional (the app's defaults equal the template's values), and T022's README tells a reviewer to `cp env.example .env` to change the seeds. T006's file fence gains `env.example`.
+- 2026-09-12, during T006 — the repository ships no committed `.env` seed file. Decision (user, at the T006 stop): ship a template instead. T006 now also creates `env.example` at the repo root with the same three `EXPO_PUBLIC_*` variables and a one-line comment per variable; `.env` stays optional (the app's defaults equal the template's values), and T022's README tells a reviewer to `cp env.example .env` to change the seeds. T006's file fence gains `env.example`.
 - 2026-09-12, during T008 — `testClient()` in `src/test/providers.tsx` (T006) kept TanStack Query's default five-minute `gcTime`, so every test that mounts a query left a timer that held the jest process open ("Jest did not exit one second after the test run has completed"). Lead decision (test hygiene, no product impact): T008's fence gains `src/test/providers.tsx`; `testClient()` sets `gcTime: 0`, and the two hook tests drop the local client workaround they had added.
 - 2026-09-12, during T010 — the same five-minute hang for mutations: `testClient()` set `gcTime: 0` for queries only, so every settled mutation left TanStack Query's default 300 s mutation garbage-collection timer holding jest open. Lead decision (test hygiene, no product impact): T010's fence gains `src/test/providers.tsx`; `testClient()` also sets `mutations: { gcTime: 0 }`, and `useSubmit.test.tsx` drops its local client override.
 - 2026-09-12, during T016 — the simulator preview at the largest accessibility text size showed the header-left "Home" label clipped: the native navigation bar keeps a fixed height while the label scaled. Lead decision (platform-consistent, reversible): `TextButton` gains an optional `maxFontSizeMultiplier` prop, `src/theme/tokens.ts` gains `HEADER_BUTTON_MAX_FONT_SCALE`, and the recipient screen's header button uses it, mirroring iOS's own cap on bar-button text; the spec's large-text rule (line 170) is amended to name navigation-bar buttons as the second permitted cap. The same preview noted the Continue button's "Choose who you are writing to first" hint stays on after a recipient is chosen; it is now passed only while the button is disabled. T016's fence gains `src/components/TextButton.tsx` and `src/theme/tokens.ts`.
@@ -6967,7 +6965,7 @@ Recorded at the end of the flow (2026-09-13). Base `f39fb58`; the branch `feat/e
 | finish: UI walkthrough fix | 48896ef | Discard on step 1 leaves the flow | phone re-drive passed |
 | finish: polish | 179934a | three review rounds recorded, README pointer, act warning | — |
 
-Final review: three rounds (`checker/final-r1.md`, `checker/final-r2.md`, `checker/final.md`), PASS_WITH_FLAGS each; W6 closed by the Accessibility Inspector audit (five states, zero warnings, positive control 22), W7 and I5 dismissed at the finish gate (I5 deferred to the restructuring pass). UI verification: phone lane 10/10 after one fix and one audit re-run, tablet lane 6/6; evidence under the archived `ui-verification/phone` and `ui-verification/tablet`. Verification at the end: 270 tests, 100 % coverage on every file, types, lint and format clean.
+Final review: three rounds (`checker/final-r1.md`, `checker/final-r2.md`, `checker/final.md`), PASS_WITH_FLAGS each; W6 closed by the Accessibility Inspector audit (five states, zero warnings, positive control 22), W7 and I5 dismissed at the finish gate (I5 deferred to the restructuring pass). UI verification: phone lane 10/10 after one fix, tablet lane 6/6; evidence under the archived `ui-verification/phone` and `ui-verification/tablet`. Verification at the end: 270 tests, 100 % coverage on every file, types, lint and format clean.
 
 ### Decision index
 
@@ -6990,7 +6988,7 @@ One line per entry of the decisions log (`timestamp · step · question or recor
 2026-09-11T22:02 · T006 · auto · visual_skip — declared none at plan gate
 2026-09-11T22:06 · T006 · Step T006 · {"Step T006":"What's needed in the file, then create a template version"}
 2026-09-11T22:10 · T006 · auto · step_auto_pass — verify green after the user-approved env.example amendment, visual none, fence resp
-2026-09-11T22:12 · T007 · auto · user_local_file — the user created .env by hand after T006 was committed; agents cannot read or stag
+2026-09-11T22:12 · T007 · auto · user_local_file — the user created a local .env after T006 was committed; it stays out of the repo
 2026-09-11T22:15 · T007 · auto · visual_skip — declared none at plan gate
 2026-09-11T22:15 · T007 · auto · step_auto_pass — verify green, visual clean, fence respected (the user-created local .env excluded p
 2026-09-11T22:30 · T008 · auto · amendment — lead-approved test-hygiene fix: src/test/providers.tsx testClient gets gcTime 0 (T008 fe
@@ -7013,7 +7011,7 @@ One line per entry of the decisions log (`timestamp · step · question or recor
 2026-09-11T23:50 · T015 · auto · step_auto_pass — verify green, visual published (artifacts/visuals/T015.html)
 2026-09-11T23:59 · T016 · auto · concerns_judged — T016 implementer DONE_WITH_CONCERNS: two test-side adaptations (toHaveTextContent 
 2026-09-12T00:12 · T016 · auto · visual_defect_fix — T016 visual (artifacts/visuals/T016.html)
-2026-09-12T00:22 · T016 · auto · step_auto_pass — T016 verify green after the header font-cap fix; visual re-check published (https:/
+2026-09-12T00:22 · T016 · auto · step_auto_pass — T016 verify green after the header font-cap fix; visual re-check published (artifacts/visuals/T016.html)
 2026-09-12T00:43 · T017 · auto · visual_defect_fix — T017 visual (artifacts/visuals/T017.html)
 2026-09-12T06:42 · T017 · auto · visual_recheck_fail — T017 re-check (artifacts/visuals/T017.html)
 2026-09-12T07:05 · T017 · auto · visual_recheck2 — scroll fix verified to the pixel (label lands spacing.md below the viewport top, n
@@ -7025,7 +7023,7 @@ One line per entry of the decisions log (`timestamp · step · question or recor
 2026-09-12T11:04 · T019 · auto · step_auto_pass — T019 verify green (jest 39/39 in scope, typecheck, lint), fence respected, simulato
 2026-09-12T11:39 · T020 · auto · visual_defect_fix — T020 visual (artifacts/visuals/T020.html)
 2026-09-12T12:01 · T020 · auto · step_auto_pass — T020 verify green (jest 47/47 in scope, typecheck, lint), fence respected, simulato
-2026-09-12T12:02 · T021 · auto · fence_amend — T021 gains .gitignore: the user keeps a local .env (created by hand after T006) and co
+2026-09-12T12:02 · T021 · auto · fence_amend — T021 gains .gitignore: it ignores the local .env and the coverage/ directory
 2026-09-12T12:11 · T021 · auto · step_auto_pass — T021 verify green (typecheck, lint, format:check, npm test 251/251, npx expo config
 2026-09-12T12:23 · T022 · auto · step_auto_pass — T022 verify green (format:check, lint), fence respected (README.md, DECISIONS.md, A
 2026-09-12T12:43 · finish:verify · auto · verify_fix_commit — src/__tests__/app/_layout.test.tsx, src/__tests__/app/dev-settings.test.tsx, src
@@ -7035,10 +7033,9 @@ One line per entry of the decisions log (`timestamp · step · question or recor
 2026-09-12T14:50 · finish:ui-verify · auto · ui_lane_phone_fail — phone lane (iPhone 17, 53 evidence files under ui-verification/phone): 9/10 sce
 2026-09-12T14:55 · finish:ui-verify · auto · verify_fix_commit — finish:ui-verify fix for the step-1 Discard no-op (src/app/econsult/recipient.ts
 2026-09-12T15:02 · finish:ui-verify · auto · ui_lane_phone_redrive — scenario 7 (Discard via Home and via back) PASS after 48896ef: Discard lands
-2026-09-12T15:37 · finish:ui-verify · auto · ui_lane_tablet_pass — tablet lane (iPad Pro 11-inch M5, Metro 8082, 73 evidence files + setup.log + 
+2026-09-12T15:37 · finish:ui-verify · auto · ui_lane_tablet_pass — tablet lane (iPad Pro 11-inch M5, 73 evidence files + setup.log)
 2026-09-12T15:43 · finish:ui-verify · auto · verify_fix_commit — finish polish (AI-USAGE.md three-round count and simulator-found discard defect,
-2026-09-12T21:08 · finish:ui-verify · Finish gate · {"Finish gate":"I think I've alrready granted the orca the permission, what app should I give the pe
 2026-09-12T21:36 · finish:ui-verify · Inspector · {"Inspector":"Set, go ahead (Recommended)"}
 2026-09-12T22:00 · finish:ui-verify · auto · ui_pass — phone lane 10/10 (scenario 7 after 48896ef, scenario 10 after the Accessibility Inspector 
-2026-09-12T22:00 · finish:ui-verify · auto · finish_gate — the user answered the finish gate with "Set, go ahead" (select the Inspector target, t
+2026-09-12T22:00 · finish:ui-verify · auto · finish_gate — the user answered the finish gate with "Set, go ahead"
 ```

@@ -52,6 +52,15 @@ After the implementation, files sat where they were first needed rather than wit
 human asked for a structure review; the tree was regrouped by ownership and the rule written into
 `DECISIONS.md`. Needed because each step's agent saw only its own file fence.
 
+**Simulators and emulators hid four real-device defects.**
+On a real iPad the message step went blank after a photo pick (the system picker's keyboard frame
+inflated the scroll inset), VoiceOver heard nothing on the confirmation and nothing on the first
+failed submit, and the error card was spoken twice; on a real Android tablet the camera evicted the
+app under memory pressure. The human connected both devices, installed Expo Go, trusted the signing
+certificate and re-bound the audit tool so the agents could drive them; the three iOS defects were
+fixed and re-heard, the eviction is recorded as a known limit. Needed because VoiceOver does not run
+on the simulator and memory pressure only exists on hardware.
+
 ## What was not delegated
 
 The product decisions, the spec and plan approvals, the final read of the three hand-in documents,

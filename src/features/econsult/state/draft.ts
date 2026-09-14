@@ -1,6 +1,13 @@
 export type DraftPhoto =
   | { status: "preparing"; pickId: string }
-  | { status: "ready"; pickId: string; uri: string; width: number; height: number };
+  | {
+      status: "ready";
+      pickId: string;
+      uri: string;
+      width: number;
+      height: number;
+      mimeType?: string;
+    };
 
 export type ReadyPhoto = Extract<DraftPhoto, { status: "ready" }>;
 
@@ -21,7 +28,14 @@ export type DraftAction =
   | { type: "answerChanged"; questionId: string; value: string }
   | { type: "messageChanged"; message: string }
   | { type: "photoPickStarted"; pickId: string }
-  | { type: "photoReady"; pickId: string; uri: string; width: number; height: number }
+  | {
+      type: "photoReady";
+      pickId: string;
+      uri: string;
+      width: number;
+      height: number;
+      mimeType?: string;
+    }
   | { type: "photoRemoved" }
   | { type: "submitStarted"; idempotencyKey: string }
   | { type: "econsultCreated"; econsultId: string }

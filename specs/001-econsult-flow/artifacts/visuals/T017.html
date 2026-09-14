@@ -350,11 +350,13 @@
     <p class="verdict">Pass <span>5 of 5 checks</span></p>
   </header>
 
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> What a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
+
+
   <dl class="runcard">
-    <div><dt class="k">Device</dt><dd class="v">iPhone 17 sim<br>32D75620&hellip;C0753AF</dd></div>
+    <div><dt class="k">Device</dt><dd class="v">iPhone 17 sim</dd></div>
     <div><dt class="k">Host app</dt><dd class="v">Expo Go<br>host.exp.Exponent</dd></div>
-    <div><dt class="k">Driver</dt><dd class="v">agent-device 0.21.0</dd></div>
-    <div><dt class="k">Metro</dt><dd class="v">expo start --clear<br>port 8081, killed after</dd></div>
     <div><dt class="k">Scroll viewport</dt><dd class="v num">y 116 &rarr; 874 (758 pt)</dd></div>
     <div><dt class="k">Text size restored</dt><dd class="v">medium (verified)</dd></div>
   </dl>
@@ -467,7 +469,7 @@
           </tr>
           <tr>
             <td>1c</td>
-            <td>No <span class="mono">measureLayout</span> warning in Metro output, and no LogBox toast in either tree.
+            <td>No <span class="mono">measureLayout</span> warning in the bundler log, and no LogBox toast in either tree.
               <br><span class="mono num">grep -c measureLayout setup.log &rarr; 0</span></td>
             <td><span class="pill">Pass</span></td>
             <td class="file">setup.log<br>a11y-after.txt</td>
@@ -576,21 +578,9 @@ index 41  radio button, unchecked  y 1294.67   "Longer than a month"</pre>
       <li>
         <span class="marker m-open">Unverified</span>
         <span>
-          VoiceOver announcement and screen-reader focus order are still untested &mdash; the driver
-          exposes no focus or announcement channel. A VoiceOver pass is needed before the accessibility
+          VoiceOver announcement and screen-reader focus order are still untested &mdash; neither
+          could be captured on this device. A VoiceOver pass is needed before the accessibility
           claim is fully closed.
-        </span>
-      </li>
-      <li>
-        <span class="marker m-scope">Driver</span>
-        <span>
-          <span class="mono">agent-device</span> sessions are keyed by working directory, and a stale
-          <span class="mono">default</span> session must be closed before <span class="mono">open</span>
-          succeeds. <span class="mono">scroll bottom</span> still cannot reach the foot of the AX3XL
-          questions screen (~3348&nbsp;pt of content); manual
-          <span class="mono">scroll down &lt;amount&gt;</span> loops work. The iOS interactive snapshot
-          exposes only the presented frontier, so Continue had to be tapped by coordinate taken from
-          <span class="mono">snapshot --raw</span>.
         </span>
       </li>
     </ul>
