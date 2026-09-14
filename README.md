@@ -21,6 +21,15 @@ npx expo start
 Press `i` to open the iOS simulator, or scan the QR code with the Camera app on iOS or with Expo Go
 on Android. The backend is faked in process, so there is no server to configure or start.
 
+```bash
+npm run showcase
+```
+
+That opens the dashboard of how this app was built: the research, the spec and plan reviews, the 22
+implementation steps with their simulator proofs, the device verification and the reviews that
+followed, each linked to its evidence. It is a local page under `specs/`; see "How it was built"
+below.
+
 ## Recording
 
 - [One path through the flow](specs/001-econsult-flow/artifacts/recording/econsult-one-path.mp4) —
