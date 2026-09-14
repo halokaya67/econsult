@@ -1,6 +1,6 @@
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import type { PhotoFile } from "@/api/transport";
-import { devWarn } from "./devWarn";
+import { devWarn } from "@/lib/devWarn";
 
 export const PHOTO_MAX_EDGE = 1600;
 export const PHOTO_JPEG_QUALITY = 0.7;

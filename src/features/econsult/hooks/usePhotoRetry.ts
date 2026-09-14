@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { announce } from "@/lib/announce";
-import { photoFileFor } from "@/lib/photo";
-import { readyPhoto } from "./draft";
-import { useDraft } from "./DraftProvider";
-import { sendErrorCopy } from "./errorCopy";
+import { readyPhoto } from "../state/draft";
+import { useDraft } from "../state/DraftProvider";
+import { sendErrorCopy } from "../utils/errorCopy";
+import { photoFileFor } from "../utils/photo";
 import { useRetryAttachment } from "./useSubmit";
 
 export const PHOTO_STILL_FAILED =
@@ -35,7 +35,8 @@ export function usePhotoRetry() {
         announce(PHOTO_STILL_FAILED);
       }
     } catch (error) {
-      // The alert is already mounted, so iOS only speaks the new line when it is announced.
+      // The alert is already mounted and is not a live region, so announcing is what speaks the
+      // new line, once, on both platforms.
       announce(sendErrorCopy(error));
     } finally {
       isInFlight.current = false;

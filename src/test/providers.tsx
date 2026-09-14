@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { render, type RenderResult } from "@testing-library/react-native";
 import { useState, type ReactElement, type ReactNode } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { DEFAULT_PRACTICE_ID, type DevSettings } from "@/lib/devSettings";
+import { DEFAULT_PRACTICE_ID, type DevSettings } from "@/features/devSettings/utils/settings";
 import { AppProviders } from "@/providers/AppProviders";
 
 export type ProviderOptions = { settings?: Partial<DevSettings>; client?: QueryClient };

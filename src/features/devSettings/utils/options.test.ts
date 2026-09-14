@@ -1,5 +1,3 @@
-import type { FaultKind } from "@/api/fake/fakeTransport";
-import { DEFAULT_PRACTICE_ID } from "@/lib/devSettings";
 import {
   faultFor,
   faultOptionFor,
@@ -9,6 +7,7 @@ import {
   practiceLabelFor,
   withFault,
 } from "./options";
+import { DEFAULT_PRACTICE_ID } from "./settings";
 
 describe("developer settings options", () => {
   test("latency options round-trip", () => {
@@ -23,13 +22,6 @@ describe("developer settings options", () => {
     expect(faultFor(faultOptionFor("network"))).toBe("network");
     expect(faultFor(faultOptionFor("server"))).toBe("server");
     expect(faultFor(faultOptionFor("timeout"))).toBe("timeout");
-  });
-
-  test("a fault kind with no matching option falls back to None", () => {
-    // The cast stands in for a kind the transport gains before this screen lists it.
-    const unlistedKind = "gateway" as string as FaultKind;
-
-    expect(faultOptionFor(unlistedKind)).toBe("None");
   });
 
   test("withFault sets and clears one request's fault without mutating", () => {

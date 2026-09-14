@@ -8,11 +8,16 @@ import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { EmptyState, ErrorState, LoadingCards } from "@/components/StatusViews";
 import { StepHeader } from "@/components/StepHeader";
 import { TextButton } from "@/components/TextButton";
-import { shouldGuardLeaving, type DraftState } from "@/features/econsult/draft";
-import { useDraft } from "@/features/econsult/DraftProvider";
-import { roleLabel, type RecipientsResult } from "@/features/econsult/recipients";
-import { stepAfterRecipient, STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/steps";
-import { useRecipients } from "@/features/econsult/useRecipients";
+import { useRecipients } from "@/features/econsult/hooks/useRecipients";
+import { shouldGuardLeaving, type DraftState } from "@/features/econsult/state/draft";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
+import { roleLabel, type RecipientsResult } from "@/features/econsult/utils/recipients";
+import {
+  stepAfterRecipient,
+  STEP_TITLES,
+  stepCount,
+  stepNumber,
+} from "@/features/econsult/utils/steps";
 import { HEADER_BUTTON_MAX_FONT_SCALE, spacing } from "@/theme/tokens";
 
 const LOADING_LABEL = "Loading your practice's care team";

@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 import { TestProviders } from "@/test/providers";
-import { initialDraft, type DraftState } from "./draft";
-import { DraftProvider } from "./DraftProvider";
-import * as submitModule from "./submit";
+import * as submitModule from "../api/submit";
+import { initialDraft, type DraftState } from "../state/draft";
+import { DraftProvider } from "../state/DraftProvider";
 import { usePhotoRetry } from "./usePhotoRetry";
 
 const READY_PHOTO = {

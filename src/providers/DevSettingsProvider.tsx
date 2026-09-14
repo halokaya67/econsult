@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { seedsFromEnv, type DevSettings } from "@/lib/devSettings";
+import { seedsFromEnv, type DevSettings } from "@/features/devSettings/utils/settings";
 
 type DevSettingsContextValue = { settings: DevSettings; apply: (next: DevSettings) => void };
 

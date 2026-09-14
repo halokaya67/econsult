@@ -1,7 +1,7 @@
 import { onlineManager } from "@tanstack/react-query";
 import { useNetworkState } from "expo-network";
 import { createContext, useContext, useEffect, useRef, type ReactNode } from "react";
-import { announce } from "./announce";
+import { announce } from "@/lib/announce";
 
 export const OFFLINE_MESSAGE =
   "You're offline. You can keep writing, but sending needs a connection.";
@@ -37,6 +37,7 @@ export function NetworkProvider({
   return <OfflineContext.Provider value={isOffline}>{children}</OfflineContext.Provider>;
 }
 
+// Defaults to online outside a provider, so a component can read the link without one.
 export function useIsOffline(): boolean {
   return useContext(OfflineContext);
 }

@@ -1,8 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import type { PhotoFile } from "@/api/transport";
 import { useServices } from "@/providers/ServicesProvider";
-import type { AttachmentStatus } from "./draft";
-import { retryAttachment, submitEConsult, type SubmitInput, type SubmitOutcome } from "./submit";
+import {
+  retryAttachment,
+  submitEConsult,
+  type SubmitInput,
+  type SubmitOutcome,
+} from "../api/submit";
+import type { AttachmentStatus } from "../state/draft";
 
 // "always": a send must never sit paused behind a wrong offline flag; the timeout is the authority.
 export function useSubmit(onCreated: (econsultId: string) => void) {

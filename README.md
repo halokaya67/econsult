@@ -84,26 +84,38 @@ Coverage is enforced per area: 100 % of statements, branches, functions and line
 `src/features`, `src/lib` and `src/providers`, and at least 90 % of statements on `src/components`
 and `src/app`.
 
-## Source layout
+## Where to find things
 
-| Path                               | What lives there                                                                                                                          |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/api`                          | zod contracts, the `Transport` interface, the timeout helper, and the typed services                                                      |
-| `src/api/fake`                     | The in-process fake transport (latency, faults, abort, idempotency) and the three fixtures                                                |
-| `src/providers`                    | The provider stack the app and the tests share: developer settings, services, network, the faked session                                  |
-| `src/features/econsult`            | The draft reducer and provider, validation, the step model, the send path, the hooks screens call                                         |
-| `src/features/econsult/components` | The components only this flow uses: the photo picker                                                                                      |
-| `src/features/devSettings`         | The option tables and helpers behind the developer-settings screen                                                                        |
-| `src/lib`                          | Query client, network state, announcements, `devWarn`/`isDevelopmentBuild`, ids, photo processing, developer-settings parsing             |
-| `src/components`                   | The accessible building blocks: scaffold, buttons, text field, choice group, and the shared field-label helpers                           |
-| `src/theme`                        | Colour, spacing, type-scale and touch-target tokens, plus the shared text styles                                                          |
-| `src/app`                          | The expo-router routes: home, developer settings, and the four flow screens                                                               |
-| `src/__tests__/app`                | The screen tests, mirroring the route paths                                                                                               |
-| `src/test`                         | Test-only helpers: the provider wrapper, a flow layout that presets a draft, a handled-rejection helper and the expo-router matcher types |
+The first layer of `src` groups by responsibility — what a folder is for — and the second groups by
+kind, so a feature always has the same shape inside it.
 
-Unit tests sit next to the code they cover. Screen tests are the exception: expo-router treats every
-`.tsx` under `src/app` as a route and requires each one at start-up in development, so a test file
-there would break the app instead of testing it.
+| I'm looking for…                                              | Look in                                                                                                       |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| A screen                                                      | `src/app` — routes only, nothing else; expo-router requires every file here at start-up                       |
+| The backend contract, the transport, and the fake behind them | `src/api`                                                                                                     |
+| App-wide context and the wiring that mounts it                | `src/providers`                                                                                               |
+| Something the patient does, end to end                        | `src/features/<name>`                                                                                         |
+| A UI building block more than one feature uses                | `src/components`                                                                                              |
+| Shared logic that is not UI                                   | `src/lib`                                                                                                     |
+| Colour, spacing, type-scale and touch-target tokens           | `src/theme`                                                                                                   |
+| A helper the tests share                                      | `src/test`                                                                                                    |
+| A screen's test                                               | `src/__tests__/app` — unit tests sit beside their code, but a test under `src/app` would be loaded as a route |
+
+Every feature is laid out the same way:
+
+```
+src/features/econsult/
+  api/         reads and writes
+  state/       the draft reducer
+  hooks/       what screens call
+  components/  UI used here
+  utils/       pure rules, copy
+```
+
+No loose files at a feature root: everything belongs to one of those five kinds.
+
+A file lives inside a feature only while that feature is its sole owner; the moment a second one
+needs it, it moves out to `src/components` or `src/lib`.
 
 ## Accessibility
 
@@ -127,9 +139,10 @@ size. Two caveats:
 - The camera action is offered only when `expo-device` reports a real device, so on a simulator the
   photo block shows a short note and the library path instead. The capture path needs a phone.
 - Android has not been run. What to check there: the system back gesture on the confirmation screen
-  (it must not leave, since Done is the only exit), TalkBack with the live regions used for errors
-  and the offline banner, the emulator's virtual-scene camera for the capture path, and edge-to-edge
-  insets, which SDK 57 applies by default.
+  (it must not leave, since Done is the only exit), that a validation error is spoken once with
+  TalkBack, and that the offline banner, the sending status and a failed photo retry are each spoken
+  once too, since every message has one channel and never both, the emulator's virtual-scene camera
+  for the capture path, and edge-to-edge insets, which SDK 57 applies by default.
 
 ## The design record
 

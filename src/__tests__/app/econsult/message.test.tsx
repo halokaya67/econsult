@@ -9,10 +9,10 @@ import * as servicesModule from "@/api/services";
 import MessageScreen from "@/app/econsult/message";
 import { RETRY_LABEL } from "@/components/StatusViews";
 import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/features/econsult/components/PhotoPicker";
-import { initialDraft, type DraftState } from "@/features/econsult/draft";
-import { useDraft } from "@/features/econsult/DraftProvider";
-import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/validation";
-import * as networkModule from "@/lib/network";
+import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
+import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/utils/validation";
+import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders, type ProviderOptions } from "@/test/providers";
 import { spacing } from "@/theme/tokens";
@@ -33,6 +33,7 @@ const READY_PHOTO = {
   height: 10,
 } as const;
 const FIELD = "What would you like to ask?";
+const SENDING_STATUS = "Sending your message";
 
 function renderMessage(
   options: ProviderOptions = {},
@@ -167,7 +168,7 @@ describe("Message step", () => {
 
     await user.press(screen.getByRole("button", { name: "Send" }));
 
-    expect(screen.queryByText("Sending your message")).toBeNull();
+    expect(screen.queryByText(SENDING_STATUS)).toBeNull();
     expect(screen).toHavePathname("/econsult/message");
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("no recipient"));
   });
@@ -194,6 +195,23 @@ describe("Message step", () => {
 
     await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
     expect(screen.getByText(/^sent:ec-\d+:none$/)).toBeOnTheScreen();
+  });
+
+  test("the sending status is spoken once, by the announcement and not by a live region", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
+    const user = userEvent.setup();
+    renderMessage({ settings: { latencyMs: SEND_LATENCY_MS } });
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+
+    await user.press(screen.getByRole("button", { name: "Send" }));
+
+    expect(screen.getByText(SENDING_STATUS).props.accessibilityLiveRegion).toBeUndefined();
+    expect(announce.mock.calls.filter(([line]) => line === SENDING_STATUS)).toHaveLength(1);
+    await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
   });
 
   test("Change and going back wait while the send is in flight", async () => {
@@ -296,7 +314,7 @@ describe("Message step", () => {
 
     await user.press(screen.getByRole("button", { name: RETRY_LABEL }));
 
-    await waitFor(() => expect(announce).toHaveBeenCalledWith("Sending your message"));
+    await waitFor(() => expect(announce).toHaveBeenCalledWith(SENDING_STATUS));
     expect(randomUUID).not.toHaveBeenCalled();
     // The retry fails too, which lifts the lock the send put on Change and on going back; act spans
     // the wait because the leave-guard's own state cascade would otherwise land between its polls.

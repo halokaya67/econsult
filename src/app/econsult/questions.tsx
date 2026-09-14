@@ -6,10 +6,10 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold, useScrollToField, type ScrollToField } from "@/components/ScreenScaffold";
 import { StepHeader } from "@/components/StepHeader";
 import { TextField } from "@/components/TextField";
-import { useDraft } from "@/features/econsult/DraftProvider";
-import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/steps";
-import { useQuestions } from "@/features/econsult/useQuestions";
-import { validateAnswers, type AnswerErrors } from "@/features/econsult/validation";
+import { useQuestions } from "@/features/econsult/hooks/useQuestions";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
+import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
+import { validateAnswers, type AnswerErrors } from "@/features/econsult/utils/validation";
 import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
 
 function requirementOf(question: Question) {

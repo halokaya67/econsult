@@ -4,8 +4,8 @@ import { AccessibilityInfo, Text } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders } from "@/test/providers";
-import { initialDraft, type DraftState } from "./draft";
-import * as submitModule from "./submit";
+import * as submitModule from "../api/submit";
+import { initialDraft, type DraftState } from "../state/draft";
 import { useMessageSend } from "./useMessageSend";
 
 const DRAFT: DraftState = {

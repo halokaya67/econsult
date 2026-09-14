@@ -1,13 +1,13 @@
 import { userEvent } from "@testing-library/react-native";
-import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { router } from "expo-router";
+import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, Text } from "react-native";
 import SentScreen from "@/app/econsult/sent";
 import { RETRY_LABEL } from "@/components/StatusViews";
-import { initialDraft, type DraftState } from "@/features/econsult/draft";
-import * as submitModule from "@/features/econsult/submit";
-import * as useSubmitModule from "@/features/econsult/useSubmit";
-import * as networkModule from "@/lib/network";
+import * as submitModule from "@/features/econsult/api/submit";
+import * as useSubmitModule from "@/features/econsult/hooks/useSubmit";
+import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
+import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders } from "@/test/providers";
 
@@ -155,6 +155,8 @@ describe("Sent", () => {
     expect(spoken).toHaveBeenCalledWith(
       "The photo still couldn't be attached. You can try again or continue without it.",
     );
+    // Spoken by the announcement alone; a live region here would repeat it on Android.
+    expect(screen.getByRole("alert").props.accessibilityLiveRegion).toBeUndefined();
     expect(screen.getByRole("button", { name: RETRY_LABEL })).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Continue without the photo" })).toBeOnTheScreen();
   });

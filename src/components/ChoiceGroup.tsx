@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { accessibleName, labelWithRequirement, type Requirement } from "@/lib/fieldLabel";
 import {
   borderWidth,
   colors,
@@ -9,7 +10,6 @@ import {
   radius,
   spacing,
 } from "@/theme/tokens";
-import { accessibleName, labelWithRequirement, type Requirement } from "./fieldLabel";
 
 type Props<T extends string> = {
   label: string;
