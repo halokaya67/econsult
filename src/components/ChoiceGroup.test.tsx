@@ -1,6 +1,6 @@
 import { render, screen, userEvent } from "@testing-library/react-native";
 import { createRef } from "react";
-import type { Text } from "react-native";
+import type { View } from "react-native";
 import { borderWidth, MIN_TOUCH } from "@/theme/tokens";
 import { ChoiceGroup } from "./ChoiceGroup";
 
@@ -163,8 +163,27 @@ describe("ChoiceGroup", () => {
     expect(screen.queryByLabelText(/Error:/)).toBeNull();
   });
 
+  // iOS reads a Text's accessible name once and keeps it while the words on screen stay the same,
+  // so a corrected answer would still be described as an error by the name it froze.
+  test("names the label's wrapper rather than the text iOS would freeze the name on", () => {
+    render(
+      <ChoiceGroup
+        label="How long?"
+        options={OPTIONS}
+        value={null}
+        onChange={() => {}}
+        error="This question is required"
+      />,
+    );
+
+    const named = screen.getByLabelText("How long?. Error: This question is required");
+
+    expect(named.props.accessible).toBe(true);
+    expect(screen.getByText("How long?").props.accessibilityLabel).toBeUndefined();
+  });
+
   test("its ref lands on the label, the element whose name carries the error", () => {
-    const ref = createRef<Text>();
+    const ref = createRef<View>();
 
     render(
       <ChoiceGroup

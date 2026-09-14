@@ -63,7 +63,9 @@ describe("useMessageSend", () => {
     expect(send).toHaveBeenCalledTimes(1);
   });
 
-  test("speaks each status once, at the moment it is set", async () => {
+  // The confirmation's heading is "Message sent" too and is read when focus lands on it there, so
+  // the status line reports only the progress that happens before that screen exists.
+  test("speaks the sending status once and leaves the sent status to the confirmation", async () => {
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
@@ -74,8 +76,8 @@ describe("useMessageSend", () => {
 
     await user.press(screen.getByRole("button", { name: SEND_TWICE }));
 
-    await waitFor(() => expect(announce).toHaveBeenCalledWith(SENT_STATUS));
+    await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
     expect(announce.mock.calls.filter(([line]) => line === SENDING_STATUS)).toHaveLength(1);
-    expect(announce.mock.calls.filter(([line]) => line === SENT_STATUS)).toHaveLength(1);
+    expect(announce.mock.calls.filter(([line]) => line === SENT_STATUS)).toHaveLength(0);
   });
 });

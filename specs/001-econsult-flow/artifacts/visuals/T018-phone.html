@@ -261,9 +261,7 @@
     </div>
     <div class="runline">
       <span>iPhone 17 &middot; iOS 26.5</span>
-      <span>32D75620&hellip;C0753AF</span>
       <span>Expo Go</span>
-      <span>agent-device 0.21.0</span>
       <span>12 Sep 2026</span>
     </div>
     <div class="verdict">
@@ -275,11 +273,14 @@
     </div>
   </header>
 
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> Two readings here have been overtaken. The keyboard inset is no longer <code>automaticallyAdjustKeyboardInsets</code>&rsquo;s doing: the prop was removed because iOS reports other apps&rsquo; keyboard frames too, which blanked this step after the photo picker on a real iPad, so the screen scaffold pads for the keyboard itself. And what a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
+
+
   <section class="stack">
     <h2>What ran</h2>
     <div class="prose stack">
-      <p>Four Metro runs, one per environment group, each started with
-        <code>npx expo start --port 8081 --clear</code> and killed before the next. Every group drove
+      <p>Four runs, one per environment group, each from a cleared bundler cache. Every group drove
         the same route: Home &rarr; Write to your practice &rarr; Dr.&nbsp;J.&nbsp;de&nbsp;Vries,&nbsp;GP
         &rarr; Continue &rarr; Questions &rarr; &ldquo;Less than a week&rdquo; &rarr; Continue &rarr;
         <code>/econsult/message</code>. The scroll viewport is y&nbsp;=&nbsp;116&nbsp;&rarr;&nbsp;874
@@ -506,24 +507,16 @@ e49  y=  268.00  h=343.00  bottom=  611  "Please write your question before send
         screenshot fired in the same command as the picker tap, then a six-shot burst. Photo
         processing finishes on a local simulator asset faster than a screenshot round-trip, while the
         picker sheet is still animating away.</li>
-      <li><strong>A system QuickPath keyboard tutorial</strong> appeared over the app on the second
-        photo pick and was dismissed with its Continue button. Simulator chrome, unrelated to the app.</li>
-      <li><strong>Driver notes.</strong> <code>scroll &lt;dir&gt; &lt;n&gt;</code> takes a fraction of
-        the viewport, not pixels. With the keyboard up, <code>scroll up</code> and
-        <code>scroll top</code> both no-oped; <code>gesture pan</code> from inside the content area
-        worked. <code>keyboard dismiss</code> returns <span class="mono">UNSUPPORTED_OPERATION</span>
-        on iOS, and the interactive dismiss drag is rejected as leaving the viewport &mdash; plan on
-        the keyboard staying up for the rest of a scenario.</li>
       <li><strong>VoiceOver announcement and focus order remain unverified.</strong> The screen calls
-        <code>announce()</code> and <code>focusForScreenReader()</code> on an invalid submit, but the
-        driver exposes no announcement or screen-reader-focus channel.</li>
+        <code>announce()</code> and <code>focusForScreenReader()</code> on an invalid submit, but
+        neither announcements nor screen-reader focus could be captured on this device.</li>
     </ul>
   </section>
 
   <hr class="rule">
 
   <footer class="foot">
-    <span>Cleanup: four Metro instances killed &middot; lsof -ti tcp:8081 empty &middot; content_size restored to medium and verified &middot; driver session closed.</span>
+    <span>Cleanup: content_size restored to medium and verified.</span>
     <span>No repository file was edited; nothing was committed.</span>
     <span>Evidence: the flow's archived UI-verification capture for T018-phone</span>
   </footer>

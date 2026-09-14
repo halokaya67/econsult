@@ -89,8 +89,9 @@ main > .shots{max-width:none}
 .dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
 .dumps code{font-size:12px}
 </style>
-<p>Device: iPad Pro 11-inch (M5) simulator (udid 1D65286A-2499-4E02-A229-FC82D9AF559A), Expo Go 57.0.9 installed from the iPhone lane&#39;s bundle, Metro port 8082. Head: <code>48896ef</code>.
-Driver: agent-device 0.21.0. Text size: medium unless stated. Portrait unless stated.</p>
+<p>Device: iPad Pro 11-inch (M5) simulator, Expo Go 57.0.9. Head: <code>48896ef</code>.
+Text size: medium unless stated. Portrait unless stated.</p>
+<blockquote><p><strong>Since then.</strong> Two readings below have been overtaken. The photo preview no longer fills the content width: it is capped at 360 points, the fix for the sliver of photo a Samsung tablet showed. And the clean iPad photo-picker result did not hold on a real iPad, where the message step blanked when the picker returned, because iOS reports the out-of-process picker's keyboard frame too; the screen scaffold now pads for the keyboard itself.</p></blockquote>
 <h2 id="verdict">Verdict</h2>
 <p>All six scenarios PASS. No functional or visual defect. One non-failing layout observation: the form column runs 802 pt wide in an 834 pt portrait canvas (1178 pt of 1210 pt in landscape), so body copy and the full-width buttons stretch nearly edge to edge; a centred max-width column of roughly 560 to 680 pt would read better on iPad and would not change phone rendering.</p>
 <h2 id="scenarios">Scenarios</h2>
@@ -160,8 +161,8 @@ Note: a selector press at the row&#39;s horizontal centre did not flip the toggl
   <figure><a href="tablet/t05-06-confirmation-axxxl.png"><img src="tablet/t05-06-confirmation-axxxl.png" alt="t05-06-confirmation-axxxl.png" loading="lazy"></a><figcaption>t05-06-confirmation-axxxl.png</figcaption></figure>
 </div>
 <p class="dumps">Text evidence: <a href="tablet/t05-01-home-axxxl.raw.txt"><code>t05-01-home-axxxl.raw.txt</code></a>, <a href="tablet/t05-02-step1-axxxl.raw.txt"><code>t05-02-step1-axxxl.raw.txt</code></a>, <a href="tablet/t05-04-step2-error-axxxl.a11y.txt"><code>t05-04-step2-error-axxxl.a11y.txt</code></a>, <a href="tablet/t05-05-step3-pristine-axxxl.a11y.txt"><code>t05-05-step3-pristine-axxxl.a11y.txt</code></a>, <a href="tablet/t05-06-confirmation-axxxl.a11y.txt"><code>t05-06-confirmation-axxxl.a11y.txt</code></a></p><h3>6. Landscape spot check — PASS (informational)</h3>
-<p>Orientation set to landscape-left through the driver: the app re-laid out to a 1210 × 834 viewport. Step 3 pristine: every element inside the 834 pt height, Send (1178 × 48 pt) reachable without scrolling. Sent in landscape → confirmation with all lines and Done at y 279. Rotated back → 834 × 1210 and the Home frames identical to the portrait baseline. Evidence: t06-01 … t06-03.
-Caveats: the on-disk landscape screenshots show the content rotated 90 degrees because the Simulator window did not re-orient when the orientation was set programmatically; the verdict rests on the measured accessibility frames plus a desktop screenshot. The Simulator&#39;s rotate menu could not be clicked because an Accessibility Inspector helper overlaid that screen region. app.json declares <code>&quot;orientation&quot;: &quot;portrait&quot;</code>, so a standalone build is portrait-locked; Expo Go does not enforce it, which is how landscape was reachable.</p>
+<p>Orientation set to landscape-left: the app re-laid out to a 1210 × 834 viewport. Step 3 pristine: every element inside the 834 pt height, Send (1178 × 48 pt) reachable without scrolling. Sent in landscape → confirmation with all lines and Done at y 279. Rotated back → 834 × 1210 and the Home frames identical to the portrait baseline. Evidence: t06-01 … t06-03.
+Caveat: the on-disk landscape screenshots show the content rotated 90 degrees because the Simulator window did not re-orient; the verdict rests on the measured accessibility frames plus a desktop screenshot. app.json declares <code>&quot;orientation&quot;: &quot;portrait&quot;</code>, so a standalone build is portrait-locked; Expo Go does not enforce it, which is how landscape was reachable.</p>
 <div class="shots">
   <figure><a href="tablet/t06-01-step3-landscape.png"><img src="tablet/t06-01-step3-landscape.png" alt="t06-01-step3-landscape.png" loading="lazy"></a><figcaption>t06-01-step3-landscape.png</figcaption></figure>
   <figure><a href="tablet/t06-01b-landscape-raw.png"><img src="tablet/t06-01b-landscape-raw.png" alt="t06-01b-landscape-raw.png" loading="lazy"></a><figcaption>t06-01b-landscape-raw.png</figcaption></figure>
@@ -179,10 +180,10 @@ Caveats: the on-disk landscape screenshots show the content rotated 90 degrees b
 <li>Photo picker on iPad: PASS (proper iPad sheet with sidebar; returns cleanly with the preview shown).</li>
 </ul>
 <h2 id="logs-and-crashes">Logs and crashes</h2>
-<p>None. setup.log has no error, red box or exception; the only warning is Metro&#39;s empty-cache notice. No LogBox node in any tree. Reference ids read &quot;ec-1&quot; on each send because each was the first send after a relaunch (per-session counter in the fake).</p>
+<p>None. setup.log has no error, red box or exception; the only warning is the bundler&#39;s empty-cache notice. No LogBox node in any tree. Reference ids read &quot;ec-1&quot; on each send because each was the first send after a relaunch (per-session counter in the fake).</p>
 <h2 id="evidence">Evidence</h2>
 <p>73 files plus setup.log in this directory (t00 boot check, t01 … t06 scenarios, t99 final state).</p>
-<p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the Metro log:</p>
+<p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the bundler log:</p>
 <div class="shots">
   <figure><a href="tablet/t00-01-boot-check.png"><img src="tablet/t00-01-boot-check.png" alt="t00-01-boot-check.png" loading="lazy"></a><figcaption>t00-01-boot-check.png</figcaption></figure>
   <figure><a href="tablet/t99-final-home.png"><img src="tablet/t99-final-home.png" alt="t99-final-home.png" loading="lazy"></a><figcaption>t99-final-home.png</figcaption></figure>
@@ -190,7 +191,7 @@ Caveats: the on-disk landscape screenshots show the content rotated 90 degrees b
 <p class="dumps">Text evidence: <a href="tablet/setup.log"><code>setup.log</code></a>, <a href="tablet/t99-dev-settings-final-state.raw.txt"><code>t99-dev-settings-final-state.raw.txt</code></a></p>
 
   </main>
-  <footer class="foot">Generated from <code>tablet/report.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+  <footer class="foot">Written up from the tablet lane run; its screenshots, dumps and log are in <code>tablet/</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
 <script>

@@ -18,13 +18,13 @@ type Props<T extends string> = {
   onChange: (value: T) => void;
   requirement?: Requirement;
   error?: string | null;
-  ref?: Ref<Text>;
+  ref?: Ref<View>;
 };
 
 const DOT_SIZE = 24;
 
 // The group View carries role and name for TalkBack but is not `accessible`, which would swallow
-// its radios; iOS has no group element, so the label Text folds in the error and takes the ref.
+// its radios; iOS has no group element, so the label's wrapper folds in the error and takes the ref.
 // The error sits between label and radios so it stays visible when a tall label is scrolled to.
 export function ChoiceGroup<T extends string>({
   label,
@@ -39,10 +39,11 @@ export function ChoiceGroup<T extends string>({
   return (
     <View style={styles.wrap}>
       {/* Named unconditionally: Android never clears a contentDescription that goes back to
-          undefined, so a corrected answer would keep announcing its old error. */}
-      <Text ref={ref} accessibilityLabel={accessibleName(visibleLabel, error)} style={styles.label}>
-        {visibleLabel}
-      </Text>
+          undefined, so a corrected answer would keep announcing its old error. iOS caches the name
+          it first reads off a Text, so the wrapper is named and the Text left to its own words. */}
+      <View ref={ref} accessible accessibilityLabel={accessibleName(visibleLabel, error)}>
+        <Text style={styles.label}>{visibleLabel}</Text>
+      </View>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <View accessibilityRole="radiogroup" accessibilityLabel={visibleLabel} style={styles.group}>
         {options.map((option) => {

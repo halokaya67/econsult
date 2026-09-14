@@ -1,7 +1,7 @@
-import { userEvent } from "@testing-library/react-native";
+import { fireEvent, userEvent } from "@testing-library/react-native";
 import { router } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
-import { Alert, Text } from "react-native";
+import { AccessibilityInfo, Alert, Text } from "react-native";
 import RecipientScreen from "@/app/econsult/recipient";
 import HomeScreen from "@/app/index";
 import * as useRecipientsModule from "@/features/econsult/hooks/useRecipients";
@@ -12,10 +12,43 @@ import { RETRY_LABEL } from "@/lib/retryLabel";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 
+const LOAD_ERROR_NAME =
+  "We couldn't load your practice's details. Check your connection and try again.";
+// Long enough that the retry's own loading render lands, as it does on a device.
+const RETRY_LATENCY_MS = 50;
+
 const Stub = (label: string) =>
   function StubScreen() {
     return <Text>{label}</Text>;
   };
+
+// The name the focused node carried at the moment focus was sent, which is the name VoiceOver
+// reads out.
+function nameWhenFocused(node: unknown): string | undefined {
+  return (node as { props?: { accessibilityLabel?: string } }).props?.accessibilityLabel;
+}
+
+// The preset already mocks both, so each spy is the mock every earlier test wrote to.
+function spyOnFocus(namesWhenFocused: (string | undefined)[]) {
+  const focus = jest
+    .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
+    .mockImplementation((node) => void namesWhenFocused.push(nameWhenFocused(node)));
+  focus.mockClear();
+  return focus;
+}
+
+function spyOnAnnounce() {
+  const spoken = jest
+    .spyOn(AccessibilityInfo, "announceForAccessibility")
+    .mockImplementation(() => {});
+  spoken.mockClear();
+  return spoken;
+}
+
+// Stands in for the layout pass that follows the native mount; nothing lays out in a test renderer.
+function layOut(node: Parameters<typeof fireEvent>[0]) {
+  fireEvent(node, "layout", { nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 120 } } });
+}
 
 function MessageProbe() {
   const { draft } = useDraft();
@@ -142,6 +175,42 @@ describe("Recipient step", () => {
       { exact: false },
     );
     expect(screen.getByRole("button", { name: RETRY_LABEL })).toBeOnTheScreen();
+  });
+
+  // The card is the whole step when the load fails, and it says nothing of its own, so the focus
+  // move is what speaks it; announcing as well is what had VoiceOver say it twice.
+  test("a failed load speaks the error card by focusing it once it is laid out, not by announcing it", async () => {
+    const namesWhenFocused: (string | undefined)[] = [];
+    const spoken = spyOnAnnounce();
+    spyOnFocus(namesWhenFocused);
+    renderFlow({ settings: { faults: { config: "server" } } });
+    const card = await screen.findByRole("alert");
+
+    // Fabric has not mounted the card in the commit that created it, so nothing is focused yet.
+    expect(namesWhenFocused).toEqual([]);
+    layOut(card);
+
+    expect(namesWhenFocused).toEqual([LOAD_ERROR_NAME]);
+    expect(spoken.mock.calls.filter(([line]) => line.includes(LOAD_ERROR_NAME))).toHaveLength(0);
+  });
+
+  // The retry puts the step back on its skeleton, so the card that follows a second failure is a
+  // second appearance and has to be spoken again.
+  test("the error card is spoken again when Try again fails and it comes back", async () => {
+    const namesWhenFocused: (string | undefined)[] = [];
+    spyOnFocus(namesWhenFocused);
+    const user = userEvent.setup();
+    renderFlow({ settings: { faults: { config: "server" }, latencyMs: RETRY_LATENCY_MS } });
+    layOut(await screen.findByRole("alert"));
+    const firstCard = screen.getByRole("alert");
+
+    await user.press(screen.getByRole("button", { name: RETRY_LABEL }));
+    await waitFor(() => expect(firstCard).not.toBeOnTheScreen());
+    const secondCard = await screen.findByRole("alert");
+
+    expect(namesWhenFocused).toEqual([LOAD_ERROR_NAME]);
+    layOut(secondCard);
+    expect(namesWhenFocused).toEqual([LOAD_ERROR_NAME, LOAD_ERROR_NAME]);
   });
 
   test("shows the empty state when the practice lists no recipients", async () => {

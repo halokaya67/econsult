@@ -1,5 +1,6 @@
 import { render, screen, userEvent, waitFor } from "@testing-library/react-native";
 import * as Device from "expo-device";
+import { ImageManipulator } from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { Linking } from "react-native";
 import {
@@ -10,6 +11,8 @@ import {
   PhotoPicker,
   PICK_FAILED_NOTE,
   PREPARING_LABEL,
+  PREVIEW_HEIGHT,
+  PREVIEW_MAX_WIDTH,
   REMOVE_PHOTO_LABEL,
   TAKE_PHOTO_LABEL,
 } from "./PhotoPicker";
@@ -89,7 +92,26 @@ describe("PhotoPicker", () => {
       uri: "file:///cache/processed.jpg",
       width: 1600,
       height: 1200,
+      mimeType: "image/jpeg",
     });
+  });
+
+  test("hands on the original's own type when processing fails", async () => {
+    jest.spyOn(console, "warn").mockImplementation(() => {});
+    const png = { ...ASSET, uri: "file:///cache/original.png", mimeType: "image/png" };
+    jest
+      .mocked(ImagePicker.launchImageLibraryAsync)
+      .mockResolvedValueOnce({ canceled: false, assets: [png] });
+    jest
+      .mocked(ImageManipulator.manipulate(png.uri))
+      .renderAsync.mockRejectedValueOnce(new Error("decode failed"));
+    const user = userEvent.setup();
+    const handlers = renderPicker();
+
+    await user.press(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL }));
+
+    await waitFor(() => expect(handlers.onPickReady).toHaveBeenCalled());
+    expect(handlers.onPickReady).toHaveBeenCalledWith(expect.any(String), png);
   });
 
   test("a camera pick uses the camera launcher at full quality", async () => {
@@ -185,6 +207,22 @@ describe("PhotoPicker", () => {
     await user.press(screen.getByRole("button", { name: REMOVE_PHOTO_LABEL }));
 
     expect(handlers.onRemove).toHaveBeenCalledTimes(1);
+  });
+
+  test("caps the preview's width so a tablet gets a thumbnail, not a band", () => {
+    renderPicker({
+      status: "ready",
+      pickId: "p1",
+      uri: "file:///cache/p.jpg",
+      width: 10,
+      height: 10,
+    });
+
+    expect(screen.getByLabelText("Your photo")).toHaveStyle({
+      maxWidth: PREVIEW_MAX_WIDTH,
+      height: PREVIEW_HEIGHT,
+      alignSelf: "flex-start",
+    });
   });
 
   test("disables every action while sending", () => {

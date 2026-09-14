@@ -1,8 +1,10 @@
 import { useRouter } from "expo-router";
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { useCallback, useRef, useState, type RefObject } from "react";
 import type { ScrollToField } from "@/components/ScreenScaffold";
+import { useFocusAfterCommit } from "@/hooks/useFocusAfterCommit";
+import { useFocusOnLayout } from "@/hooks/useFocusOnLayout";
 import { useSession } from "@/hooks/useSession";
-import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
+import { announce, focusForScreenReader, focusOrAnnounce, type Focusable } from "@/lib/announce";
 import { devWarn } from "@/lib/devWarn";
 import { runOnce } from "@/lib/inFlight";
 import { idempotencyKeyFor, submitInputFor } from "../api/submit";
@@ -25,6 +27,7 @@ function useMessageField() {
   const anchor = useRef<Focusable | null>(null);
   const focus = useRef<Focusable | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const focusAfterCommit = useFocusAfterCommit();
 
   function setAnchor(node: Focusable | null) {
     anchor.current = node;
@@ -34,14 +37,14 @@ function useMessageField() {
     focus.current = node;
   }
 
-  // Scroll before announcing: screen-reader focus alone leaves the screen looking untouched.
+  // Scroll before moving focus: screen-reader focus alone leaves the screen looking untouched. The
+  // focus waits for the commit that folds the error into the field's name, or it speaks the old one.
   function validate(message: string, scrollToField: ScrollToField): string | null {
     const next = validateMessage(message);
     setError(next);
     if (next === null) return null;
     scrollToField(anchor.current);
-    announce(next);
-    focusForScreenReader(focus.current);
+    focusAfterCommit(() => focusOrAnnounce(focus.current, next));
     return next;
   }
 
@@ -53,41 +56,36 @@ function useMessageField() {
 }
 
 // A failed send inserts the error card above Send, which pushes the card, Try again and Send below
-// the fold on a short screen. The card is revealed the way a field error is: scrolled to first, so
-// moving screen-reader focus to it does not leave the screen looking untouched.
+// the fold on a short screen. The card is scrolled to before it takes focus, so the move does not
+// leave the screen looking untouched, and both wait for the layout that gives the card a view.
 export function useRevealSendError(
-  error: Error | null,
+  card: RefObject<Focusable | null>,
   scrollToField: ScrollToField,
-): RefObject<Focusable | null> {
-  const card = useRef<Focusable | null>(null);
-
-  useEffect(() => {
-    if (error === null) return;
-    scrollToField(card.current);
-    focusForScreenReader(card.current);
-  }, [error, scrollToField]);
-
-  return card;
+): () => void {
+  return useFocusOnLayout(card, (node) => {
+    scrollToField(node);
+    focusForScreenReader(node);
+  });
 }
 
-// The announcement is the status line's only spoken channel, so it is heard once on both platforms;
-// setting it here also keeps the side effect next to the event that caused it.
-function useAnnouncedStatus() {
+// A spoken status line has the announcement as its only channel, so it is heard once on both
+// platforms; announcing here also keeps the side effect next to the event that caused it.
+function useStatusLine() {
   const [status, setStatus] = useState("");
 
-  const announceStatus = useCallback((next: string) => {
+  const speakStatus = useCallback((next: string) => {
     setStatus(next);
-    if (next) announce(next);
+    announce(next);
   }, []);
 
-  return [status, announceStatus] as const;
+  return { status, setStatus, speakStatus };
 }
 
 export function useMessageSend() {
   const router = useRouter();
   const session = useSession();
   const { draft, dispatch } = useDraft();
-  const [status, setStatus] = useAnnouncedStatus();
+  const { status, setStatus, speakStatus } = useStatusLine();
   const field = useMessageField();
   // isPending only reaches React a macrotask later, so the disabled button cannot stop a second tap
   // inside the first one's tick; this ref can.
@@ -95,7 +93,10 @@ export function useMessageSend() {
   const hasPhoto = readyPhoto(draft) !== null;
   const submit = useSubmit((econsultId) => {
     dispatch({ type: "econsultCreated", econsultId });
-    setStatus(hasPhoto ? SENT_WITH_PHOTO_STATUS : SENT_STATUS);
+    // The confirmation's heading is "Message sent" too and is read on arrival, so the plain status
+    // is shown without being spoken; the photo line reports progress before that screen exists.
+    if (hasPhoto) speakStatus(SENT_WITH_PHOTO_STATUS);
+    else setStatus(SENT_STATUS);
   });
 
   function onMessageChange(message: string) {
@@ -113,7 +114,7 @@ export function useMessageSend() {
       }
       const idempotencyKey = idempotencyKeyFor(draft);
       dispatch({ type: "submitStarted", idempotencyKey });
-      setStatus(SENDING_STATUS);
+      speakStatus(SENDING_STATUS);
       try {
         const outcome = await submit.mutateAsync(
           submitInputFor(draft, session, recipientId, idempotencyKey),

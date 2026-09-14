@@ -2,6 +2,20 @@
 
 Snapshot of the `feat/econsult-flow` worktree at commit `f39fb58`, before any feature work. Every claim below was checked on 2026-09-11 against the files in this repository, the installed packages under `node_modules`, or the versioned Expo documentation for SDK 57. Anything that could not be checked is marked **unverified**.
 
+> **Since then.** The feature was built on top of this snapshot; the page is kept as the record of what the plan had to build on. What it describes that no longer holds:
+>
+> - The empty shell is gone: the whole e-consult flow, an in-process fake backend and a test suite of 53 files now sit on this skeleton.
+> - The root layout mounts the provider stack, and the index route is the home screen rather than a placeholder.
+> - `app.json` pins `userInterfaceStyle: "light"`, adds the expo-image-picker plugin and drops the `web` block.
+> - `package.json` carries ten scripts — `format`, `format:check`, `typecheck`, `test`, `test:coverage` and `showcase` among them — and no `web` script.
+> - `.gitignore` also ignores `.env` and `coverage/`.
+> - `AGENTS.md` is a full Shape-and-Rules document, not a single instruction to read the SDK 57 documentation.
+> - The packages listed here as installed but unimported — reanimated, worklets, gesture-handler, react-native-web, react-dom, expo-font and expo-status-bar — were removed; expo-image, expo-device and expo-system-ui are used.
+> - Font scale is read from `useWindowDimensions().fontScale`; `PixelRatio.getFontScale()` is forbidden by the spec.
+> - Of the things not present yet, the test runner, the ESLint configuration, Prettier and the type-check script all exist; environment variables were dropped and never arrived.
+> - The one-way confirmation shipped as `usePreventRemove` with `headerBackVisible: false` and `gestureEnabled: false`, not as the stack replace suggested here.
+> - The emulator's virtual-scene camera turned out to be moot: the camera action is gated on `Device.isDevice`, so an emulator never offers it, and the Android lane has since run.
+
 A rendered copy of this page lives at `specs/001-econsult-flow/artifacts/how-it-works.html`.
 
 ## What it does
@@ -98,8 +112,7 @@ Not present yet: a test runner, an ESLint configuration (`npx expo lint` would g
 - **Expo Go ignores config-plugin permission strings.** Usage descriptions declared in `app.json` plugins only take effect in a prebuild or EAS build; Expo Go shows its own prompts. This is documented in the Expo permissions guide.
 - **`gestureEnabled` is iOS only** and `headerBackVisible` has no effect on the first screen of a stack, so a confirmation screen that must not be left by going back needs a stack replace rather than a hidden button.
 - **The iOS simulator has no camera**; the Android emulator has a virtual scene camera that can be fed a JPEG.
-- **Managed workflow, no native folders.** `/ios` and `/android` are ignored; running `prebuild` would create them locally. CocoaPods is not installed on this machine, so `npx expo run:ios` is not available here without extra setup; Expo Go is the run path.
-- **Two worktrees.** `Documents/econsult/main` tracks `main`; `Documents/econsult/feat-econsult-flow` tracks `feat/econsult-flow`, where all feature work happens.
+- **Managed workflow, no native folders.** `/ios` and `/android` are ignored; running `prebuild` would create them locally. Expo Go is the run path.
 - **Unverified**: whether a freshly created Android virtual device defaults its back camera to the virtual scene; whether Network Link Conditioner on the host shapes simulator traffic. Both are only relevant to manual testing.
 
 ## Sources

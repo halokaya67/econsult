@@ -1,125 +1,236 @@
 # Decisions
 
-Each entry: what the question was, what was decided, and what that trades away.
+Each entry, one line each: why, what was decided, the alternatives and why they lost, what it costs.
 
 ## Assumptions
 
-- The patient is signed in and the practice id comes with the session. The session is faked in
-  `src/hooks/useSession.ts`.
+- The patient is signed in and the practice id comes with the session (faked in `src/hooks/useSession.ts`).
 - The practice can preview a message from its first line, so there is no subject field.
 - The brief's sample data is English, so the app is English.
-- Reviewers run it in Expo Go from a clean clone, with no development build and no local server.
+
+## Constraints honoured
+
+**Expo Go only.** The app must run from a clean clone with `npx expo start`, so only Expo's bundled native modules or pure JavaScript may be added.
+Decided: Expo Go is the runtime; nothing that needs a development build.
+Alternatives: a development build (any native module, but Xcode or Android Studio on the reviewer's machine and no clean-clone promise).
+Traded off: no NetInfo, no custom native code, the fake transport stays in-process, and Expo Go's footprint makes Android evict the app more readily.
+
+## Stack
+
+**expo-router with a native stack.** Expo's default router; kept rather than chosen.
+Decided: file routing under `src/app`.
+Alternatives: React Navigation wired by hand (same engine, more wiring); one screen with step state (no back semantics, no header).
+Traded off: every file under `src/app` is a route, so screen tests live elsewhere and screens stay thin.
+
+**TanStack Query as the only data layer.** Two reads and one send still need loading, error, retry and cache state.
+Decided: queries for the reads, one mutation for the send.
+Alternatives: fetch in effects (that state hand-written per screen); SWR (no mutation model); RTK Query (a store the app does not need).
+Traded off: a library and its model for a small surface; the send overrides the network mode.
+
+**zod at the boundary.** The contract's types come from the schemas.
+Decided: every response is parsed; types are inferred, never written twice.
+Alternatives: TypeScript types only (a malformed response crashes a screen); io-ts or valibot (same idea, smaller ecosystem).
+Traded off: runtime parsing and a dependency for payloads that today come from our own fixtures.
+
+**No state library.** The draft has one owner and dies with the flow.
+Decided: a reducer in a context mounted by the flow's layout.
+Alternatives: Zustand or Redux (a global store for local state, more to learn and mock); state lifted into the layout (the shape spreads across screens).
+Traded off: no devtools, no persistence for free, one provider to mount in tests.
+
+**No UI or styling library.** The accessibility rules are easier to enforce on controls we own.
+Decided: hand-built controls on a token file with `StyleSheet`.
+Alternatives: Paper or Tamagui (defaults to fight for targets, scaling and names; a design system is out of the brief's scope); NativeWind (styling only, a build step).
+Traded off: every control, state and accessibility prop is ours to get right.
+
+**Unit tests plus device passes, no end-to-end harness.** jest cannot see layout, font scaling or a screen reader.
+Decided: jest-expo and Testing Library at 100 % on logic, with recorded walkthroughs on simulators, an emulator and real devices.
+Alternatives: Detox or Maestro (real navigation and pickers, but a build pipeline, flaky simulators, and not runnable in Expo Go).
+Traded off: what jest cannot see is covered only by the manual passes.
+
+**React Compiler on, its lint rules at error.** Manual memoisation is easy to get wrong and nothing guards it.
+Decided: the compiler memoises; a pattern it rejects is rewritten, not silenced.
+Alternatives: compiler off with hand-written `useMemo` and `useCallback`; rules at warn (silent bail-outs, which let one regression in).
+Traded off: some patterns are forbidden and each workaround carries a comment.
+
+**Formatting is a lint failure.** Two commands to remember means one is skipped.
+Decided: Prettier runs as an ESLint rule.
+Alternatives: a separate format check only; a pre-commit hook (needs husky, and agents commit through their own tooling).
+Traded off: lint reports style noise next to real findings.
 
 ## Product
 
-**How many screens.** A three-question practice should not become an eight-screen wizard, and one
-long form breaks at the largest text size.
-Decided: three steps (recipient, questions, message with photo) plus a confirmation; the question
-step disappears when the practice has none.
-Traded off: no separate review screen; a "To: ... Change" row on the last step stands in for it.
+**Three steps plus a confirmation.** A wizard is too long, one long form breaks at large text.
+Decided: recipient, questions (skipped when none), message with photo, confirmation.
+Alternatives: one question per screen (eight screens for three questions); one long form (errors far above the fold at large text).
+Traded off: no review screen; a "To: ... Change" row stands in for it.
 
-**No subject field.** The brief's data has one, but a patient writing to their GP should not have to
-title the message.
-Decided: the practice derives a preview from the first line.
-Traded off: an inbox that needs a real subject has to add it on its side.
+**No subject field.** A patient should not have to title a message to their GP.
+Decided: the practice previews the first line.
+Alternatives: a required subject (one more thing to get wrong); an optional one (mostly left empty).
+Traded off: an inbox that needs a subject must derive one.
 
-**One photo.** The brief asks for a photo, not a gallery.
-Decided: one photo at a time; Remove is how you start over.
-Traded off: multiple photos, video, editing and cropping.
+**The confirmation is one-way.** A sent message must never look editable.
+Decided: no back button, no back gesture, a guard that swallows any leave; Done goes home.
+Alternatives: back to the message step (a double send waiting to happen); resetting the stack on send (loses the transition and the reference screen).
+Traded off: three mechanisms enforce one rule, and Android's back preview must stay off.
+
+**A sole recipient is preselected.** A one-doctor practice should not demand a tap.
+Decided: exactly one writable recipient is selected on arrival.
+Alternatives: always require the tap (consistent, pointless for that practice).
+Traded off: the selection is derived on the screen, so a step opened cold would not have it.
+
+**The draft lives in memory.** It is created when the flow opens and gone when it closes.
+Decided: no persistence; Discard means discard.
+Alternatives: save it on the device with a resume prompt (no acceptance criterion asks for it).
+Traded off: any exit loses the text, which is why the discard guard exists, and an Android camera eviction loses it too.
 
 ## Contract
 
-**The app owns the contract.** The brief gives sample data, not an API, so the shape had to be chosen.
-Decided: questions are a union of choice and text; care-team members carry a role so the patient
-knows who the GP is; unknown values fall back to safe defaults instead of failing.
-Traded off: a real backend must match these shapes or the mapping layer grows.
+**Contract shapes.** The brief leaves the shape to the app.
+Decided: questions are choice or text, care-team members carry a role, unknown values fall back safely.
+Alternatives: take the brief's draft types as fixed (no role, so two names with no way to tell the GP; a free-form question type).
+Traded off: a real backend must match these shapes or grow a mapping layer.
 
-**Sending is never duplicated.** Creating an e-consult is not idempotent and a timed-out create may
-have succeeded.
-Decided: one idempotency key per draft, reused on every retry of the same payload; editing the
-message, an answer or the recipient after a failed send starts a new key.
-Traded off: the rare double create when a create that timed out had in fact succeeded and the
-patient then edited the message.
+**One idempotency key per payload.** Creating an e-consult is not idempotent and a timeout may have succeeded.
+Decided: one key per draft, reused on retries, replaced when the payload is edited.
+Alternatives: no key (every retry can duplicate); one key per draft forever (a retry with an edited body is rejected or answered with the old message).
+Traded off: a rare double create when a timed-out create succeeded and the patient then edited.
 
-**Sending is two calls.** Create the e-consult, then upload the photo.
-Decided: a failed upload is a partial outcome, not an error; the patient sees "sent, but the photo
-could not be attached" and can retry the photo against the existing e-consult.
-Traded off: the confirmation screen has to explain a half-success.
+**A failed photo upload is a partial outcome.** Create then upload can succeed halfway.
+Decided: the patient sees "sent, photo not attached" and retries the photo against the same e-consult.
+Alternatives: treat it as a failed send (retrying creates the message twice); retry the upload silently (the patient never learns the photo is missing).
+Traded off: the confirmation has to explain a half-success.
 
-**How the real upload would work.** On SDK 57 Expo's own `fetch` rejects React Native's classic
-form-data file part.
-Decided: the real client uploads through expo-file-system's upload task; the timeout helper decides
-on its own abort signal rather than on the error's class.
-Traded off: no HTTP transport ships; only the description does.
+**The real upload streams from disk.** Expo's `fetch` on SDK 57 rejects the classic form-data file part.
+Decided: expo-file-system's upload task; the timeout helper trusts its own abort signal, not the error class.
+Alternatives: the form-data part (throws on the first byte); base64 in JSON (three times the bytes in memory).
+Traded off: no HTTP transport ships, only its description.
 
 ## Networking
 
-**Reads are offline-first, the send fails fast.** A send must never sit paused behind a spinner.
-Decided: reads run once and retry once when the link is back; the send runs in "always" mode with no
-automatic retry, and the app's own timeouts (15 s create, 45 s upload) are the authority.
-Traded off: an offline send fails immediately instead of waiting for the connection.
+**Offline-first reads, fail-fast send.** A send must never sit paused behind a spinner.
+Decided: reads retry once when the link returns; the send always runs, never auto-retries, and the app's timeouts rule.
+Alternatives: the library's default online mode for the send (a false offline reading pauses it forever); automatic retries on the send (duplicates).
+Traded off: an offline send fails at once instead of waiting.
 
-**An in-process fake behind a transport interface.** The app must run from a clean clone with no
-server.
-Decided: one interface with abort support and one fake with configurable latency, per-request faults
-and real aborts, so the timeout path is tested rather than simulated.
-Traded off: msw (open React Native breakages, fights the SDK 57 fetch) and a local server (a second
-terminal and three base URLs).
+**A failed refresh beats stale data.** A patient must not write to a doctor who has left.
+Decided: when a refetch fails, the error card replaces the list.
+Alternatives: keep showing the old list with a warning (friendlier, riskier for a medical list).
+Traded off: a blip in the connection hides a list the patient could see.
+
+**Home prefetches the flow's reads.** Step 1 should open at once.
+Decided: the practice's config and care team load on the home screen.
+Alternatives: load on step 1 only (a spinner on every entry).
+Traded off: two requests for a patient who never starts a message; the skeleton is hard to observe.
+
+**An in-process fake behind a transport interface.** No server may be needed.
+Decided: one interface with abort support, one fake with latency, faults and real aborts.
+Alternatives: msw (broken on React Native, fights the SDK 57 fetch); a local server (a second terminal, three base URLs).
+Traded off: nothing exercises real HTTP.
 
 ## Photo
 
 **Downscale at pick time.** A 12-megapixel capture is hostile on a weak connection.
-Decided: pick at full quality, bound the long edge to 1600 px, re-encode as JPEG at 0.7, keep the
-original if processing fails.
-Traded off: a client-side byte cap, which would reject the patient's photo instead of fixing it.
+Decided: long edge 1600 px, JPEG 0.7, never upscaled, original kept if processing fails.
+Alternatives: send the original (slow, expensive); a byte cap (rejects the photo instead of fixing it).
+Traded off: a kept original goes up at full size.
+
+**Android may evict the app during capture.** While the system camera is in front, Android reclaims background processes under memory pressure.
+Decided: no recovery path in this version; the limit is documented.
+Alternatives: save the draft and consume the picker's pending result on relaunch (a day of work); a standalone build (a third of Expo Go's footprint, fewer evictions).
+Traded off: a real-device capture can lose the draft.
+
+## Layout and design
+
+**Portrait only.** No landscape layout was designed.
+Decided: the app declares portrait.
+Alternatives: both orientations (every screen tested twice, wider layouts for cards and preview).
+Traded off: Expo Go does not enforce the lock at platform level, so tablets in landscape run untested.
+
+**Light appearance only.** One palette.
+Decided: no dark mode.
+Alternatives: a dark palette with the system setting (thirteen more tokens, contrast re-audited, screenshots doubled).
+Traded off: a patient with dark mode on gets a bright screen.
+
+**Android's back preview is off.** The discard dialog must be able to stop the back swipe.
+Decided: predictive back disabled.
+Alternatives: on, with every guard rewritten around Android's callback API.
+Traded off: no swipe preview on Android.
+
+**One scrolling page per step, action last.** Nothing pinned to the bottom.
+Decided: each step is one scroll view with its button as the last item.
+Alternatives: a fixed bottom bar (always visible, but covers content at large text and fights the keyboard).
+Traded off: at the largest text the button can be below the fold, so an invalid submit scrolls the field into view.
+
+**Design tokens in one file.** Values drifted once when they lived in components.
+Decided: a palette, spacing, radius, border width, a type scale and a 48-point minimum in `src/theme`, read by every component. More than a flow this small needs; kept because the alternative drifted.
+Alternatives: per-component literals (drift); a design-system package (out of the brief's scope).
+Traded off: no theming.
+
+**Font scaling is capped in two places only.** The native bar cannot grow.
+Decided: the step chip caps at 2× and bar buttons at 1.3×, the cap iOS uses for its own; everything else scales without limit.
+Alternatives: no caps (bar text clips at the largest size); caps everywhere (defeats large text).
+Traded off: the chip and bar text stop growing before the body does.
+
+**Selection never by colour alone.** Colour-blind patients and the differentiate-without-colour setting.
+Decided: border weight, fill and a filled dot change together.
+Alternatives: colour only.
+Traded off: a heavier selected look.
 
 ## Accessibility
 
-**Errors live in the field's name.** Neither VoiceOver nor TalkBack supports a separate error link
-on inputs.
-Decided: the error is folded into the field's accessible name and announced once; focus moves to the
-first invalid field and the screen scrolls it and its error into view.
-Traded off: the error text is spoken as part of the label, which is longer.
+**Errors live in the field's name.** Native screen readers have no reliable error link for inputs.
+Decided: the error is folded into the accessible name and focus moves to the field, whose name speaks it once; no separate announcement.
+Alternatives: a separate error announcement (spoken twice with the focus move); a live region (Android only).
+Traded off: a longer spoken label.
 
-**Errors render under their label.** At the largest text size the radio options alone exceed the
-viewport.
-Decided: the error sits directly under the label, so a scrolled-to field always shows it.
-Traded off: the error is above the options instead of where a sighted user might expect it.
+**One spoken channel per message.** Two channels for one sentence means hearing it twice.
+Decided: each message is spoken by one mechanism, chosen per case: a focus move for errors and headings, an announcement for progress, no live regions.
+Alternatives: two mechanisms for redundancy (every duplicate found on TalkBack and iOS came from this).
+Traded off: a one-off announcement has no backup beyond the visible text; errors persist in the field's name, so they cannot be missed.
+
+**Errors render under their label.** At the largest text the options alone fill the viewport.
+Decided: the error sits directly under the label.
+Alternatives: under the options (scrolled to the label, the error is off screen).
+Traded off: the error is above the options, not below them.
+
+**The app pads for the keyboard itself.** React Native's automatic insets apply other apps' keyboard frames too, blanking the screen after the photo picker on a real iPad.
+Decided: listen for the keyboard, ignore foreign and empty frames, pad the content instead of the inset.
+Alternatives: the automatic insets (the bug); no keyboard handling (the keyboard covers Send).
+Traded off: no native nudge of the focused input; the scaffold must reach the window bottom.
+
+**The error name lives on a view, not a text.** iOS caches a text's accessible name until its words change.
+Decided: a wrapping accessible view carries the name and error.
+Alternatives: the name on the text (stale after the error clears).
+Traded off: one more view per choice group.
 
 ## Source layout
 
-**Grouped by owner, not by kind.** The common layout with global `hooks/`, `utils/`, `types/`
-folders scatters one feature across six places.
-Decided: the first layer groups by responsibility and the second by kind — inside a feature every
-file sits in `api`, `state`, `hooks`, `components` or `utils`, never loose at its root; app-wide
-context lives in `src/providers`; shared hooks in `src/hooks`, while a context's accessor hook stays
-with whatever mounts the context; shared components go in `src/components` and shared logic with no
-single owner in `src/lib`, where a generic building block with no domain vocabulary stays even while
-one feature uses it; routes under `src/app` stay thin; types sit with the code that owns them; no
-barrel files.
-Traded off: newcomers expecting the type-based layout have to learn the ownership rule, and screen
-tests live under `src/__tests__/app` because expo-router treats every file under `src/app` as a route.
+**By responsibility, then by kind.** Global `hooks/`, `utils/`, `types/` folders scatter a feature.
+Decided: a feature owns its `api`, `state`, `hooks`, `components`, `utils`; shared code goes by kind into `components`, `lib`, `hooks`, `providers`; a context's accessor stays with what mounts it; generic pieces stay shared even with one user; routes stay thin; no barrels.
+Alternatives: the type-based layout (six folders per feature, dumping-ground buckets).
+Traded off: newcomers learn the ownership rule; screen tests live under `src/__tests__/app` because expo-router treats every file under `src/app` as a route.
 
-**No types folder.** A type kept apart from the code that gives it meaning drifts.
-Decided: wire types are inferred from the zod schemas in the contracts module, so validation and
-type are one definition; every other type sits with its owner (the reducer, the settings module, the
-component), and a shared type would get a `types.ts` inside the feature that owns it.
-Traded off: no single place to browse all types; a reader follows the import instead.
+**A file keeps its own single-use pieces.** One file per function scatters a screen across six files.
+Decided: a route or module holds its private helpers, types and sub-components in a fixed order (imports, types, constants, helpers, sub-components, the one export, styles); a piece moves out when a second file needs it, when it owns state or copy, or when the file passes about 200 lines.
+Alternatives: one file per function.
+Traded off: a file can hold several kinds of thing; the order and the single export keep it readable.
 
-## Left out
-
-Authentication, a real backend, push notifications, offline queueing, draft persistence, upload
-progress, Android capture recovery, a component library, internationalisation, store builds, the
-GP side, the inbox and reply flow, dark appearance, analytics and web. Nothing planned was cut.
+**No types folder.** A type kept away from its code drifts.
+Decided: wire types come from the zod schemas; every other type sits with its owner.
+Alternatives: a `types/` folder (a second copy of the schemas' shapes, maintained by hand).
+Traded off: no single place to browse all types.
 
 ## Platform
 
-Verified by hand on the iOS simulator in Expo Go, at the default and the largest text size, with the
-Accessibility Inspector audit clean on every screen. Not run on Android. The camera path needs a
-real device.
+Verified on the iOS simulators at default and largest text with a clean Accessibility Inspector audit
+on every screen, on an Android 16 emulator with TalkBack's speech captured, on a real Samsung tablet
+(camera, back labels, read faults) and on a real iPad.
 
 ## With another two weeks
 
-Draft persistence with a resume prompt, the real transport with upload progress, Dutch copy tested
-with TalkBack, an inbox so the practice's reply closes the loop, and end-to-end tests on both
-platforms.
+Draft persistence with a resume prompt, which also recovers an Android camera capture; a review step
+with Edit and Send before the confirmation; landscape layouts; a dark appearance; a stale list shown
+with a warning instead of the error card; an exit confirmation on the back gesture from Home; the
+real transport with upload progress; Dutch copy tested with TalkBack; an inbox so the practice's
+reply closes the loop; and end-to-end tests on both platforms.

@@ -1,0 +1,360 @@
+<meta charset="utf-8">
+<title>iPad Accessibility Verification</title>
+<meta name="description" content="Accessibility verification of the e-consult flow on a physical iPad Air: accessible names, text scaling, layout and VoiceOver across every state of the flow, re-checked twice after the VoiceOver fixes, with every VoiceOver event now passing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
+  --accent:#0F6B75; --accent-soft:#E3F1F2; --accent-ink:#0B4E56; --warm:#A8681A; --warm-soft:#FBF1E3;
+  --code-bg:#EEF3F4; --shadow:0 1px 0 rgba(22,38,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+    --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+    --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1719; --surface:#152124; --ink:#E4ECED; --muted:#9BB0B4; --line:#263539;
+  --accent:#66C7D0; --accent-soft:#16333A; --accent-ink:#A7E3E8; --warm:#E0A650; --warm-soft:#2E2515;
+  --code-bg:#1B292D; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
+@media(min-width:1100px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+header.head{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+.lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
+aside.toc{display:none}
+@media(min-width:1100px){aside.toc{display:block;position:sticky;top:24px;align-self:start;font-size:14px}}
+aside.toc .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+aside.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+aside.toc li a{display:block;padding:5px 0 5px 12px;color:var(--muted);text-decoration:none;margin-left:-2px;border-left:2px solid transparent}
+aside.toc li a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0}
+main > *{max-width:72ch}
+main > .wide, main > .band{max-width:none}
+h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px;padding-top:6px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{padding-left:1.3em;margin:0 0 16px}
+li{margin:0 0 6px}
+li > p{margin:0}
+strong{font-weight:700}
+em{color:var(--muted);font-style:italic}
+code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
+pre.code code{background:none;padding:0;font-size:inherit}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
+.band pre.mermaid{margin:0;display:flex;justify-content:center;font-family:inherit;white-space:pre-wrap;color:var(--muted);font-size:13px}
+.band pre.mermaid svg{max-width:100%;height:auto}
+.wide{overflow-x:auto;margin:8px 0 24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <header class="head">
+    <p class="eyebrow">Finish phase · device</p>
+    <h1>Accessibility verification — e-consult flow on iPad</h1>
+    <p class="lede">The whole flow driven on a physical iPad Air with every accessibility setting applied from the iPad's own Settings app and confirmed by screenshot before each pass: eleven options one at a time, both system text sizes, and VoiceOver's spoken text read from the caption panel. A text-scaling claim from an earlier pass is corrected here. Two VoiceOver re-check passes after the fixes close five of the seven defects; every VoiceOver event now passes, and defects 1 and 2 stand as observations.</p>
+  </header>
+  <aside class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol><li><a href="#environment">Environment</a></li><li><a href="#correction">A correction</a></li><li><a href="#scaling">Text scaling</a></li><li><a href="#options">The eleven options</a></li><li><a href="#voiceover">VoiceOver</a></li><li><a href="#recheck">Re-check after the fixes</a></li><li><a href="#recheck2">Second re-check</a></li><li><a href="#names">Accessible names</a></li><li><a href="#camera">Camera and photos</a></li><li><a href="#states">States</a></li><li><a href="#defects">Defects</a></li><li><a href="#not-verified">Not verified</a></li></ol>
+  </aside>
+  <main>
+<style>
+main > .shots{max-width:none}
+.shots{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 26px}
+.shots figure{margin:0;width:148px}
+.shots a{display:block}
+.shots img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.shots figcaption{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.sev{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:999px;vertical-align:2px;margin-right:8px}
+.sev-high{background:#F6DDD8;color:#7C2D17}
+.sev-med{background:var(--warm-soft);color:var(--warm)}
+.sev-low{background:var(--accent-soft);color:var(--accent-ink)}
+.sev-fixed{background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent)}
+.ok{color:var(--accent-ink);font-weight:700}
+.bad{color:#9A3412;font-weight:700}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sev-high{background:#41211A;color:#F0B7A5}:root:not([data-theme="light"]) .bad{color:#F0B7A5}}
+:root[data-theme="dark"] .sev-high{background:#41211A;color:#F0B7A5}
+:root[data-theme="dark"] .bad{color:#F0B7A5}
+</style>
+<h2 id="environment">Environment</h2>
+<div class="wide"><table><tbody>
+<tr><th>Device</th><td>iPad Air 11-inch (M3), physical</td></tr>
+<tr><th>OS</th><td>iOS 27.0</td></tr>
+<tr><th>App</th><td>the e-consult flow running in Expo Go</td></tr>
+<tr><th>Practice fixture</th><td>developer-settings default <code>prc-0421</code>: three recipients, two questions — one required single-choice, one optional free text</td></tr>
+<tr><th>How settings were applied</th><td>every option was switched on in the iPad's Settings app and screenshotted there as proof before the pass ran, then switched off again</td></tr>
+</tbody></table></div>
+<p>Evidence is a screenshot per state plus the iOS accessibility tree for each state, from which accessible names, roles, enabled state and element frames are read. For VoiceOver, the spoken text is transcribed from the on-screen caption panel.</p>
+
+<h2 id="correction">A correction to the earlier text-scaling finding</h2>
+<p>An earlier pass reported that the flow's step screens ignore the system text size, and that at the default size the <code>Continue</code> button is pushed below the fold. <strong>Both claims were wrong, and this pass withdraws them.</strong></p>
+<p>The cause was a measurement error rather than an app behaviour. The iPad's own system setting — Settings → Accessibility → Display &amp; Text Size → Larger Text — had <em>Larger Accessibility Sizes</em> switched on with the slider at its maximum throughout, while the earlier pass varied a per-app Dynamic Type override instead. Its &quot;default text&quot; pass and its &quot;largest text&quot; pass were therefore run at the same real size, which is why they produced identical frames.</p>
+<p>Driving the real system slider settles it: every screen scales. The screenshots the earlier pass filed under <code>defaulttext-*</code> were captured at the largest size despite their name, and have been removed from this folder; the captures here are named <code>default-*</code> and <code>largest-*</code>, each taken with the slider position confirmed by screenshot.</p>
+
+<h2 id="scaling">Text scaling</h2>
+<p>Measured at the two confirmed system settings: the default (Larger Accessibility Sizes off, slider at position 4 of 7) and the largest (Larger Accessibility Sizes on, slider at maximum). Heights are in points, from the accessibility tree.</p>
+<div class="wide"><table>
+<thead><tr><th>Element</th><th>Default size</th><th>Largest size</th><th>Scales</th></tr></thead>
+<tbody>
+<tr><td>Home heading <code>Hello, Ria de Boer.</code></td><td>38</td><td>271.5</td><td class="ok">yes</td></tr>
+<tr><td>Home intro paragraph</td><td>24</td><td>257.5</td><td class="ok">yes</td></tr>
+<tr><td>Home <code>Developer settings</code></td><td>48</td><td>86</td><td class="ok">yes</td></tr>
+<tr><td>Home <code>Write to your practice</code></td><td>48</td><td>102</td><td class="ok">yes</td></tr>
+<tr><td>Step 1 heading <code>Who are you writing to?</code></td><td>38</td><td>271.5</td><td class="ok">yes</td></tr>
+<tr><td>Step 1 recipient card</td><td>96</td><td>240.5</td><td class="ok">yes</td></tr>
+<tr><td>Step 1 <code>Continue</code></td><td>48, at y 526 — on screen</td><td>102, at y 1211 — one scroll down</td><td class="ok">yes</td></tr>
+<tr><td>Step 2 question label</td><td>32</td><td>229</td><td class="ok">yes</td></tr>
+<tr><td>Confirmation heading <code>Message sent</code></td><td>38</td><td>136</td><td class="ok">yes</td></tr>
+<tr><td>Developer-settings modal heading</td><td>38</td><td>271.5</td><td class="ok">yes</td></tr>
+</tbody></table></div>
+<p>At the largest size the flow simply becomes a longer page: step 1 runs to two screens and <code>Continue</code> sits below the fold, which is the intended consequence of no pinned footer. At the default size the whole of step 1 fits on one screen.</p>
+
+<h2 id="options">The eleven accessibility options</h2>
+<p>Each option was switched on alone, the whole flow driven — Home, recipient, recipient chosen, questions with the required error, questions answered, message with the empty-message error, message typed, confirmation — then switched off again. On iPadOS 27 &quot;Button Shapes&quot; is named <strong>Show Borders</strong>.</p>
+<div class="wide"><table>
+<thead><tr><th>Option</th><th>Confirmed on</th><th>Result across the flow</th></tr></thead>
+<tbody>
+<tr><td>Bold Text</td><td class="ok">yes</td><td>clean; see defect 1 for the one Home capture in this pass</td></tr>
+<tr><td>Larger Text</td><td class="ok">yes</td><td>clean — see the scaling table above</td></tr>
+<tr><td>Show Borders (Button Shapes)</td><td class="ok">yes</td><td>clean, but the app adds no shapes — defect 2</td></tr>
+<tr><td>On/Off Labels</td><td class="ok">yes</td><td>clean</td></tr>
+<tr><td>Reduce Transparency</td><td class="ok">yes</td><td>clean</td></tr>
+<tr><td>Increase Contrast</td><td class="ok">yes</td><td>clean</td></tr>
+<tr><td>Differentiate Without Colour</td><td class="ok">yes</td><td>clean; the error carries the words <code>This question is required</code> and a selected answer shows a filled radio and a border, so neither depends on colour</td></tr>
+<tr><td>Smart Invert</td><td class="ok">yes</td><td>clean, inverted and legible throughout</td></tr>
+<tr><td>Classic Invert</td><td class="ok">yes</td><td>clean</td></tr>
+<tr><td>Colour Filters → Greyscale</td><td class="ok">yes</td><td>clean</td></tr>
+<tr><td>Reduce Motion</td><td class="ok">yes</td><td>clean</td></tr>
+</tbody></table></div>
+<p>Nothing was clipped, overlapping or unreadable in any state under any option, and every pass reached the confirmation, so the primary action stayed reachable throughout.</p>
+<blockquote><p>Classic Invert and Colour Filters are applied by the display compositor, below the screenshot path, so their captures look unfiltered. Their activation is evidenced by the Settings screenshots; the captures show that the app's layout and content are unaffected, not what the colours looked like on the glass. Smart Invert does appear in captures.</p></blockquote>
+<div class="shots">
+  <figure><a href="device/opt-boldtext-s3-questions-error.png"><img src="device/opt-boldtext-s3-questions-error.png" alt="Questions step with the required error, Bold Text on" loading="lazy"></a><figcaption>bold text</figcaption></figure>
+  <figure><a href="device/opt-buttonshapes-s4-message-typed.png"><img src="device/opt-buttonshapes-s4-message-typed.png" alt="Message step, Show Borders on" loading="lazy"></a><figcaption>show borders</figcaption></figure>
+  <figure><a href="device/opt-onofflabels-s3-questions-error.png"><img src="device/opt-onofflabels-s3-questions-error.png" alt="Questions step, On/Off Labels on" loading="lazy"></a><figcaption>on/off labels</figcaption></figure>
+  <figure><a href="device/opt-reducetransparency-s4-message-empty-error.png"><img src="device/opt-reducetransparency-s4-message-empty-error.png" alt="Empty-message error, Reduce Transparency on" loading="lazy"></a><figcaption>reduce transparency</figcaption></figure>
+  <figure><a href="device/opt-increasecontrast-s3-questions-answered.png"><img src="device/opt-increasecontrast-s3-questions-answered.png" alt="Questions answered, Increase Contrast on" loading="lazy"></a><figcaption>increase contrast</figcaption></figure>
+  <figure><a href="device/opt-differentiatewithoutcolor-s3-questions-answered.png"><img src="device/opt-differentiatewithoutcolor-s3-questions-answered.png" alt="Questions answered, Differentiate Without Colour on" loading="lazy"></a><figcaption>differentiate without colour</figcaption></figure>
+  <figure><a href="device/opt-smartinvert-s4-message-empty-error.png"><img src="device/opt-smartinvert-s4-message-empty-error.png" alt="Empty-message error, Smart Invert on" loading="lazy"></a><figcaption>smart invert</figcaption></figure>
+  <figure><a href="device/opt-classicinvert-s4-message-typed.png"><img src="device/opt-classicinvert-s4-message-typed.png" alt="Message step, Classic Invert on" loading="lazy"></a><figcaption>classic invert</figcaption></figure>
+  <figure><a href="device/opt-grayscale-s3-questions-error.png"><img src="device/opt-grayscale-s3-questions-error.png" alt="Questions step, Greyscale on" loading="lazy"></a><figcaption>greyscale</figcaption></figure>
+  <figure><a href="device/opt-reducemotion-s5-confirmation.png"><img src="device/opt-reducemotion-s5-confirmation.png" alt="Confirmation, Reduce Motion on" loading="lazy"></a><figcaption>reduce motion</figcaption></figure>
+</div>
+
+<h2 id="voiceover">VoiceOver</h2>
+<p>VoiceOver was switched on with its caption panel showing, and every string below is transcribed from that panel. The panel shows one utterance at a time and highlights the word being spoken, so &quot;once&quot; means the highlight advanced through a single utterance and &quot;twice&quot; means it was seen to restart at the first word.</p>
+<div class="wide"><table>
+<thead><tr><th>Event</th><th>Spoken</th><th>Times</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Focus on a recipient card</td><td><code>Dr. J. de Vries, GP, radio button, unchecked</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>Focus on Continue with nothing chosen</td><td><code>Continue, dimmed, Button, Choose who you are writing to first</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>Continue on the questions step, nothing answered</td><td>first press <code>How long have you had this problem? (required)</code>; second press <code>How long have you had this problem? (required). Error: This question is required</code></td><td>1 each</td><td class="bad">Fail — defect 3</td></tr>
+<tr><td>The same question after answering</td><td><code>How long have you had this problem? (required)</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>Send with an empty message</td><td><code>What would you like to ask?, Text field, What helps your GP: where it is, since when, and what you have already tried.</code> — no error</td><td>1</td><td class="bad">Fail — defect 3</td></tr>
+<tr><td>Send with a message</td><td><code>Sending your message</code>, then <code>Sending</code>, <code>Sending, busy</code>, <code>Sending, busy, dimmed</code></td><td>1 each</td><td class="bad">Partial — defect 4</td></tr>
+<tr><td>The confirmation heading, focused by hand</td><td><code>Message sent, Heading</code></td><td>1</td><td class="ok">Pass on the trait</td></tr>
+<tr><td>Photo-upload failure</td><td><code>Message sent, adding your photo</code>, then <code>Your message was sent, but the photo could not be attached.</code></td><td>1 each</td><td class="ok">Pass</td></tr>
+<tr><td>Try again after a photo failure</td><td><code>Try again, Button</code>; pressing it: <code>Attaching your photo</code>, then <code>The photo still couldn't be attached. You can try again or continue without it.</code></td><td>1 each</td><td class="ok">Pass</td></tr>
+<tr><td>Offline</td><td>banner <code>You're offline. You can keep writing, but sending needs a connection.</code> as the first element of each step; Send <code>Send, dimmed, Button, You're offline. Sending needs a connection.</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>Create failure</td><td><code>Your message wasn't sent. We couldn't reach your practice. Check your connection and try again.</code></td><td>2</td><td class="bad">Partial — defect 5</td></tr>
+</tbody></table></div>
+<div class="shots">
+  <figure><a href="device/vo-e1-recipient-focus.png"><img src="device/vo-e1-recipient-focus.png" alt="Caption panel on a recipient card" loading="lazy"></a><figcaption>recipient focus</figcaption></figure>
+  <figure><a href="device/vo-e2-continue-disabled-hint.png"><img src="device/vo-e2-continue-disabled-hint.png" alt="Caption panel on the disabled Continue" loading="lazy"></a><figcaption>continue hint</figcaption></figure>
+  <figure><a href="device/vo-e3-questions-error.png"><img src="device/vo-e3-questions-error.png" alt="Caption panel after the first failed Continue" loading="lazy"></a><figcaption>first failed continue</figcaption></figure>
+  <figure><a href="device/vo-e5-empty-message-error.png"><img src="device/vo-e5-empty-message-error.png" alt="Caption panel after the first failed Send" loading="lazy"></a><figcaption>first failed send</figcaption></figure>
+  <figure><a href="device/vo-e6b-confirmation.png"><img src="device/vo-e6b-confirmation.png" alt="Confirmation reached with a stale caption" loading="lazy"></a><figcaption>silent confirmation</figcaption></figure>
+  <figure><a href="device/vo-e7c-tryagain-outcome.png"><img src="device/vo-e7c-tryagain-outcome.png" alt="Caption panel after Try again" loading="lazy"></a><figcaption>try again outcome</figcaption></figure>
+  <figure><a href="device/vo-e8-send-disabled.png"><img src="device/vo-e8-send-disabled.png" alt="Caption panel on the disabled Send while offline" loading="lazy"></a><figcaption>offline send</figcaption></figure>
+  <figure><a href="device/vo-e9-create-failure.png"><img src="device/vo-e9-create-failure.png" alt="Caption panel on the create-failure card" loading="lazy"></a><figcaption>create failure</figcaption></figure>
+</div>
+<p>The three rows marked <span class="bad">Fail</span> or <span class="bad">Partial</span> above were re-checked after the fixes landed; the section below supersedes them.</p>
+
+<h2 id="recheck">Re-check after the VoiceOver fixes</h2>
+<p>A second VoiceOver pass on the same iPad, driving only the events the fixes touch. Method unchanged: caption panel on, a screenshot roughly every half second through each event, and an utterance counted as &quot;once&quot; when the word highlight advances through a single sentence and then holds rather than restarting at its first word. The app was reloaded before the pass, so every observation is against the fixed build; the developer-settings fault for each event was set from the app's own modal and cleared again afterwards.</p>
+<div class="wide"><table>
+<thead><tr><th>Event</th><th>Expected</th><th>Spoken</th><th>Times</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>E3 — first Continue on the questions step, nothing answered</td><td>the question's name including its error</td><td><code>How long have you had this problem? (required). Error: This question is required</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>E5 — first Send with an empty message</td><td>the field's name including its error</td><td><code>What would you like to ask?. Error: Please write your question before sending, Text field</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>E6 — arrival on the confirmation after a plain send</td><td><code>Message sent, Heading</code>, with no <code>Sending…</code> left as the last caption</td><td><code>Sending your message</code>, then <code>Sending</code>, <code>Sending, busy</code>, <code>Sending, busy, dimmed</code>, then <code>Message sent, Heading</code></td><td>1 each</td><td class="ok">Pass</td></tr>
+<tr><td>E7 — arrival on the confirmation after a failed photo upload</td><td>the photo-failed sentence heard in full</td><td><code>Sending your message</code>; <code>Message sent, adding your photo</code> cut off at its second word; <code>Your message was sent, but the photo could not be attached.</code> cut off after three to five words; <code>Message sent, Heading</code></td><td>the photo sentence starts once and never finishes</td><td class="bad">Fail — defect 6</td></tr>
+<tr><td>E9 — the send-failure card</td><td>the card's sentence, once</td><td><code>Your message wasn't sent. We couldn't reach your practice. Check your connection and try again.</code></td><td>1</td><td class="ok">Pass</td></tr>
+<tr><td>Step 1 load-error card</td><td>the card's sentence when it appears, once</td><td>nothing; the caption still held <code>Home, Button</code> from the push</td><td>0</td><td class="bad">Fail — defect 7</td></tr>
+</tbody></table></div>
+<p><strong>Defect 3 is fixed.</strong> Both validation paths now speak the error on the <em>first</em> failed submit. On the questions step the caption ran <code>How long…</code> → <code>(required).</code> → <code>Error:</code> → <code>This question is required</code> with the highlight advancing once through the whole sentence, and the capture shows the VoiceOver cursor sitting on the question. The message step behaves the same, and adds the field's <code>Text field</code> role after the error rather than before it.</p>
+<p><strong>Defect 4 is fixed.</strong> The confirmation now speaks itself on arrival: the last caption before the push is <code>Sending, busy, dimmed</code> and the first one after it is <code>Message sent, Heading</code>, spoken once and then stable across every later sample. Nothing has to be found by exploring.</p>
+<p><strong>Defect 5 is fixed.</strong> The send-failure sentence was sampled from its first word to its last across twelve consecutive captures and never restarted; further samples afterwards showed the caption unchanged. One utterance, not two.</p>
+<div class="shots">
+  <figure><a href="device/vr-e3-questions-error.png"><img src="device/vr-e3-questions-error.png" alt="Caption panel reading the question name with its error after the first failed Continue" loading="lazy"></a><figcaption>E3 first failed continue</figcaption></figure>
+  <figure><a href="device/vr-e5-empty-message-error.png"><img src="device/vr-e5-empty-message-error.png" alt="Caption panel reading the field name with its error after the first failed Send" loading="lazy"></a><figcaption>E5 first failed send</figcaption></figure>
+  <figure><a href="device/vr-e6-confirmation-heading.png"><img src="device/vr-e6-confirmation-heading.png" alt="Confirmation on arrival with the caption reading Message sent, Heading" loading="lazy"></a><figcaption>E6 confirmation spoken</figcaption></figure>
+  <figure><a href="device/vr-e7-photo-failed-caption.png"><img src="device/vr-e7-photo-failed-caption.png" alt="Caption panel part-way through the photo-failure sentence" loading="lazy"></a><figcaption>E7 photo sentence starts</figcaption></figure>
+  <figure><a href="device/vr-e7-heading-interrupts.png"><img src="device/vr-e7-heading-interrupts.png" alt="The next capture, with the heading caption in place of the photo-failure sentence" loading="lazy"></a><figcaption>E7 heading interrupts</figcaption></figure>
+  <figure><a href="device/vr-e9-create-failure.png"><img src="device/vr-e9-create-failure.png" alt="Caption panel reading the send-failure sentence once" loading="lazy"></a><figcaption>E9 failure spoken once</figcaption></figure>
+  <figure><a href="device/vr-load-error-card.png"><img src="device/vr-load-error-card.png" alt="Step 1 load-error card on screen with the caption still reading Home, Button" loading="lazy"></a><figcaption>load-error card silent</figcaption></figure>
+  <figure><a href="device/vr-restored-home.png"><img src="device/vr-restored-home.png" alt="Home with defaults restored and the caption panel off" loading="lazy"></a><figcaption>restored</figcaption></figure>
+</div>
+<p>Defects 6 and 7 were fixed in turn and re-checked again below, which supersedes the two <span class="bad">Fail</span> rows in the table above.</p>
+
+<h2 id="recheck2">Second re-check — the arrival and load-error fixes</h2>
+<p>Same method again: caption panel on, a screenshot roughly every half second through each event, and an utterance counted as &quot;once&quot; when the word highlight advances through a single sentence and then holds. The app was reloaded before the pass. Only the three events the second round of fixes touches were driven.</p>
+<div class="wide"><table>
+<thead><tr><th>Event</th><th>Expected</th><th>Spoken</th><th>Times</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>E7 — arrival on the confirmation after a failed photo upload</td><td>the photo-failed alert, in full, as the only utterance on arrival</td><td>the send's progress first — <code>Sending</code>, then <code>Message sent, adding your photo</code> to its last word — then <code>Your message was sent, but the photo could not be attached.</code> from <code>Your</code> to <code>attached.</code> and holding there. No heading utterance at all</td><td>1, complete</td><td class="ok">Pass</td></tr>
+<tr><td>Step 1 load-error card, on appearance</td><td>the card's sentence, once, when it appears</td><td><code>We couldn't load your practice's details. Check your connection and try again.</code></td><td>1, complete</td><td class="ok">Pass</td></tr>
+<tr><td>Step 1 load-error card, after a failed Try again</td><td>the card's sentence again</td><td><code>Try again, Button</code>, then <code>Loading your practice's care team</code> and <code>Loading your practice's care team, busy</code>, then <code>We couldn't load your practice's details. Check your connection and try again.</code></td><td>1, complete</td><td class="ok">Pass</td></tr>
+<tr><td>E9 — the send-failure card on the message step</td><td>still the card's sentence, once, now by focus-on-layout</td><td><code>Sending</code>, <code>Sending, busy</code>, <code>Sending, busy, dimmed</code>, then <code>Your message wasn't sent. We couldn't reach your practice. Check your connection and try again.</code></td><td>1</td><td class="ok">Pass</td></tr>
+</tbody></table></div>
+<p><strong>Defect 6 is fixed.</strong> The confirmation no longer speaks its heading when the photo failed: focus lands on the alert instead, whose name is the photo-failed line, and that sentence runs to its last word and stays there. The two progress lines before the screen change also complete now rather than cutting each other off. Run twice, with an identical caption sequence both times, which matters for a defect that was a race. The capture shows the VoiceOver cursor on the alert, not on <code>Message sent</code>.</p>
+<p><strong>Defect 7 is fixed.</strong> The card speaks itself the moment it appears, and again when it comes back after a failed retry — the new view is treated as a new card, so the reason is repeated rather than swallowed. In both captures the VoiceOver cursor sits on the card.</p>
+<p><strong>E9 survived its mechanism change.</strong> Moving the create-failure card from an effect to focus-on-layout did not reintroduce the double utterance: the sentence was sampled from its first word to its last across nine consecutive captures, never restarted, and further samples afterwards showed the caption unchanged.</p>
+<p>All six VoiceOver events across the two re-checks now pass, and defects 3 through 7 are closed. Defects 1 and 2 are untouched by these fixes and stand as observations.</p>
+<div class="shots">
+  <figure><a href="device/vr2-e7-photo-failed.png"><img src="device/vr2-e7-photo-failed.png" alt="Confirmation after a failed photo upload, caption reading the photo-failed sentence to its end" loading="lazy"></a><figcaption>E7 alert spoken in full</figcaption></figure>
+  <figure><a href="device/vr2-load-error-card.png"><img src="device/vr2-load-error-card.png" alt="Step 1 load-error card with the caption reading its sentence" loading="lazy"></a><figcaption>load-error card spoken</figcaption></figure>
+  <figure><a href="device/vr2-load-error-retry.png"><img src="device/vr2-load-error-retry.png" alt="Step 1 load-error card after a failed retry, spoken again" loading="lazy"></a><figcaption>spoken again after retry</figcaption></figure>
+  <figure><a href="device/vr2-e9-create-failure.png"><img src="device/vr2-e9-create-failure.png" alt="Create-failure card on the message step with the caption reading its sentence" loading="lazy"></a><figcaption>E9 still once</figcaption></figure>
+  <figure><a href="device/vr2-restored-home.png"><img src="device/vr2-restored-home.png" alt="Home with defaults restored and the caption panel off" loading="lazy"></a><figcaption>restored</figcaption></figure>
+</div>
+
+<h2 id="names">Accessible names</h2>
+<div class="wide"><table>
+<thead><tr><th>Check</th><th>Result</th><th>Observed</th></tr></thead>
+<tbody>
+<tr><td>Recipient cards read as &quot;name, role&quot; with radio role and selected state</td><td class="ok">Pass</td><td><code>Dr. J. de Vries, GP</code> with value <code>radio button, unchecked</code>, becoming <code>radio button, checked</code> on selection while the other two stay unchecked</td></tr>
+<tr><td>An invalid required question&#39;s name carries the error while it shows</td><td class="ok">Pass</td><td><code>How long have you had this problem? (required). Error: This question is required</code>, on a single element</td></tr>
+<tr><td>…and drops the error once the question is answered</td><td class="ok">Pass</td><td><code>How long have you had this problem? (required)</code>, with no occurrence of the error string anywhere in the tree</td></tr>
+<tr><td>The message field&#39;s name carries the error while it shows</td><td class="ok">Pass</td><td><code>What would you like to ask?. Error: Please write your question before sending</code></td></tr>
+<tr><td>…and drops it once a message is typed</td><td class="ok">Pass</td><td><code>What would you like to ask?</code>, with the typed text as the field&#39;s value</td></tr>
+<tr><td>Continue is disabled until a recipient is chosen, and says why</td><td class="ok">Pass</td><td><code>Continue</code>, disabled and not hittable; its hint reads <code>Choose who you are writing to first</code></td></tr>
+<tr><td>Send is disabled when the device is offline, and says why</td><td class="ok">Pass</td><td><code>Send</code> disabled with a message typed, so the disabled state is the offline rule and not the empty-message rule; its hint reads <code>You're offline. Sending needs a connection.</code></td></tr>
+<tr><td>The confirmation opens with a &quot;Message sent&quot; heading</td><td class="ok">Pass</td><td>spoken as <code>Message sent, Heading</code>, followed by <code>Sent to Dr. J. de Vries.</code>, <code>Your practice usually replies within two working days.</code>, <code>Reference: ec-1</code>, button <code>Done</code></td></tr>
+<tr><td>&quot;Try again&quot; on a failed send is a button</td><td class="ok">Pass</td><td><code>Try again, Button</code>, for both the create-failure and the photo-failure variants</td></tr>
+<tr><td>The failure card reads as whole sentences</td><td class="ok">Pass</td><td><code>Your message wasn&#39;t sent. We couldn&#39;t reach your practice. Check your connection and try again.</code></td></tr>
+<tr><td>An offline reason is visible next to the disabled Send</td><td class="ok">Pass</td><td><code>You&#39;re offline. Sending needs a connection.</code> rendered directly below the Send button</td></tr>
+</tbody></table></div>
+<p>The two hints in this table — the one on the disabled Continue and the one on the disabled Send — are <code>accessibilityHint</code> values that are not drawn on screen. Earlier passes could not read them; hearing them through VoiceOver is what resolves them.</p>
+
+<h2 id="camera">Camera and photos</h2>
+<p><strong>Camera capture works.</strong> &quot;Take a photo&quot; raised the iOS camera-permission prompt, and after allowing it the camera opened, the shutter took a picture, &quot;Use Photo&quot; returned to the message step with the preview and &quot;Remove photo&quot; rendered, Send was enabled, and sending produced the confirmation with <code>Your photo was attached.</code></p>
+<p><strong>The blank message step is fixed.</strong> The earlier high-severity defect — attach a photo, scroll down for Send, and the page turns blank — no longer reproduces. After picking a photo and scrolling to the bottom, the content stays on screen and hittable at both sizes: at the default size <code>Send</code> sits at y 738, at the largest size at y 1029, with no negative-offset displacement.</p>
+<div class="shots">
+  <figure><a href="device/camera-preview-attached.png"><img src="device/camera-preview-attached.png" alt="Message step with a camera photo attached" loading="lazy"></a><figcaption>camera preview</figcaption></figure>
+  <figure><a href="device/camera-sent-confirmation.png"><img src="device/camera-sent-confirmation.png" alt="Confirmation after sending a camera photo" loading="lazy"></a><figcaption>camera sent</figcaption></figure>
+  <figure><a href="device/d1-default-text-after-pick-scroll.png"><img src="device/d1-default-text-after-pick-scroll.png" alt="Message step after a photo pick at the default text size" loading="lazy"></a><figcaption>after pick, default text</figcaption></figure>
+  <figure><a href="device/d1-largest-text-after-pick-scroll.png"><img src="device/d1-largest-text-after-pick-scroll.png" alt="Message step after a photo pick at the largest text size" loading="lazy"></a><figcaption>after pick, largest text</figcaption></figure>
+</div>
+
+<h2 id="states">States</h2>
+<p>No clipped or overlapping text was seen in any state, at either text size. The developer-settings modal, the create-failure card and the confirmation all wrap and scroll cleanly.</p>
+<h3>At the default system text size</h3>
+<div class="shots">
+  <figure><a href="device/default-s0-home.png"><img src="device/default-s0-home.png" alt="Home" loading="lazy"></a><figcaption>s0 home</figcaption></figure>
+  <figure><a href="device/default-s1-recipient.png"><img src="device/default-s1-recipient.png" alt="Recipient step" loading="lazy"></a><figcaption>s1 recipient</figcaption></figure>
+  <figure><a href="device/default-s2-recipient-selected.png"><img src="device/default-s2-recipient-selected.png" alt="Recipient chosen" loading="lazy"></a><figcaption>s2 recipient chosen</figcaption></figure>
+  <figure><a href="device/default-s3-questions-error.png"><img src="device/default-s3-questions-error.png" alt="Questions step with the required error" loading="lazy"></a><figcaption>s3 required error</figcaption></figure>
+  <figure><a href="device/default-s3-questions-answered.png"><img src="device/default-s3-questions-answered.png" alt="Questions step answered" loading="lazy"></a><figcaption>s3 answered</figcaption></figure>
+  <figure><a href="device/default-s4-message-empty-error.png"><img src="device/default-s4-message-empty-error.png" alt="Message step with the empty-message error" loading="lazy"></a><figcaption>s4 empty-message error</figcaption></figure>
+  <figure><a href="device/default-s4-message-typed.png"><img src="device/default-s4-message-typed.png" alt="Message step with text typed" loading="lazy"></a><figcaption>s4 message typed</figcaption></figure>
+  <figure><a href="device/default-s5-confirmation.png"><img src="device/default-s5-confirmation.png" alt="Confirmation" loading="lazy"></a><figcaption>s5 confirmation</figcaption></figure>
+</div>
+<h3>At the largest accessibility text size</h3>
+<div class="shots">
+  <figure><a href="device/largest-s0-home.png"><img src="device/largest-s0-home.png" alt="Home" loading="lazy"></a><figcaption>s0 home</figcaption></figure>
+  <figure><a href="device/largest-s1-recipient.png"><img src="device/largest-s1-recipient.png" alt="Recipient step" loading="lazy"></a><figcaption>s1 recipient</figcaption></figure>
+  <figure><a href="device/largest-s1-continue-disabled.png"><img src="device/largest-s1-continue-disabled.png" alt="Continue disabled" loading="lazy"></a><figcaption>s1 continue disabled</figcaption></figure>
+  <figure><a href="device/largest-s2-recipient-selected.png"><img src="device/largest-s2-recipient-selected.png" alt="Recipient chosen" loading="lazy"></a><figcaption>s2 recipient chosen</figcaption></figure>
+  <figure><a href="device/largest-s3-questions-error.png"><img src="device/largest-s3-questions-error.png" alt="Questions step with the required error" loading="lazy"></a><figcaption>s3 required error</figcaption></figure>
+  <figure><a href="device/largest-s3-questions-answered.png"><img src="device/largest-s3-questions-answered.png" alt="Questions step answered" loading="lazy"></a><figcaption>s3 answered</figcaption></figure>
+  <figure><a href="device/largest-s4-message-empty-error.png"><img src="device/largest-s4-message-empty-error.png" alt="Message step with the empty-message error" loading="lazy"></a><figcaption>s4 empty-message error</figcaption></figure>
+  <figure><a href="device/largest-s4-message-typed.png"><img src="device/largest-s4-message-typed.png" alt="Message step with text typed" loading="lazy"></a><figcaption>s4 message typed</figcaption></figure>
+  <figure><a href="device/largest-s4-photo-attached.png"><img src="device/largest-s4-photo-attached.png" alt="Message step with a photo attached" loading="lazy"></a><figcaption>s4 photo attached</figcaption></figure>
+  <figure><a href="device/largest-s5-confirmation.png"><img src="device/largest-s5-confirmation.png" alt="Confirmation" loading="lazy"></a><figcaption>s5 confirmation</figcaption></figure>
+  <figure><a href="device/largest-s6-developer-settings.png"><img src="device/largest-s6-developer-settings.png" alt="Developer settings modal" loading="lazy"></a><figcaption>s6 developer settings</figcaption></figure>
+  <figure><a href="device/largest-s7-create-failure.png"><img src="device/largest-s7-create-failure.png" alt="Create-failure error card" loading="lazy"></a><figcaption>s7 create failure</figcaption></figure>
+  <figure><a href="device/largest-s8-offline-banner.png"><img src="device/largest-s8-offline-banner.png" alt="Offline banner" loading="lazy"></a><figcaption>s8 offline banner</figcaption></figure>
+  <figure><a href="device/largest-s8-offline-send-disabled.png"><img src="device/largest-s8-offline-send-disabled.png" alt="Send disabled while offline" loading="lazy"></a><figcaption>s8 offline send</figcaption></figure>
+  <figure><a href="device/largest-discard-guard.png"><img src="device/largest-discard-guard.png" alt="Discard your message confirmation" loading="lazy"></a><figcaption>discard guard</figcaption></figure>
+</div>
+
+<h2 id="defects">Defects</h2>
+
+<h3><span class="sev sev-med">Medium</span> 1 — Home can be left laid out for the previous text size</h3>
+<p>Seen once, with the system size confirmed at the default: Home's layout boxes were still sized for the largest accessibility text — the greeting's box 271.5 points tall, the two buttons 86 and 102 — while the glyphs were drawn at the default size. On screen that is a greeting alone at the top, a large empty gap, the intro line floating mid-screen, and the primary button a tall slab holding small text. The page reads as mostly blank, which matches a report that on Home &quot;no text is visible, the views don't get larger with the text size&quot;.</p>
+<p>Relaunching the app restored correct metrics immediately.</p>
+<p><strong>The trigger was not identified.</strong> Three deliberate attempts to reproduce it failed: switching Bold Text on, then off, then on again all left Home correct, and changing the system text size while the app sat on Home re-measured live and correctly. So the condition is real and captured but intermittent, and the mechanism is not established.</p>
+<div class="shots">
+  <figure><a href="device/opt-boldtext-s0-home.png"><img src="device/opt-boldtext-s0-home.png" alt="Home laid out for the largest text size while drawing default-size text" loading="lazy"></a><figcaption>stale layout on Home</figcaption></figure>
+  <figure><a href="device/default-s0-home.png"><img src="device/default-s0-home.png" alt="Home laid out correctly at the default text size" loading="lazy"></a><figcaption>correct, for comparison</figcaption></figure>
+</div>
+
+<h3><span class="sev sev-low">Low</span> 2 — the app does not respond to Show Borders</h3>
+<p>With Show Borders on, the text-style controls — <code>Developer settings</code>, <code>Change</code>, <code>Take a photo</code>, <code>Choose from library</code> — stay plain coloured text with no added shape or underline, so a patient who turns the setting on precisely to stop relying on colour gets no change in this app. The setting is a UIKit affordance that a React Native view does not inherit, so this is an unimplemented affordance rather than a rendering break; nothing is clipped or broken.</p>
+
+<h3><span class="sev sev-fixed">Fixed</span> 3 — the first failed submit tells a screen-reader user nothing is wrong</h3>
+<p><em>Re-checked and fixed — see <a href="#recheck">the re-check</a>, events E3 and E5. What follows is what was seen before the fix.</em></p>
+<p>On the <em>first</em> press of Continue with the required question unanswered, focus moves to the question and VoiceOver speaks only <code>How long have you had this problem? (required)</code>. The error half of the name is not spoken, so the patient is moved somewhere and given no reason. Pressing Continue again — with the error already in state — speaks the full <code>How long have you had this problem? (required). Error: This question is required</code>, and focusing the element by hand also speaks it in full, so the name itself is correct.</p>
+<p>The same happens on the message step: the first Send with an empty field speaks the field's name, role and helper hint with no mention of the error, while a deliberate re-focus speaks <code>What would you like to ask?. Error: Please write your question before sending, Text field, …</code>.</p>
+<p>Reading: focus is moved before the error text has been attached to the accessible name, so the announcement wins the race. That mechanism is an inference; the omission itself is on the captions and reproduces on both validation paths.</p>
+
+<h3><span class="sev sev-fixed">Fixed</span> 4 — the confirmation screen is silent for a screen-reader user</h3>
+<p><em>Re-checked and fixed — see <a href="#recheck">the re-check</a>, event E6. What follows is what was seen before the fix.</em></p>
+<p>After a successful send the last thing spoken is <code>Sending, busy, dimmed</code>. The confirmation then appears and nothing is announced — the caption panel still held that sentence across six samples spanning the transition. The heading carries the right trait, and focusing it by hand speaks <code>Message sent, Heading</code>, but a patient who cannot see the screen is never told the message was sent and has to go exploring to find out.</p>
+<p>Worth contrasting: the photo path does announce its outcomes, so the gap is specific to the plain success arrival.</p>
+
+<h3><span class="sev sev-fixed">Fixed</span> 5 — the send-failure sentence is spoken twice</h3>
+<p><em>Re-checked and fixed — see <a href="#recheck">the re-check</a>, event E9. What follows is what was seen before the fix.</em></p>
+<p>The error card's sentence, <code>Your message wasn't sent. We couldn't reach your practice. Check your connection and try again.</code>, is spoken, stops, and is spoken again: across consecutive caption samples the word highlight advanced part-way, restarted at the first word, and advanced again. The sentence breaks are correct — the earlier comma-splice problem stays fixed — and the repetition stops after the second utterance.</p>
+<p>Related and smaller: the visible red error text under a question is its own focusable element, so a user swiping past it hears the error sentence a second time after the field's own name has already carried it.</p>
+
+<h3><span class="sev sev-fixed">Fixed</span> 6 — the photo-failure sentence is cut off by the confirmation heading</h3>
+<p><em>Re-checked and fixed — see <a href="#recheck2">the second re-check</a>. What follows is what was seen before the fix.</em></p>
+<p>Found by <a href="#recheck">the re-check</a>, event E7. On the failed-photo path three things want to speak within about a second of each other: the status line <code>Message sent, adding your photo</code>, the announcement <code>Your message was sent, but the photo could not be attached.</code>, and the heading focus that defect 4's fix added. Each interrupts the one before it. Across two runs the photo-failure sentence reached <code>Your message was</code> and <code>Your message was sent, but</code> respectively before <code>Message sent, Heading</code> replaced it, so a patient who cannot see the screen hears that the message was sent and never hears that the photo was not.</p>
+<p>The line is on screen and reachable — the confirmation renders <code>Your message was sent, but the photo could not be attached.</code> with <code>Try again</code> and <code>Continue without the photo</code> beneath it — so nothing is lost to a sighted user, and a screen-reader user who explores the page will find it. What is lost is the announcement itself.</p>
+<div class="shots">
+  <figure><a href="device/vr-e7-photo-failed-caption.png"><img src="device/vr-e7-photo-failed-caption.png" alt="Caption panel part-way through the photo-failure sentence" loading="lazy"></a><figcaption>sentence starts</figcaption></figure>
+  <figure><a href="device/vr-e7-heading-interrupts.png"><img src="device/vr-e7-heading-interrupts.png" alt="The next capture, with the heading caption in place of the photo-failure sentence" loading="lazy"></a><figcaption>heading interrupts</figcaption></figure>
+</div>
+
+<h3><span class="sev sev-fixed">Fixed</span> 7 — the step 1 load-error card is still silent when it appears</h3>
+<p><em>Re-checked and fixed — see <a href="#recheck2">the second re-check</a>. What follows is what was seen before the fix.</em></p>
+<p>Found by <a href="#recheck">the re-check</a>. With the practice configuration forced to fail, step 1 shows its skeleton for about five seconds and then replaces it with <code>We couldn't load your practice's details. Check your connection and try again.</code> and a <code>Try again</code> button. Through the whole of that — thirteen consecutive captures, about eight seconds after the card appeared — the caption panel still held <code>Home, Button</code>, the name of the navigation-bar button VoiceOver had focused when the step was pushed. The capture shows the VoiceOver cursor still around that button while the error card fills the page.</p>
+<p>The card's name is correct and does speak when it is reached by hand: the accessibility tree carries <code>We couldn't load your practice's details. Check your connection and try again.</code> as one label on the alert, and swiping to it reads the whole sentence. It is the move of focus to the card on appearance that does not take effect, so the patient is left on a step that looks like it is still loading.</p>
+<p>Pressing <code>Try again</code> does not rescue it either: the retry speaks <code>Loading your practice's care team</code> and then <code>Loading your practice's care team, busy</code>, and when the card comes back VoiceOver lands on <code>Try again, Button</code> rather than on the card, so the reason is still never spoken.</p>
+<div class="shots">
+  <figure><a href="device/vr-load-error-card.png"><img src="device/vr-load-error-card.png" alt="Step 1 load-error card on screen with the caption still reading Home, Button" loading="lazy"></a><figcaption>load-error card silent</figcaption></figure>
+</div>
+
+<h2 id="not-verified">Not verified</h2>
+<ul>
+<li><strong>The automated accessibility audits</strong> and their positive control. The audit tool was not attached to the app during this pass, so no audit produced a result. Everything reported above is read from the accessibility tree, from screenshots, and from VoiceOver's own speech. The audit itself is not missing from the record: it ran on the <a href="phone.html">phone lane</a>, five states at 0 warnings and 0 duplicates each against a positive control of 22.</li>
+<li><strong>What Classic Invert and Colour Filters actually looked like on the glass</strong>, since the display compositor applies them below the screenshot path. Their activation and the app's layout under them are evidenced; the rendered colours are not.</li>
+<li><strong>The trigger for defect 1.</strong> The condition is captured but could not be reproduced on demand.</li>
+<li><strong>The option matrix and the two text sizes against the fixed build.</strong> Both re-checks drove only the VoiceOver events the fixes touch; the eleven options and the scaling measurements above stand from the earlier pass and were not repeated.</li>
+</ul>
+  </main>
+  <footer class="foot">Generated from <code>device/report.md</code>.</footer>
+</div>

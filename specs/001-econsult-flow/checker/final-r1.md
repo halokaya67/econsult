@@ -3,6 +3,20 @@ mode: final · reviewed head: a04aede · base: f39fb58 · previous rounds: spec-
 
 ## Spec-Checker Report — mode: final
 
+> **Since then.** This round read the change at `a04aede`. The branch has moved on; what it records that no longer holds:
+>
+> - The diff it measured — 132 files over 25 commits, 41 test files and 261 tests — stands at 432 files over 40 commits at `b1fb557`, across 53 test files.
+> - Twenty-one paths in its Files block are gone: `env.example`, `src/smoke.test.tsx`, `src/test/providers.tsx`, the `src/lib/{devSettings,network,photo,queryClient}` modules and the four `src/components` files that moved into the feature; the list also predates `src/app/+not-found.tsx`, `src/providers/`, `src/hooks/`, `src/features/devSettings/` and the four newer feature hooks.
+> - The step 1 leave guard it cites in `recipient.tsx` is now `src/features/econsult/hooks/useDiscardGuard.ts`.
+> - A8 certifies a mechanism that has since been replaced: the scaffold pads for the keyboard itself instead of adjusting insets.
+> - U4's and A6's `env.example` and `.env` seeds no longer exist; the developer settings screen is the only knob.
+> - A9's per-scaffold offline announcement was fixed in round 2: the network provider announces once per transition.
+> - W2 to W5 are fixed, and two of the files they point at no longer exist.
+> - SC3's missing Accessibility Inspector audit (W6) has since run on the phone lane: five states, zero warnings and zero duplicates each, against a positive control of 22.
+> - I5's four ownership findings were carried out in the restructuring pass — to `src/providers/ServicesProvider.tsx`, `src/providers/DevSettingsProvider.tsx`, `src/hooks/useSession.ts` and `src/features/devSettings/utils/options.ts` — and the `recipients.ts` / `useRecipients.ts` type cycle is gone.
+> - `StatusViews.tsx` is three files now, and the offline banner copy lives in `src/providers/NetworkProvider.tsx`.
+> - I6's untested Discard path was driven on the phone lane and again on the real Samsung tablet.
+
 **Verdict:** PASS_WITH_FLAGS
 
 **Reviewed:** 119/132 files · `base: f39fb58 · head: a04aede` · `132 files changed, 34591 insertions(+), 2294 deletions(-)` (25 commits) · canon cited: `rules/workflow.md` (Coding Canon: size caps, explicit errors, KISS/DRY, testing bar), `rules/comments.md` (≤ 2 sentences), `rules/javascript.md` (naming, 100 % on changed files), repo `AGENTS.md` (48 pt, error folding, offline-first reads / always-mode send, functions < 50 lines) · Sourcegraph not configured: local tree only · verify evidence read: `verify/finish-3/coverage.log` → All files 100/100/100/100, 41 suites, 261 tests; `typecheck.log`, `lint.log`, `format.log` present · UI evidence read: T016/T018/T019/T020 re-check reports (all PASS) · searches: `git diff f39fb58...HEAD --name-only` → 132 · `grep -in dismiss <decisions log>` → 1 line (T001-C1/C3/C4, none in this diff's scope) · `grep visual_defect_fix|visual_scope|step_auto_pass|verify_fix_commit` → 5 + 1 + 21 + 1, all read · `grep -rn 'TODO|FIXME|console.log|debugger' src` (non-test) → 0 · `grep -rn 'fetch(|createUploadTask|expo-file-system' src` → 0 (only `refetch()`), confirms DECISIONS.md:95-97 · `grep -rn allowFontScaling src` → 0; `maxFontSizeMultiplier` → 3 sites (chip, header Home, header Cancel) · comment-length scan over `src/**/*.ts(x)` (non-test) → 1 block > 2 sentences · function-length scan → 1 function > 50 lines · `FixturePracticeId` consumers → 0 · `"reset"` dispatches → 0 · `function handled<T>` → 3 test files · `Accessibility Inspector` in `ui-verification/*/report.md` → 0 · node_modules facts: `expo-router/build/react-navigation/core/useOnPreventRemove.js:43-67`, `expo-router/build/global-state/router.js:77-78`, `expo-router/build/getRoutesCore.js:655`, `react-native/src/private/webapis/dom/nodes/ReactNativeElement.js:177-190`, `expo/src/winter/fetch/convertFormData.ts:35,77`, `react-native/Libraries/Components/Switch/Switch.js:267`, `react-native/Libraries/Components/ScrollView/ScrollView.d.ts:891`, `AccessibilityInfo.d.ts:174`
@@ -395,9 +409,9 @@ Paths relative to the repo root; "test" names the file and test title or line.
 - **Severity:** WARNING
 - **Category:** tests
 - **Location:** `specs/001-econsult-flow/spec.md:203`; `README.md:113-114` tells the reviewer to run it
-- **Finding:** SC3 names three verifications: role/label queries (done), `toHaveStyle` 48-pt checks (done in `PrimaryButton.test:11`, `TextButton.test:14`, `ChoiceGroup.test:29-31`), and "an Accessibility Inspector audit on the simulator with zero errors". No UI report under `ui-verification/` mentions the audit (grep → 0); the reports use agent-device accessibility dumps, which are not the Xcode audit.
+- **Finding:** SC3 names three verifications: role/label queries (done), `toHaveStyle` 48-pt checks (done in `PrimaryButton.test:11`, `TextButton.test:14`, `ChoiceGroup.test:29-31`), and "an Accessibility Inspector audit on the simulator with zero errors". No UI report under `ui-verification/` mentions the audit (grep → 0); the reports use accessibility-tree dumps, which are not the Xcode audit.
 - **Why:** A success criterion the spec itself made measurable is unrecorded; the README promises the reviewer "it should report no issues".
-- **Suggested fix:** in finish:ui-verify, run Xcode > Open Developer Tool > Accessibility Inspector > Audit on Home, step 1 (loaded and empty), step 2, step 3 (pristine and with the error), Sent (partial variant) and Developer settings; record the result per screen in the report. If the audit cannot be automated, amend SC3 to name the agent-device a11y dump as the audit and say so in DECISIONS.md.
+- **Suggested fix:** in finish:ui-verify, run Xcode > Open Developer Tool > Accessibility Inspector > Audit on Home, step 1 (loaded and empty), step 2, step 3 (pristine and with the error), Sent (partial variant) and Developer settings; record the result per screen in the report. If the audit cannot be automated, amend SC3 to name the accessibility-tree dump as the audit and say so in DECISIONS.md.
 - **Needs user:** no
 
 ### W7 — Partial review of thirteen artifact files

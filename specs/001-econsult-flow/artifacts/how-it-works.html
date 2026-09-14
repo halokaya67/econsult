@@ -81,6 +81,22 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
   <main>
 
 <p>Snapshot of the <code>feat/econsult-flow</code> worktree at commit <code>f39fb58</code>, before any feature work. Every claim below was checked on 2026-09-11 against the files in this repository, the installed packages under <code>node_modules</code>, or the versioned Expo documentation for SDK 57. Anything that could not be checked is marked <strong>unverified</strong>.</p>
+<blockquote>
+<p><strong>Since then.</strong> The feature was built on top of this snapshot; the page is kept as the record of what the plan had to build on. What it describes that no longer holds:</p>
+<ul>
+<li>The empty shell is gone: the whole e-consult flow, an in-process fake backend and a test suite of 53 files now sit on this skeleton.</li>
+<li>The root layout mounts the provider stack, and the index route is the home screen rather than a placeholder.</li>
+<li><code>app.json</code> pins <code>userInterfaceStyle: &quot;light&quot;</code>, adds the expo-image-picker plugin and drops the <code>web</code> block.</li>
+<li><code>package.json</code> carries ten scripts — <code>format</code>, <code>format:check</code>, <code>typecheck</code>, <code>test</code>, <code>test:coverage</code> and <code>showcase</code> among them — and no <code>web</code> script.</li>
+<li><code>.gitignore</code> also ignores <code>.env</code> and <code>coverage/</code>.</li>
+<li><code>AGENTS.md</code> is a full Shape-and-Rules document, not a single instruction to read the SDK 57 documentation.</li>
+<li>The packages listed here as installed but unimported — reanimated, worklets, gesture-handler, react-native-web, react-dom, expo-font and expo-status-bar — were removed; expo-image, expo-device and expo-system-ui are used.</li>
+<li>Font scale is read from <code>useWindowDimensions().fontScale</code>; <code>PixelRatio.getFontScale()</code> is forbidden by the spec.</li>
+<li>Of the things not present yet, the test runner, the ESLint configuration, Prettier and the type-check script all exist; environment variables were dropped and never arrived.</li>
+<li>The one-way confirmation shipped as <code>usePreventRemove</code> with <code>headerBackVisible: false</code> and <code>gestureEnabled: false</code>, not as the stack replace suggested here.</li>
+<li>The emulator&#39;s virtual-scene camera turned out to be moot: the camera action is gated on <code>Device.isDevice</code>, so an emulator never offers it, and the Android lane has since run.</li>
+</ul>
+</blockquote>
 <p>A rendered copy of this page lives at <code>specs/001-econsult-flow/artifacts/how-it-works.html</code>.</p>
 <h2 id="what-it-does">What it does</h2>
 <p>Today the app is an empty Expo shell. It starts, shows a single screen with a placeholder sentence, and does nothing else. There is no e-consult flow, no data access, no fake backend and no test suite. What does exist is the skeleton the feature will be built into: file-based navigation with a native stack, TypeScript in strict mode, and the SDK 57 toolchain, all confirmed to run in Expo Go on the iOS simulator from a clean checkout.</p>
@@ -151,8 +167,7 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
 <li><strong>Expo Go ignores config-plugin permission strings.</strong> Usage descriptions declared in <code>app.json</code> plugins only take effect in a prebuild or EAS build; Expo Go shows its own prompts. This is documented in the Expo permissions guide.</li>
 <li><strong><code>gestureEnabled</code> is iOS only</strong> and <code>headerBackVisible</code> has no effect on the first screen of a stack, so a confirmation screen that must not be left by going back needs a stack replace rather than a hidden button.</li>
 <li><strong>The iOS simulator has no camera</strong>; the Android emulator has a virtual scene camera that can be fed a JPEG.</li>
-<li><strong>Managed workflow, no native folders.</strong> <code>/ios</code> and <code>/android</code> are ignored; running <code>prebuild</code> would create them locally. CocoaPods is not installed on this machine, so <code>npx expo run:ios</code> is not available here without extra setup; Expo Go is the run path.</li>
-<li><strong>Two worktrees.</strong> <code>Documents/econsult/main</code> tracks <code>main</code>; <code>Documents/econsult/feat-econsult-flow</code> tracks <code>feat/econsult-flow</code>, where all feature work happens.</li>
+<li><strong>Managed workflow, no native folders.</strong> <code>/ios</code> and <code>/android</code> are ignored; running <code>prebuild</code> would create them locally. Expo Go is the run path.</li>
 <li><strong>Unverified</strong>: whether a freshly created Android virtual device defaults its back camera to the virtual scene; whether Network Link Conditioner on the host shapes simulator traffic. Both are only relevant to manual testing.</li>
 </ul>
 <h2 id="sources">Sources</h2>

@@ -1,5 +1,5 @@
 import { onlineManager } from "@tanstack/react-query";
-import { userEvent } from "@testing-library/react-native";
+import { fireEvent, userEvent, within } from "@testing-library/react-native";
 import * as Crypto from "expo-crypto";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -34,6 +34,19 @@ const READY_PHOTO = {
 } as const;
 const FIELD = "What would you like to ask?";
 const SENDING_STATUS = "Sending your message";
+const SENT_STATUS = "Message sent";
+const SENT_WITH_PHOTO_STATUS = "Message sent, adding your photo";
+const OFFLINE_HINT_LINE = "You're offline. Sending needs a connection.";
+const CARD_SENTENCE = "We couldn't reach your practice.";
+
+// @testing-library/react-native does not re-export the node type its queries return.
+type RenderedNode = ReturnType<typeof screen.getByText>;
+
+// The name the focused node carried at the moment focus was sent, which is the name VoiceOver
+// reads out; a focus sent before the error is committed still records the name without it.
+function nameWhenFocused(node: unknown): string | undefined {
+  return (node as { props?: { accessibilityLabel?: string } }).props?.accessibilityLabel;
+}
 
 function renderMessage(
   options: ProviderOptions = {},
@@ -75,6 +88,11 @@ const FIELD_TOP = 540;
 const INPUT_TOP = 620;
 // The error card is inserted below the photo block, far enough down to be off a short screen.
 const CARD_TOP = 880;
+
+// Stands in for the layout pass that follows the native mount; nothing lays out in a test renderer.
+function layOut(node: RenderedNode) {
+  fireEvent(node, "layout", { nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 200 } } });
+}
 
 // Only an ApiError comes out of the fake transport, so a plain bug in the upload is injected here.
 function breakTheUpload() {
@@ -127,7 +145,8 @@ describe("Message step", () => {
     expect(announce.mock.calls.filter(([line]) => line.startsWith("Step"))).toHaveLength(1);
   });
 
-  test("an empty message is blocked with an error tied to the field and announced", async () => {
+  test("an empty message is blocked with an error spoken by moving focus to the field", async () => {
+    const namesWhenFocused: (string | undefined)[] = [];
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
@@ -135,17 +154,20 @@ describe("Message step", () => {
     announce.mockClear();
     const focus = jest
       .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
-      .mockImplementation(() => {});
+      .mockImplementation((node) => void namesWhenFocused.push(nameWhenFocused(node)));
+    focus.mockClear();
     const user = userEvent.setup();
     renderMessage();
     await screen.findByText("To: Dr. J. de Vries");
 
     await user.press(screen.getByRole("button", { name: "Send" }));
 
+    // One focus move, made late enough that the name it speaks already carries the error; the
+    // focused input is named with the error, so announcing it too would speak it twice.
     expect(screen.getByLabelText(`${FIELD}. Error: ${EMPTY_MESSAGE_ERROR}`)).toBeOnTheScreen();
-    // Filtered, so the StepHeader's own mount announcement stays out of the count.
-    expect(announce.mock.calls.filter(([line]) => line === EMPTY_MESSAGE_ERROR)).toHaveLength(1);
-    expect(focus).toHaveBeenCalledWith(expect.anything(), "focus");
+    expect(focus).toHaveBeenCalledWith(expect.any(TextInput), "focus");
+    expect(namesWhenFocused).toEqual([`${FIELD}. Error: ${EMPTY_MESSAGE_ERROR}`]);
+    expect(announce.mock.calls.filter(([line]) => line === EMPTY_MESSAGE_ERROR)).toHaveLength(0);
     expect(screen).toHavePathname("/econsult/message");
   });
 
@@ -204,7 +226,12 @@ describe("Message step", () => {
     expect(screen.queryByText(/A little more detail helps/)).toBeNull();
   });
 
-  test("sends the message, reports the status, and moves to the confirmation", async () => {
+  // "Message sent" is the confirmation's heading, which is read when focus lands on it there.
+  test("sends the message and moves to the confirmation without speaking its heading", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
     const user = userEvent.setup();
     renderMessage();
     await screen.findByText("To: Dr. J. de Vries");
@@ -214,6 +241,7 @@ describe("Message step", () => {
 
     await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
     expect(screen.getByText(/^sent:ec-\d+:none$/)).toBeOnTheScreen();
+    expect(announce.mock.calls.filter(([line]) => line === SENT_STATUS)).toHaveLength(0);
   });
 
   test("the sending status is spoken once, by the announcement and not by a live region", async () => {
@@ -263,7 +291,11 @@ describe("Message step", () => {
     await waitFor(() => expect(screen.getByText(/^sent:ec-\d+:none$/)).toBeOnTheScreen());
   });
 
-  test("uploads the photo after the message and reports it attached", async () => {
+  test("uploads the photo after the message, speaking the interim status once", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
     const user = userEvent.setup();
     renderMessage({}, { ...DRAFT, photo: READY_PHOTO });
     await screen.findByText("To: Dr. J. de Vries");
@@ -273,6 +305,8 @@ describe("Message step", () => {
 
     await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
     expect(screen.getByText(/^sent:ec-\d+:attached$/)).toBeOnTheScreen();
+    // The upload still runs when it is spoken, so it reports progress the confirmation cannot.
+    expect(announce.mock.calls.filter(([line]) => line === SENT_WITH_PHOTO_STATUS)).toHaveLength(1);
   });
 
   test("a failed upload still reaches the confirmation, marked as failed", async () => {
@@ -318,10 +352,14 @@ describe("Message step", () => {
   });
 
   // Inserted above Send, the card pushed it and Try again below the fold and nothing scrolled.
-  test("a failed create scrolls its error card into view and moves focus to it", async () => {
+  test("a failed create scrolls its error card into view and speaks it by focus alone", async () => {
     const focus = jest
       .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
       .mockImplementation(() => {});
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
     getInnerViewRef.mockReturnValue(CONTENT_REF);
     measureLayout.mockImplementation((_relativeTo, onSuccess) => onSuccess(0, CARD_TOP, 300, 200));
     const user = userEvent.setup();
@@ -330,11 +368,39 @@ describe("Message step", () => {
     await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
 
     await user.press(screen.getByRole("button", { name: "Send" }));
-    await screen.findByRole("alert");
+    const card = await screen.findByRole("alert");
+
+    // Fabric holds no view for the card in the commit that inserted it, so nothing moves yet.
+    expect(scrollTo).not.toHaveBeenCalled();
+    layOut(card);
 
     // The message passed validation, so the card is the only node measured or focused.
     expect(scrollTo).toHaveBeenCalledWith({ x: 0, y: CARD_TOP - spacing.md, animated: true });
     expect(focus).toHaveBeenCalledWith(measureLayout.mock.contexts[0], "focus");
+    // The focused card is named with the whole sentence, so announcing it would speak it twice.
+    expect(announce.mock.calls.filter(([line]) => line.includes(CARD_SENTENCE))).toHaveLength(0);
+  });
+
+  // The error is cleared while the retry is in flight, so a second failure is a second card; it
+  // would go unspoken if the reveal were tied to the first appearance alone.
+  test("a retry that fails again brings the card back and speaks it again", async () => {
+    const focus = jest
+      .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
+      .mockImplementation(() => {});
+    focus.mockClear();
+    const user = userEvent.setup();
+    renderMessage({ settings: { faults: { create: "network" } } });
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+    await user.press(screen.getByRole("button", { name: "Send" }));
+    const firstCard = await screen.findByRole("alert");
+    layOut(firstCard);
+
+    await user.press(screen.getByRole("button", { name: RETRY_LABEL }));
+    await waitFor(() => expect(firstCard).not.toBeOnTheScreen());
+    layOut(await screen.findByRole("alert"));
+
+    expect(focus).toHaveBeenCalledTimes(2);
   });
 
   test("Retry re-sends with the idempotency key of the first attempt", async () => {
@@ -389,6 +455,30 @@ describe("Message step", () => {
 
     expect(send.props.accessibilityHint).toBe("You're offline. Sending needs a connection.");
     expect(screen.getByRole("alert")).toHaveTextContent(/offline/);
+  });
+
+  // At the largest text size the step is about two screens tall, so the banner explaining the dead
+  // Send is off-screen by the time the patient has scrolled to it.
+  test("repeats the offline reason under Send, as copy only", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
+    renderMessage({ settings: { forceOffline: true } });
+    await screen.findByText("To: Dr. J. de Vries");
+
+    // getByText lands on the host text inside RN's Text, so the block it shares with Send is two up.
+    const block = screen.getByText(OFFLINE_HINT_LINE).parent?.parent as RenderedNode;
+
+    expect(within(block).getByRole("button", { name: "Send", disabled: true })).toBeOnTheScreen();
+    expect(announce.mock.calls.filter(([line]) => line === OFFLINE_HINT_LINE)).toHaveLength(0);
+  });
+
+  test("leaves the reason out from under Send while online", async () => {
+    renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+
+    expect(screen.queryByText(OFFLINE_HINT_LINE)).toBeNull();
   });
 
   test("a picked photo becomes the draft's preview and Remove takes it back out", async () => {

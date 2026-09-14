@@ -3,6 +3,11 @@ mode: plan · round: 1 (preliminary, dispatched before the plan phase transition
 
 ## Spec-Checker Report — mode: plan
 
+> **Since then.** The plan this round reviewed was executed, and the tree was restructured afterwards. Two things it relies on have changed:
+>
+> - The paths it names have moved: `src/test/providers.tsx` is `src/test/renderWithProviders.tsx`, the flat `src/features/econsult/*.ts` modules went into `api/`, `state/`, `hooks/` and `utils/`, and the screen tests it moved out of the route directory live under `src/__tests__/app/`.
+> - The `accessibilityLiveRegion="polite"` in the `OfflineBanner`, `ErrorState` and `PhotoPicker` code it quotes was removed: an error is spoken once by the focus move to the field, and no error surface is a live region.
+
 **Verdict:** FAIL
 
 **Reviewed:** 6/6 artifact files (plan.md 6587 lines in full; spec.md; how-it-works.md; the brief `case-study-mobile.md`; checker/spec-r3.md; research.md by grep as dispatched) plus package.json, tsconfig.json, app.json, .gitignore, .claude/settings.json, .vscode/settings.json · diff: n/a (mode plan) · canon cited: workflow.md (Coding Canon: DRY, Testing bar, "Errors & inputs"; Commit Policy) · decisions log: 1 entry (spec-gate approval), `grep -in dismiss` → 0 · Sourcegraph not configured, local Grep only; standalone take-home repo, no cross-repo consumers · searches:

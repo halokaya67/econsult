@@ -46,7 +46,8 @@
     "format:check": "prettier --check .",
     "typecheck": "expo customize tsconfig.json && tsc",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "showcase": "node scripts/showcase.js"
   },
   "jest": {
     "preset": "jest-expo",

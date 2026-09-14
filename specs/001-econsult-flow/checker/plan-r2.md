@@ -3,6 +3,8 @@ mode: plan · round: 2 · reviewed: plan.md revision 2.1 (working tree) · previ
 
 ## Spec-Checker Report — mode: plan
 
+> **Since then.** Two paths this round names have moved: `src/test/providers.tsx` is `src/test/renderWithProviders.tsx`, and the flat `src/features/econsult/*.ts` modules and their tests sit in `api/`, `state/`, `hooks/` and `utils/`.
+
 **Verdict:** FAIL
 
 **Reviewed:** 5/5 artifact files (plan.md 6790 lines in full, working tree; spec.md 216 lines, working tree; how-it-works.md; checker/plan-r1.md; research.md by grep) plus repo `tsconfig.json`, `expo/tsconfig.base.json`, `.expo/types/router.d.ts`, `assets/` listing, `git status` · diff: n/a (mode plan) · canon cited: workflow.md (Coding Canon: size caps, DRY, Testing bar) · decisions log: 1 entry (spec-gate approval), 0 dismissals · Sourcegraph not configured, local tree only; standalone take-home repo, no cross-repo consumers · searches:
