@@ -38,11 +38,9 @@ export function ChoiceGroup<T extends string>({
   const visibleLabel = labelWithRequirement(label, requirement);
   return (
     <View style={styles.wrap}>
-      <Text
-        ref={ref}
-        accessibilityLabel={error ? accessibleName(visibleLabel, error) : undefined}
-        style={styles.label}
-      >
+      {/* Named unconditionally: Android never clears a contentDescription that goes back to
+          undefined, so a corrected answer would keep announcing its old error. */}
+      <Text ref={ref} accessibilityLabel={accessibleName(visibleLabel, error)} style={styles.label}>
         {visibleLabel}
       </Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}

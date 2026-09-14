@@ -27,7 +27,9 @@ describe("ChoiceGroup", () => {
       />,
     );
 
-    expect(screen.getByLabelText("How long? (required)")).toBeOnTheScreen();
+    const [label, group] = screen.getAllByLabelText("How long? (required)");
+    expect(label).toHaveTextContent("How long? (required)");
+    expect(group.props.accessibilityRole).toBe("radiogroup");
     expect(screen.getByRole("radio", { name: "1 to 4 weeks", checked: true })).toHaveStyle({
       minHeight: MIN_TOUCH,
       borderWidth,
@@ -132,10 +134,33 @@ describe("ChoiceGroup", () => {
     );
   });
 
-  test("leaves the label to speak for itself while the answer is still valid", () => {
-    render(<ChoiceGroup label="How long?" options={OPTIONS} value={null} onChange={() => {}} />);
+  // Android never clears a content description that goes back to undefined, so a corrected answer
+  // has to be named with the plain label rather than with no label at all.
+  test("takes the error back out of the label's accessible name once the answer is corrected", () => {
+    const { rerender } = render(
+      <ChoiceGroup
+        label="How long?"
+        options={OPTIONS}
+        value={null}
+        onChange={() => {}}
+        error="This question is required"
+      />,
+    );
 
-    expect(screen.getByText("How long?").props.accessibilityLabel).toBeUndefined();
+    rerender(
+      <ChoiceGroup
+        label="How long?"
+        options={OPTIONS}
+        value="1 to 4 weeks"
+        onChange={() => {}}
+        error={null}
+      />,
+    );
+
+    const [label, group] = screen.getAllByLabelText("How long?");
+    expect(label).toHaveTextContent("How long?");
+    expect(group.props.accessibilityRole).toBe("radiogroup");
+    expect(screen.queryByLabelText(/Error:/)).toBeNull();
   });
 
   test("its ref lands on the label, the element whose name carries the error", () => {

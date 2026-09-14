@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import type { ScrollToField } from "@/components/ScreenScaffold";
 import { useSession } from "@/hooks/useSession";
 import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
@@ -50,6 +50,24 @@ function useMessageField() {
   }
 
   return { error, setAnchor, setFocus, validate, clearError };
+}
+
+// A failed send inserts the error card above Send, which pushes the card, Try again and Send below
+// the fold on a short screen. The card is revealed the way a field error is: scrolled to first, so
+// moving screen-reader focus to it does not leave the screen looking untouched.
+export function useRevealSendError(
+  error: Error | null,
+  scrollToField: ScrollToField,
+): RefObject<Focusable | null> {
+  const card = useRef<Focusable | null>(null);
+
+  useEffect(() => {
+    if (error === null) return;
+    scrollToField(card.current);
+    focusForScreenReader(card.current);
+  }, [error, scrollToField]);
+
+  return card;
 }
 
 // The announcement is the status line's only spoken channel, so it is heard once on both platforms;

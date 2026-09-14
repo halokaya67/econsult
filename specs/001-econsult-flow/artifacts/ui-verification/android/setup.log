@@ -1,0 +1,50 @@
+Setup and environment log — Android UI verification
+
+== emulator ==
+$ ~/Library/Android/sdk/emulator/emulator -avd Pixel_API_36 -no-snapshot-load -no-boot-anim   (background)
+$ adb wait-for-device && adb shell getprop sys.boot_completed  -> 1   (boot in ~30 s)
+ro.build.version.release = 16
+ro.build.version.sdk     = 36
+ro.product.model         = sdk_gphone64_arm64
+ro.build.fingerprint     = google/sdk_gphone64_arm64/emu64a:16/BE2A.250530.026.F3/13894323:userdebug/dev-keys
+wm size                  = 1080x2424    wm density = 420
+
+== app ==
+$ npx expo start --android --port 8083   (background)
+Expo CLI fetched and installed Expo Go on the emulator, then opened exp://10.0.2.2:8083
+Expo Go versionName = 57.0.9 (versionCode 444, minSdk 24, targetSdk 36)
+package.json: expo ~57.0.22 | react-native 0.86.3 | expo-router ~57.0.21
+worktree head = f177213
+
+== metro log ==
+Starting project at <repo root>
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Starting Metro Bundler
+
+› Opening exp://192.168.1.77:8083 on Pixel_API_36
+- Fetching Expo Go
+- Installing Expo Go on Pixel_API_36
+Waiting on http://localhost:8083
+
+Logs for your project will appear below.
+Android Bundled 3075ms node_modules/expo-router/entry.js (1633 modules)
+Android Bundled 16ms node_modules/expo-router/entry.js (1 module)
+Android Bundled 17ms node_modules/expo-router/entry.js (1 module)
+Android Bundled 18ms node_modules/expo-router/entry.js (1 module)
+Android Bundled 15ms node_modules/expo-router/entry.js (1 module)
+Android Bundled 24ms node_modules/expo-router/entry.js (1 module)
+Android Bundled 16ms node_modules/expo-router/entry.js (1 module)
+
+== end-of-run state ==
+system font_scale             = 1.0
+secure accessibility_enabled  = 0
+secure enabled_accessibility_services = null
+system user_rotation          = 0
+system accelerometer_rotation = 1
+Developer settings left at: prc-0421, Latency Default, all faults None, Force offline off.
+Emulator left running, as asked.
+
+No app-originated LogBox or red box at any point. The one LogBox seen was Expo Go's own
+"Cannot connect to Expo CLI" warning, caused deliberately by dropping the emulator's network
+to test the offline state on the confirmation screen; it cleared on reload.
