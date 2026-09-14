@@ -13,7 +13,6 @@ import {
   type Send,
   type SendState,
 } from "@/features/econsult/hooks/useMessageSend";
-import { useQuestions } from "@/features/econsult/hooks/useQuestions";
 import { useRecipients } from "@/features/econsult/hooks/useRecipients";
 import { isPhotoPreparing } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
@@ -21,7 +20,7 @@ import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
 import { isMessageThin } from "@/features/econsult/utils/validation";
-import { useIsOffline } from "@/providers/NetworkProvider";
+import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";
 
@@ -30,7 +29,6 @@ const FIELD_HINT = "What helps your GP: where it is, since when, and what you ha
 const THIN_NUDGE =
   "A little more detail helps your GP answer without asking back, for example where it is and since when.";
 const CHANGE_HINT = "Choose a different person";
-const OFFLINE_HINT = "You're offline. Sending needs a connection.";
 const PREPARING_HINT = "Wait for the photo to finish preparing";
 const ERROR_TITLE = "Your message wasn't sent";
 
@@ -157,7 +155,10 @@ export default function MessageScreen() {
   const isOffline = useIsOffline();
   const { draft } = useDraft();
   const recipients = useRecipients();
-  const hasQuestions = useQuestions().length > 0;
+  // Whether the practice asks questions is unknown until its config lands, and a header rendered on
+  // that guess would announce "2 of 2" and then "3 of 3" — which is what a deep link here gets.
+  const isPracticeReady = recipients.status === "ready";
+  const hasQuestions = isPracticeReady && recipients.questions.length > 0;
   const send = useMessageSend();
   const isPreparing = isPhotoPreparing(draft);
   const isSending = send.submit.isPending;
@@ -172,11 +173,13 @@ export default function MessageScreen() {
     <ScreenScaffold
       action={<SendButton send={send} isOffline={isOffline} isPreparing={isPreparing} />}
     >
-      <StepHeader
-        stepNumber={stepNumber("message", hasQuestions)}
-        stepCount={stepCount(hasQuestions)}
-        title={STEP_TITLES.message}
-      />
+      {isPracticeReady ? (
+        <StepHeader
+          stepNumber={stepNumber("message", hasQuestions)}
+          stepCount={stepCount(hasQuestions)}
+          title={STEP_TITLES.message}
+        />
+      ) : null}
       <ToRow
         name={recipientNameFor(recipients, draft.recipientId)}
         disabled={isSending}

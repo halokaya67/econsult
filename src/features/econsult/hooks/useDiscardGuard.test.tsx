@@ -71,7 +71,8 @@ describe("useDiscardGuard", () => {
     await waitFor(() => expect(screen).toHavePathname("/"));
   });
 
-  test("choosing Keep writing stays put with the guard still up", () => {
+  // Keep writing is a no-op by design, so the second back is what shows the guard is still armed.
+  test("leaves the guard armed after Keep writing, so the next back asks again", () => {
     const alert = spyOnAlert();
     renderGuarded(GUARDED_DRAFT);
     act(() => router.back());

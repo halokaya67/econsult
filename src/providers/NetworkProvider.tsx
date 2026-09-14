@@ -5,6 +5,8 @@ import { announce } from "@/lib/announce";
 
 export const OFFLINE_MESSAGE =
   "You're offline. You can keep writing, but sending needs a connection.";
+// The hint every blocked Send and Retry speaks, kept here so the screens that say it cannot drift.
+export const OFFLINE_HINT = "You're offline. Sending needs a connection.";
 export const BACK_ONLINE_MESSAGE = "You're back online.";
 
 const OfflineContext = createContext<boolean>(false);

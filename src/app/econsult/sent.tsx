@@ -10,9 +10,9 @@ import { useRecipients } from "@/features/econsult/hooks/useRecipients";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
-import { focusForScreenReader, type Focusable } from "@/lib/announce";
+import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
 import { RETRY_LABEL } from "@/lib/retryLabel";
-import { useIsOffline } from "@/providers/NetworkProvider";
+import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
 
@@ -20,8 +20,6 @@ const TITLE = "Message sent";
 const REPLY_TIME = "Your practice usually replies within two working days.";
 const PHOTO_FAILED = "Your message was sent, but the photo could not be attached.";
 const PHOTO_ATTACHED = "Your photo was attached.";
-// The message step speaks the same reason for its blocked Retry, so the two surfaces say one thing.
-const OFFLINE_HINT = "You're offline. Sending needs a connection.";
 const RETRY_BUSY_LABEL = "Attaching your photo";
 const CONTINUE_WITHOUT_PHOTO = "Continue without the photo";
 
@@ -63,6 +61,7 @@ export default function SentScreen() {
   const recipients = useRecipients();
   const [isLeaving, setIsLeaving] = useState(false);
   const headingRef = useRef<Focusable | null>(null);
+  const hasFailedPhoto = draft.attachment === "failed";
 
   // The guard stays up until Done lowers it; the unwind runs in the effect below, by which time
   // the guard is already down, so Done is not blocked by it.
@@ -71,6 +70,12 @@ export default function SentScreen() {
   useEffect(() => {
     focusForScreenReader(headingRef.current);
   }, []);
+
+  // The line is already on screen when the confirmation mounts, so nothing else would speak it;
+  // the alert is not a live region, which would repeat it on Android.
+  useEffect(() => {
+    if (hasFailedPhoto) announce(PHOTO_FAILED);
+  }, [hasFailedPhoto]);
 
   useEffect(() => {
     if (isLeaving) router.dismissTo("/");

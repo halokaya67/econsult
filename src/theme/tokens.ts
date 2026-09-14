@@ -28,7 +28,7 @@ export const borderWidth = 2;
 // 48 satisfies Android's 48 dp guidance and exceeds Apple's 44 pt.
 export const MIN_TOUCH = 48;
 
-// The only place font scaling is capped: a chip that must stay a chip.
+// Capped so a chip stays a chip; the header buttons cap separately below.
 export const STEP_CHIP_MAX_FONT_SCALE = 2;
 
 // The native navigation bar cannot grow, so its buttons cap their text like iOS bar buttons do.
