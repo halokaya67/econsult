@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react-native";
 import type { ReactNode } from "react";
-import { DEFAULT_PRACTICE_ID, type DevSettings } from "@/features/devSettings/utils/settings";
+import { DEFAULT_DEV_SETTINGS, type DevSettings } from "@/features/devSettings/utils/settings";
 import { DevSettingsProvider, useDevSettings } from "./DevSettingsProvider";
 
 const SETTINGS: DevSettings = {
@@ -17,11 +17,10 @@ function wrapperWith(initial?: DevSettings) {
 }
 
 describe("DevSettingsProvider", () => {
-  test("seeds from the environment when no initial settings are given", () => {
+  test("starts from the default settings when no initial settings are given", () => {
     const { result } = renderHook(() => useDevSettings(), { wrapper: wrapperWith() });
 
-    expect(result.current.settings.practiceId).toBe(DEFAULT_PRACTICE_ID);
-    expect(result.current.settings.forceOffline).toBe(false);
+    expect(result.current.settings).toEqual(DEFAULT_DEV_SETTINGS);
   });
 
   test("apply replaces the settings", () => {

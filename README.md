@@ -47,28 +47,6 @@ current settings alone.
 The partial failure worth seeing — message sent, photo not attached — is `Fail: Upload photo` set
 to any kind, then a send with a photo added.
 
-### Env seeds
-
-The values the app starts with can be seeded instead:
-
-```bash
-cp env.example .env
-```
-
-| Variable                  | Value                                                                                              |
-| ------------------------- | -------------------------------------------------------------------------------------------------- |
-| `EXPO_PUBLIC_PRACTICE_ID` | `prc-0421`, `prc-0873` or `prc-0000`; anything else falls back to `prc-0421`                       |
-| `EXPO_PUBLIC_LATENCY_MS`  | A non-negative delay applied to every request; empty means the defaults above                      |
-| `EXPO_PUBLIC_FAULTS`      | Comma-separated `request:kind` pairs, for example `config:timeout,upload:server`; empty means none |
-
-Requests are `config`, `careTeam`, `create` and `upload`; kinds are `network`, `server` and
-`timeout`. Unparseable entries are ignored rather than crashing the app.
-
-`EXPO_PUBLIC_*` values are inlined into the bundle at build time, so they are seeds, never a live
-toggle: after editing `.env`, reload the app (press `r` in the terminal running `npx expo start`).
-Expo's docs say an Expo CLI restart or cache clear is not needed for this; if a change does not show
-up, restart `npx expo start` and reload. Developer settings override the seeds at runtime.
-
 ## Quality commands
 
 ```bash
