@@ -6,8 +6,9 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { careTeamQuery, configQuery } from "@/features/econsult/queries";
-import { useServices, useSession } from "@/lib/devSettings";
 import { isDevelopmentBuild } from "@/lib/devWarn";
+import { useServices } from "@/providers/ServicesProvider";
+import { useSession } from "@/providers/session";
 import { text } from "@/theme/text";
 
 const INTRO =

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Question } from "@/api/contracts";
-import { useServices, useSession } from "@/lib/devSettings";
+import { useServices } from "@/providers/ServicesProvider";
+import { useSession } from "@/providers/session";
 import { configQuery } from "./queries";
 
 const NO_QUESTIONS: Question[] = [];

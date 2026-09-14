@@ -2,29 +2,26 @@ import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import type { PatientSession } from "@/api/contracts";
-import { PhotoPicker } from "@/components/PhotoPicker";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold, useScrollToField, type ScrollToField } from "@/components/ScreenScaffold";
 import { ErrorState } from "@/components/StatusViews";
 import { StepHeader } from "@/components/StepHeader";
 import { TextButton } from "@/components/TextButton";
 import { TextField } from "@/components/TextField";
-import { isPhotoPreparing, readyPhoto, type DraftState } from "@/features/econsult/draft";
+import { PhotoPicker } from "@/features/econsult/components/PhotoPicker";
+import { isPhotoPreparing, readyPhoto } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
 import { sendErrorCopy } from "@/features/econsult/errorCopy";
 import { recipientNameFor } from "@/features/econsult/recipients";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/steps";
-import type { SubmitInput } from "@/features/econsult/submit";
+import { idempotencyKeyFor, submitInputFor } from "@/features/econsult/submit";
 import { useQuestions } from "@/features/econsult/useQuestions";
 import { useRecipients } from "@/features/econsult/useRecipients";
 import { useSubmit } from "@/features/econsult/useSubmit";
 import { isMessageThin, validateMessage } from "@/features/econsult/validation";
 import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
-import { useSession } from "@/lib/devSettings";
-import { newId } from "@/lib/ids";
 import { useIsOffline } from "@/lib/network";
-import { photoFileFor } from "@/lib/photo";
+import { useSession } from "@/providers/session";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";
 
@@ -62,23 +59,6 @@ function useFieldNodes() {
   }
 
   return { setAnchor, setFocus, reportProblem };
-}
-
-function submitInputFor(
-  draft: DraftState,
-  session: PatientSession,
-  recipientId: string,
-  idempotencyKey: string,
-): SubmitInput {
-  const photo = readyPhoto(draft);
-  return {
-    session,
-    recipientId,
-    message: draft.message,
-    answers: draft.answers,
-    photo: photo ? photoFileFor(photo) : null,
-    idempotencyKey,
-  };
 }
 
 type Send = (scrollToField: ScrollToField) => Promise<void>;
@@ -120,7 +100,7 @@ function useSend() {
       return;
     }
     if (!draft.recipientId) return;
-    const idempotencyKey = draft.idempotencyKey ?? newId();
+    const idempotencyKey = idempotencyKeyFor(draft);
     dispatch({ type: "submitStarted", idempotencyKey });
     setStatus(SENDING_STATUS);
     try {

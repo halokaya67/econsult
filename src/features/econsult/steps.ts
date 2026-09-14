@@ -19,8 +19,7 @@ export function stepNumber(step: FlowStep, hasQuestions: boolean): number {
   return stepCount(hasQuestions);
 }
 
-export function routeAfterRecipient(
-  hasQuestions: boolean,
-): "/econsult/questions" | "/econsult/message" {
-  return hasQuestions ? "/econsult/questions" : "/econsult/message";
+// The feature speaks in steps; the screens own the route each step lives at.
+export function stepAfterRecipient(hasQuestions: boolean): Exclude<FlowStep, "recipient"> {
+  return hasQuestions ? "questions" : "message";
 }

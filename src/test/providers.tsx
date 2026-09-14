@@ -1,9 +1,9 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { render, type RenderResult } from "@testing-library/react-native";
 import { useState, type ReactElement, type ReactNode } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { DevSettingsProvider, type DevSettings } from "@/lib/devSettings";
-import { NetworkProvider } from "@/lib/network";
+import { DEFAULT_PRACTICE_ID, type DevSettings } from "@/lib/devSettings";
+import { AppProviders } from "@/providers/AppProviders";
 
 export type ProviderOptions = { settings?: Partial<DevSettings>; client?: QueryClient };
 
@@ -13,7 +13,13 @@ const METRICS = {
 };
 
 export function testSettings(overrides: Partial<DevSettings> = {}): DevSettings {
-  return { practiceId: "prc-0421", latencyMs: 0, faults: {}, forceOffline: false, ...overrides };
+  return {
+    practiceId: DEFAULT_PRACTICE_ID,
+    latencyMs: 0,
+    faults: {},
+    forceOffline: false,
+    ...overrides,
+  };
 }
 
 // gcTime 0: the default five-minute garbage-collection timers for queries and mutations outlive the
@@ -24,20 +30,19 @@ function testClient(): QueryClient {
   });
 }
 
+// The app's own provider stack with the test's overrides, so a test can never pass against wiring
+// the app does not have.
 export function TestProviders({
   children,
   settings,
   client,
 }: ProviderOptions & { children: ReactNode }) {
-  const devSettings = testSettings(settings);
   const [fallback] = useState(testClient);
   return (
     <SafeAreaProvider initialMetrics={METRICS}>
-      <DevSettingsProvider initial={devSettings}>
-        <QueryClientProvider client={client ?? fallback}>
-          <NetworkProvider forceOffline={devSettings.forceOffline}>{children}</NetworkProvider>
-        </QueryClientProvider>
-      </DevSettingsProvider>
+      <AppProviders queryClient={client ?? fallback} initialSettings={testSettings(settings)}>
+        {children}
+      </AppProviders>
     </SafeAreaProvider>
   );
 }
