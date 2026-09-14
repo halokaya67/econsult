@@ -8,16 +8,20 @@ import { StepHeader } from "@/components/StepHeader";
 import { TextButton } from "@/components/TextButton";
 import { TextField } from "@/components/TextField";
 import { PhotoPicker } from "@/features/econsult/components/PhotoPicker";
-import { isPhotoPreparing } from "@/features/econsult/draft";
-import { useDraft } from "@/features/econsult/DraftProvider";
-import { sendErrorCopy } from "@/features/econsult/errorCopy";
-import { recipientNameFor } from "@/features/econsult/recipients";
-import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/steps";
-import { useMessageSend, type Send, type SendState } from "@/features/econsult/useMessageSend";
-import { useQuestions } from "@/features/econsult/useQuestions";
-import { useRecipients } from "@/features/econsult/useRecipients";
-import { isMessageThin } from "@/features/econsult/validation";
-import { useIsOffline } from "@/lib/network";
+import {
+  useMessageSend,
+  type Send,
+  type SendState,
+} from "@/features/econsult/hooks/useMessageSend";
+import { useQuestions } from "@/features/econsult/hooks/useQuestions";
+import { useRecipients } from "@/features/econsult/hooks/useRecipients";
+import { isPhotoPreparing } from "@/features/econsult/state/draft";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
+import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
+import { recipientNameFor } from "@/features/econsult/utils/recipients";
+import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
+import { isMessageThin } from "@/features/econsult/utils/validation";
+import { useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";
 
@@ -133,11 +137,8 @@ function SendFeedback({
   const scrollToField = useScrollToField();
   return (
     <>
-      {status ? (
-        <Text accessibilityLiveRegion="polite" style={styles.status}>
-          {status}
-        </Text>
-      ) : null}
+      {/* Not a live region: the hook announces the status, and both would speak it on Android. */}
+      {status ? <Text style={styles.status}>{status}</Text> : null}
       {error ? (
         <ErrorState
           title={ERROR_TITLE}

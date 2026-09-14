@@ -1,8 +1,8 @@
 import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import type { DevSettings } from "@/lib/devSettings";
-import { NetworkProvider } from "@/lib/network";
+import type { DevSettings } from "@/features/devSettings/utils/settings";
 import { DevSettingsProvider, useDevSettings } from "./DevSettingsProvider";
+import { NetworkProvider } from "./NetworkProvider";
 import { ServicesProvider } from "./ServicesProvider";
 
 function NetworkFromSettings({ children }: { children: ReactNode }) {

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { text } from "@/theme/text";
-import { colors, fontSize, lineHeight, radius, spacing } from "@/theme/tokens";
+import { borderWidth, colors, fontSize, lineHeight, radius, spacing } from "@/theme/tokens";
 
 type Props = { name: string; role: string; checked: boolean; onPress: () => void };
 
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.md,
     padding: spacing.md,
-    borderWidth: 2,
+    borderWidth,
     borderColor: colors.border,
     borderRadius: radius,
     backgroundColor: colors.background,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     width: INDICATOR_SIZE,
     height: INDICATOR_SIZE,
     borderRadius: INDICATOR_SIZE / 2,
-    borderWidth: 2,
+    borderWidth,
     borderColor: colors.border,
   },
   indicatorChecked: { borderColor: colors.primary, backgroundColor: colors.primary },

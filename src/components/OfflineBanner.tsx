@@ -1,16 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import { OFFLINE_MESSAGE } from "@/lib/network";
+import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
 import { colors, fontSize, lineHeight, radius, spacing } from "@/theme/tokens";
 
 // Text only, so grouping it into one accessibility element is safe and makes the role queryable.
+// No live region: the provider announces the change, and a live region here would repeat it.
 export function OfflineBanner() {
   return (
-    <View
-      accessible
-      accessibilityRole="alert"
-      accessibilityLiveRegion="polite"
-      style={styles.banner}
-    >
+    <View accessible accessibilityRole="alert" style={styles.banner}>
       <Text style={styles.text}>{OFFLINE_MESSAGE}</Text>
     </View>
   );

@@ -4,11 +4,11 @@ import type { ScrollToField } from "@/components/ScreenScaffold";
 import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
 import { devWarn } from "@/lib/devWarn";
 import { useSession } from "@/providers/session";
-import { readyPhoto } from "./draft";
-import { useDraft } from "./DraftProvider";
-import { idempotencyKeyFor, submitInputFor } from "./submit";
+import { idempotencyKeyFor, submitInputFor } from "../api/submit";
+import { readyPhoto } from "../state/draft";
+import { useDraft } from "../state/DraftProvider";
+import { validateMessage } from "../utils/validation";
 import { useSubmit } from "./useSubmit";
-import { validateMessage } from "./validation";
 
 const SENDING_STATUS = "Sending your message";
 const SENT_STATUS = "Message sent";
@@ -51,8 +51,8 @@ function useMessageField() {
   return { error, setAnchor, setFocus, validate, clearError };
 }
 
-// The status line is a live region, which Android speaks by itself; announcing where the status is
-// set covers iOS and keeps the side effect next to the event that caused it.
+// The announcement is the status line's only spoken channel, so it is heard once on both platforms;
+// setting it here also keeps the side effect next to the event that caused it.
 function useAnnouncedStatus() {
   const [status, setStatus] = useState("");
 

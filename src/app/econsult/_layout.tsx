@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { DraftProvider } from "@/features/econsult/DraftProvider";
+import { DraftProvider } from "@/features/econsult/state/DraftProvider";
 
 // A deep link or reload into a later step still gets a back arrow to the first step.
 export const unstable_settings = { anchor: "recipient" };

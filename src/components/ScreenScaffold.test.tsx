@@ -3,7 +3,7 @@ import * as Network from "expo-network";
 import { useRef } from "react";
 import { Platform, ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { OFFLINE_MESSAGE } from "@/lib/network";
+import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
 import { renderWithProviders } from "@/test/providers";
 import { spacing } from "@/theme/tokens";
 import { ScreenScaffold, useScrollToField } from "./ScreenScaffold";
@@ -66,7 +66,7 @@ describe("ScreenScaffold", () => {
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  // Announcing the transition belongs to NetworkProvider, so it is asserted in network.test.tsx.
+  // Announcing the transition belongs to NetworkProvider, so it is asserted in NetworkProvider.test.tsx.
   test("shows the offline banner while the link is down", () => {
     mockedState.mockReturnValue({ isConnected: false, isInternetReachable: false });
 

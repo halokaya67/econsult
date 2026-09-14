@@ -19,8 +19,8 @@ import {
   practiceLabelFor,
   REQUEST_LABELS,
   withFault,
-} from "@/features/devSettings/options";
-import type { DevSettings } from "@/lib/devSettings";
+} from "@/features/devSettings/utils/options";
+import type { DevSettings } from "@/features/devSettings/utils/settings";
 import { isDevelopmentBuild } from "@/lib/devWarn";
 import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { text } from "@/theme/text";

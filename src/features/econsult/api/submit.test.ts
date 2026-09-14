@@ -1,6 +1,6 @@
 import { createFakeTransport } from "@/api/fake/fakeTransport";
 import { createServices, type Services } from "@/api/services";
-import { initialDraft, type DraftState } from "./draft";
+import { initialDraft, type DraftState } from "../state/draft";
 import {
   idempotencyKeyFor,
   retryAttachment,

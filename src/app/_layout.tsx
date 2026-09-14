@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { useState } from "react";
-import { createQueryClient } from "@/lib/queryClient";
 import { AppProviders } from "@/providers/AppProviders";
+import { createQueryClient } from "@/providers/queryClient";
 
 export default function RootLayout() {
   const [queryClient] = useState(createQueryClient);

@@ -1,7 +1,7 @@
 import { renderRouter, screen } from "expo-router/testing-library";
 import { Text } from "react-native";
 import EConsultLayout, { unstable_settings } from "@/app/econsult/_layout";
-import { useDraft } from "@/features/econsult/DraftProvider";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { TestProviders } from "@/test/providers";
 
 function DraftProbe() {

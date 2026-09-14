@@ -1,14 +1,14 @@
 import { userEvent } from "@testing-library/react-native";
-import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { router } from "expo-router";
+import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Alert, Text } from "react-native";
-import HomeScreen from "@/app/index";
 import RecipientScreen from "@/app/econsult/recipient";
+import HomeScreen from "@/app/index";
 import { RETRY_LABEL } from "@/components/StatusViews";
-import { initialDraft, type DraftState } from "@/features/econsult/draft";
-import { useDraft } from "@/features/econsult/DraftProvider";
-import { STEP_TITLES } from "@/features/econsult/steps";
-import * as useRecipientsModule from "@/features/econsult/useRecipients";
+import * as useRecipientsModule from "@/features/econsult/hooks/useRecipients";
+import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
+import { useDraft } from "@/features/econsult/state/DraftProvider";
+import { STEP_TITLES } from "@/features/econsult/utils/steps";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders, type ProviderOptions } from "@/test/providers";
 

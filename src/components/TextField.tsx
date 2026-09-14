@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import { StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { accessibleName, labelWithRequirement, type Requirement } from "@/lib/fieldLabel";
 import { text } from "@/theme/text";
 import {
   borderWidth,
@@ -10,7 +11,6 @@ import {
   radius,
   spacing,
 } from "@/theme/tokens";
-import { accessibleName, labelWithRequirement, type Requirement } from "./fieldLabel";
 
 type Props = {
   label: string;

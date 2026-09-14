@@ -6,7 +6,7 @@ import {
   parsePracticeId,
   readEnvSeeds,
   seedsFromEnv,
-} from "./devSettings";
+} from "./settings";
 
 describe("parseLatency", () => {
   test.each([

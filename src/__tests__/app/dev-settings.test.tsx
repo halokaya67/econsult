@@ -4,11 +4,11 @@ import { router, Stack } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Text } from "react-native";
 import DevSettingsScreen from "@/app/dev-settings";
-import { practiceLabelFor } from "@/features/devSettings/options";
-import { DEFAULT_PRACTICE_ID } from "@/lib/devSettings";
+import { practiceLabelFor } from "@/features/devSettings/utils/options";
+import { DEFAULT_PRACTICE_ID } from "@/features/devSettings/utils/settings";
 import * as devWarn from "@/lib/devWarn";
-import { useIsOffline } from "@/lib/network";
 import { useDevSettings } from "@/providers/DevSettingsProvider";
+import { useIsOffline } from "@/providers/NetworkProvider";
 import { TestProviders } from "@/test/providers";
 
 // Reads the network context as well as the settings, so Apply with Force offline is observable.

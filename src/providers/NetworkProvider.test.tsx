@@ -9,7 +9,7 @@ import {
   NetworkProvider,
   OFFLINE_MESSAGE,
   useIsOffline,
-} from "./network";
+} from "./NetworkProvider";
 
 const mockedState = jest.mocked(Network.useNetworkState);
 
@@ -99,8 +99,10 @@ describe("NetworkProvider", () => {
     expect(announce).toHaveBeenNthCalledWith(1, OFFLINE_MESSAGE);
     expect(announce).toHaveBeenNthCalledWith(2, BACK_ONLINE_MESSAGE);
   });
+});
 
-  test("useIsOffline is false outside a provider", () => {
+describe("useIsOffline", () => {
+  test("is false outside a provider", () => {
     const { result } = renderHook(() => useIsOffline());
 
     expect(result.current).toBe(false);

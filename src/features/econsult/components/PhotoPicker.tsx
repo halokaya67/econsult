@@ -6,10 +6,10 @@ import { ActivityIndicator, Linking, StyleSheet, Text, View } from "react-native
 import { TextButton } from "@/components/TextButton";
 import { devWarn } from "@/lib/devWarn";
 import { newId } from "@/lib/ids";
-import { processPhoto, type PickedPhoto } from "@/lib/photo";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
-import type { DraftPhoto } from "../draft";
+import type { DraftPhoto } from "../state/draft";
+import { processPhoto, type PickedPhoto } from "../utils/photo";
 
 export const TAKE_PHOTO_LABEL = "Take a photo";
 export const CHOOSE_PHOTO_LABEL = "Choose from library";
