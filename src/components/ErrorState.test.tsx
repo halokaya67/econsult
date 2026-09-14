@@ -40,9 +40,9 @@ describe("ErrorState", () => {
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 
-  // VoiceOver never hears a live region, so the announcement is the alert's only spoken channel;
-  // keeping the region would have TalkBack say it twice.
-  test("speaks its title and body once, and not from a live region", () => {
+  // Whoever shows the card moves screen-reader focus to it, which speaks its name; announcing here
+  // as well is what had VoiceOver say the sentence twice.
+  test("says nothing of its own, and is not a live region", () => {
     const spoken = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
@@ -53,8 +53,33 @@ describe("ErrorState", () => {
       <ErrorState title="We couldn't load" body="Check your connection." onRetry={() => {}} />,
     );
 
-    expect(spoken).toHaveBeenCalledTimes(1);
-    expect(spoken).toHaveBeenCalledWith("We couldn't load. Check your connection.");
+    expect(spoken).not.toHaveBeenCalled();
     expect(screen.getByRole("alert").props.accessibilityLiveRegion).toBeUndefined();
+  });
+
+  // Left to iOS, a grouped view's name is its children joined with commas, which speaks the title
+  // and the body as one run-on sentence.
+  test("is named by its title and body joined with a sentence break", () => {
+    const name = "Your message wasn't sent. We couldn't reach your practice.";
+
+    render(
+      <ErrorState
+        title="Your message wasn't sent"
+        body="We couldn't reach your practice."
+        onRetry={() => {}}
+      />,
+    );
+
+    expect(screen.getByRole("alert", { name })).toBeOnTheScreen();
+  });
+
+  test("keeps one period when the title already ends with one", () => {
+    render(
+      <ErrorState title="We couldn't load." body="Check your connection." onRetry={() => {}} />,
+    );
+
+    expect(
+      screen.getByRole("alert", { name: "We couldn't load. Check your connection." }),
+    ).toBeOnTheScreen();
   });
 });

@@ -1,6 +1,6 @@
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type Ref } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
@@ -10,7 +10,8 @@ import { useRecipients } from "@/features/econsult/hooks/useRecipients";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
-import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
+import { useFocusOnArrival, type ArrivalNavigation } from "@/hooks/useFocusOnArrival";
+import type { Focusable } from "@/lib/announce";
 import { RETRY_LABEL } from "@/lib/retryLabel";
 import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
@@ -23,9 +24,10 @@ const PHOTO_ATTACHED = "Your photo was attached.";
 const RETRY_BUSY_LABEL = "Attaching your photo";
 const CONTINUE_WITHOUT_PHOTO = "Continue without the photo";
 
-// The alert groups only the text, so the two buttons stay separately focusable elements. It is not
-// a live region: the retry hook announces every line it adds, and both would speak it on Android.
-function PhotoOutcome() {
+// The alert groups only the text, so the two buttons stay separately focusable elements and its
+// name is the photo-failed line the arrival focus speaks. It is not a live region: the retry hook
+// announces every line it adds, and both would speak it on Android.
+function PhotoOutcome({ ref }: { ref?: Ref<View> }) {
   const { draft, dispatch } = useDraft();
   const isOffline = useIsOffline();
   const retry = usePhotoRetry();
@@ -34,7 +36,7 @@ function PhotoOutcome() {
   if (draft.attachment !== "failed") return null;
   return (
     <View style={styles.warning}>
-      <View accessible accessibilityRole="alert" style={styles.stack}>
+      <View ref={ref} accessible accessibilityRole="alert" style={styles.stack}>
         <Text style={text.body}>{PHOTO_FAILED}</Text>
         {retry.hasRetryFailed ? <Text style={text.body}>{PHOTO_STILL_FAILED}</Text> : null}
         {retry.error ? <Text style={text.body}>{sendErrorCopy(retry.error)}</Text> : null}
@@ -57,25 +59,21 @@ function PhotoOutcome() {
 
 export default function SentScreen() {
   const router = useRouter();
+  const navigation = useNavigation<ArrivalNavigation>();
   const { draft } = useDraft();
   const recipients = useRecipients();
   const [isLeaving, setIsLeaving] = useState(false);
   const headingRef = useRef<Focusable | null>(null);
+  const alertRef = useRef<Focusable | null>(null);
   const hasFailedPhoto = draft.attachment === "failed";
 
   // The guard stays up until Done lowers it; the unwind runs in the effect below, by which time
   // the guard is already down, so Done is not blocked by it.
   usePreventRemove(!isLeaving, () => {});
 
-  useEffect(() => {
-    focusForScreenReader(headingRef.current);
-  }, []);
-
-  // The line is already on screen when the confirmation mounts, so nothing else would speak it;
-  // the alert is not a live region, which would repeat it on Android.
-  useEffect(() => {
-    if (hasFailedPhoto) announce(PHOTO_FAILED);
-  }, [hasFailedPhoto]);
+  // One thing speaks on arrival. A failed photo takes the focus itself, because its alert is named
+  // with the line that matters most; the heading and an announcement as well cut it off mid-word.
+  useFocusOnArrival(navigation, hasFailedPhoto ? alertRef : headingRef);
 
   useEffect(() => {
     if (isLeaving) router.dismissTo("/");
@@ -95,7 +93,11 @@ export default function SentScreen() {
       <Text style={text.body}>Sent to {recipientNameFor(recipients, draft.recipientId)}.</Text>
       <Text style={text.body}>{REPLY_TIME}</Text>
       <Text style={text.body}>Reference: {draft.econsultId}</Text>
-      <PhotoOutcome />
+      <PhotoOutcome
+        ref={(node) => {
+          alertRef.current = node;
+        }}
+      />
     </ScreenScaffold>
   );
 }

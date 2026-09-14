@@ -288,10 +288,14 @@
     <h1>Recipient step: who are you writing to?</h1>
     <div class="meta">
       <span><b>iPhone 17</b> simulator &middot; iOS 26.5</span>
-      <span>Expo Go SDK 57 &middot; Metro :8081</span>
+      <span>Expo Go SDK 57</span>
       <span>12 September 2026</span>
     </div>
   </header>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> The loading, error and empty states below were driven through <code>EXPO_PUBLIC_LATENCY_MS</code>, <code>EXPO_PUBLIC_FAULTS</code> and <code>EXPO_PUBLIC_PRACTICE_ID</code>. The environment layer has since been removed: those states are reached from the developer-settings modal, which is the only knob.</div>
+
 
   <p class="lede">Seven captures from a live walkthrough of the first e-consult flow step: the loaded list at
     two text sizes, the selection state, and the three non-happy paths the screen can land in. Every capture
@@ -433,11 +437,11 @@
         <strong>Continue keeps its &ldquo;choose a recipient first&rdquo; hint after a card is selected</strong>
         <span class="chip note">observation</span>
       </div>
-      <div class="where">src/app/econsult/recipient.tsx:90 &mdash; source-read, not observable through the driver</div>
+      <div class="where">src/app/econsult/recipient.tsx:90 &mdash; source-read, not observable on the device</div>
       <p>The accessibilityHint is passed unconditionally, so once a recipient is chosen and the button is
         enabled VoiceOver still announces &ldquo;Choose who you are writing to first&rdquo; after the label.
         The hint is correct while the button is disabled; it should drop away with the disabled state.
-        Accessibility hints are not exposed by the simulator driver, so this was read from source, not driven.</p>
+        Accessibility hints are not exposed by the simulator, so this was read from source.</p>
     </div>
 
     <div class="defect minor">
@@ -454,7 +458,6 @@
   </div>
 
   <footer>
-    Driven with agent-device 0.21.0 over the booted iPhone 17 simulator (32D75620-F071-416F-9079-98106C0753AF).
-    Each seeded scenario ran on its own Metro session started with --clear.
+    Driven over Expo Go on the iPhone 17 simulator. Each seeded scenario ran from a cleared bundler cache.
   </footer>
 </div>

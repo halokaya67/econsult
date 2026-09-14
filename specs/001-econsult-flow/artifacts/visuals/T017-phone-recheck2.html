@@ -150,13 +150,16 @@
       <span class="because">The <span class="mono">getInnerViewRef()</span> fix works exactly as designed &mdash; the scroll fires and lands the invalid question 16.00&nbsp;pt below the viewport top, with no <span class="mono">measureLayout</span> warning anywhere. But at the largest text size that scroll puts the red error message 522&nbsp;pt below the fold, so a sighted user still sees no error at all.</span>
     </div>
     <div class="meta">
-      <span>iPhone 17 sim <b>32D75620</b></span>
-      <span>Expo Go, Metro <b>--clear</b></span>
-      <span>agent-device <b>0.21.0</b></span>
+      <span>iPhone 17 sim</span>
+      <span>Expo Go</span>
       <span>Text size <b>AX3XL</b> + <b>medium</b></span>
       <span>Viewport <b>y 116&ndash;874</b> (758 pt)</span>
     </div>
   </header>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> What a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
+
 
   <section>
     <h2>Checks</h2>
@@ -174,7 +177,7 @@
           </tr>
           <tr>
             <td class="id">1b</td>
-            <td>No <span class="mono">measureLayout</span> warning in Metro output or as a LogBox toast</td>
+            <td>No <span class="mono">measureLayout</span> warning in the bundler log or as a LogBox toast</td>
             <td><span class="tag pass">Pass</span></td>
             <td class="ev">setup.log<br>a11y-after.txt</td>
           </tr>
@@ -272,7 +275,7 @@ grep -cE 'Warning|LogBox' a11y-after   -&gt; <b>0 nodes</b>    (no toast on scre
         <h3>What changed since re-check 1</h3>
         <ul>
           <li>The scroll callback fires. Label moves <span class="mono">&minus;1410.33 &rarr; 131.99998</span> instead of staying put.</li>
-          <li>The <span class="mono">measureLayout</span> warning is gone from Metro output and from the screen, at both text sizes.</li>
+          <li>The <span class="mono">measureLayout</span> warning is gone from the bundler log and from the screen, at both text sizes.</li>
           <li>The error fold in the accessible name is unchanged and still correct.</li>
           <li>Still open: at AX3XL the invalid submit produces no visible feedback for a sighted user.</li>
         </ul>
@@ -284,10 +287,8 @@ grep -cE 'Warning|LogBox' a11y-after   -&gt; <b>0 nodes</b>    (no toast on scre
     <h2>Incidental</h2>
     <ul>
       <li><strong>Unchanged from the last pass:</strong> the step heading &ldquo;A few questions from your practice&rdquo; has no upper bound on Dynamic Type scaling &mdash; 814&nbsp;pt tall at AX3XL against a 758&nbsp;pt viewport, more than one full screen of heading. <span class="mono">tokens.ts</span> caps the step chip and the header buttons but not screen headings. Out of scope for this step.</li>
-      <li><span class="mono">agent-device scroll bottom</span> hits its safety limit on the AX3XL questions screen (content is ~3100&nbsp;pt tall); manual <span class="mono">scroll down &lt;amount&gt;</span> loops work. Driver limitation, not an app defect.</li>
-      <li>The driver session is keyed by working directory, so every <span class="mono">agent-device</span> call must run from the repo root and every output path must be absolute.</li>
-      <li>VoiceOver announcement and screen-reader focus order are still unverified &mdash; the driver exposes no focus or announcement channel. A VoiceOver pass is still owed before the accessibility claim is closed.</li>
-      <li>Text size restored to <span class="mono">medium</span> (verified), Metro killed, port 8081 confirmed closed.</li>
+      <li>VoiceOver announcement and screen-reader focus order are still unverified &mdash; neither could be captured on this device. A VoiceOver pass is still owed before the accessibility claim is closed.</li>
+      <li>Text size restored to <span class="mono">medium</span> (verified).</li>
     </ul>
   </section>
 

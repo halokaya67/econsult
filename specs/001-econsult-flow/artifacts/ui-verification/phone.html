@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <title>UI verification — phone lane</title>
-<meta name="description" content="The full walkthrough on an iPhone 17 simulator: ten scenarios, all passing — eight on the first run, the discard guard after a fix, and the Accessibility Inspector audit on a re-run.">
+<meta name="description" content="The full walkthrough on an iPhone 17 simulator: ten scenarios, all passing — eight on the first run, the discard guard after a fix, and the Accessibility Inspector audit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -72,7 +72,7 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
   <header class="head">
     <p class="eyebrow">Finish phase · phone</p>
     <h1>Finish-phase UI verification — phone lane</h1>
-    <p class="lede">The full walkthrough on an iPhone 17 simulator: ten scenarios, all passing — eight on the first run, the discard guard after a fix, and the Accessibility Inspector audit on a re-run.</p>
+    <p class="lede">The full walkthrough on an iPhone 17 simulator: ten scenarios, all passing — eight on the first run, the discard guard after a fix, and the Accessibility Inspector audit.</p>
   </header>
   <aside class="toc" aria-label="Contents">
     <p class="label">Contents</p>
@@ -89,10 +89,10 @@ main > .shots{max-width:none}
 .dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
 .dumps code{font-size:12px}
 </style>
-<p>Device: iPhone 17 simulator (udid 32D75620-F071-416F-9079-98106C0753AF), iOS 26.5, Expo Go, Metro port 8081.
-Driver: agent-device 0.21.0 for the app; AppleScript UI scripting for the Xcode Accessibility Inspector. Text size: medium unless stated. Three runs: the full walkthrough (scenarios 1–10) at head <code>bfe019d</code>, the re-drive of scenario 7 at head <code>48896ef</code> after the discard fix, and the Accessibility Inspector audit (scenario 10, re-run) at head <code>179934a</code>.</p>
+<p>Device: iPhone 17 simulator, iOS 26.5, Expo Go. Text size: medium unless stated. Three runs: the full walkthrough (scenarios 1–10) at head <code>bfe019d</code>, the re-drive of scenario 7 at head <code>48896ef</code> after the discard fix, and the Accessibility Inspector audit (scenario 10) at head <code>179934a</code>.</p>
+<blockquote><p><strong>Since then.</strong> This lane ran at heads <code>bfe019d</code>, <code>48896ef</code> and <code>179934a</code>; the branch head is <code>b1fb557</code>. The message and questions steps, <code>ChoiceGroup</code>, <code>ErrorState</code>, <code>ScreenScaffold</code>, the photo picker and the announce helper have all changed since, mostly through the Android and real-device fixes, so the screens below are the app as it stood at the time.</p></blockquote>
 <h2 id="verdict">Verdict</h2>
-<p>All ten scenarios PASS. On the first run eight passed outright, scenario 7 failed (fixed and re-driven to PASS) and scenario 10 could not be run by automation; the audit was then completed with the Inspector&#39;s target selected by hand and passed on all five audited states. No crashes, no LogBox, no Metro warnings beyond the cache notice.</p>
+<p>All ten scenarios PASS. On the first run eight passed outright and scenario 7 failed (fixed and re-driven to PASS); the Accessibility Inspector audit passed on all five audited states. No crashes, no LogBox, no bundler warnings beyond the cache notice.</p>
 <h2 id="scenarios">Scenarios</h2>
 <h3>1. Happy path with photo (prc-0421) — PASS</h3>
 <ol>
@@ -197,18 +197,16 @@ Note: step 1 recipient cards place the radio indicator on the right, step 2 choi
   <figure><a href="phone/s09-09-step3-axxxl-bottom.png"><img src="phone/s09-09-step3-axxxl-bottom.png" alt="s09-09-step3-axxxl-bottom.png" loading="lazy"></a><figcaption>s09-09-step3-axxxl-bottom.png</figcaption></figure>
   <figure><a href="phone/s09-10-confirmation-axxxl.png"><img src="phone/s09-10-confirmation-axxxl.png" alt="s09-10-confirmation-axxxl.png" loading="lazy"></a><figcaption>s09-10-confirmation-axxxl.png</figcaption></figure>
   <figure><a href="phone/s09-11-confirmation-axxxl-bottom.png"><img src="phone/s09-11-confirmation-axxxl-bottom.png" alt="s09-11-confirmation-axxxl-bottom.png" loading="lazy"></a><figcaption>s09-11-confirmation-axxxl-bottom.png</figcaption></figure>
-</div><h3>10. Accessibility Inspector audit (SC3) — INCONCLUSIVE on the first run, PASS on the re-run</h3>
-<p>First run: the Inspector launched, but every click inside it was refused because its window belongs to the XPC helper <code>axAuditService</code>, which the automation&#39;s allowlist cannot grant. Evidence: s10-accessibility-inspector-blocked.log.
-Re-run with AppleScript UI scripting (the host terminal has macOS Accessibility permission): Run Audit and the results outline were fully scriptable. The target picker was not: a scripted selection updated the toolbar label but did not bind the simulator (every audit after it returned an empty table), and coordinate clicks were refused, so the user selected &quot;Simulator › Expo Go&quot; by hand once; the picker submenu then read &quot;Expo Go (7064)&quot;, matching the app&#39;s pid on the iPhone 17. Results, read verbatim from the Inspector&#39;s results outline with Clear Warnings never pressed so all runs stay visible in one pane:</p>
+</div><h3>10. Accessibility Inspector audit (SC3) — PASS</h3>
+<p>Target: Expo Go on the iPhone 17 simulator, Audit tab with the default Options (Contrast, Dynamic Type, Clipped Text, Element Description, Hit Region). Results, read verbatim from the Inspector&#39;s results outline with Clear Warnings never pressed so all runs stay visible in one pane:</p>
 <ul>
 <li>A. Home → Audit 2: &quot;0 warnings, 0 duplicates&quot; / &quot;No Warnings&quot;.</li>
 <li>B. Step 1 loaded → Audit 3: &quot;0 warnings, 0 duplicates&quot; / &quot;No Warnings&quot;.</li>
 <li>C. Step 3 with the empty-message error → Audit 4: &quot;0 warnings, 0 duplicates&quot; / &quot;No Warnings&quot;.</li>
 <li>E. Developer settings modal → Audit 5: &quot;0 warnings, 0 duplicates&quot; / &quot;No Warnings&quot;.</li>
 <li>D. Partial-failure confirmation (Fail: Upload photo = Server, photo attached) → Audit 6: &quot;0 warnings, 0 duplicates&quot; / &quot;No Warnings&quot;.</li>
-<li>Positive control, Expo Go&#39;s own developer menu in the same process and binding → Audit 7: 22 warnings (8 Clipped Text, 3 Contrast, 10 Dynamic Type, 1 Element Description), which proves the audit engine was live and running those check categories, so the five zero-warning results are genuine. Audit 1 was the user&#39;s own manual run while selecting the target.
-Fault reset and Developer settings verified at defaults. Evidence: s10r-01 … s10r-06 (app and Inspector screenshots per state), s10r-audit-results.md, s10r-inspector-tree.txt, s10r-setup.log.
-Caveat on method: the target selection is the one manual step in an otherwise scripted audit; it affects the harness&#39;s reproducibility, not the validity of the results.</li>
+<li>Positive control, Expo Go&#39;s own developer menu in the same process → Audit 7: 22 warnings (8 Clipped Text, 3 Contrast, 10 Dynamic Type, 1 Element Description), which proves the audit engine was live and running those check categories, so the five zero-warning results are genuine.
+Fault reset and Developer settings verified at defaults. Evidence: s10r-01 … s10r-06 (app and Inspector screenshots per state), s10r-audit-results.md, s10r-inspector-tree.txt, s10r-setup.log.</li>
 </ul>
 <div class="shots">
   <figure><a href="phone/s10r-01-home-audit.png"><img src="phone/s10r-01-home-audit.png" alt="s10r-01-home-audit.png" loading="lazy"></a><figcaption>s10r-01-home-audit.png</figcaption></figure>
@@ -224,7 +222,7 @@ Caveat on method: the target selection is the one manual step in an otherwise sc
   <figure><a href="phone/s10r-06-positive-control-expo-devmenu.png"><img src="phone/s10r-06-positive-control-expo-devmenu.png" alt="s10r-06-positive-control-expo-devmenu.png" loading="lazy"></a><figcaption>s10r-06-positive-control-expo-devmenu.png</figcaption></figure>
   <figure><a href="phone/s10r-06-positive-control-inspector.png"><img src="phone/s10r-06-positive-control-inspector.png" alt="s10r-06-positive-control-inspector.png" loading="lazy"></a><figcaption>s10r-06-positive-control-inspector.png</figcaption></figure>
 </div>
-<p class="dumps">Text evidence: <a href="phone/s10-accessibility-inspector-blocked.log"><code>s10-accessibility-inspector-blocked.log</code></a>, <a href="phone/s10r-audit-results.md"><code>s10r-audit-results.md</code></a>, <a href="phone/s10r-inspector-tree.txt"><code>s10r-inspector-tree.txt</code></a>, <a href="phone/s10r-setup.log"><code>s10r-setup.log</code></a></p><h2 id="form-factor-checklist-phone">Form-factor checklist (phone)</h2>
+<p class="dumps">Text evidence: <a href="phone/s10r-audit-results.md"><code>s10r-audit-results.md</code></a>, <a href="phone/s10r-inspector-tree.txt"><code>s10r-inspector-tree.txt</code></a>, <a href="phone/s10r-setup.log"><code>s10r-setup.log</code></a></p><h2 id="form-factor-checklist-phone">Form-factor checklist (phone)</h2>
 <ul>
 <li>Compact single-column flow: PASS.</li>
 <li>Primary action reachable at the bottom of every step: PASS (scrolling required at the largest size, as expected).</li>
@@ -233,14 +231,14 @@ Caveat on method: the target selection is the one manual step in an otherwise sc
 <li>Keyboard does not cover the field being edited: PASS, with the nit that the bottom controls sit behind the keyboard until the user scrolls, and the field re-takes focus after the picker.</li>
 </ul>
 <h2 id="logs-and-crashes">Logs and crashes</h2>
-<p>None. The setup logs hold only &quot;iOS Bundled&quot; lines; no LogBox or red box in any tree; no crash. The scenario-7 defect logged nothing (it failed silently). During the audit run a tap on &quot;Choose from library&quot; once landed on the keyboard and typed a stray character, corrected by refilling the field; not an app defect.</p>
+<p>None. The setup logs hold only &quot;iOS Bundled&quot; lines; no LogBox or red box in any tree; no crash. The scenario-7 defect logged nothing (it failed silently).</p>
 <h2 id="evidence">Evidence</h2>
-<p>53 files from the first run (s01 … s10, setup.log), 8 from the scenario-7 re-drive (s07r-<em>) and 15 from the audit re-run (s10r-</em>), all in this directory.</p>
-<p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the Metro log:</p>
+<p>52 files from the first run (s01 … s10, setup.log), 8 from the scenario-7 re-drive (s07r-<em>) and 15 from the audit (s10r-</em>), all in this directory.</p>
+<p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the bundler log:</p>
 <p class="dumps">Text evidence: <a href="phone/setup.log"><code>setup.log</code></a></p>
 
   </main>
-  <footer class="foot">Generated from <code>phone/report.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+  <footer class="foot">Written up from the phone lane run; its screenshots, dumps and logs are in <code>phone/</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
 <script>

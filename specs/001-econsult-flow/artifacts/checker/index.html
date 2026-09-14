@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Checker rounds — 001-econsult-flow</title>
-<meta name="description" content="All eleven review rounds in order: five on the spec, three on the plan, three on the finished change, each with its verdict and what it raised.">
+<meta name="description" content="The eleven recorded review rounds in order: five on the spec, three on the plan, three on the finished change, each with its verdict and what it raised, and the three later passes that left fix commits instead of reports.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -34,16 +34,20 @@ td.v{white-space:nowrap;font-weight:700;font-size:13px;letter-spacing:.03em}
 td.raised{white-space:nowrap;color:var(--muted);font-size:14px}
 th.grp{background:var(--ground);color:var(--ink);font-size:13px;letter-spacing:.06em;text-transform:none}
 footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.since{margin:0 0 24px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0;max-width:72ch}
+.since p{margin:0;max-width:none}
 </style>
 <div class="shell">
   <header class="head">
     <p class="eyebrow">Flow record · 001-econsult-flow · Checker</p>
-    <h1>The eleven review rounds</h1>
-    <p class="lede">Every artifact was reviewed by a separate checker before it could be used, and the finished change was reviewed again at the end. Each round read the artifact against the brief, the repository and the language canon, and reported what it could prove.</p>
+    <h1>The eleven recorded review rounds</h1>
+    <p class="lede">Every artifact was reviewed by a separate checker before it could be used, and the finished change was reviewed again at the end. Each round read the artifact against the brief, the repository and the language canon, and reported what it could prove. Three further passes came after these rounds — a pre-PR review, a posted-review pass and a folder-ownership check — and left their findings as fix commits (<code>7aac59c</code>, <code>f177213</code>, <code>577cc71</code>) rather than as reports, so they have no page below.</p>
   </header>
   <main>
 
     <p><a href="../index.html">← Back to the record</a></p>
+
+    <div class="since"><p><strong>Since then.</strong> The sizes quoted for the final rounds are the diff as it stood at the time — round 1 read 132 files across 25 commits, 119 of them in full. The branch stands at 432 files across 40 commits at <code>b1fb557</code>.</p></div>
 
     <h2>How to read a verdict</h2>
     <ul>

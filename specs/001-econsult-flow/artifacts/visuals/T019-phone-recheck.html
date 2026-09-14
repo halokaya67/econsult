@@ -217,11 +217,15 @@
     </p>
     <div class="meta">
       <div><span>Device</span> iPhone 17 simulator, iOS 26.5</div>
-      <div><span>Runtime</span> Expo Go, Metro <code>--clear</code></div>
+      <div><span>Runtime</span> Expo Go</div>
       <div><span>Fault</span> <code>EXPO_PUBLIC_FAULTS=upload:server</code></div>
       <div><span>Viewport</span> 402 &times; 874 pt, scroll 116&ndash;874</div>
     </div>
   </header>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> Two readings here have been overtaken. The upload fault was set through <code>EXPO_PUBLIC_FAULTS</code>; the environment layer has since been removed and the fault is set in the developer-settings modal. And what a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
+
 
   <section>
     <h2>Checks</h2>
@@ -337,11 +341,11 @@ e40   y= 338.67  h=  98.67  Other   "&hellip;could not be attached., The photo s
     <ul>
       <li>A second Try again clears the line while busy and restores it once &mdash; the run resets the
         flag before it re-sets it, so the sentence never stacks.</li>
-      <li>Metro logged nothing but <code>warning: Bundler cache is empty, rebuilding</code> from
-        <code>--clear</code>. No LogBox toast appears in any of the seven screenshots.</li>
+      <li>The bundler logged nothing but <code>warning: Bundler cache is empty, rebuilding</code>.
+        No LogBox toast appears in any of the seven screenshots.</li>
       <li>Reachability at AX3XL was proven by use: Continue without the photo was tapped at the foot of
         the surface and cleared the alert.</li>
-      <li>Not observable through this driver: what VoiceOver speaks. The announcement of the new line was
+      <li>Not observable on this device: what VoiceOver speaks. The announcement of the new line was
         read in the source, not heard on the device.</li>
       <li>Reference ids come from the fake transport and count per app launch, which is why the two sizes
         show <code>ec-2</code> and <code>ec-1</code>.</li>
@@ -349,7 +353,7 @@ e40   y= 338.67  h=  98.67  Other   "&hellip;could not be attached., The photo s
   </section>
 
   <footer>
-    Text size restored to <code>medium</code>, Metro killed, port 8081 closed, driver session closed. No
-    repository file was edited and nothing was committed.
+    Text size restored to <code>medium</code>. No repository file was edited and nothing was
+    committed.
   </footer>
 </div>

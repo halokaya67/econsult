@@ -308,11 +308,8 @@
     </p>
     <div class="rig">
       <span><b>Device</b> iPhone 17 · 402 × 874 pt</span>
-      <span><b>UDID</b> 32D75620…0C0753AF</span>
       <span><b>Runtime</b> Expo Go · host.exp.Exponent</span>
-      <span><b>Driver</b> agent-device 0.21.0</span>
       <span><b>Capture</b> 3 px per pt · last column 401.67</span>
-      <span><b>Metro</b> one run, --clear · two launches</span>
     </div>
   </header>
 
@@ -601,8 +598,8 @@ reopened after Cancel, with prc-0873 having been selected in the draft:
     </div>
     <div class="prose">
       <p>
-        Metro's log carries one warning for the whole run — <code>warning: Bundler cache is empty,
-        rebuilding</code>, the <code>--clear</code> notice — followed by two <code>iOS Bundled</code> lines
+        The bundler log carries one warning for the whole run — <code>warning: Bundler cache is empty,
+        rebuilding</code> — followed by two <code>iOS Bundled</code> lines
         and nothing else. No LogBox node appeared in any snapshot.
       </p>
     </div>
@@ -611,22 +608,18 @@ reopened after Cancel, with prc-0873 having been selected in the draft:
   <section>
     <div class="sec-head">
       <p class="eyebrow">Notes</p>
-      <h2>Scope, and notes for the next run</h2>
+      <h2>Scope</h2>
     </div>
     <ul>
       <li><b>Only the three dispatched checks were re-run.</b> Scenarios 1–5 from the first run were not repeated, though the reopened screen in check 3 incidentally re-confirms the structure and 48&nbsp;pt targets at medium, and the AX3XL page in check 1 re-confirms that nothing else on it overlaps.</li>
       <li><b>The uncapped heading scale at AX3XL is still there</b> — a 543&nbsp;pt title and a 600&nbsp;pt blurb. Accepted in T018, not re-opened.</li>
-      <li><b>Driver correction.</b> <code>agent-device open</code> keys its session to the working directory of the shell that ran it (<code>sessions/cwd_&lt;hash&gt;_default</code>), and a subagent's working directory resets between calls — so a later <code>--session default</code> fails with <code>SESSION_NOT_FOUND</code> while the device reports <code>DEVICE_IN_USE</code>. Pass an explicit session name on <code>open</code> and on every later command.</li>
-      <li><b>Screenshots take <code>--out &lt;path&gt;</code>, not <code>--path</code></b>, plus <code>--pixel-density 3</code> for a 3x PNG.</li>
-      <li><b>The system Python has no PIL</b>, so the pixel scans ran through a small pure-stdlib PNG decoder — <code>zlib</code> plus the five PNG filter types.</li>
     </ul>
   </section>
 
   <footer>
     Cleanup — left the screen via Cancel, so nothing from this run was applied; the device ends on home at
-    <b>medium</b> text size, read back from <code>simctl ui … content_size</code>. Metro killed,
-    <code>lsof -ti tcp:8081</code> empty. Both driver sessions closed. No other simulator touched, no
-    repository file edited, nothing committed, <code>.env</code> neither read nor modified.
+    <b>medium</b> text size, read back from <code>simctl ui … content_size</code>. No other simulator
+    touched, no repository file edited, nothing committed.
   </footer>
 
 </div>

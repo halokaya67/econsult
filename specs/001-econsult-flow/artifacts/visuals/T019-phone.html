@@ -257,8 +257,8 @@
     <h1>Confirmation screen</h1>
     <div class="meta">
       <span>iPhone 17 simulator &middot; iOS 26.5</span>
-      <span>Expo Go &middot; agent-device 0.21.0</span>
-      <span>2 Metro runs &middot; 4 app launches</span>
+      <span>Expo Go</span>
+      <span>4 app launches</span>
       <span>9 declared scenarios</span>
     </div>
     <div class="verdict">
@@ -268,6 +268,10 @@
       failure into the same &ldquo;failed&rdquo; outcome and never produces an error for the screen to show.</p>
     </div>
   </header>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+  <div class="since"><strong>Since then.</strong> Three readings here have been overtaken. The upload fault was set through <code>EXPO_PUBLIC_FAULTS</code>; the environment layer has since been removed and the fault is set in the developer-settings modal. <code>src/features/econsult/submit.ts</code> is now <code>src/features/econsult/api/submit.ts</code>. And what a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
+
 
   <section>
     <h2>Checks</h2>
@@ -349,7 +353,7 @@ e39  y= 330.67  h= 48.00  Button         "Done"       &larr; exactly MIN_TOUCH</
 
   <section>
     <h2>Partial upload failure</h2>
-    <p><code>EXPO_PUBLIC_FAULTS=upload:server</code>, photo attached at step 3. Metro&rsquo;s banner confirms the
+    <p><code>EXPO_PUBLIC_FAULTS=upload:server</code>, photo attached at step 3. The startup banner confirms the
     shell value won: it exported only <code>EXPO_PUBLIC_LATENCY_MS</code> and <code>EXPO_PUBLIC_PRACTICE_ID</code> from the
     repo&rsquo;s own file.</p>
     <div class="plates">
@@ -486,7 +490,7 @@ async function uploadOrFail(...): Promise&lt;AttachmentStatus&gt; {
   <section>
     <h2>Unverifiable on this device</h2>
     <div class="note">
-      <p>The driver&rsquo;s snapshots expose frames, labels, roles and values, but no traits, no
+      <p>The device snapshots expose frames, labels, roles and values, but no traits, no
       screen-reader focus and no announcement channel. So three things in the step&rsquo;s contract were
       checked in the source and not on the device: that focus lands on the header
       (<code>focusForScreenReader</code> in a mount effect), that the alert carries
@@ -501,9 +505,8 @@ async function uploadOrFail(...): Promise&lt;AttachmentStatus&gt; {
     <ul>
       <li>The confirmation route never mounts a back button and the swipe is dead in both directions tested, so scenario 2 holds by layout as well as by the <code>usePreventRemove</code> guard.</li>
       <li>Reference ids come from the fake transport and count up per app launch (<code>ec-1</code>, <code>ec-2</code>), which is why the two default-size confirmations disagree.</li>
-      <li>Neither Metro run logged anything but <code>Bundler cache is empty, rebuilding</code> from <code>--clear</code>; no LogBox toast appears in any of the thirteen screenshots.</li>
-      <li>Driver notes for the next run: selector values with spaces need inner quotes (<code>text="Try again"</code>); refs carry a per-frame suffix and a bare <code>@e8</code> is refused; with the keyboard up, <code>scroll bottom</code> fails and <code>gesture pan &lt;x&gt; &lt;y&gt; 0 -280</code> is the reliable way down; the system photo picker is invisible to snapshots and has to be tapped by coordinate off a <code>simctl</code> screenshot.</li>
-      <li>Cleanup: both Metro instances killed and port 8081 confirmed closed; <code>content_size</code> set back to <code>medium</code> and read back; driver session closed. No repository file was edited and nothing was committed.</li>
+      <li>The bundler logged nothing but <code>Bundler cache is empty, rebuilding</code>; no LogBox toast appears in any of the thirteen screenshots.</li>
+      <li>Cleanup: <code>content_size</code> set back to <code>medium</code> and read back. No repository file was edited and nothing was committed.</li>
     </ul>
   </section>
 

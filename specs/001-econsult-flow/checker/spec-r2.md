@@ -10,6 +10,8 @@ All verification is in. Evidence summary before the report:
 
 ## Spec-Checker Report — mode: spec
 
+> **Since then.** I4 here produced the `.env` seed wording in the spec. The environment layer was removed afterwards — no `.env`, no `EXPO_PUBLIC_*` — and the developer settings screen is the only knob.
+
 **Verdict:** PASS_WITH_FLAGS
 
 **Reviewed:** 6/6 files (spec.md, how-it-works.md, the brief `case-study-mobile.md`, checker/spec-r1.md, package.json, app.json) · diff: n/a (mode spec) · head: f39fb58 (unchanged since round 1; working tree: only `specs/` untracked) · canon cited: workflow.md (Coding Canon: KISS/YAGNI; Testing bar "numeric thresholds are stack-specific") · decisions log: file absent → empty, no dismissals · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): `PreventRemoveProvider|usePreventRemove` in expo-router/build → 20 files (vendored core + native-stack); `@react-navigation` top-level and nested under expo-router → 0 dirs (vendoring confirmed); `shouldPreventRemove` in core/useOnAction.js → 1 (line 75); `preventRemove|preventNativeDismiss|gestureEnabled|preventedRoutes|onNativeDismissCancelled|onDismissed` in native-stack/views/NativeStackView.native.js → 8 lines; `dismissTo|dismissAll` in global-state/router.d.ts → 4; `POP_TO` in global-state/*.js + link/*.js → 3 (router.js:78,87; BaseExpoRouterLink.js:68); `routingQueue.run|subscribe` in expo-router/build → imperative-api.js:10,12 (flushed in `useEffect`); `event|popTo|findDivergentState|target|replace` in global-state/getNavigationAction.js → 7 (root navigator targeted for `/deeply/nested → /top-level`)

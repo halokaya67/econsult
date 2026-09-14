@@ -2,105 +2,312 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>E-consult flow — process record</title>
-<meta name="description" content="The full record of how the e-consult submission flow was built: research, spec, plan, twenty-two verified steps, simulator previews, review rounds and the finish-phase UI walkthroughs.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<title>E-consult flow — what the AI workflow did</title>
+<meta name="description" content="A dashboard of the gated AI implementation flow behind the e-consult feature: research, spec and its five checker rounds, plan and its three, twenty-two committed steps with their simulator proof, three implementation-review rounds, four device lanes of UI verification, and the reviews that followed.">
 <style>
-:root{--ground:#F6F8F8;--surface:#FFFFFF;--ink:#16262B;--muted:#55686D;--line:#D6DFE1;--accent:#0F6B75;--accent-soft:#E3F1F2;--accent-ink:#0B4E56;--code-bg:#EEF3F4;--shadow:0 1px 0 rgba(22,38,43,.06);color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--ground:#0F1719;--surface:#152124;--ink:#E4ECED;--muted:#9BB0B4;--line:#263539;--accent:#66C7D0;--accent-soft:#16333A;--accent-ink:#A7E3E8;--code-bg:#1B292D;--shadow:none;color-scheme:dark}}
+:root{
+  --ground:#F6F8F8;--surface:#FFFFFF;--ink:#16262B;--muted:#55686D;--line:#D6DFE1;
+  --accent:#0F6B75;--accent-soft:#E3F1F2;--accent-ink:#0B4E56;
+  --warm:#A8681A;--warm-soft:#FBF1E3;--code-bg:#EEF3F4;
+  --shadow:0 1px 0 rgba(22,38,43,.06);
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--ground:#0F1719;--surface:#152124;--ink:#E4ECED;--muted:#9BB0B4;--line:#263539;--accent:#66C7D0;--accent-soft:#16333A;--accent-ink:#A7E3E8;--warm:#E0A650;--warm-soft:#2E2515;--code-bg:#1B292D;--shadow:none;color-scheme:dark}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;padding-inline:clamp(14px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
 .shell{max-width:940px;margin:0 auto}
 a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
 a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
-header.head{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:36px}
+header.head{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
-h1{font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:26ch}
+h1{font-size:clamp(28px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance;max-width:26ch}
 .lede{color:var(--muted);margin:0;max-width:64ch;font-size:16px}
-h2{font-size:24px;line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:44px 0 12px}
+h2{font-size:clamp(21px,2.4vw,24px);line-height:1.25;font-weight:800;letter-spacing:-.01em;margin:48px 0 6px;scroll-margin-top:18px}
+h2 .num{color:var(--accent);font-family:var(--mono);font-size:.7em;font-weight:500;margin-right:.5em}
+h3{font-size:17px;font-weight:700;margin:26px 0 8px}
 p{margin:0 0 14px;max-width:72ch}
-ul{padding-left:1.3em;margin:0 0 16px;max-width:72ch}
-li{margin:0 0 6px}
-code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:16px;margin:8px 0 24px;padding:0;list-style:none;max-width:none}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);margin:0}
-.card a{display:block;padding:18px 20px;color:inherit;text-decoration:none;border-radius:8px;height:100%}
-.card a:hover .name{text-decoration:underline}
-.card .name{font-weight:700;font-size:17px;margin:0 0 6px;color:var(--accent-ink)}
-.card .file{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--muted);margin:0 0 8px}
-.card .what{color:var(--muted);font-size:15px;margin:0;max-width:none}
+ul{padding-left:1.25em;margin:0 0 16px;max-width:72ch}
+li{margin:0 0 7px}
+code{font-family:var(--mono);font-size:.85em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+.src{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:12px;margin:0 0 18px}
+.stand{color:var(--muted);max-width:72ch;margin:0 0 16px}
+nav.jump{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:16px 20px;margin:0 0 8px}
+nav.jump p{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+nav.jump ol{margin:0;padding-left:1.4em;columns:2;column-gap:28px;font-size:15px}
+nav.jump li{margin:0 0 5px;break-inside:avoid}
+@media (max-width:560px){nav.jump ol{columns:1}}
+.figs{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;padding:0;list-style:none;max-width:none}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:10px 14px;margin:0;min-width:120px;flex:1 1 150px}
+.fig b{display:block;font-size:22px;font-weight:800;line-height:1.1;color:var(--accent-ink)}
+.fig span{display:block;font-size:13px;color:var(--muted);margin-top:3px}
+.links{margin:0 0 16px;padding:0;list-style:none;max-width:72ch}
+.links li{margin:0 0 7px;padding-left:1.1em;position:relative}
+.links li::before{content:"→";position:absolute;left:0;color:var(--accent);font-size:.9em}
+.links .note{color:var(--muted)}
+.wide{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow);margin:8px 0 12px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:9px 13px;border-bottom:1px solid var(--line)}
+th{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:none}
+td.v{white-space:nowrap;font-weight:700;font-size:12.5px;letter-spacing:.04em}
+td.n{white-space:nowrap;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.pass{color:var(--accent-ink)}
+.fail{color:var(--warm)}
+ol.tasks{list-style:none;margin:8px 0 12px;padding:0;max-width:none;border-top:1px solid var(--line)}
+.task{display:grid;grid-template-columns:4.4rem minmax(0,1fr) 5.4rem;gap:2px 14px;margin:0;padding:9px 2px;border-bottom:1px solid var(--line)}
+.task>p{margin:0;max-width:none}
+.tid{grid-column:1;grid-row:1;font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:1px}
+.ttitle{grid-column:2;grid-row:1;font-size:15.5px}
+.tsha{grid-column:3;grid-row:1;text-align:right;font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:1px}
+.tev{grid-column:2/4;grid-row:2;font-size:13.5px;color:var(--muted)}
+.tev a{margin-right:.9em;white-space:nowrap}
+@media (max-width:620px){
+  .task{grid-template-columns:4.4rem minmax(0,1fr)}
+  .tsha{grid-column:2;grid-row:2;text-align:left}
+  .tev{grid-column:1/-1;grid-row:3;padding-top:2px}
+}
+.caught{margin:8px 0 16px;padding:0;list-style:none;max-width:none;display:grid;gap:12px}
+.caught li{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--warm);border-radius:0 8px 8px 0;box-shadow:var(--shadow);padding:13px 16px;margin:0}
+.caught .what{font-weight:700;margin:0 0 5px;max-width:none}
+.caught .why{color:var(--muted);font-size:15px;margin:0 0 7px;max-width:none}
+.caught .ev{font-size:13.5px;margin:0;max-width:none}
 footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 </style>
 <div class="shell">
   <header class="head">
     <p class="eyebrow">Flow record · 001-econsult-flow</p>
-    <h1>How this feature was built</h1>
-    <p class="lede">The process record of the e-consult submission flow, copied into the repository so every page opens from a clone with no network and no server.</p>
+    <h1>What the AI workflow did</h1>
+    <p class="lede">The e-consult submission flow was built by AI inside a gated loop, and every gate left a file behind. This page walks the loop in the order it ran and links the evidence for each stage. Everything is local: no network, no server, relative links only.</p>
   </header>
   <main>
 
-    <h2>What this record is</h2>
-    <p>The feature was built with a gated, agent-driven implementation flow. In order: platform research; a snapshot of how the app worked before the change; a spec that went through five checker rounds; a plan that went through three; then twenty-two steps executed one at a time, each verified with the project's own commands, and for the six steps that added a screen, previewed on a simulator before the step was allowed to pass. After the last step a final checker reviewed the whole change over three rounds, and the finished app was walked through end to end on a phone simulator and a tablet simulator.</p>
-    <p>A step passed on its own only when its checks were green, its simulator preview was clean and it stayed inside the files it was allowed to touch. Anything else — a failing check, a visual defect, a file outside the fence — stopped the flow for a decision, and the decision is part of the record below.</p>
+    <nav class="jump">
+      <p>The loop, in order</p>
+      <ol>
+        <li><a href="#research">Brief → research</a></li>
+        <li><a href="#spec">Spec, five checker rounds</a></li>
+        <li><a href="#plan">Plan, three rounds, 22 steps</a></li>
+        <li><a href="#review">Implementation review</a></li>
+        <li><a href="#ui">UI verification, four lanes</a></li>
+        <li><a href="#after">Reviews after implementation</a></li>
+        <li><a href="#handin">Hand-in documents</a></li>
+        <li><a href="#caught">What the loop caught</a></li>
+      </ol>
+    </nav>
 
-    <h2>At a glance</h2>
-    <ul>
-      <li>22 steps planned, executed and committed.</li>
-      <li>11 checker rounds: five on the spec, three on the plan, three on the finished change.</li>
-      <li>13 simulator runs behind the six steps that added a screen — first runs plus the re-checks that confirmed each fix.</li>
-      <li>16 scenarios in the finish-phase walkthrough, all passing: ten on an iPhone 17 simulator, six on an iPad Pro 11-inch — including an Accessibility Inspector audit that returned no warnings on any of the five states it audited.</li>
+    <p class="stand">Every number on this page was counted from the files in this repository, and each section says which file it was counted from. Commit hashes are the ones on the <code>feat/econsult-flow</code> branch as it stands, so <code>git show &lt;hash&gt;</code> works from a clone; the execution log at the end of <a href="../plan.md">plan.md</a> records the hashes as the run itself saw them, before the branch was rebased.</p>
+
+    <h2 id="research"><span class="num">01</span>Brief → research</h2>
+    <p>Before anything was specified, nine platform topics were researched by agents that had to open their sources and mark unopened recall as unverified; a second pass then tried to refute every claim against the installed SDK, and a completeness critic sent six remaining gaps back for one more round.</p>
+    <ul class="figs">
+      <li class="fig"><b>9</b><span>topics researched</span></li>
+      <li class="fig"><b>8</b><span>verdicts <i>partly-wrong</i> on re-check</span></li>
+      <li class="fig"><b>1</b><span>verdict <i>sound</i></span></li>
+      <li class="fig"><b>6</b><span>follow-up queries after the gap review</span></li>
+    </ul>
+    <p class="src">Counted in <code>research.md</code>: nine <code>## Topic:</code> headings, eight <code>**Verdict:** partly-wrong</code> and one <code>**Verdict:** sound</code> under the per-topic “Adversarial verification”, and six <code>## followup:</code> sections from the single follow-up round the completeness critic triggered.</p>
+    <ul class="links">
+      <li><a href="research.html">Platform research</a> <span class="note">— the nine topics, their facts, their open uncertainties and the adversarial verdict on each (<a href="../research.md">research.md</a>)</span></li>
+      <li><a href="research.html#followup-1">Follow-up 1: uploading a picked photo</a> <span class="note">— the round that overturned the original upload recommendation</span></li>
+      <li><a href="how-it-works.html">How the app worked before</a> <span class="note">— the snapshot the plan had to build on (<a href="../how-it-works.md">how-it-works.md</a>)</span></li>
     </ul>
 
-    <h2>The pages</h2>
-    <ul class="cards">
-      <li class="card"><a href="how-it-works.html">
-        <p class="name">How the app works today</p>
-        <p class="file">how-it-works.html</p>
-        <p class="what">The app as it stood before this feature: routes, providers, tooling and the pieces the plan had to build on.</p>
-      </a></li>
-      <li class="card"><a href="spec.html">
-        <p class="name">Spec</p>
-        <p class="file">spec.html</p>
-        <p class="what">The agreed behaviour: approach, contract changes, screens, edge cases and success criteria. Settled after five review rounds.</p>
-      </a></li>
-      <li class="card"><a href="plan.html">
-        <p class="name">Implementation plan</p>
-        <p class="file">plan.html</p>
-        <p class="what">Twenty-two test-first steps, each with the exact files it may touch, the interfaces it adds and the commands that verify it.</p>
-      </a></li>
-      <li class="card"><a href="research.html">
-        <p class="name">Platform research</p>
-        <p class="file">research.html</p>
-        <p class="what">The platform facts checked before planning: nine topics, adversarial re-checks and what Expo Go can and cannot do.</p>
-      </a></li>
-      <li class="card"><a href="board.html">
-        <p class="name">Progress board</p>
-        <p class="file">board.html</p>
-        <p class="what">Every step in order with the reason it exists, the number of files it touched and, for screens, a link to its simulator evidence.</p>
-      </a></li>
-      <li class="card"><a href="visuals/index.html">
-        <p class="name">Simulator previews</p>
-        <p class="file">visuals/index.html</p>
-        <p class="what">The runs behind the six screen steps: what each run found, which fix followed and the run that finally passed.</p>
-      </a></li>
-      <li class="card"><a href="ui-verification/index.html">
-        <p class="name">Finish-phase UI verification</p>
-        <p class="file">ui-verification/index.html</p>
-        <p class="what">The finished app driven end to end on a phone and a tablet, scenario by scenario, with screenshots, accessibility-tree dumps and the Accessibility Inspector audit.</p>
-      </a></li>
-      <li class="card"><a href="checker/index.html">
-        <p class="name">Checker rounds</p>
-        <p class="file">checker/index.html</p>
-        <p class="what">All eleven review rounds in order with their verdicts and the blockers, warnings and notes each one raised.</p>
-      </a></li>
+    <h2 id="spec"><span class="num">02</span>The spec, and its five checker rounds</h2>
+    <p>The spec was written from the brief and the research, then read by a separate checker five times. No round found a blocker; each one traded a plausible claim for a verified one, and the last round left two information items and no warnings.</p>
+    <div class="wide">
+      <table>
+        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><a href="checker/spec-r1.html">Spec review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 4 I</td><td class="n"><a href="../checker/spec-r1.md">spec-r1.md</a></td></tr>
+          <tr><td><a href="checker/spec-r2.html">Spec review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 2 I</td><td class="n"><a href="../checker/spec-r2.md">spec-r2.md</a></td></tr>
+          <tr><td><a href="checker/spec-r3.html">Spec review 3</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 1 I</td><td class="n"><a href="../checker/spec-r3.md">spec-r3.md</a></td></tr>
+          <tr><td><a href="checker/spec-r4.html">Spec review 4</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 2 I</td><td class="n"><a href="../checker/spec-r4.md">spec-r4.md</a></td></tr>
+          <tr><td><a href="checker/spec-r5.html">Spec review 5</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">0 W · 2 I</td><td class="n"><a href="../checker/spec-r5.md">spec-r5.md</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Verdicts are each report's own <code>**Verdict:**</code> line. The counts are the numbered rows of each report's findings table: <code>W</code> for warnings, <code>I</code> for information items, none of the five rounds raising a <code>C</code> blocker. Totals: 13 warnings, 11 information items, 0 blockers.</p>
+    <ul class="links">
+      <li><a href="spec.html">The spec</a> <span class="note">— the agreed behaviour, as it stood after round five (<a href="../spec.md">spec.md</a>)</span></li>
+      <li>The spec went to a human gate and was approved there; the approval is the first line of the decision index in <a href="plan.html">plan.html</a>.</li>
     </ul>
 
-    <h2>Reading notes</h2>
+    <h2 id="plan"><span class="num">03</span>The plan, its three rounds, and the twenty-two steps</h2>
+    <p>The plan broke the spec into twenty-two test-first steps, each with the files it was allowed to touch and the commands that would verify it. It failed its checker three times running.</p>
+    <div class="wide">
+      <table>
+        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><a href="checker/plan-r1.html">Plan review 1</a></td><td class="v fail">FAIL</td><td class="n">6 C · 7 W · 4 I</td><td class="n"><a href="../checker/plan-r1.md">plan-r1.md</a></td></tr>
+          <tr><td><a href="checker/plan-r2.html">Plan review 2</a></td><td class="v fail">FAIL</td><td class="n">4 C · 4 W · 7 I</td><td class="n"><a href="../checker/plan-r2.md">plan-r2.md</a></td></tr>
+          <tr><td><a href="checker/plan-r3.html">Plan review 3</a></td><td class="v fail">FAIL</td><td class="n">2 C · 1 W · 2 I</td><td class="n"><a href="../checker/plan-r3.md">plan-r3.md</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Same source as the spec rounds: each report's <code>**Verdict:**</code> line and the numbered rows of its findings table. Twelve blockers in total, all removed on paper; revision 3.1 is what went to the human gate and was approved.</p>
+
+    <h3>The twenty-two steps, in the order they were committed</h3>
+    <p>One commit per step, tests written first, inside the step's declared file fence. Six steps put a new screen on the device; each of those was driven on an iPhone 17 simulator at the default and the largest accessibility text size before the step was allowed to pass, and re-driven after every fix.</p>
+    <ol class="tasks">
+      <li class="task"><p class="tid">T001</p><p class="ttitle">Test, lint, format and type-check tooling</p><p class="tsha">02efd1d</p></li>
+      <li class="task"><p class="tid">T002</p><p class="ttitle">Wire contracts and fixtures</p><p class="tsha">498c6b5</p></li>
+      <li class="task"><p class="tid">T003</p><p class="ttitle">Transport interface, errors, timeout helper and the fake transport</p><p class="tsha">5ed85e1</p></li>
+      <li class="task"><p class="tid">T004</p><p class="ttitle">Typed services with timeouts and boundary validation</p><p class="tsha">91eff94</p></li>
+      <li class="task"><p class="tid">T005</p><p class="ttitle">Query client, network state, announcements, dev warning, ids</p><p class="tsha">1a73630</p></li>
+      <li class="task"><p class="tid">T006</p><p class="ttitle">Developer settings, services provider, session and the test provider stack</p><p class="tsha">5459086</p></li>
+      <li class="task"><p class="tid">T007</p><p class="ttitle">Draft state, reducer, selectors and provider</p><p class="tsha">ae816aa</p></li>
+      <li class="task"><p class="tid">T008</p><p class="ttitle">Shared queries, recipient helpers and the recipients and questions hooks</p><p class="tsha">7123dfe</p></li>
+      <li class="task"><p class="tid">T009</p><p class="ttitle">Validation and the step model</p><p class="tsha">5c51877</p></li>
+      <li class="task"><p class="tid">T010</p><p class="ttitle">Sending, the partial-failure outcome and the mutations</p><p class="tsha">8d02d75</p></li>
+      <li class="task"><p class="tid">T011</p><p class="ttitle">Photo processing</p><p class="tsha">aaf1bba</p></li>
+      <li class="task"><p class="tid">T012</p><p class="ttitle">Theme tokens, screen scaffold, buttons, offline banner and step header</p><p class="tsha">68e4582</p></li>
+      <li class="task"><p class="tid">T013</p><p class="ttitle">Text field, choice group, recipient card and the status views</p><p class="tsha">5b8e34a</p></li>
+      <li class="task"><p class="tid">T014</p><p class="ttitle">Photo picker</p><p class="tsha">6f60ec9</p></li>
+      <li class="task"><p class="tid">T015</p><p class="ttitle">App shell: providers, root stack, home screen and the flow group</p><p class="tsha">06d47d7</p>
+        <p class="tev"><a href="visuals/T015-phone.html">preview</a> <span class="note">— clean; one flag about the placeholder step's missing back control carried to T016</span></p></li>
+      <li class="task"><p class="tid">T016</p><p class="ttitle">Step 1, the recipient screen</p><p class="tsha">e677722</p>
+        <p class="tev"><a href="visuals/T016-phone.html">preview</a><a href="visuals/T016-phone-recheck.html">re-check</a> <span class="note">— header label clipped at the largest text size</span></p></li>
+      <li class="task"><p class="tid">T017</p><p class="ttitle">Step 2, the questions screen</p><p class="tsha">27aa5a0</p>
+        <p class="tev"><a href="visuals/T017-phone.html">preview</a><a href="visuals/T017-phone-recheck.html">re-check</a><a href="visuals/T017-phone-recheck2.html">re-check 2</a><a href="visuals/T017-phone-recheck3.html">re-check 3</a> <span class="note">— scroll-to-error took three attempts</span></p></li>
+      <li class="task"><p class="tid">T018</p><p class="ttitle">Step 3, the message screen with photo and sending</p><p class="tsha">a1a6fb0</p>
+        <p class="tev"><a href="visuals/T018-phone.html">preview</a><a href="visuals/T018-phone-recheck.html">re-check</a> <span class="note">— an invalid Send scrolled the field's label off screen</span></p></li>
+      <li class="task"><p class="tid">T019</p><p class="ttitle">The confirmation screen</p><p class="tsha">e6e0db7</p>
+        <p class="tev"><a href="visuals/T019-phone.html">preview</a><a href="visuals/T019-phone-recheck.html">re-check</a> <span class="note">— a failed photo retry changed nothing on screen</span></p></li>
+      <li class="task"><p class="tid">T020</p><p class="ttitle">Developer settings screen</p><p class="tsha">b094bce</p>
+        <p class="tev"><a href="visuals/T020-phone.html">preview</a><a href="visuals/T020-phone-recheck.html">re-check</a> <span class="note">— the Force offline switch was pushed past the screen edge</span></p></li>
+      <li class="task"><p class="tid">T021</p><p class="ttitle">Dependency, configuration and asset cleanup, and the agent guidance files</p><p class="tsha">a19b53d</p></li>
+      <li class="task"><p class="tid">T022</p><p class="ttitle">README, DECISIONS.md and AI-USAGE.md</p><p class="tsha">bcce520</p></li>
+    </ol>
+    <ul class="figs">
+      <li class="fig"><b>22</b><span>steps, one commit each</span></li>
+      <li class="fig"><b>6</b><span>steps that added a screen</span></li>
+      <li class="fig"><b>5</b><span>of those needed a re-check</span></li>
+      <li class="fig"><b>13</b><span>simulator runs in total</span></li>
+    </ul>
+    <p class="src">Step ids, titles and order from the twenty-two <code>### Task</code> headings and the execution-log table in <code>plan.md</code>; hashes from <code>git log</code> on <code>feat/econsult-flow</code>, matched to the execution log one-to-one by subject and order. Runs counted as the pages listed on <a href="visuals/index.html">visuals/index.html</a>: six first runs plus seven re-checks.</p>
+    <ul class="links">
+      <li><a href="plan.html">The plan</a> <span class="note">— the twenty-two steps with their fences and verify commands, the amendments, the execution log and the decision index (<a href="../plan.md">plan.md</a>)</span></li>
+      <li><a href="board.html">The detailed board</a> <span class="note">— every step again, with why it exists, how many files it touched and what it shipped</span></li>
+      <li><a href="visuals/index.html">All thirteen simulator runs</a> <span class="note">— what each run found, the fix it forced, and the run that finally passed</span></li>
+    </ul>
+
+    <h2 id="review"><span class="num">04</span>The implementation review</h2>
+    <p>With the last step committed, a checker read the whole change rather than any one step — 132 files across 25 commits at the first round — three times over, re-reading each round's fixes in the next.</p>
+    <div class="wide">
+      <table>
+        <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Fixed in</th></tr></thead>
+        <tbody>
+          <tr><td><a href="checker/final-r1.html">Final review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 6 I</td><td class="n">15d0259</td></tr>
+          <tr><td><a href="checker/final-r2.html">Final review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">3 W · 1 I</td><td class="n">ad5dee8</td></tr>
+          <tr><td><a href="checker/final.html">Final review 3, closing</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 4 I</td><td class="n">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Verdicts and counts read the same way as the earlier rounds, from <a href="../checker/final-r1.md">final-r1.md</a>, <a href="../checker/final-r2.md">final-r2.md</a> and <a href="../checker/final.md">final.md</a>. The fix commits are the ones whose messages name those findings, in branch order. The closing round had no code to fix: its two remaining warnings were the Accessibility Inspector audit having no evidence yet — run afterwards, with zero warnings on five states — and the partial read of the artifact files. <code>e7ab09a</code> is what recorded the three rounds.</p>
+    <ul class="links">
+      <li><a href="checker/index.html">All eleven checker rounds on one page</a> <span class="note">— five on the spec, three on the plan, three on the finished change, with what each one blocked</span></li>
+      <li><code>2e453b1</code> <span class="note">— the coverage commit that preceded round 1: tests only, every source file at 100 %</span></li>
+    </ul>
+
+    <h2 id="ui"><span class="num">05</span>UI verification, on four lanes</h2>
+    <p>The finished app was then driven end to end against the real build, not a test double: a phone simulator, a tablet simulator, an Android lane that ran on an emulator with TalkBack and then on a physical Samsung tablet, and a physical iPad. Five passes, four lanes — the Samsung run is the Android lane's second half and shares its report.</p>
+    <div class="wide">
+      <table>
+        <thead><tr><th>Lane</th><th>Passed</th><th>Defects</th><th>Report</th></tr></thead>
+        <tbody>
+          <tr><td>Phone — iPhone 17 simulator, iOS 26.5</td><td class="n">10 / 10 scenarios</td><td>1 found → fixed (<code>1bc3e88</code>) and re-driven</td><td><a href="ui-verification/phone.html">phone.html</a></td></tr>
+          <tr><td>Tablet — iPad Pro 11-inch (M5) simulator</td><td class="n">6 / 6 scenarios</td><td>0; one layout observation about the full-width column</td><td><a href="ui-verification/tablet.html">tablet.html</a></td></tr>
+          <tr><td>Android emulator — Pixel, API 36, TalkBack</td><td class="n">53 / 56 checks</td><td>5 found → all fixed and re-verified: 1–3 in <code>b1fb557</code>, the two spoken-output ones earlier</td><td><a href="ui-verification/android.html">android.html</a></td></tr>
+          <tr><td>Android lane, second half — real Samsung Galaxy Tab S7 FE</td><td class="n">19 / 21 checks</td><td>2 found: 1 fixed by a preview cap (the preview's aspect on a tablet), 1 recorded as a known limit (process eviction during capture)</td><td><a href="ui-verification/android.html#real-device">android.html</a></td></tr>
+          <tr><td>Real iPad Air 11-inch (M3), iOS 27</td><td class="n">11 / 11 accessible-name checks<br>12 / 12 VoiceOver events after two re-checks</td><td>7 found: 5 fixed and re-verified; 1 and 2 stand as observations; the earlier blank-message-step defect confirmed fixed</td><td><a href="ui-verification/device.html">device.html</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Each row is the lane report's own verdict paragraph: “ten scenarios, all passing” and “six scenarios, all passing” from <a href="ui-verification/phone.html#verdict">phone.html</a> and <a href="ui-verification/tablet.html">tablet.html</a>; “53 of 56 checks pass … all five since fixed and re-verified” and “19 of 21 checks pass” from <a href="ui-verification/android/report.md">android/report.md</a>; for the iPad, the eleven rows of the “Accessible names” table (all Pass) and the twelve VoiceOver events across that report's “VoiceOver” table and the two re-checks that supersede six of its rows (all Pass) in <a href="ui-verification/device/report.md">device/report.md</a>, whose Defects section lists the seven, five of them marked fixed. That run also drove nine accessibility settings one at a time, with the setting screenshotted as proof before each pass, and both system text sizes. The Android report names the head each pass ran against but not the commit that fixed each defect; <code>b1fb557</code>'s own message claims defects 1 to 3, and the two spoken-output ones were closed before it by the review-fix commits in section 6. The two physical-device lanes are additional passes, not replacements: the Samsung run covers only what an emulator cannot show, and the iPad run only the accessibility settings.</p>
+
+    <h3>The Accessibility Inspector audit</h3>
+    <p>Xcode's Accessibility Inspector was run against the app on the iPhone 17 simulator with the default audit options. Five states were audited — home, step 1 loaded, step 3 with the empty-message error, the developer-settings modal, and the partial-failure confirmation — and each returned <strong>0 warnings, 0 duplicates</strong>. Because a row of zeros only means something if the engine was looking, the same audit was pointed at Expo Go's own developer menu as a positive control, in the same process: <strong>22 warnings</strong>.</p>
+    <p class="src">Read verbatim from the Inspector's results outline, transcribed in <a href="ui-verification/phone/s10r-audit-results.md">phone/s10r-audit-results.md</a>; the screenshots pairing each state with the Inspector window are the <code>s10r-</code> series on <a href="ui-verification/phone.html#scenarios">phone.html</a>.</p>
+
+    <h3>The TalkBack spoken text</h3>
+    <p>On the Android emulator, TalkBack's speech was shown on screen and the exact wording of nine spoken events was transcribed: the recipient cards, the disabled Continue with its hint, the two validation errors, the sending status, the confirmation, the photo-failed line, the offline banner with its disabled Send, and the error card. Two of them were wrong in the same way — spoken twice — and both were fixed and re-verified: the required-question error, announced once and then again as the focused field's name, and “Message sent” on the confirmation, spoken as a status and as a heading.</p>
+    <p class="src">Transcripts and counts in <a href="ui-verification/android/talkback-method-and-counts.txt">android/talkback-method-and-counts.txt</a>; the defects and their re-check are sections <a href="ui-verification/android.html#talkback-spoken">“TalkBack spoken text”</a> and <a href="ui-verification/android.html#spoken-re-check">“Re-check of the spoken-output defects”</a> of the Android report. VoiceOver's own spoken text was transcribed separately on the physical iPad, from the caption panel, in <a href="ui-verification/device.html#voiceover">device.html</a>.</p>
+    <ul class="links">
+      <li><a href="ui-verification/index.html">The UI verification overview</a> <span class="note">— screenshots, accessibility-tree dumps and logs behind every lane. Written before the iPad lane was added, so reach <a href="ui-verification/device.html">device.html</a> from here.</span></li>
+    </ul>
+
+    <h2 id="after"><span class="num">06</span>Reviews after the implementation</h2>
+    <p>Two more reviews followed the flow itself, seven axes each: one before the pull request, one on the delta afterwards. Neither produced a rendered report; what they produced is commits. In branch order, with the subject <code>git log --oneline</code> shows:</p>
+    <div class="wide">
+      <table>
+        <thead><tr><th>Commit</th><th>Subject</th><th>Belongs to</th></tr></thead>
+        <tbody>
+          <tr><td class="n">68fdd18</td><td>refactor: group the source tree by responsibility and ownership</td><td>pre-PR review</td></tr>
+          <tr><td class="n">7aac59c</td><td>fix: address pre-PR review findings</td><td>pre-PR review</td></tr>
+          <tr><td class="n">705ca0a</td><td>refactor: group the source tree by responsibility, then by kind</td><td>pre-PR review</td></tr>
+          <tr><td class="n">b5b1aaf</td><td>docs: shorten the hand-in documents</td><td>pre-PR review</td></tr>
+          <tr><td class="n">693bb39</td><td>refactor: remove the env seeds</td><td>pre-PR review</td></tr>
+          <tr><td class="n">6ce561a</td><td>refactor: keep the shared layer strictly by kind</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">06393b6</td><td>docs(specs): make the process record self-contained</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">577cc71</td><td>refactor: fix the ownership leaks the folder check found</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">f177213</td><td>fix: address posted-review findings</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">b1fb557</td><td>fix: address the Android emulator findings</td><td>UI verification, Android lane</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Hashes and subjects from <code>git log --oneline</code> on <code>feat/econsult-flow</code>, for everything after the flow's own last commit <code>0a0d23d</code>. The two fix commits name their review in the subject; the refactor and documentation commits around them are grouped by where they fall between those two, which is an inference from the order and the dates, not a claim the commits themselves make.</p>
+    <p>What the two reviews changed is mostly structural: the source tree moved from “where the file was first needed” to “who owns it”, the shared layer stopped importing a feature, the in-flight guard became a plain helper so the React Compiler would take the hooks again, three announcements that spoke twice on Android were reduced to one, and two tests that could not fail were made into real assertions. The rules they produced are written into the <a href="../../../README.md">README</a> and <a href="../../../DECISIONS.md">DECISIONS.md</a>.</p>
+
+    <h2 id="handin"><span class="num">07</span>Hand-in documents</h2>
+    <p>Three documents at the repository root, written by the flow's last step and kept current by the reviews after it.</p>
+    <ul class="links">
+      <li><a href="../../../README.md">README.md</a> <span class="note">— how to run it, how to reach every state, where to find things, and “How it was built” with the control-point table</span></li>
+      <li><a href="../../../DECISIONS.md">DECISIONS.md</a> <span class="note">— each product and technical decision as the question, what was decided and what it traded off</span></li>
+      <li><a href="../../../AI-USAGE.md">AI-USAGE.md</a> <span class="note">— where the AI went wrong, the human intervention each case needed, and why</span></li>
+    </ul>
+
+    <h2 id="caught"><span class="num">08</span>What the loop caught</h2>
+    <p>Six cases the README's control-point table cites, each one a defect that the stage before it had passed. They are the argument for the gates.</p>
+    <ol class="caught">
+      <li>
+        <p class="what">The upload recommendation would have failed on the first byte</p>
+        <p class="why">The research first recommended React Native's classic form-data file part. The adversarial pass read the installed Expo source and found that Expo's own <code>fetch</code>, which is the global on SDK 57, rejects that value outright. No unit test would have caught it without a real server.</p>
+        <p class="ev">Evidence: <a href="research.html#followup-1">research.html, follow-up 1</a> and the <a href="research.html#topic-image-picker">image-picker topic's verdict</a>.</p>
+      </li>
+      <li>
+        <p class="what">The plan would have stopped the app from starting</p>
+        <p class="why">It placed the screen tests next to the screens, under <code>src/app</code> — where expo-router loads every file as a route. The plan checker found it on paper, before any code existed; the failure mode is app start-up, not a red test.</p>
+        <p class="ev">Evidence: <a href="checker/plan-r1.html">plan review 1</a>, one of that round's six blockers.</p>
+      </li>
+      <li>
+        <p class="what">Five of the six screen steps passed their tests and failed on the simulator</p>
+        <p class="why">A header label clipped at the largest text size (T016); scroll-to-error doing nothing under the New Architecture, and then an error still rendered off screen once it worked (T017, three re-checks); the message field scrolling its own label out of view (T018); a failed photo retry changing nothing on screen (T019); the offline switch pushed past the screen edge (T020). Each was found by driving the simulator after the step's tests were green, and each was fixed before the step was committed. Jest renders no layout and no text scaling.</p>
+        <p class="ev">Evidence: the re-check pages for <a href="visuals/T016-phone-recheck.html">T016</a>, <a href="visuals/T017-phone-recheck3.html">T017</a>, <a href="visuals/T018-phone-recheck.html">T018</a>, <a href="visuals/T019-phone-recheck.html">T019</a> and <a href="visuals/T020-phone-recheck.html">T020</a>, collected on <a href="visuals/index.html">visuals/index.html</a>.</p>
+      </li>
+      <li>
+        <p class="what">A corrected question kept announcing its old error</p>
+        <p class="why">On Android, a content description set back to <code>undefined</code> is never cleared, so an answered choice question still carried “Error: This question is required” in its accessible name. Invisible to a sighted user and to every test; only TalkBack showed it.</p>
+        <p class="ev">Evidence: defect 1 on the <a href="ui-verification/android.html#defects">Android lane</a>, with its <a href="ui-verification/android.html#re-check">re-check</a>.</p>
+      </li>
+      <li>
+        <p class="what">A photo pick blanked the screen on a real iPad</p>
+        <p class="why">Attach a photo, scroll down for Send, and the message step went blank — on physical hardware, in a state both simulators had rendered correctly. The later iPad pass confirms it no longer reproduces, with Send hittable at both text sizes.</p>
+        <p class="ev">Evidence: “The blank message step is fixed” in <a href="ui-verification/device.html#camera">device.html</a>.</p>
+      </li>
+      <li>
+        <p class="what">The same error was spoken twice</p>
+        <p class="why">A required-question error was announced and then spoken again as the focused field's name, and “Message sent” was spoken as a status and as a heading. Both are correct on screen and wrong in the ear; a validation error is now spoken by the focus move alone, and the confirmation heading speaks itself once.</p>
+        <p class="ev">Evidence: defects A and B under <a href="ui-verification/android.html#talkback-spoken">TalkBack spoken text</a>, and their <a href="ui-verification/android.html#spoken-re-check">re-check</a>.</p>
+      </li>
+    </ol>
+
+    <h2 id="notes">Reading notes</h2>
     <ul>
-      <li>Every link is relative. Open <code>index.html</code> from the file system and the whole record works offline; the web fonts and the diagram renderer are the only things that want a connection, and the pages read fine without them.</li>
-      <li>The screenshots are downscaled copies of the originals — long edge at most 900 px — so the record stays small enough to live in the repository.</li>
-      <li>The checker reports and the two lane reports are rendered from the markdown the flow wrote at the time. The wording and the verdicts are theirs, unedited.</li>
+      <li>Every link on this page is relative and every file it points at is in the repository. Open it from the file system and the whole record works with no network; <code>npm run showcase</code> does exactly that.</li>
+      <li>Pages ending in <code>.html</code> are rendered copies of the markdown the flow wrote at the time — the wording, the evidence lines and the verdicts are unedited. The <code>.md</code> links go to those sources.</li>
+      <li>Screenshots are downscaled copies, long edge at most 900 px, so the record stays small enough to live in the repository. The accessibility-tree and speech dumps are the originals.</li>
+      <li>The lanes on the two physical devices are the most recent work, and they leave three defects unfixed. They are described where they were found, not hidden: one on the <a href="ui-verification/android.html#real-device">Samsung tablet</a>, recorded as a known limit, and two on the <a href="ui-verification/device.html#defects">iPad</a> that stand as observations — a layout condition that could not be reproduced, and a UIKit affordance a React Native view does not inherit.</li>
     </ul>
 
   </main>

@@ -1,6 +1,6 @@
 import { userEvent } from "@testing-library/react-native";
 import { renderRouter, screen } from "expo-router/testing-library";
-import { AccessibilityInfo, ScrollView, Text, TextInput } from "react-native";
+import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
 import type { Question } from "@/api/contracts";
 import QuestionsScreen from "@/app/econsult/questions";
 import * as choiceGroupSource from "@/components/ChoiceGroup";
@@ -69,9 +69,15 @@ const getInnerViewRef = jest.mocked(
 const measureLayout = jest.mocked(Text.prototype.measureLayout);
 
 // StepHeader announces its own title on mount and the announcement mock is shared by the whole
-// file, so "announced once" is counted over the calls that carry the error itself.
+// file, so the error's own announcements are counted apart from it.
 function announcementsOf(calls: [string][], message: string): [string][] {
   return calls.filter(([announced]) => announced === message);
+}
+
+// The name the focused node carried at the moment focus was sent, which is the name VoiceOver
+// reads out; a focus sent before the error is committed still records the name without it.
+function nameWhenFocused(node: unknown): string | undefined {
+  return (node as { props?: { accessibilityLabel?: string } }).props?.accessibilityLabel;
 }
 
 // Stands in for the content view element getInnerViewRef returns under the New Architecture.
@@ -97,24 +103,29 @@ describe("Questions step", () => {
     expect(screen.getByText("Step 2 of 3")).toBeOnTheScreen();
   });
 
-  test("blocks Continue on an unanswered required question, ties the error to it, announces and focuses it", async () => {
+  test("blocks Continue on an unanswered required question and speaks the error by focusing it", async () => {
+    const namesWhenFocused: (string | undefined)[] = [];
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
     const focus = jest
       .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
-      .mockImplementation(() => {});
-    // The mock is shared by the file, so clearing keeps the count below to this test's own calls.
+      .mockImplementation((node) => void namesWhenFocused.push(nameWhenFocused(node)));
+    // The mocks are shared by the file, so clearing keeps the counts below to this test's own calls.
     announce.mockClear();
+    focus.mockClear();
     const user = userEvent.setup();
     renderQuestions();
     await screen.findByText(CHOICE);
 
     await user.press(screen.getByRole("button", { name: "Continue" }));
 
+    // One focus move, made late enough that the name it speaks already carries the error; the
+    // focused group is named with the error, so announcing it too would speak it twice.
     expect(screen.getByLabelText(`${CHOICE}. Error: ${REQUIRED_ERROR}`)).toBeOnTheScreen();
-    expect(announcementsOf(announce.mock.calls, REQUIRED_ERROR)).toHaveLength(1);
-    expect(focus).toHaveBeenCalledWith(expect.anything(), "focus");
+    expect(focus).toHaveBeenCalledWith(expect.any(View), "focus");
+    expect(namesWhenFocused).toEqual([`${CHOICE}. Error: ${REQUIRED_ERROR}`]);
+    expect(announcementsOf(announce.mock.calls, REQUIRED_ERROR)).toHaveLength(0);
     expect(screen).toHavePathname("/econsult/questions");
   });
 
@@ -150,7 +161,7 @@ describe("Questions step", () => {
     expect(focus).toHaveBeenCalledWith(expect.any(TextInput), "focus");
   });
 
-  test("a blocked Continue announces the error even when the field reports no node", async () => {
+  test("a blocked Continue announces the error only when the field reports no node", async () => {
     jest.spyOn(choiceGroupSource, "ChoiceGroup").mockImplementation(NodelessChoiceGroup);
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")

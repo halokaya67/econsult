@@ -21,7 +21,7 @@ in one of the same five kinds (`api`, `state`, `hooks`, `components`, `utils`) a
 ## Rules
 
 - Every interactive element: accessible name, at least 48 by 48 points, `allowFontScaling` never disabled.
-- Errors are folded into the field's accessible name and announced once.
+- Errors are folded into the field's accessible name; on validation failure focus moves to the first invalid field, which speaks the error once; no separate announcement.
 - Reads: offline-first with one retry. The send mutation runs in `always` mode with no retry; the create call times out at 15 seconds and the photo upload at 45.
 - Return new objects; keep functions under 50 lines; no `any`; validate at the boundary with zod.
 - Tests sit next to the code as `*.test.ts(x)` (screens excepted, see above) and query by role and label; a `View` gets `accessible` only when it groups text alone. `npm test`, `npm run lint`, `npm run typecheck`, `npm run format:check` must pass.

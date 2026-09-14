@@ -30,6 +30,23 @@ const SENT: DraftState = {
 
 const FAILED: DraftState = { ...SENT, photo: READY_PHOTO, attachment: "failed" };
 const PHOTO_FAILED_LINE = "Your message was sent, but the photo could not be attached.";
+// Long enough to outlast the arrival fallback, which is itself longer than a push transition.
+const ARRIVAL_TIMEOUT_MS = 3000;
+
+// Which element the arrival focus landed on: the heading, or the alert whose name is the
+// photo-failed sentence.
+function roleWhenFocused(node: unknown): string | undefined {
+  return (node as { props?: { accessibilityRole?: string } }).props?.accessibilityRole;
+}
+
+function spyOnFocus(rolesWhenFocused: (string | undefined)[]) {
+  const focus = jest
+    .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
+    .mockImplementation((node) => void rolesWhenFocused.push(roleWhenFocused(node)));
+  // The preset already mocks it, so the spy is the mock every earlier test wrote to.
+  focus.mockClear();
+  return focus;
+}
 
 // Start on step 1 and push the confirmation on top of it so that "back" has a real target to be
 // blocked from.
@@ -53,17 +70,29 @@ function renderSent(draft: DraftState) {
 describe("Sent", () => {
   afterEach(() => jest.restoreAllMocks());
 
-  test("confirms who received the message, gives the reference, and focuses the heading", async () => {
-    const focus = jest
-      .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
-      .mockImplementation(() => {});
+  test("confirms who received the message and gives the reference", async () => {
     renderSent(SENT);
 
     expect(screen.getByRole("header", { name: "Message sent" })).toBeOnTheScreen();
     expect(await screen.findByText("Sent to Dr. J. de Vries.")).toBeOnTheScreen();
     expect(screen.getByText(/Reference: ec-1/)).toBeOnTheScreen();
     expect(screen.getByText(/two working days/)).toBeOnTheScreen();
-    expect(focus).toHaveBeenCalledWith(expect.anything(), "focus");
+  });
+
+  // VoiceOver drops a focus move made while the push transition is still running, which left the
+  // confirmation silent; nothing reports that transition in a test, so the fallback focuses here.
+  test("focuses the heading only once the screen has finished arriving", async () => {
+    const rolesWhenFocused: (string | undefined)[] = [];
+    const focus = spyOnFocus(rolesWhenFocused);
+    renderSent(SENT);
+    await screen.findByText("Sent to Dr. J. de Vries.");
+
+    expect(focus).not.toHaveBeenCalled();
+
+    await waitFor(() => expect(rolesWhenFocused).toEqual(["header"]), {
+      timeout: ARRIVAL_TIMEOUT_MS,
+    });
+    expect(focus).toHaveBeenCalledTimes(1);
   });
 
   test("cannot be left by going back", async () => {
@@ -102,9 +131,11 @@ describe("Sent", () => {
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  // The line is on screen from the first render, so without the announcement nothing would speak
-  // it; a live region would be Android-only and say it a second time there.
-  test("the failed-photo line is spoken once when the confirmation opens", async () => {
+  // The alert's name is the photo-failed sentence, so the arrival focus is what speaks it; the
+  // heading focus and an announcement as well were three utterances racing, and the line was cut.
+  test("a failed photo takes the arrival focus and is not announced as well", async () => {
+    const rolesWhenFocused: (string | undefined)[] = [];
+    const focus = spyOnFocus(rolesWhenFocused);
     const spoken = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
@@ -114,7 +145,12 @@ describe("Sent", () => {
     renderSent(FAILED);
     await screen.findByRole("alert");
 
-    expect(spoken.mock.calls.filter(([line]) => line === PHOTO_FAILED_LINE)).toHaveLength(1);
+    await waitFor(() => expect(rolesWhenFocused).toEqual(["alert"]), {
+      timeout: ARRIVAL_TIMEOUT_MS,
+    });
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("alert")).toHaveTextContent(PHOTO_FAILED_LINE, { exact: false });
+    expect(spoken.mock.calls.filter(([line]) => line === PHOTO_FAILED_LINE)).toHaveLength(0);
     expect(screen.getByRole("alert").props.accessibilityLiveRegion).toBeUndefined();
   });
 

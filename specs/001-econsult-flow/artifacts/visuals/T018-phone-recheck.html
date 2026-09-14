@@ -231,7 +231,7 @@
     <div><dt>Device</dt><dd>iPhone 17, Expo Go</dd></div>
     <div><dt>Scroll viewport</dt><dd>y 116 &rarr; 874 (758 pt)</dd></div>
     <div><dt>Text sizes</dt><dd>AX3XL, medium</dd></div>
-    <div><dt>Metro warnings</dt><dd>none</dd></div>
+    <div><dt>Bundler warnings</dt><dd>none</dd></div>
   </dl>
 
   <section>
@@ -360,14 +360,14 @@ e44  y=1085.00  h=467.67  bottom=1553   "What would you like to ask?. <span clas
 
   <section class="check">
     <h2>Flags</h2>
-    <p>None. No <code>measureLayout</code> warning, bridge warning or React warning in Metro output,
+    <p>None. No <code>measureLayout</code> warning, bridge warning or React warning in the bundler log,
       and no LogBox toast in any of the six screenshots &mdash; including the two taken immediately
       after the failing submit.</p>
   </section>
 
   <footer>
     <div>Evidence: <span class="path">the flow's archived UI-verification capture for T018-phone-recheck</span></div>
-    <div>One Metro run, <code>--clear</code>, no extra env vars. Text size restored to
-      <code>medium</code>; port 8081 closed; driver session closed. No repository file was edited.</div>
+    <div>One run from a cleared bundler cache, no extra env vars. Text size restored to
+      <code>medium</code>. No repository file was edited.</div>
   </footer>
 </div>

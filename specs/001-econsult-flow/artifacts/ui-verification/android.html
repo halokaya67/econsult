@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <title>UI verification — Android lane</title>
-<meta name="description" content="The full walkthrough on a Pixel API 36 emulator in Expo Go: 56 checks, 53 passing, two TalkBack-only accessibility defects and one layout observation — all three since fixed and re-verified.">
+<meta name="description" content="The full walkthrough on a Pixel API 36 emulator in Expo Go: 56 checks, 53 passing, two TalkBack-only accessibility defects and one layout observation, plus a transcript of what TalkBack actually speaks, which turned up two more in the spoken output — all five since fixed and re-verified.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -72,11 +72,11 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
   <header class="head">
     <p class="eyebrow">Finish phase · Android</p>
     <h1>Finish-phase UI verification — Android lane</h1>
-    <p class="lede">The full walkthrough on a Pixel API 36 emulator in Expo Go: 56 checks, 53 passing. The three Android questions the README singles out all pass; two TalkBack-only accessibility defects and one layout observation came out of the run.</p>
+    <p class="lede">The full walkthrough on a Pixel API 36 emulator in Expo Go: 56 checks, 53 passing. The three Android questions the README singles out all pass; two TalkBack-only accessibility defects and one layout observation came out of the run. A later pass on a physical Galaxy Tab S7 FE covered the three things an emulator cannot show &mdash; camera capture, the spoken header labels and the step 1 read faults &mdash; and found one more defect.</p>
   </header>
   <aside class="toc" aria-label="Contents">
     <p class="label">Contents</p>
-    <ol><li><a href="#verdict">Verdict</a></li><li><a href="#environment">Environment</a></li><li><a href="#developer-settings">Developer settings</a></li><li><a href="#the-flow">The flow</a></li><li><a href="#failures-and-offline">Failures and offline</a></li><li><a href="#navigation-and-form-factor">Navigation and form factor</a></li><li><a href="#largest-text">Largest text size</a></li><li><a href="#defects">Defects</a></li><li><a href="#talkback">TalkBack</a></li><li><a href="#not-verified">Not verified</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#re-check">Re-check after fixes</a></li><li><a href="#evidence">Evidence</a></li></ol>
+    <ol><li><a href="#verdict">Verdict</a></li><li><a href="#environment">Environment</a></li><li><a href="#developer-settings">Developer settings</a></li><li><a href="#the-flow">The flow</a></li><li><a href="#failures-and-offline">Failures and offline</a></li><li><a href="#navigation-and-form-factor">Navigation and form factor</a></li><li><a href="#largest-text">Largest text size</a></li><li><a href="#defects">Defects</a></li><li><a href="#talkback">TalkBack</a></li><li><a href="#not-verified">Not verified</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#re-check">Re-check after fixes</a></li><li><a href="#talkback-spoken">TalkBack spoken text</a></li><li><a href="#spoken-re-check">Re-check of the spoken-output defects</a></li><li><a href="#real-device">Real device: Galaxy Tab S7 FE</a></li><li><a href="#evidence">Evidence</a></li></ol>
   </aside>
   <main>
 
@@ -90,8 +90,10 @@ main > .shots{max-width:none}
 .dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
 .dumps code{font-size:12px}
 </style>
+<blockquote><p><strong>Since then.</strong> The three emulator fixes this report re-checks landed in <code>b1fb557</code>. The counts in the summary above are the emulator walkthrough&#39;s; the real-device pass on the Galaxy Tab S7 FE adds twenty-one checks of its own, further down. R-2, the tablet photo-preview sliver, has since been fixed like the rest &mdash; the preview is capped at 360 points &mdash; while R-1, the camera eviction, has not: it stands as a known limit, recorded in <code>DECISIONS.md</code>.</p></blockquote>
 <h2 id="verdict">Verdict</h2>
-<p><strong>DEFECTS at the time of this pass; all three have since been fixed and re-verified — see <a href="#re-check">Re-check after fixes</a>.</strong> 53 of 56 checks pass. The three questions the README singles out for Android all pass: the system back gesture and the back key both hold on the confirmation screen, the camera action is correctly absent on the emulator with the library path offered instead, and edge-to-edge insets are respected on every screen. Two accessibility defects were found, both TalkBack-only and neither visible to a sighted touch user, plus one low-severity layout observation. No crash, no app-originated LogBox, no red box.</p>
+<p><strong>DEFECTS at the time of this pass; all five have since been fixed and re-verified — the first three under <a href="#re-check">Re-check after fixes</a>, the two spoken-output ones under <a href="#spoken-re-check">Re-check of the spoken-output defects</a>.</strong> 53 of 56 checks pass. The three questions the README singles out for Android all pass: the system back gesture and the back key both hold on the confirmation screen, the camera action is correctly absent on the emulator with the library path offered instead, and edge-to-edge insets are respected on every screen. Two accessibility defects were found, both TalkBack-only and neither visible to a sighted touch user, plus one low-severity layout observation. No crash, no app-originated LogBox, no red box.</p>
+<p>A later pass captured what TalkBack actually <em>says</em>, rather than counting utterances. It confirmed the three fixes at the spoken level and turned up <strong>two further defects in the spoken output</strong> &mdash; A (medium) and B (low), one of them a reading this page had previously recorded as passing. Both have since been fixed and heard again: see <a href="#talkback-spoken">TalkBack spoken text</a> and its <a href="#spoken-re-check">re-check</a>.</p>
 <blockquote><p>The blue gear at the top right of every screenshot is Expo Go&#39;s own floating dev-tools button, drawn over the app. It is not part of the app and is ignored throughout.</p></blockquote>
 
 <h2 id="environment">Environment</h2>
@@ -102,10 +104,8 @@ main > .shots{max-width:none}
 <tr><td>OS</td><td>Android 16, API 36, build <code>BE2A.250530.026.F3</code></td></tr>
 <tr><td>Screen</td><td>1080 &times; 2424 at 420 dpi, gesture navigation</td></tr>
 <tr><td>Client</td><td>Expo Go 57.0.9 (versionCode 444, targetSdk 36)</td></tr>
-<tr><td>Metro</td><td><code>npx expo start --android --port 8083</code>, opened as <code>exp://10.0.2.2:8083</code></td></tr>
 <tr><td>Project</td><td>expo ~57.0.22, react-native 0.86.3, expo-router ~57.0.21</td></tr>
 <tr><td>Font scales</td><td>1.0 for the walkthrough, 2.0 for the sweep &mdash; the emulator accepted 2.0, so no fallback to 1.3 was needed</td></tr>
-<tr><td>Driver</td><td><code>adb</code>: <code>exec-out screencap</code>, <code>uiautomator dump</code>, <code>input tap/text/keyevent/swipe</code></td></tr>
 </tbody></table></div>
 <h2 id="developer-settings">Developer settings</h2>
 <div class="wide"><table>
@@ -182,7 +182,7 @@ main > .shots{max-width:none}
 <tr><td>33</td><td>Force offline on</td><td>Banner on home</td><td>&quot;You&#39;re offline. You can keep writing, but sending needs a connection.&quot;</td><td>PASS</td></tr>
 <tr><td>34</td><td>Force offline, steps 1 to 3</td><td>Banner on every step</td><td>Present on all three</td><td>PASS</td></tr>
 <tr><td>35</td><td>Force offline, Send</td><td>Disabled even with text typed</td><td><code>enabled=false</code> with a full message in the field</td><td>PASS</td></tr>
-<tr><td>36</td><td>Offline on the confirmation, Try again</td><td>Disabled</td><td>Link dropped with <code>svc wifi/data disable</code> while on a partial-failure confirmation: the banner appeared, Try again went <code>enabled=false</code>, Continue without the photo and Done stayed enabled</td><td>PASS</td></tr>
+<tr><td>36</td><td>Offline on the confirmation, Try again</td><td>Disabled</td><td>Link dropped while on a partial-failure confirmation: the banner appeared, Try again went <code>enabled=false</code>, Continue without the photo and Done stayed enabled</td><td>PASS</td></tr>
 <tr><td>37</td><td>Back online</td><td>Banner clears, Retry re-enabled</td><td>Both, within seconds of restoring the link</td><td>PASS</td></tr>
 </tbody></table></div>
 <p>Check 36 needed a real link drop: reaching the confirmation requires a successful send, so Force offline cannot be switched on from the home screen and still leave a confirmation to look at. Dropping the emulator&#39;s Wi-Fi and data while sitting on the partial-failure confirmation exercises the same code path, since <code>NetworkProvider</code> treats a real <code>isConnected === false</code> exactly as it treats the forced flag.</p>
@@ -215,7 +215,7 @@ main > .shots{max-width:none}
 <tr><td>45</td><td>Discard, Home button variant</td><td>Home; the next Write shows three unchecked recipients, Continue disabled, empty message</td><td>PASS</td></tr>
 <tr><td>46</td><td>Discard, back key variant</td><td>Home</td><td>PASS</td></tr>
 <tr><td>47</td><td>Not-found route</td><td>Correct copy, and the link works when tapped, but it is not an actionable accessibility node</td><td><strong>FAIL &mdash; defect 2</strong></td></tr>
-<tr><td>48</td><td>Rotation to landscape on the message step</td><td>The app stays portrait. <code>app.json</code> declares <code>&quot;orientation&quot;: &quot;portrait&quot;</code> and Expo Go honours it: with <code>user_rotation=1</code> and <code>accelerometer_rotation=0</code> the app window stayed <code>mDisplayRotation=ROTATION_0</code></td><td>PASS (by design)</td></tr>
+<tr><td>48</td><td>Rotation to landscape on the message step</td><td>The app stays portrait. <code>app.json</code> declares <code>&quot;orientation&quot;: &quot;portrait&quot;</code> and Expo Go honours it: with the device rotated to landscape and auto-rotate off, the app window stayed in portrait</td><td>PASS (by design)</td></tr>
 <tr><td>49</td><td>Edge-to-edge, status bar</td><td>Every screen&#39;s content starts below the status bar; the native header is inset correctly</td><td>PASS</td></tr>
 <tr><td>50</td><td>Edge-to-edge, gesture navigation bar</td><td>Primary actions clear the gesture pill on every screen, including the longest scroll views</td><td>PASS</td></tr>
 </tbody></table></div>
@@ -234,7 +234,7 @@ main > .shots{max-width:none}
   <figure><a href="android/46-rotation-locked-portrait.png"><img src="android/46-rotation-locked-portrait.png" alt="46-rotation-locked-portrait.png" loading="lazy"></a><figcaption>46-rotation-locked-portrait.png</figcaption></figure>
 </div>
 <h2 id="largest-text">Largest text size</h2>
-<p><code>adb shell settings put system font_scale 2.0</code> was accepted, so the sweep ran at the full 2&times; rather than the 1.3&times; fallback. The app was relaunched after the change.</p>
+<p>The emulator accepted a font scale of 2.0, so the sweep ran at the full 2&times; rather than the 1.3&times; fallback. The app was relaunched after the change.</p>
 <div class="wide"><table>
 <thead><tr><th>#</th><th>State</th><th>Observed</th><th>Verdict</th></tr></thead>
 <tbody>
@@ -265,11 +265,11 @@ main > .shots{max-width:none}
 <p><strong>Repro</strong> (font scale 1.0, <code>prc-0421</code>):</p>
 <ol>
 <li>Home, then Write to your practice, pick any recipient, Continue.</li>
-<li>On step 2, press Continue without answering. The red &quot;This question is required&quot; appears and the label&#39;s <code>content-desc</code> becomes <code>How long have you had this problem? (required). Error: This question is required</code>.</li>
+<li>On step 2, press Continue without answering. The red &quot;This question is required&quot; appears and the label&#39;s accessible name becomes <code>How long have you had this problem? (required). Error: This question is required</code>.</li>
 <li>Answer the question. The red text disappears from the screen and from the accessibility tree.</li>
-<li><code>adb shell uiautomator dump</code> &mdash; the label&#39;s <code>content-desc</code> is unchanged.</li>
+<li>Read the accessibility tree &mdash; the label&#39;s accessible name is unchanged.</li>
 </ol>
-<p>Persists across a re-dump after 3 s, across selecting a different option, and across a scroll that forces re-layout.</p>
+<p>Persists across a re-read after 3 s, across selecting a different option, and across a scroll that forces re-layout.</p>
 <p><strong>Why.</strong> <code>src/components/ChoiceGroup.tsx</code> passes <code>accessibilityLabel={error ? accessibleName(visibleLabel, error) : undefined}</code>. React Native on Android does not clear a previously set <code>contentDescription</code> when the prop goes back to <code>undefined</code>. <code>src/components/TextField.tsx</code> passes <code>accessibilityLabel={accessibleName(visibleLabel, error)}</code> unconditionally &mdash; <code>accessibleName()</code> returns the plain label when <code>error</code> is falsy &mdash; so the text field resets correctly, which is why the message step does not have this bug and is the contrast case in check 16.</p>
 <div class="shots">
   <figure><a href="android/D1a-choicegroup-error-shown.png"><img src="android/D1a-choicegroup-error-shown.png" alt="D1a-choicegroup-error-shown.png" loading="lazy"></a><figcaption>D1a-choicegroup-error-shown.png</figcaption></figure>
@@ -278,10 +278,8 @@ main > .shots{max-width:none}
 <h3>2 &mdash; MEDIUM &middot; Not-found screen &middot; the only way out is invisible to TalkBack</h3>
 <p><strong>FIXED &mdash; re-verified 2026-09-14.</strong> The escape is now an <code>android.widget.Button</code> with a click action and an accessible name.</p>
 <p><strong>What a user sees.</strong> A sighted user taps &quot;Go to the home screen&quot; and it works. A TalkBack user hears it as plain text with no role and no &quot;double-tap to activate&quot;, and because the node exposes no click action it is skipped entirely when swiping between controls. On a screen whose whole purpose is to offer an escape, the escape is not announced as one.</p>
-<p><strong>Repro:</strong></p>
-<pre class="code"><code>adb shell am start -a android.intent.action.VIEW -d "exp://10.0.2.2:8083/--/nowhere"
-adb shell uiautomator dump /sdcard/ui.xml &amp;&amp; adb pull /sdcard/ui.xml</code></pre>
-<p>The node is <code>class=&quot;android.view.View&quot;</code>, <code>clickable=&quot;false&quot;</code>, <code>content-desc=&quot;&quot;</code>. Every other action in the app is an <code>android.widget.Button</code> with <code>clickable=&quot;true&quot;</code> and an accessible name.</p>
+<p><strong>Repro:</strong> open the route <code>exp://10.0.2.2:8083/--/nowhere</code>, then read the accessibility tree.</p>
+<p>The node is <code>android.view.View</code>, <code>clickable=&quot;false&quot;</code>, with an empty accessible name. Every other action in the app is an <code>android.widget.Button</code> with <code>clickable=&quot;true&quot;</code> and an accessible name.</p>
 <p><strong>Why.</strong> <code>src/app/+not-found.tsx</code> uses a bare expo-router <code>&lt;Link&gt;</code> styled as text, with no <code>accessibilityRole</code> and no pressable wrapper. Elsewhere the app routes every action through <code>TextButton</code> / <code>PrimaryButton</code>, which is what gives those the role and the click action.</p>
 <div class="shots">
   <figure><a href="android/D2-not-found-link-not-actionable.png"><img src="android/D2-not-found-link-not-actionable.png" alt="D2-not-found-link-not-actionable.png" loading="lazy"></a><figcaption>D2-not-found-link-not-actionable.png</figcaption></figure>
@@ -291,10 +289,14 @@ adb shell uiautomator dump /sdcard/ui.xml &amp;&amp; adb pull /sdcard/ui.xml</co
 <p><strong>What a user sees.</strong> The patient presses Send, the request fails, and the error card is inserted above the Send button. At the default font scale the card&#39;s heading and body land at the very bottom edge and both &quot;Try again&quot; and &quot;Send&quot; are pushed below the fold; the view does not scroll. The feedback is visible enough to notice, but the user has to scroll to act on it.</p>
 <p><strong>Repro:</strong> Developer settings, Fail: Create message = Network, Apply, walk to step 3, type a message, Send.</p>
 <p>Not Android-specific as far as this run can tell &mdash; the same insertion order would do the same on iOS, and the phone lane did not flag it. Recorded as an observation rather than a regression.</p>
+<h3>A &mdash; MEDIUM &middot; Questions step &middot; the required-field error is spoken twice</h3>
+<p><strong>Fixed and re-verified.</strong> The error is now spoken once, by the focus move to the invalid question, whose name already carries it; the standalone announcement is gone. What a patient heard before and why is in <a href="#talkback-spoken">Defect A under TalkBack spoken text</a>; the re-check is in <a href="#spoken-re-check">Re-check of the spoken-output defects</a>.</p>
+<h3>B &mdash; LOW &middot; Confirmation &middot; &quot;Message sent&quot; is spoken twice on arrival</h3>
+<p><strong>Fixed and re-verified.</strong> The confirmation heading speaks it once and the message step&#39;s status line is no longer announced. What a patient heard before and why is in <a href="#talkback-spoken">Defect B under TalkBack spoken text</a>; the re-check is in <a href="#spoken-re-check">Re-check of the spoken-output defects</a>.</p>
 
 <h2 id="talkback">TalkBack</h2>
-<p><strong>Available: yes.</strong> The google_apis image does ship the Android Accessibility Suite (<code>com.google.android.marvin.talkback</code>), which was not expected. It was enabled through <code>settings put secure enabled_accessibility_services</code> and <code>accessibility_enabled 1</code>, confirmed bound and speaking via <code>dumpsys accessibility</code>, and disabled again at the end. Nothing was sideloaded.</p>
-<p><strong>The utterance text could not be captured.</strong> <code>adb logcat -s TalkBack</code> yields nothing: the shipped TalkBack is a release build with its logging stripped, and forcing <code>pref_log_level=2</code> into its device-protected preferences as root and restarting the service changed nothing. The spoken string appears in no logcat buffer. The only trace of an utterance is <code>I/GoogleTTSServiceImpl: Synthesis request &hellip;</code>, one line per utterance, without the text. So every figure below is a <strong>count</strong>, calibrated first:</p>
+<p><strong>Available: yes.</strong> The google_apis image ships the Android Accessibility Suite (<code>com.google.android.marvin.talkback</code>). TalkBack was enabled for this pass, confirmed bound and speaking, and disabled again at the end.</p>
+<p><strong>Every figure below is an utterance count</strong>, one per speech-synthesis request, read from the speech-synthesis request log. The exact wording was captured in a later pass and is in <a href="#talkback-spoken">TalkBack spoken text</a>. The counts were calibrated first:</p>
 <ul>
 <li>one <code>announceForAccessibility()</code> produces exactly <strong>one</strong> synthesis request, whatever its sentence count &mdash; proved twice, with the two-sentence offline message and the three-sentence error-card message;</li>
 <li>a TalkBack <strong>focus</strong> event on a composed control is several requests, because name, role and hint are separate utterances: focusing the message field alone is three.</li>
@@ -315,32 +317,31 @@ adb shell uiautomator dump /sdcard/ui.xml &amp;&amp; adb pull /sdcard/ui.xml</co
   <figure><a href="android/49-talkback-empty-validation.png"><img src="android/49-talkback-empty-validation.png" alt="49-talkback-empty-validation.png" loading="lazy"></a><figcaption>49-talkback-empty-validation.png</figcaption></figure>
 </div><p class="dumps">Text evidence: <a href="android/talkback-method-and-counts.txt"><code>talkback-method-and-counts.txt</code></a></p>
 <h2 id="not-verified">Not verified</h2>
+<p>The wording of TalkBack&#39;s utterances was captured in the later pass &mdash; see <a href="#talkback-spoken">TalkBack spoken text</a> &mdash; including the spoken hints on a disabled Send or Retry and on a disabled Continue, which are not exposed as separate attributes in the accessibility tree. The disabled state those hints explain was verified in checks 7, 35 and 36. What follows was not verified at all.</p>
 <ul>
-<li><strong>The wording of any TalkBack utterance.</strong> Counts only, for the reason above. The wording itself was read from the accessibility tree (<code>content-desc</code>), which is where it actually lives for field labels and alerts, but nothing was confirmed by hearing it.</li>
-<li><strong><code>accessibilityHint</code> values.</strong> The spoken hints on a disabled Send or Retry and on a disabled Continue are not exposed by <code>uiautomator</code> for these nodes, and the spoken text is not capturable. Present in source; never heard. The disabled state they explain was verified in checks 7, 35 and 36.</li>
-<li><strong>The step 1 loading state.</strong> With the default 2 s config latency the home screen&#39;s prefetch always won, and at Slow the care team was already cached, so the skeleton never rendered long enough to capture. The loading path itself is not in doubt &mdash; the slow send held its busy state for the full 5 s &mdash; but there is no screenshot of it.</li>
-<li><strong>The practice-config and care-team fault states.</strong> Only the create-message and upload-photo faults were exercised; the two fetch faults, and so the error state on step 1, were not.</li>
-<li><strong>Camera capture.</strong> Impossible here by design: <code>expo-device</code> reports no real device on an emulator, so the app shows the note instead. That absence is check 14 and it passes; the capture path still needs a phone.</li>
-<li><strong>Landscape layout.</strong> Not reachable &mdash; the app is locked to portrait by <code>app.json</code>.</li>
+<li><strike><strong>The step 1 loading state.</strong></strike> <strong>Now verified on hardware</strong> &mdash; the skeleton and its accessible name were captured on the tablet, see <a href="#real-device">Real device</a>, check R15.</li>
+<li><strike><strong>The practice-config and care-team fault states.</strong></strike> <strong>Now verified on hardware</strong> &mdash; both fetch faults were exercised on the tablet, see checks R16 to R20.</li>
+<li><strike><strong>Camera capture.</strong></strike> <strong>Now driven on hardware</strong> &mdash; &quot;Take a photo&quot; is offered on the tablet and the capture works end to end, see checks R1 to R9. That pass found defect R-1.</li>
+<li><strong>Landscape layout.</strong> Not reachable on the emulator, and still open: the real-device pass found the host activity is <em>not</em> portrait-locked at the platform level in Expo Go, so this reading needs re-testing by hand on hardware.</li>
 <li><strong>Predictive back.</strong> <code>app.json</code> sets <code>&quot;predictiveBackGestureEnabled&quot;: false</code>, so the Android 14+ predictive-back animation was not exercised; only the classic back gesture and back key were, and both behave correctly.</li>
-<li><strong>Multi-window and split screen, dark mode, and a real device.</strong> Out of scope for this pass.</li>
+<li><strong>Multi-window and split screen, and dark mode.</strong> Out of scope. <strike>A real device.</strike> <strong>Now covered</strong> for camera capture, the header labels and the read faults &mdash; see <a href="#real-device">Real device</a>. Rotation while the camera is open remains open there.</li>
 </ul>
 
 <h2 id="logs-and-crashes">Logs and crashes</h2>
-<p>None. No crash, no app-originated LogBox, no red box, and no Metro warning beyond the bundle lines. The one LogBox that appeared was Expo Go&#39;s own &quot;Cannot connect to Expo CLI&quot; warning, caused deliberately by dropping the emulator&#39;s network to test the offline state on the confirmation screen; it cleared on reload.</p>
+<p>None. No crash, no app-originated LogBox, no red box, and no bundler warning beyond the bundle lines. The one LogBox that appeared was Expo Go&#39;s own &quot;Cannot connect to Expo CLI&quot; warning, caused deliberately by dropping the emulator&#39;s network to test the offline state on the confirmation screen; it cleared on reload.</p>
 
 
 <h2 id="re-check">Re-check after fixes</h2>
-<p>Same emulator, same Expo Go build, Metro still on port 8083. Expo Go was force-stopped and relaunched so the three fixes loaded as a cold bundle rather than a hot reload. Each defect was re-driven with its original repro steps, and the happy path was walked once more at <code>font_scale 2.0</code>.</p>
+<p>Same emulator, same Expo Go build. Expo Go was force-stopped and relaunched so the three fixes loaded as a cold bundle rather than a hot reload. Each defect was re-driven with its original repro steps, and the happy path was walked once more at a font scale of 2.0.</p>
 <div class="wide"><table>
 <thead><tr><th>Defect</th><th>Expected after the fix</th><th>Observed</th><th>Verdict</th></tr></thead>
 <tbody>
-<tr><td>1 &mdash; stale choice-question error</td><td>Once the required question is answered, the label&#39;s <code>content-desc</code> equals the plain label with its <code>(required)</code> suffix and contains no <code>Error:</code></td><td>Pristine: <code>How long have you had this problem? (required)</code> &mdash; named even before any validation, which it was not before. After Continue with nothing answered: <code>&hellip; (required). Error: This question is required</code>. After answering: back to <code>How long have you had this problem? (required)</code>, the red row gone from the screen and from the tree. Unchanged after a 3 s re-dump, after selecting a different option, and after a scroll that forces re-layout</td><td>PASS</td></tr>
-<tr><td>2 &mdash; not-found escape not actionable</td><td>The home action is an <code>android.widget.Button</code>, <code>clickable=true</code>, with an accessible name, and tapping it lands on home</td><td><code>[android.widget.Button] clickable=true enabled=true bounds=[42,578][1038,704] desc=&#39;Go to the home screen&#39;</code> &mdash; it was <code>android.view.View</code>, <code>clickable=false</code>, <code>content-desc=&quot;&quot;</code>. The box is 126 px at 420 dpi = 48 dp, so it clears the 48-point minimum too. Tapped: the home screen, with the header&#39;s back arrow gone, so <code>router.dismissTo(&quot;/&quot;)</code> left no not-found entry on the stack</td><td>PASS</td></tr>
+<tr><td>1 &mdash; stale choice-question error</td><td>Once the required question is answered, the label&#39;s accessible name equals the plain label with its <code>(required)</code> suffix and contains no <code>Error:</code></td><td>Pristine: <code>How long have you had this problem? (required)</code> &mdash; named even before any validation, which it was not before. After Continue with nothing answered: <code>&hellip; (required). Error: This question is required</code>. After answering: back to <code>How long have you had this problem? (required)</code>, the red row gone from the screen and from the tree. Unchanged after a 3 s re-read, after selecting a different option, and after a scroll that forces re-layout</td><td>PASS</td></tr>
+<tr><td>2 &mdash; not-found escape not actionable</td><td>The home action is an <code>android.widget.Button</code>, <code>clickable=true</code>, with an accessible name, and tapping it lands on home</td><td><code>[android.widget.Button] clickable=true enabled=true bounds=[42,578][1038,704]</code> named <code>Go to the home screen</code> &mdash; it was <code>android.view.View</code>, <code>clickable=false</code>, with an empty accessible name. The box is 126 px at 420 dpi = 48 dp, so it clears the 48-point minimum too. Tapped: the home screen, with the header&#39;s back arrow gone, so <code>router.dismissTo(&quot;/&quot;)</code> left no not-found entry on the stack</td><td>PASS</td></tr>
 <tr><td>3 &mdash; recovery buttons off-screen after a failed send</td><td>With no scrolling, the error card, &quot;Try again&quot; and &quot;Send&quot; all sit inside the viewport, and screen-reader focus moves to the card</td><td>The view scrolls itself: the &quot;Your message&quot; heading is clipped at the top, which it was not before the Send. Card <code>[84,1647][996,1899]</code>, Try again <code>[84,1941][996,2067]</code>, Send <code>[42,2172][1038,2298]</code> &mdash; all three end above y=2424, and Send still clears the gesture pill. With TalkBack on, the green accessibility-focus rectangle is drawn at x&asymp;82&ndash;992, y&asymp;1614&ndash;1885: exactly the alert view, not the Send button that was double-tapped</td><td>PASS</td></tr>
-<tr><td>Regression sweep at <code>font_scale 2.0</code></td><td>The questions &rarr; message &rarr; confirmation happy path still renders with nothing clipped or overlapping</td><td>The questions step reflows to two-line labels with the radio cards intact; the message step wraps its hint to three lines and keeps the field and the photo block clean; the confirmation fits without scrolling and reads &quot;Message sent&quot; / &quot;Sent to Dr. J. de Vries.&quot; / &quot;Reference: ec-1&quot; / Done, with the nav bar at &quot;Sent&quot; and no back control</td><td>PASS</td></tr>
+<tr><td>Regression sweep at a font scale of 2.0</td><td>The questions &rarr; message &rarr; confirmation happy path still renders with nothing clipped or overlapping</td><td>The questions step reflows to two-line labels with the radio cards intact; the message step wraps its hint to three lines and keeps the field and the photo block clean; the confirmation fits without scrolling and reads &quot;Message sent&quot; / &quot;Sent to Dr. J. de Vries.&quot; / &quot;Reference: ec-1&quot; / Done, with the nav bar at &quot;Sent&quot; and no back control</td><td>PASS</td></tr>
 </tbody></table></div>
-<p><code>dumpsys accessibility</code> reports accessibility focus only at window granularity (<code>Accessibility Focused Window Id = 2134</code>, the Expo Go window) and never names the focused node, so defect 3&#39;s focus evidence is TalkBack&#39;s own focus highlight in <code>R3d</code>, read against the node bounds from the same dump.</p>
+<p>The system reports accessibility focus only at window granularity, never naming the focused node, so defect 3&#39;s focus evidence is TalkBack&#39;s own focus highlight in <code>R3d</code>, read against the node bounds from the same accessibility tree.</p>
 <div class="shots">
   <figure><a href="android/R1a-choicegroup-error-shown.png"><img src="android/R1a-choicegroup-error-shown.png" alt="R1a-choicegroup-error-shown.png" loading="lazy"></a><figcaption>R1a-choicegroup-error-shown.png</figcaption></figure>
   <figure><a href="android/R1b-choicegroup-error-cleared-label-reset.png"><img src="android/R1b-choicegroup-error-cleared-label-reset.png" alt="R1b-choicegroup-error-cleared-label-reset.png" loading="lazy"></a><figcaption>R1b-choicegroup-error-cleared-label-reset.png</figcaption></figure>
@@ -356,11 +357,212 @@ adb shell uiautomator dump /sdcard/ui.xml &amp;&amp; adb pull /sdcard/ui.xml</co
 </div>
 <h3>One new observation, not from these fixes</h3>
 <p>A single LogBox appeared on one cold launch, on the home screen: &quot;Can&#39;t perform a React state update on a component that hasn&#39;t mounted yet. This indicates that you have a side-effect in your render function that asynchronously tries to update the component.&quot;</p>
-<p>Its call stack is entirely inside <code>node_modules</code>: <code>url.then$argument_0</code> at <code>expo-router/build/fork/useLinking.native.js:127</code> calling <code>dispatchSetState</code> on <code>ContextNavigator</code> (<code>expo-router/build/ExpoRoot.js:135</code>), under <code>ExpoRoot</code> &rarr; <code>App</code> &rarr; <code>WithDevTools</code>. No application frame appears anywhere in it, and none of the three fixes touches router linking or the root navigator. It is expo-router&#39;s <code>getInitialURL()</code> promise resolving before the navigator has mounted &mdash; a race only a deep-link cold start can lose. It did <strong>not</strong> reproduce on two further cold launches of the same bundle, so it is intermittent rather than deterministic. Whether it also occurs on the pre-fix code was not bisected: that would mean editing <code>src/</code>, which this pass was barred from doing. Recorded as an observation against expo-router, not as a defect of this feature.</p>
-<p><strong>State left behind.</strong> <code>font_scale</code> back to 1.0 (verified), TalkBack disabled &mdash; <code>enabled_accessibility_services</code> deleted, <code>accessibility_enabled 0</code>, and <code>dumpsys accessibility</code> showing <code>Bound services:{}</code> with <code>touchExplorationEnabled=false</code>. Developer settings back at <code>prc-0421</code> with Fail: Create message returned to None.</p>
+<p>Its call stack is entirely inside <code>node_modules</code>: <code>url.then$argument_0</code> at <code>expo-router/build/fork/useLinking.native.js:127</code> calling <code>dispatchSetState</code> on <code>ContextNavigator</code> (<code>expo-router/build/ExpoRoot.js:135</code>), under <code>ExpoRoot</code> &rarr; <code>App</code> &rarr; <code>WithDevTools</code>. No application frame appears anywhere in it, and none of the three fixes touches router linking or the root navigator. It is expo-router&#39;s <code>getInitialURL()</code> promise resolving before the navigator has mounted &mdash; a race only a deep-link cold start can lose. It did <strong>not</strong> reproduce on two further cold launches of the same bundle, so it is intermittent rather than deterministic. Whether it also occurs on the pre-fix code was not bisected. Recorded as an observation against expo-router, not as a defect of this feature.</p>
+<p><strong>State left behind.</strong> Font scale back to 1.0 (verified), TalkBack disabled and confirmed unbound, with touch exploration off. Developer settings back at <code>prc-0421</code> with Fail: Create message returned to None.</p>
+
+<h2 id="talkback-spoken">TalkBack spoken text</h2>
+<p>Same emulator, same Expo Go build. TalkBack&#39;s on-screen speech output was switched on for this pass, so every sentence it speaks is drawn on the screen as it is spoken and is caught in the screenshots below. TalkBack draws an app announcement on a <strong>red</strong> ground and the reading of whatever holds screen-reader focus on <strong>grey</strong>, which is how the two are told apart throughout.</p>
+<p>This section carries the wording behind the counts in the <a href="#talkback">TalkBack</a> section, and corrects one reading inferred from them: the validation-error reading recorded there as passing did not generalise to the questions step, where the wording showed the error spoken twice. Both spoken-output defects this section found have since been fixed and heard again &mdash; see <a href="#spoken-re-check">the re-check</a> at the end.</p>
+<blockquote><p>&quot;Times&quot; is the number of separate utterances that carried the sentence. Once is a pass.</p></blockquote>
+<div class="wide"><table>
+<thead><tr><th>Event</th><th>Expected</th><th>Spoken text observed</th><th>Times</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Focus an unselected recipient card</td><td>Name, role, radio-button role, unchecked state</td><td><code>not checked. Dr. J. de Vries, GP. Radio button</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Focus the selected recipient card</td><td>The same, reading checked</td><td><code>checked. Dr. J. de Vries, GP. Radio button</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Focus Continue on step 1 with nothing chosen</td><td>Disabled state and the reason</td><td><code>Continue. Button. Choose who you are writing to first. disabled</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Continue on the questions step with nothing answered</td><td>The error once, focus on the field whose name carries it</td><td><code>This question is required</code> &mdash; then, 1.7 s later &mdash; <code>How long have you had this problem? (required). Error: This question is required</code></td><td><strong>2</strong></td><td><strong>FAIL &mdash; defect A</strong></td></tr>
+<tr><td>Focus the same question after answering it</td><td>The label with no <code>Error:</code></td><td><code>How long have you had this problem? (required)</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Send on the message step with an empty message</td><td>The error once, focus on the field</td><td><code>What would you like to ask?. Error: Please write your question before sending</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Send with a message &mdash; the busy state</td><td>&quot;Sending your message&quot; once</td><td><code>Sending your message</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Send with a message &mdash; arriving on the confirmation</td><td>The heading read on arrival</td><td><code>Message sent</code> as a status announcement, then the screen title <code>Sent</code>, then <code>Message sent</code> again as the focused heading</td><td><strong>2</strong></td><td>Heading PASS; the repeat is <strong>defect B</strong></td></tr>
+<tr><td>Send with a photo that fails to upload</td><td>The photo-failed line once</td><td>Full sequence: <code>Sending your message</code> &rarr; <code>Message sent, adding your photo</code> &rarr; <code>Your message was sent, but the photo could not be attached.</code> &rarr; <code>Sent</code> &rarr; <code>Message sent</code> (heading)</td><td>1</td><td>PASS</td></tr>
+<tr><td>Going offline</td><td>The banner once</td><td><code>You&#39;re offline. You can keep writing, but sending needs a connection.</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Focus Send on the message step while offline</td><td>Disabled state and the reason</td><td><code>Send. Button. You&#39;re offline. Sending needs a connection.. disabled</code></td><td>1</td><td>PASS</td></tr>
+<tr><td>Moving between steps while still offline</td><td>The banner is not repeated on each screen</td><td>Only <code>Step 2 of 3: A few questions from your practice</code>; the banner sentence is not spoken again</td><td>0 repeats</td><td>PASS</td></tr>
+<tr><td>Send with the create call failing</td><td>The error card once, with a sentence break</td><td><code>Your message wasn&#39;t sent. We couldn&#39;t reach your practice. Check your connection and try again.</code></td><td>1</td><td>PASS</td></tr>
+</tbody></table></div>
+<p><strong>Reading order.</strong> TalkBack&#39;s default node order on this device is state, then name, then role, so a recipient card reads &quot;not checked. Dr. J. de Vries, GP. Radio button&quot; rather than name-first. That is the screen reader&#39;s ordering, not the app&#39;s, and the content is complete either way.</p>
+<div class="shots">
+  <figure><a href="android/T1-recipient-not-checked.png"><img src="android/T1-recipient-not-checked.png" alt="T1-recipient-not-checked.png" loading="lazy"></a><figcaption>T1-recipient-not-checked.png</figcaption></figure>
+  <figure><a href="android/T2-recipient-checked.png"><img src="android/T2-recipient-checked.png" alt="T2-recipient-checked.png" loading="lazy"></a><figcaption>T2-recipient-checked.png</figcaption></figure>
+  <figure><a href="android/T3-continue-disabled-reason.png"><img src="android/T3-continue-disabled-reason.png" alt="T3-continue-disabled-reason.png" loading="lazy"></a><figcaption>T3-continue-disabled-reason.png</figcaption></figure>
+  <figure><a href="android/T6-question-after-answer.png"><img src="android/T6-question-after-answer.png" alt="T6-question-after-answer.png" loading="lazy"></a><figcaption>T6-question-after-answer.png</figcaption></figure>
+  <figure><a href="android/T7-empty-message-error.png"><img src="android/T7-empty-message-error.png" alt="T7-empty-message-error.png" loading="lazy"></a><figcaption>T7-empty-message-error.png</figcaption></figure>
+  <figure><a href="android/T8-sending-your-message.png"><img src="android/T8-sending-your-message.png" alt="T8-sending-your-message.png" loading="lazy"></a><figcaption>T8-sending-your-message.png</figcaption></figure>
+  <figure><a href="android/T11-photo-failed.png"><img src="android/T11-photo-failed.png" alt="T11-photo-failed.png" loading="lazy"></a><figcaption>T11-photo-failed.png</figcaption></figure>
+  <figure><a href="android/T12-offline-banner.png"><img src="android/T12-offline-banner.png" alt="T12-offline-banner.png" loading="lazy"></a><figcaption>T12-offline-banner.png</figcaption></figure>
+  <figure><a href="android/T13-send-disabled-offline.png"><img src="android/T13-send-disabled-offline.png" alt="T13-send-disabled-offline.png" loading="lazy"></a><figcaption>T13-send-disabled-offline.png</figcaption></figure>
+  <figure><a href="android/T14-step-change-no-repeat.png"><img src="android/T14-step-change-no-repeat.png" alt="T14-step-change-no-repeat.png" loading="lazy"></a><figcaption>T14-step-change-no-repeat.png</figcaption></figure>
+  <figure><a href="android/T15-create-failure-error-card.png"><img src="android/T15-create-failure-error-card.png" alt="T15-create-failure-error-card.png" loading="lazy"></a><figcaption>T15-create-failure-error-card.png</figcaption></figure>
+</div>
+
+<h3>Defect A &mdash; MEDIUM &middot; Questions step &middot; the required-field error is spoken twice</h3>
+<p><strong>What a patient hears.</strong> Press Continue on the questions step with the required question unanswered. TalkBack says &quot;This question is required&quot;. About 1.7 seconds later it says &quot;How long have you had this problem? (required). Error: This question is required&quot;. The same sentence, twice in a row, with nothing the patient can do to stop the second one.</p>
+<p><strong>Why.</strong> The step does two things in sequence: it announces the error, then it moves screen-reader focus to the question, whose accessible name already ends in that same error. TalkBack treats an app announcement as uninterruptible by new speech, so the focus reading queues behind it and both are heard in full.</p>
+<p>The message step performs the identical pair of actions and escapes the repeat only by accident of widget type. Its focus target is a real text field, so moving focus there also raises an input-focus event, and that is what cuts the announcement off &mdash; before a single word of it is spoken. The questions step&#39;s focus target is a grouping view that takes no input focus, so nothing cuts it off. The &quot;announced once&quot; rule therefore holds on the message step for a reason that does not generalise.</p>
+<p>Reproduced on two separate runs.</p>
+<div class="shots">
+  <figure><a href="android/T4-required-error-announced.png"><img src="android/T4-required-error-announced.png" alt="T4-required-error-announced.png" loading="lazy"></a><figcaption>T4-required-error-announced.png &mdash; the announcement, red</figcaption></figure>
+  <figure><a href="android/T5-required-error-field-name.png"><img src="android/T5-required-error-field-name.png" alt="T5-required-error-field-name.png" loading="lazy"></a><figcaption>T5-required-error-field-name.png &mdash; the focus reading, grey</figcaption></figure>
+</div>
+
+<h3>Defect B &mdash; LOW &middot; Confirmation &middot; &quot;Message sent&quot; is spoken twice on arrival</h3>
+<p><strong>What a patient hears.</strong> After a successful send: &quot;Sending your message&quot;, then &quot;Message sent&quot;, then &quot;Sent&quot; (the screen title), then &quot;Message sent&quot; again. The message step&#39;s success status line and the confirmation&#39;s heading are the same words, and both are spoken.</p>
+<p><strong>Why TalkBack&#39;s own duplicate filter does not catch it.</strong> When the same sentence is pending twice, TalkBack drops the duplicate &mdash; that is exactly what keeps the create-failure error card down to one utterance, where the announcement and the card&#39;s focus reading carry identical text. Here the status announcement has already finished speaking by the time the heading is focused, with the screen title read in between, so there is no pending duplicate left to drop.</p>
+<p>The heading being read on arrival is correct and wanted; it is the preceding status announcement that makes it a repeat.</p>
+<div class="shots">
+  <figure><a href="android/T9-message-sent-announced.png"><img src="android/T9-message-sent-announced.png" alt="T9-message-sent-announced.png" loading="lazy"></a><figcaption>T9-message-sent-announced.png &mdash; the announcement, red</figcaption></figure>
+  <figure><a href="android/T10-message-sent-heading.png"><img src="android/T10-message-sent-heading.png" alt="T10-message-sent-heading.png" loading="lazy"></a><figcaption>T10-message-sent-heading.png &mdash; the heading reading, grey</figcaption></figure>
+</div>
+
+<h3>Observation, not a defect</h3>
+<p>Hint strings that already end in a full stop produce a doubled stop where TalkBack joins name, hint and state: &quot;You&#39;re offline. Sending needs a connection.. disabled&quot;, &quot;What would you like to ask?. Error: &hellip;&quot;. It shows in the on-screen speech output and is inaudible in speech, since the synthesiser does not pronounce the punctuation. Cosmetic only.</p>
+
+<h3>What the wording confirms about the earlier fixes</h3>
+<ul>
+<li>The corrected choice question no longer carries a stale error in what is <em>spoken</em>, not just in the tree: after answering, it reads as the plain label with its <code>(required)</code> suffix and no <code>Error:</code>.</li>
+<li>The disabled Continue and the disabled Send both speak their reason and their disabled state, so the hint values the earlier pass could only find in source are confirmed as heard.</li>
+<li>On a failed send the error card takes screen-reader focus and is read out in full, with the card, &quot;Try again&quot; and &quot;Send&quot; all inside the viewport at the moment it is read.</li>
+</ul>
+<p><strong>State left behind.</strong> TalkBack disabled and its speech-output display switched back off; developer settings back at <code>prc-0421</code>, Latency Default, all four faults None, Force offline off; the app left on the home screen with no offline banner.</p>
+
+<h3 id="spoken-re-check">Re-check of the spoken-output defects</h3>
+<p>Same emulator, same Expo Go build, relaunched cold so the two spoken-output fixes loaded as a fresh bundle. TalkBack&#39;s on-screen speech output was switched on again, so each screenshot below carries the sentence as it was spoken, on the same red-for-announcement / grey-for-focus-reading ground as the rest of this section.</p>
+<blockquote><p>&quot;Times&quot; is again the number of separate utterances that carried the sentence, this time read from TalkBack&#39;s own speech log rather than from synthesis requests, so each utterance is named and the point at which one interrupts another is recorded. A sentence TalkBack starts and then cuts off within a few milliseconds is not counted, because no word of it is heard; where that happens it is called out in the observation.</p></blockquote>
+<div class="wide"><table>
+<thead><tr><th>Event</th><th>Expected</th><th>Utterances observed</th><th>Times</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>E3 &mdash; Questions step, Continue with nothing answered</td><td>The error once, carried by the field&#39;s own name, and no standalone announcement of it</td><td><code>How long have you had this problem? (required). Error: This question is required</code>, spoken as the question&#39;s focus reading. The plain label starts 7 ms earlier from the input-focus event and is cut off by it before a word is audible. Nothing on TalkBack&#39;s red ground at any point in the window</td><td><strong>1</strong> (was 2)</td><td>PASS</td></tr>
+<tr><td>E5 &mdash; Message step, Send with an empty message</td><td>The error once</td><td><code>What would you like to ask?. Error: Please write your question before sending</code>, spoken as the field&#39;s focus reading; the plain label starts 4 ms earlier and is cut off the same way. The field&#39;s role and hint follow as the rest of that one focus reading</td><td><strong>1</strong></td><td>PASS</td></tr>
+<tr><td>E6 &mdash; Send with a message, the busy state</td><td>&quot;Sending your message&quot; once</td><td><code>Sending your message</code>, as an app announcement. The button&#39;s own change to &quot;Sending&quot; was not spoken as a second utterance</td><td><strong>1</strong></td><td>PASS</td></tr>
+<tr><td>E6 &mdash; Send with a message, arriving on the confirmation</td><td>&quot;Message sent&quot; once, spoken by the heading, with no status announcement of it</td><td><code>Sent</code> (the screen title), then <code>Message sent</code> as the focused heading, then <code>Heading</code>. The status line is no longer announced</td><td><strong>1</strong> (was 2)</td><td>PASS</td></tr>
+<tr><td>E7 &mdash; Send with a photo that fails to upload (regression)</td><td>The photo-failed line once</td><td>The whole sequence: <code>Sending your message</code> &rarr; <code>Message sent, adding your photo</code> &rarr; <code>Your message was sent, but the photo could not be attached.</code> &rarr; <code>Sent</code> &rarr; <code>Message sent</code> (heading). The failed line itself: 1</td><td><strong>1</strong></td><td>PASS</td></tr>
+<tr><td>E9 &mdash; Send with the create call failing (regression)</td><td>The error card once</td><td><code>Your message wasn&#39;t sent. We couldn&#39;t reach your practice. Check your connection and try again.</code>, spoken as the card&#39;s focus reading, then <code>Alert</code>. No separate announcement</td><td><strong>1</strong></td><td>PASS</td></tr>
+</tbody></table></div>
+<p>Defects A and B are fixed. The questions step now reaches the patient through one channel only &mdash; moving screen-reader focus to the invalid question, whose name already ends in the error &mdash; so the sentence that used to be announced first and then read again is heard once. E3 was driven twice, with the same result both times.</p>
+<p>The confirmation&#39;s &quot;Message sent&quot; is likewise heard once, from the heading, which is the reading that should survive. The photo path keeps its own status announcement, &quot;Message sent, adding your photo&quot;, and that is right: it reports progress while the message step is still on screen, before the confirmation exists, and it is not a repeat of anything.</p>
+<p>The observation about doubled full stops still stands &mdash; <code>What would you like to ask?. Error: &hellip;</code> &mdash; and is still cosmetic, since the synthesiser does not pronounce the punctuation.</p>
+<div class="shots">
+  <figure><a href="android/TR1-questions-required-error.png"><img src="android/TR1-questions-required-error.png" alt="TR1-questions-required-error.png" loading="lazy"></a><figcaption>TR1-questions-required-error.png</figcaption></figure>
+  <figure><a href="android/TR2-message-empty-error.png"><img src="android/TR2-message-empty-error.png" alt="TR2-message-empty-error.png" loading="lazy"></a><figcaption>TR2-message-empty-error.png</figcaption></figure>
+  <figure><a href="android/TR3-sending-your-message.png"><img src="android/TR3-sending-your-message.png" alt="TR3-sending-your-message.png" loading="lazy"></a><figcaption>TR3-sending-your-message.png</figcaption></figure>
+  <figure><a href="android/TR4-message-sent-heading.png"><img src="android/TR4-message-sent-heading.png" alt="TR4-message-sent-heading.png" loading="lazy"></a><figcaption>TR4-message-sent-heading.png</figcaption></figure>
+  <figure><a href="android/TR5-photo-failed-line.png"><img src="android/TR5-photo-failed-line.png" alt="TR5-photo-failed-line.png" loading="lazy"></a><figcaption>TR5-photo-failed-line.png</figcaption></figure>
+  <figure><a href="android/TR6-create-failure-error-card.png"><img src="android/TR6-create-failure-error-card.png" alt="TR6-create-failure-error-card.png" loading="lazy"></a><figcaption>TR6-create-failure-error-card.png</figcaption></figure>
+</div>
+<p><strong>State left behind.</strong> TalkBack disabled and confirmed unbound with touch exploration off, and its speech-output display switched back off. Developer settings back at <code>prc-0421</code>, Latency Default, all four faults None, Force offline off; font scale 1.0, rotation automatic, the app on the home screen with no offline banner.</p>
+
+<h2 id="real-device">Real device: Samsung Galaxy Tab S7 FE</h2>
+<p>A second pass on physical hardware, on the same bundle as <a href="#re-check">Re-check after fixes</a>, loaded cold. It covers only the three things the emulator could not show: camera capture, the spoken labels on the header controls, and the two read-fault states on step 1. Everything above stands as recorded.</p>
+<div class="wide"><table>
+<thead><tr><th>What</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Device</td><td>Samsung Galaxy Tab S7 FE (SM-T733), physical tablet over USB</td></tr>
+<tr><td>OS</td><td>Android 14 (One UI), with Samsung TalkBack</td></tr>
+<tr><td>Screen</td><td>1600 &times; 2560, 300 dpi effective (853 dp wide), gesture navigation</td></tr>
+<tr><td>Client</td><td>Expo Go 57.0.9</td></tr>
+<tr><td>RAM</td><td>3.4 GB total</td></tr>
+<tr><td>Font scale</td><td>0.8 &mdash; the tablet&#39;s own setting, left as the owner had it</td></tr>
+<tr><td>Camera</td><td>Present; Samsung&#39;s system camera app answers the capture intent</td></tr>
+</tbody></table></div>
+<blockquote><p>Screenshots for this section are the <code>D1-01</code> to <code>D1-18</code> series, unrelated to the <code>D1a</code> / <code>D1b</code> / <code>D2</code> defect screenshots from the emulator pass. Two things in them are not the app: Expo Go&#39;s blue gear, as before, and a short grey pill at the top and bottom centre, which is One UI&#39;s own multi-window handle. The camera frames are almost black because the tablet&#39;s rear lens was against a dark surface; the capture succeeded, and the preview shows the real frame, sensor grain included.</p></blockquote>
+<p><strong>DEFECTS.</strong> 19 of 21 checks pass, one fails and one could not be driven. The three questions this pass existed to answer are answered: &quot;Take a photo&quot; is offered and the capture works end to end, all four header controls carry a meaningful accessible name, and both read faults produce the right error state with a working retry &mdash; including the loading skeleton the emulator never held long enough to show. Against that, one real-device defect appeared that no emulator run could have found: the app&#39;s process is evicted while the system camera is in the foreground, and the patient comes back to an empty home screen with the message and the photo gone.</p>
+
+<h3>Camera capture</h3>
+<div class="wide"><table>
+<thead><tr><th>#</th><th>State</th><th>Expected</th><th>Observed</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>R1</td><td>Step 3 on a real device</td><td>&quot;Take a photo&quot; offered, no camera-unavailable note</td><td>Both &quot;Take a photo&quot; and &quot;Choose from library&quot; present; the emulator&#39;s note is absent. The contrast case for check 14</td><td>PASS</td></tr>
+<tr><td>R2</td><td>First &quot;Take a photo&quot;</td><td>A camera permission prompt</td><td>&quot;Allow Expo Go to take pictures and record video?&quot; with While using the app / Only this time / Don&#39;t allow. On later taps it does not reappear</td><td>PASS</td></tr>
+<tr><td>R3</td><td>After allowing</td><td>The system camera opens</td><td>Samsung&#39;s camera app, shutter and controls laid out for the tablet</td><td>PASS</td></tr>
+<tr><td>R4</td><td>Take a picture</td><td>A review screen with an accept action</td><td>Full-frame review with Retry and OK</td><td>PASS</td></tr>
+<tr><td>R5</td><td>Accept</td><td>Back in the app with the photo attached</td><td>Returned to step 3 with the message draft intact, the preview labelled &quot;Your photo&quot;, &quot;Remove photo&quot; in place of the two source actions</td><td>PASS</td></tr>
+<tr><td>R6</td><td>Remove photo</td><td>Preview gone, both source actions back, message kept</td><td>Exactly that; the typed message is byte-identical</td><td>PASS</td></tr>
+<tr><td>R7</td><td>Surviving the camera round trip</td><td>Coming back from the camera keeps the draft</td><td>The app&#39;s process is evicted while the camera is in the foreground and the app cold-starts on the home screen; the message and the photo are gone. 4 of 5 captures ended this way</td><td><strong>FAIL &mdash; defect R-1</strong></td></tr>
+<tr><td>R8</td><td>Attach again, then Send</td><td>Confirmation says the photo was attached</td><td>&quot;Message sent&quot; / &quot;Sent to Dr. J. de Vries.&quot; / &quot;Reference: ec-1&quot; / &quot;Your photo was attached.&quot; / Done. Driven with a photo from the library, because the camera round trip did not survive often enough to reach Send from a capture</td><td>PASS</td></tr>
+<tr><td>R9</td><td>&quot;Choose from library&quot;</td><td>System picker, no app permission prompt</td><td>Android&#39;s photo picker opened directly, no permission dialog, and the selection came back with the draft intact. No screenshot: the picker shows the owner&#39;s own photo library</td><td>PASS</td></tr>
+<tr><td>R10</td><td>Rotating to landscape with the camera open</td><td>The capture still returns correctly</td><td>Not verified. The system camera asks the platform to follow the physical accelerometer, so the display orientation cannot be changed while it is in front; turning the tablet by hand is the only way to drive this</td><td>NOT VERIFIED</td></tr>
+</tbody></table></div>
+<div class="shots">
+  <figure><a href="android/D1-01-step3-take-a-photo-offered.png"><img src="android/D1-01-step3-take-a-photo-offered.png" alt="D1-01-step3-take-a-photo-offered.png" loading="lazy"></a><figcaption>D1-01-step3-take-a-photo-offered.png</figcaption></figure>
+  <figure><a href="android/D1-02-message-typed.png"><img src="android/D1-02-message-typed.png" alt="D1-02-message-typed.png" loading="lazy"></a><figcaption>D1-02-message-typed.png</figcaption></figure>
+  <figure><a href="android/D1-03-camera-permission-prompt.png"><img src="android/D1-03-camera-permission-prompt.png" alt="D1-03-camera-permission-prompt.png" loading="lazy"></a><figcaption>D1-03-camera-permission-prompt.png</figcaption></figure>
+  <figure><a href="android/D1-04-system-camera.png"><img src="android/D1-04-system-camera.png" alt="D1-04-system-camera.png" loading="lazy"></a><figcaption>D1-04-system-camera.png</figcaption></figure>
+  <figure><a href="android/D1-05-camera-review-accept.png"><img src="android/D1-05-camera-review-accept.png" alt="D1-05-camera-review-accept.png" loading="lazy"></a><figcaption>D1-05-camera-review-accept.png</figcaption></figure>
+  <figure><a href="android/D1-06-photo-preview-from-camera.png"><img src="android/D1-06-photo-preview-from-camera.png" alt="D1-06-photo-preview-from-camera.png" loading="lazy"></a><figcaption>D1-06-photo-preview-from-camera.png</figcaption></figure>
+  <figure><a href="android/D1-07-after-remove-photo.png"><img src="android/D1-07-after-remove-photo.png" alt="D1-07-after-remove-photo.png" loading="lazy"></a><figcaption>D1-07-after-remove-photo.png</figcaption></figure>
+  <figure><a href="android/D1-08-home-after-process-eviction.png"><img src="android/D1-08-home-after-process-eviction.png" alt="D1-08-home-after-process-eviction.png" loading="lazy"></a><figcaption>D1-08-home-after-process-eviction.png</figcaption></figure>
+  <figure><a href="android/D1-09-photo-attached-before-send.png"><img src="android/D1-09-photo-attached-before-send.png" alt="D1-09-photo-attached-before-send.png" loading="lazy"></a><figcaption>D1-09-photo-attached-before-send.png</figcaption></figure>
+  <figure><a href="android/D1-10-confirmation-photo-attached.png"><img src="android/D1-10-confirmation-photo-attached.png" alt="D1-10-confirmation-photo-attached.png" loading="lazy"></a><figcaption>D1-10-confirmation-photo-attached.png</figcaption></figure>
+</div>
+
+<h3>Header controls, with a screen reader running</h3>
+<p>Samsung TalkBack was enabled for this group, confirmed bound and speaking. The name below is the control&#39;s accessible name as the platform exposes it, which is exactly the name TalkBack speaks; the wording was not captured from the speech stream, because screen-reader focus could not be moved onto the navigation header from this harness. The screenshots show the app under TalkBack with its focus indicator drawn.</p>
+<div class="wide"><table>
+<thead><tr><th>#</th><th>Control</th><th>Expected</th><th>Accessible name observed</th><th>Size</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>R11</td><td>Step 2 header back</td><td>A meaningful label</td><td><code>Navigate up</code> &mdash; Android&#39;s convention, on a Button node with a click action</td><td>56 &times; 64 dp</td><td>PASS</td></tr>
+<tr><td>R12</td><td>Step 3 header back</td><td>A meaningful label</td><td><code>Navigate up</code></td><td>56 &times; 64 dp</td><td>PASS</td></tr>
+<tr><td>R13</td><td>Step 1 header Home</td><td>&quot;Home&quot;</td><td><code>Home</code></td><td>53 &times; 48 dp</td><td>PASS</td></tr>
+<tr><td>R14</td><td>Developer-settings header Cancel</td><td>&quot;Cancel&quot;</td><td><code>Cancel</code></td><td>58 &times; 48 dp</td><td>PASS</td></tr>
+</tbody></table></div>
+<p>No name is empty or generic, and all four clear the 48-point minimum.</p>
+<div class="shots">
+  <figure><a href="android/D1-15-step2-header-talkback.png"><img src="android/D1-15-step2-header-talkback.png" alt="D1-15-step2-header-talkback.png" loading="lazy"></a><figcaption>D1-15-step2-header-talkback.png</figcaption></figure>
+  <figure><a href="android/D1-16-step3-header-talkback.png"><img src="android/D1-16-step3-header-talkback.png" alt="D1-16-step3-header-talkback.png" loading="lazy"></a><figcaption>D1-16-step3-header-talkback.png</figcaption></figure>
+  <figure><a href="android/D1-17-step1-header-talkback.png"><img src="android/D1-17-step1-header-talkback.png" alt="D1-17-step1-header-talkback.png" loading="lazy"></a><figcaption>D1-17-step1-header-talkback.png</figcaption></figure>
+  <figure><a href="android/D1-18-modal-header-talkback.png"><img src="android/D1-18-modal-header-talkback.png" alt="D1-18-modal-header-talkback.png" loading="lazy"></a><figcaption>D1-18-modal-header-talkback.png</figcaption></figure>
+</div>
+
+<h3>Step 1 read faults</h3>
+<div class="wide"><table>
+<thead><tr><th>#</th><th>State</th><th>Expected</th><th>Observed</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>R15</td><td>Loading state</td><td>Three placeholder cards with an accessible &quot;loading the care team&quot; label</td><td>Three placeholder cards; the group&#39;s accessible name is <code>Loading your practice&#39;s care team, busy</code>. Slow latency was not needed &mdash; with a read fault armed the skeleton holds long enough on this device to capture</td><td>PASS</td></tr>
+<tr><td>R16</td><td>Fail: Practice config = Network</td><td>&quot;We couldn&#39;t load your practice&#39;s details&quot; with a retry</td><td>Exactly that, plus &quot;Check your connection and try again.&quot; and a &quot;Try again&quot; button, in a red card at the top of the screen with nothing below the fold</td><td>PASS</td></tr>
+<tr><td>R17</td><td>Try again with the fault still armed</td><td>Re-runs the read, route unchanged</td><td>The skeleton reappears, then the same single error card. No second card, no navigation</td><td>PASS</td></tr>
+<tr><td>R18</td><td>Fault cleared, back into the flow</td><td>Recipients load</td><td>Three recipients, Continue disabled until one is chosen</td><td>PASS</td></tr>
+<tr><td>R19</td><td>Fail: Care team = Network</td><td>The same error state</td><td>Identical copy and layout &mdash; both read faults land on the same error state</td><td>PASS</td></tr>
+<tr><td>R20</td><td>Fault cleared after the care-team fault</td><td>Recovers</td><td>Recipients load normally</td><td>PASS</td></tr>
+<tr><td>R21</td><td>Photo preview proportions on a tablet</td><td>Preview readable</td><td>The preview is a fixed 200-point-high box across the full 853-point width, cropped to fill, so a portrait photo is reduced to a horizontal band roughly a quarter of its height</td><td><strong>Observation &mdash; defect R-2</strong></td></tr>
+</tbody></table></div>
+<div class="shots">
+  <figure><a href="android/D1-11-step1-loading-skeleton.png"><img src="android/D1-11-step1-loading-skeleton.png" alt="D1-11-step1-loading-skeleton.png" loading="lazy"></a><figcaption>D1-11-step1-loading-skeleton.png</figcaption></figure>
+  <figure><a href="android/D1-12-step1-config-fault-error.png"><img src="android/D1-12-step1-config-fault-error.png" alt="D1-12-step1-config-fault-error.png" loading="lazy"></a><figcaption>D1-12-step1-config-fault-error.png</figcaption></figure>
+  <figure><a href="android/D1-13-step1-careteam-fault-error.png"><img src="android/D1-13-step1-careteam-fault-error.png" alt="D1-13-step1-careteam-fault-error.png" loading="lazy"></a><figcaption>D1-13-step1-careteam-fault-error.png</figcaption></figure>
+  <figure><a href="android/D1-14-step1-recovered.png"><img src="android/D1-14-step1-recovered.png" alt="D1-14-step1-recovered.png" loading="lazy"></a><figcaption>D1-14-step1-recovered.png</figcaption></figure>
+</div>
+
+<h3>R-1 &mdash; MEDIUM &middot; Message step &middot; the camera can cost the patient the whole message</h3>
+<p><strong>What a patient sees.</strong> They write their question, tap &quot;Take a photo&quot;, take the picture and accept it &mdash; and land back on the home screen. The message they typed and the photo they just took are both gone, with no warning and nothing to recover from. Starting over is the only option.</p>
+<p><strong>What happens.</strong> The system camera is a heavy foreground app. On this tablet, which has 3.4 GB of RAM, the platform reclaims memory while the camera is in front and the app&#39;s own process is one of the things it takes. When the capture finishes, the result is handed back to a freshly started process; the app restarts from its entry point on the home screen, because nothing about the draft is persisted and nothing checks for a capture that completed while the app was not alive.</p>
+<p><strong>Repro</strong> (default practice, no faults): home, Write to your practice, pick a recipient, answer the question, type a message on step 3, &quot;Take a photo&quot;, take the picture, accept it. Observed on 4 of 5 captures; the first one survived, so it is frequent rather than certain. The library path did not reproduce it once &mdash; Android&#39;s photo picker is far lighter than the camera app.</p>
+<p><strong>Where it points.</strong> <code>src/features/econsult/components/PhotoPicker.tsx</code> launches the camera and waits on the returned promise; there is no handling for the case where the process does not live long enough to receive it, and no draft is written anywhere outside memory. Two separate gaps: the capture result is dropped, and the typed message is dropped with it.</p>
+<p>Measured in Expo Go, whose runtime footprint is larger than a standalone build&#39;s. A standalone build would be evicted less readily, but the 3.4 GB class of device plus a camera intent is exactly the case this path has to survive, and nothing in the app makes it survivable.</p>
+
+<h3>R-2 &mdash; LOW &middot; Message step &middot; on a tablet the photo preview shows a sliver of the photo</h3>
+<p><strong>What a patient sees.</strong> The attached photo is shown in a full-width box of fixed height, cropped to fill. On a phone that is close to a 2:1 letterbox; at 853 points of width it is about 4:1, so a portrait photo of a rash appears as a horizontal band through its middle and the patient cannot tell from the preview what they actually attached.</p>
+<p>The fixed height is deliberate &mdash; it keeps the layout from jumping when a photo of unknown proportions arrives &mdash; so this is a tablet-width consequence of that choice rather than a mistake. A maximum width on the preview, or a height that follows the width, would fix it without giving the layout shift back. Visible in <code>D1-09-photo-attached-before-send.png</code>, where the attached image is a test card of even horizontal bands and only a couple of its twelve bands are inside the preview.</p>
+
+<h3>Observations, not defects</h3>
+<ul>
+<li><strong>The camera permission copy is the platform&#39;s, not the app&#39;s.</strong> Android shows &quot;Allow Expo Go to take pictures and record video?&quot;; the app&#39;s own camera explanation is an iOS usage string and is not shown here. Nothing to fix, but worth knowing that the reassuring sentence the app supplies is not what an Android patient reads.</li>
+<li><strong>The expo-router cold-start warning reappeared.</strong> The same <code>useLinking</code> state-update warning recorded as an observation after the emulator fixes showed up again here, on the repeated cold starts that defect R-1 forces. Its stack is still entirely inside <code>node_modules</code>, with no application frame.</li>
+<li><strong>Expo Go does not lock the host activity to portrait.</strong> The activity hosting the app asks the platform to follow the physical sensor rather than requesting portrait, so the portrait setting in <code>app.json</code> is not being enforced at the platform level in Expo Go. Whether the app therefore rotates when the tablet is physically turned was not established.</li>
+</ul>
+
+<h3>Not verified on the real device</h3>
+<ul>
+<li><strong>Rotation while the camera is open</strong>, and with it the question of whether the capture survives a configuration change. The system camera follows the physical accelerometer and ignores a software rotation request, so this needs someone to turn the tablet by hand while the camera is open.</li>
+<li><strong>Whether the app itself rotates when the tablet is turned.</strong> Related to the point above: the host activity is not portrait-locked at the platform level, which makes the emulator pass&#39;s reading of check 48 worth re-testing by hand on hardware.</li>
+<li><strong>The exact wording TalkBack speaks for the four header controls.</strong> Screen-reader focus could not be moved onto the navigation header from this harness, so the accessible names are reported from the platform&#39;s own accessibility tree rather than from the speech stream. The names are unambiguous, and the spoken wording for the rest of the flow is already recorded under <a href="#talkback-spoken">TalkBack spoken text</a>.</li>
+</ul>
+
+<h3>State left behind</h3>
+<p>TalkBack disabled and confirmed unbound, with touch exploration off and the tablet&#39;s pre-existing accessibility service untouched. Developer settings back at <code>prc-0421</code>, Latency Default, all four faults None, Force offline off. The app is on the home screen with no offline banner. Font scale and rotation were left as the tablet&#39;s owner had them. The camera permission granted during the pass was left granted; the temporary image placed in the gallery for the library check was deleted.</p>
 
 <h2 id="evidence">Evidence</h2>
-<p>75 screenshots and seven text files in this directory: 64 and four from the original run, plus the eleven <code>R*</code> screenshots and three <code>R*</code> trees from the re-check. The state left behind after both: <code>font_scale</code> back to 1.0, TalkBack disabled, rotation back to automatic, and Developer settings back at <code>prc-0421</code> / Latency Default / all faults None / Force offline off.</p>
+<p>114 screenshots and seven text files in this directory: 64 and four from the original emulator run, the eleven <code>R*</code> screenshots and three <code>R*</code> trees from the re-check, the fifteen <code>T*</code> screenshots of TalkBack&#39;s spoken text, the six <code>TR*</code> screenshots from the spoken-output re-check, and the eighteen <code>D1-*</code> screenshots from the real-device pass. The state left behind on the emulator: font scale back to 1.0, TalkBack disabled with its speech-output display off, rotation back to automatic, and Developer settings back at <code>prc-0421</code> / Latency Default / all faults None / Force offline off. The tablet is described under <a href="#real-device">Real device</a>.</p>
 <p class="dumps">Text evidence: <a href="android/report.md"><code>report.md</code></a>, <a href="android/setup.log"><code>setup.log</code></a>, <a href="android/a11y-choicegroup-stale-label.txt"><code>a11y-choicegroup-stale-label.txt</code></a>, <a href="android/a11y-not-found-link.txt"><code>a11y-not-found-link.txt</code></a>, <a href="android/talkback-method-and-counts.txt"><code>talkback-method-and-counts.txt</code></a>, <a href="android/R1-choicegroup-label-reset.txt"><code>R1-choicegroup-label-reset.txt</code></a>, <a href="android/R2-not-found-button.txt"><code>R2-not-found-button.txt</code></a>, <a href="android/R3-error-card-reveal.txt"><code>R3-error-card-reveal.txt</code></a></p><div class="shots">
   <figure><a href="android/61-final-home-defaults.png"><img src="android/61-final-home-defaults.png" alt="61-final-home-defaults.png" loading="lazy"></a><figcaption>61-final-home-defaults.png</figcaption></figure>
 </div>

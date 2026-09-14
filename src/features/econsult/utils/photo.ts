@@ -4,8 +4,22 @@ import { devWarn } from "@/lib/devWarn";
 
 export const PHOTO_MAX_EDGE = 1600;
 export const PHOTO_JPEG_QUALITY = 0.7;
+export const PHOTO_MIME_JPEG = "image/jpeg";
 
-export type PickedPhoto = { uri: string; width: number; height: number };
+const JPEG_EXTENSION = "jpg";
+
+// The picker may hand back any of these untouched when processing fails; anything else is declared
+// a JPEG, which is what the endpoint accepts by default.
+const EXTENSIONS: Readonly<Record<string, string | undefined>> = {
+  [PHOTO_MIME_JPEG]: JPEG_EXTENSION,
+  "image/png": "png",
+  "image/heic": "heic",
+  "image/heif": "heif",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
+
+export type PickedPhoto = { uri: string; width: number; height: number; mimeType?: string };
 
 type Context = ReturnType<typeof ImageManipulator.manipulate>;
 type ResizeTarget = { width: number } | { height: number };
@@ -23,7 +37,12 @@ async function renderAndSave(context: Context, target: ResizeTarget): Promise<Pi
   const image = await context.resize(target).renderAsync();
   try {
     const saved = await image.saveAsync({ compress: PHOTO_JPEG_QUALITY, format: SaveFormat.JPEG });
-    return { uri: saved.uri, width: saved.width, height: saved.height };
+    return {
+      uri: saved.uri,
+      width: saved.width,
+      height: saved.height,
+      mimeType: PHOTO_MIME_JPEG,
+    };
   } finally {
     image.release();
   }
@@ -49,6 +68,13 @@ export async function processPhoto(asset: PickedPhoto): Promise<PickedPhoto> {
   }
 }
 
+// A kept original is uploaded under its own type, but never under its own name: "photo.<ext>" is
+// all the server ever learns about the file the patient picked.
 export function photoFileFor(photo: PickedPhoto): PhotoFile {
-  return { uri: photo.uri, name: "photo.jpg", type: "image/jpeg" };
+  const type = photo.mimeType ?? PHOTO_MIME_JPEG;
+  const extension = EXTENSIONS[type];
+  if (extension === undefined) {
+    return { uri: photo.uri, name: `photo.${JPEG_EXTENSION}`, type: PHOTO_MIME_JPEG };
+  }
+  return { uri: photo.uri, name: `photo.${extension}`, type };
 }
