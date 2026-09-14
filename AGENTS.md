@@ -5,8 +5,10 @@ Read the versioned Expo docs at https://docs.expo.dev/versions/v57.0.0/ before w
 ## Shape
 
 - `src/api`: contracts (zod), the `Transport` interface, the in-process fake, and the four typed services. The real client is described in `DECISIONS.md`; nothing here does HTTP.
-- `src/features/econsult`: the draft reducer, validation, step model and the send path. Sending is two calls: create the e-consult, then upload the photo; a failed upload is a partial outcome the patient sees, never a reason to create the message again.
-- `src/lib`: query client, network state, announcements, `devWarn` and `isDevelopmentBuild`, ids, developer settings, photo processing.
+- `src/providers`: the one provider stack, mounted by the root layout and by the test wrapper. `ServicesProvider` is the composition root: the only place that chooses the fake transport. `session.ts` holds the faked patient session.
+- `src/features/econsult`: the draft reducer, validation, step model, the send path (including the draft-to-request mapping and the idempotency key) and the photo picker. Sending is two calls: create the e-consult, then upload the photo; a failed upload is a partial outcome the patient sees, never a reason to create the message again.
+- `src/features/devSettings`: the option tables and pure helpers the developer-settings screen renders.
+- `src/lib`: query client, network state, announcements, `devWarn` and `isDevelopmentBuild`, ids, developer-settings parsing and its env seeds, photo processing.
 - `src/components`: small accessible building blocks; `src/app`: expo-router screens that compose them.
 - Screen tests live under `src/__tests__/app/`: every `.tsx` under `src/app` is a route, so no test may sit there.
 - `env.example` documents the three `EXPO_PUBLIC_*` seeds; copy it to `.env` to change them. Developer settings (a modal from the home screen in development builds) override them at runtime.

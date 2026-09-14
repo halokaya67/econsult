@@ -1,7 +1,7 @@
 import type { Ref } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors, fontSize, lineHeight, MIN_TOUCH, radius, spacing } from "@/theme/tokens";
-import { accessibleName, labelWithRequirement, type Requirement } from "./TextField";
+import { accessibleName, labelWithRequirement, type Requirement } from "./fieldLabel";
 
 type Props = {
   label: string;

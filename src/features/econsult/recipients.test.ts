@@ -1,6 +1,11 @@
 import type { CareTeamMember, PracticeEConsultConfig } from "@/api/contracts";
-import type { RecipientsResult } from "./useRecipients";
-import { joinRecipients, recipientNameFor, roleLabel, UNKNOWN_RECIPIENT } from "./recipients";
+import {
+  joinRecipients,
+  recipientNameFor,
+  roleLabel,
+  UNKNOWN_RECIPIENT,
+  type RecipientsResult,
+} from "./recipients";
 
 const TEAM: CareTeamMember[] = [
   { id: "ct-11", displayName: "Dr. J. de Vries", role: "gp" },

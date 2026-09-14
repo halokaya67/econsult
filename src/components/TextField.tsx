@@ -2,8 +2,7 @@ import type { Ref } from "react";
 import { StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, MIN_TOUCH, radius, spacing } from "@/theme/tokens";
-
-export type Requirement = "required" | "optional";
+import { accessibleName, labelWithRequirement, type Requirement } from "./fieldLabel";
 
 type Props = {
   label: string;
@@ -20,16 +19,6 @@ type Props = {
   ref?: Ref<TextInput>;
   testID?: string;
 };
-
-export function labelWithRequirement(label: string, requirement?: Requirement): string {
-  return requirement ? `${label} (${requirement})` : label;
-}
-
-// Neither platform supports an error-message link on inputs, so the error is folded into the
-// field's accessible name: the one mechanism that works identically for VoiceOver and TalkBack.
-export function accessibleName(label: string, error?: string | null): string {
-  return error ? `${label}. Error: ${error}` : label;
-}
 
 export const MULTILINE_MIN_HEIGHT = 132;
 

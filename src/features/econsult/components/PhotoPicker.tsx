@@ -3,13 +3,13 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ActivityIndicator, Linking, StyleSheet, Text, View } from "react-native";
-import type { DraftPhoto } from "@/features/econsult/draft";
+import { TextButton } from "@/components/TextButton";
 import { devWarn } from "@/lib/devWarn";
 import { newId } from "@/lib/ids";
 import { processPhoto, type PickedPhoto } from "@/lib/photo";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
-import { TextButton } from "./TextButton";
+import type { DraftPhoto } from "../draft";
 
 export const TAKE_PHOTO_LABEL = "Take a photo";
 export const CHOOSE_PHOTO_LABEL = "Choose from library";

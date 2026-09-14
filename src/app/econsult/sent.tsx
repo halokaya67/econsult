@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { RETRY_LABEL } from "@/components/StatusViews";
 import { TextButton } from "@/components/TextButton";
 import { readyPhoto } from "@/features/econsult/draft";
 import { useDraft } from "@/features/econsult/DraftProvider";
@@ -22,7 +23,6 @@ const PHOTO_FAILED = "Your message was sent, but the photo could not be attached
 const PHOTO_ATTACHED = "Your photo was attached.";
 const PHOTO_STILL_FAILED =
   "The photo still couldn't be attached. You can try again or continue without it.";
-const RETRY_LABEL = "Try again";
 const RETRY_BUSY_LABEL = "Attaching your photo";
 const CONTINUE_WITHOUT_PHOTO = "Continue without the photo";
 

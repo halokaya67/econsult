@@ -1,8 +1,20 @@
-import type { CareTeamMember, CareTeamRole, PracticeEConsultConfig } from "@/api/contracts";
+import type {
+  CareTeamMember,
+  CareTeamRole,
+  PracticeEConsultConfig,
+  Question,
+} from "@/api/contracts";
 import { devWarn } from "@/lib/devWarn";
-import type { RecipientsResult } from "./useRecipients";
 
 export type Recipient = CareTeamMember;
+
+// The shape the recipient screens narrow on; it lives with the helpers that read it rather than
+// with the hook that happens to produce it.
+export type RecipientsResult =
+  | { status: "loading" }
+  | { status: "error"; retry: () => void }
+  | { status: "empty" }
+  | { status: "ready"; recipients: Recipient[]; questions: Question[] };
 
 export const UNKNOWN_RECIPIENT = "your practice";
 

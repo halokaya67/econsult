@@ -1,4 +1,4 @@
-import { routeAfterRecipient, STEP_TITLES, stepCount, stepNumber } from "./steps";
+import { stepAfterRecipient, STEP_TITLES, stepCount, stepNumber } from "./steps";
 
 describe("steps", () => {
   test("a practice with questions has three steps", () => {
@@ -15,8 +15,8 @@ describe("steps", () => {
   });
 
   test("after the recipient the flow goes to questions only when there are some", () => {
-    expect(routeAfterRecipient(true)).toBe("/econsult/questions");
-    expect(routeAfterRecipient(false)).toBe("/econsult/message");
+    expect(stepAfterRecipient(true)).toBe("questions");
+    expect(stepAfterRecipient(false)).toBe("message");
   });
 
   test("every step has a patient-facing title", () => {

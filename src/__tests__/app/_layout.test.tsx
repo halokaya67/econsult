@@ -3,9 +3,9 @@ import { renderRouter, screen } from "expo-router/testing-library";
 import { Text } from "react-native";
 import RootLayout from "@/app/_layout";
 import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
-import { useDevSettings } from "@/lib/devSettings";
 import { useIsOffline } from "@/lib/network";
 import { STALE_TIME_MS } from "@/lib/queryClient";
+import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
 
 // Reads every context the root layout is meant to provide, so a missing provider fails the render.

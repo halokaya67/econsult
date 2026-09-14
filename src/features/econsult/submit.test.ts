@@ -1,8 +1,11 @@
 import { createFakeTransport } from "@/api/fake/fakeTransport";
 import { createServices, type Services } from "@/api/services";
+import { initialDraft, type DraftState } from "./draft";
 import {
+  idempotencyKeyFor,
   retryAttachment,
   submitEConsult,
+  submitInputFor,
   toAnswers,
   toCreateRequest,
   type SubmitInput,
@@ -22,6 +25,59 @@ function input(overrides: Partial<SubmitInput> = {}): SubmitInput {
     ...overrides,
   };
 }
+
+const DRAFT: DraftState = {
+  ...initialDraft,
+  recipientId: "ct-11",
+  message: "My knee hurts",
+  answers: { "q-duration": "1 to 4 weeks" },
+};
+const READY_PHOTO = {
+  status: "ready",
+  pickId: "p1",
+  uri: "file:///cache/p.jpg",
+  width: 10,
+  height: 10,
+} as const;
+
+describe("idempotencyKeyFor", () => {
+  test("reuses the key the draft already carries", () => {
+    expect(idempotencyKeyFor({ ...DRAFT, idempotencyKey: "key-9" })).toBe("key-9");
+  });
+
+  test("allocates a fresh key for a draft that has never been sent", () => {
+    const first = idempotencyKeyFor(DRAFT);
+
+    expect(first).toEqual(expect.any(String));
+    expect(idempotencyKeyFor(DRAFT)).not.toBe(first);
+  });
+});
+
+describe("submitInputFor", () => {
+  test("maps the draft and the session onto the send input", () => {
+    expect(submitInputFor(DRAFT, SESSION, "ct-11", "key-1")).toEqual({
+      session: SESSION,
+      recipientId: "ct-11",
+      message: "My knee hurts",
+      answers: { "q-duration": "1 to 4 weeks" },
+      photo: null,
+      idempotencyKey: "key-1",
+    });
+  });
+
+  test("sends a ready photo as a file and a photo still preparing as none", () => {
+    const ready = submitInputFor({ ...DRAFT, photo: READY_PHOTO }, SESSION, "ct-11", "key-1");
+    const preparing = submitInputFor(
+      { ...DRAFT, photo: { status: "preparing", pickId: "p2" } },
+      SESSION,
+      "ct-11",
+      "key-1",
+    );
+
+    expect(ready.photo).toEqual({ uri: READY_PHOTO.uri, name: "photo.jpg", type: "image/jpeg" });
+    expect(preparing.photo).toBeNull();
+  });
+});
 
 describe("toAnswers and toCreateRequest", () => {
   test("drops blank answers and trims the rest", () => {
