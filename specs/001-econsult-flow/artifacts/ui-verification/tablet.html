@@ -77,6 +77,15 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#verdict">Verdict</a></li><li><a href="#scenarios">Scenarios</a></li><li><a href="#form-factor-checklist-tablet">Form-factor checklist (tablet)</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#evidence">Evidence</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The same walkthrough on an iPad Pro 11-inch (M5) simulator, in portrait unless a scenario says otherwise.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-pass">PASS</span> all six scenarios pass, with no functional or visual defect and one non-failing layout observation.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>6 scenarios · iPad Pro 11-inch (M5) simulator, Expo Go 57.0.9 · head <code>48896ef</code> · portrait and medium text unless stated.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>Nothing to fix. The observation: the form column runs 802 pt wide in an 834 pt portrait canvas, where a centred 560 to 680 pt column would read better and would not change phone rendering.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="index.html">All lanes</a><a href="phone.html">Phone lane</a></span></p>
+  </aside>
+
 <style>
 main > .shots{max-width:none}
 .shots{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 26px}
@@ -86,13 +95,65 @@ main > .shots{max-width:none}
 .shots figcaption{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
 .dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
 .dumps code{font-size:12px}
+
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <p>Device: iPad Pro 11-inch (M5) simulator, Expo Go 57.0.9. Head: <code>48896ef</code>.
 Text size: medium unless stated. Portrait unless stated.</p>
 <blockquote><p><strong>Since then.</strong> Two readings below have been overtaken. The photo preview no longer fills the content width: it is capped at 360 points, the fix for the sliver of photo a Samsung tablet showed. And the clean iPad photo-picker result did not hold on a real iPad, where the message step blanked when the picker returned, because iOS reports the out-of-process picker's keyboard frame too; the screen scaffold now pads for the keyboard itself.</p></blockquote>
-<h2 id="verdict">Verdict</h2>
+<details class="sec" open><summary><h2 id="verdict">Verdict</h2></summary>
 <p>All six scenarios PASS. No functional or visual defect. One non-failing layout observation: the form column runs 802 pt wide in an 834 pt portrait canvas (1178 pt of 1210 pt in landscape), so body copy and the full-width buttons stretch nearly edge to edge; a centred max-width column of roughly 560 to 680 pt would read better on iPad and would not change phone rendering.</p>
-<h2 id="scenarios">Scenarios</h2>
+</details><details class="sec"><summary><h2 id="scenarios">Scenarios</h2></summary>
+<table class="ps-t">
+    <caption>Six scenarios, all PASS</caption>
+    <thead><tr><th scope="col">#</th><th scope="col">Scenario</th><th scope="col">Result</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Happy path with photo (prc-0421), portrait</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>2</td><td>Validation</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>3</td><td>The other two practices (prc-0873, prc-0000)</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>4</td><td>Offline</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>5</td><td>Largest text size sweep</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>6</td><td>Landscape spot check (informational)</td><td><span class="ps-pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+
 <h3>1. Happy path with photo (prc-0421), portrait — PASS</h3>
 <ol>
 <li>Home: &quot;Hello, Ria de Boer.&quot;, &quot;Write to your practice&quot;, &quot;Developer settings&quot;; content 802 pt wide, buttons 802 × 48 pt.</li>
@@ -168,7 +229,7 @@ Caveat: the on-disk landscape screenshots show the content rotated 90 degrees be
   <figure><a href="tablet/t06-02-confirmation-landscape.png"><img src="tablet/t06-02-confirmation-landscape.png" alt="t06-02-confirmation-landscape.png" loading="lazy"></a><figcaption>t06-02-confirmation-landscape.png</figcaption></figure>
   <figure><a href="tablet/t06-03-portrait-restored-home.png"><img src="tablet/t06-03-portrait-restored-home.png" alt="t06-03-portrait-restored-home.png" loading="lazy"></a><figcaption>t06-03-portrait-restored-home.png</figcaption></figure>
 </div>
-<p class="dumps">Text evidence: <a href="tablet/t06-01-step3-landscape.raw.txt"><code>t06-01-step3-landscape.raw.txt</code></a>, <a href="tablet/t06-02-confirmation-landscape.a11y.txt"><code>t06-02-confirmation-landscape.a11y.txt</code></a>, <a href="tablet/t06-02-confirmation-landscape.raw.txt"><code>t06-02-confirmation-landscape.raw.txt</code></a>, <a href="tablet/t06-03-portrait-restored.raw.txt"><code>t06-03-portrait-restored.raw.txt</code></a></p><h2 id="form-factor-checklist-tablet">Form-factor checklist (tablet)</h2>
+<p class="dumps">Text evidence: <a href="tablet/t06-01-step3-landscape.raw.txt"><code>t06-01-step3-landscape.raw.txt</code></a>, <a href="tablet/t06-02-confirmation-landscape.a11y.txt"><code>t06-02-confirmation-landscape.a11y.txt</code></a>, <a href="tablet/t06-02-confirmation-landscape.raw.txt"><code>t06-02-confirmation-landscape.raw.txt</code></a>, <a href="tablet/t06-03-portrait-restored.raw.txt"><code>t06-03-portrait-restored.raw.txt</code></a></p></details><details class="sec"><summary><h2 id="form-factor-checklist-tablet">Form-factor checklist (tablet)</h2></summary>
 <ul>
 <li>Content width: OBSERVATION, not a failure. 802 pt of 834 pt in portrait (16 pt gutters), 1178 pt of 1210 pt in landscape. Body copy runs a single line nearly edge to edge and the primary buttons read as oversized; a centred max-width column would help on iPad without affecting phones.</li>
 <li>Touch targets ≥ 48 pt: PASS (buttons 48 pt, recipient rows 93.5 pt, option rows 48 pt; the system nav back button is 44 × 44 pt; at the largest size buttons grow to 86–102 pt).</li>
@@ -177,9 +238,9 @@ Caveat: the on-disk landscape screenshots show the content rotated 90 degrees be
 <li>Keyboard does not cover the edited field: PASS.</li>
 <li>Photo picker on iPad: PASS (proper iPad sheet with sidebar; returns cleanly with the preview shown).</li>
 </ul>
-<h2 id="logs-and-crashes">Logs and crashes</h2>
+</details><details class="sec"><summary><h2 id="logs-and-crashes">Logs and crashes</h2></summary>
 <p>None. setup.log has no error, red box or exception; the only warning is the bundler&#39;s empty-cache notice. No LogBox node in any tree. Reference ids read &quot;ec-1&quot; on each send because each was the first send after a relaunch (per-session counter in the fake).</p>
-<h2 id="evidence">Evidence</h2>
+</details><details class="sec"><summary><h2 id="evidence">Evidence</h2></summary>
 <p>73 files plus setup.log in this directory (t00 boot check, t01 … t06 scenarios, t99 final state).</p>
 <p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the bundler log:</p>
 <div class="shots">
@@ -188,6 +249,6 @@ Caveat: the on-disk landscape screenshots show the content rotated 90 degrees be
 </div>
 <p class="dumps">Text evidence: <a href="tablet/setup.log"><code>setup.log</code></a>, <a href="tablet/t99-dev-settings-final-state.raw.txt"><code>t99-dev-settings-final-state.raw.txt</code></a></p>
 
-  </main>
+  </details></main>
   <footer class="foot">Written up from the tablet lane run; its screenshots, dumps and log are in <code>tablet/</code>.</footer>
 </div>

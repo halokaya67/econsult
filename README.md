@@ -21,6 +21,15 @@ npx expo start
 Press `i` to open the iOS simulator, or scan the QR code with the Camera app on iOS or with Expo Go
 on Android. The backend is faked in process, so there is no server to configure or start.
 
+## Recording
+
+- [One path through the flow](specs/001-econsult-flow/artifacts/recording/econsult-one-path.mp4) —
+  a minute on the iPhone simulator: recipient, questions, message, a photo from the library, send,
+  confirmation.
+- [Every state](specs/001-econsult-flow/artifacts/recording/econsult-showcase.mp4) — one continuous
+  run through all twelve scenarios below, from validation to the largest text size, with
+  [chapters](specs/001-econsult-flow/artifacts/recording/chapters.md) giving the time of each.
+
 ## The fake backend, and how to reach every state
 
 No request leaves the device. `src/api/fake` serves three fixture practices behind the same

@@ -6,6 +6,12 @@ export type RequestName = "config" | "careTeam" | "create" | "upload";
 export type FaultKind = "network" | "server" | "timeout";
 export type Faults = Partial<Record<RequestName, FaultKind>>;
 export type FakeTransportOptions = { latencyMs?: number | null; faults?: Faults };
+// What a server would keep: the e-consults created so far and the ids already handed out.
+export type FakeState = {
+  nextId: number;
+  byIdempotencyKey: Map<string, string>;
+  econsults: Set<string>;
+};
 
 export const REQUEST_NAMES: readonly RequestName[] = ["config", "careTeam", "create", "upload"];
 export const FAULT_KINDS: readonly FaultKind[] = ["network", "server", "timeout"];
@@ -57,7 +63,11 @@ function notFound(what: string): ApiError {
   return new ApiError("server", `${what} was not found`, HTTP_NOT_FOUND);
 }
 
-type FakeState = { nextId: number; byIdempotencyKey: Map<string, string>; econsults: Set<string> };
+// A fresh state is an empty backend; one state shared by several transports is one backend the
+// developer settings can be changed against.
+export function createFakeState(): FakeState {
+  return { nextId: 1, byIdempotencyKey: new Map(), econsults: new Set() };
+}
 
 function create(state: FakeState, headers: Record<string, string>): { econsultId: string } {
   const idempotencyKey = headers[IDEMPOTENCY_HEADER];
@@ -71,8 +81,12 @@ function create(state: FakeState, headers: Record<string, string>): { econsultId
   return { econsultId };
 }
 
-export function createFakeTransport(options: FakeTransportOptions = {}): Transport {
-  const state: FakeState = { nextId: 1, byIdempotencyKey: new Map(), econsults: new Set() };
+// Latency and faults belong to the transport, the e-consults to the state handed in: a
+// developer-settings change rebuilds the transport and must not lose what the patient has sent.
+export function createFakeTransport(
+  options: FakeTransportOptions = {},
+  state: FakeState = createFakeState(),
+): Transport {
   const faults = options.faults ?? {};
 
   async function simulate(name: RequestName, signal: AbortSignal): Promise<void> {

@@ -65,6 +65,44 @@ blockquote p{margin:0}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
 footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <div class="shell">
   <header class="head">
@@ -77,6 +115,14 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The third spec round, on the runtime facts behind the upload decision: which fetch is installed, what it does with a file part, and which abort signals exist.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">PASS_WITH_FLAGS</span> all three findings fixed in the next revision; round 4 records them RESOLVED.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>2 warnings · 1 information item · 8 of 8 files · head <code>32db7de</code> · research record consulted by 9 greps.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>The stale Expo 57 rationale carried by <code>how-it-works.md:86</code> and <code>spec.md:146</code>, the undefined behaviour while a photo is "Preparing", and the picker's documented 0 width and height.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="spec-r4.html">Round 4</a><a href="index.html">All rounds</a></span></p>
+  </aside>
 <p>agent_id: a7b433df484c8b1bf
 mode: spec · round: 3 · reviewed head: 32db7de · previous rounds: checker/spec-r1.md, checker/spec-r2.md</p>
 <p>All verification is in. Evidence summary before the report:</p>
@@ -95,7 +141,7 @@ mode: spec · round: 3 · reviewed head: 32db7de · previous rounds: checker/spe
 <p><strong>Reviewed:</strong> 8/8 files (spec.md, how-it-works.md, checker/spec-r1.md, checker/spec-r2.md, the brief <code>case-study-mobile.md</code>, package.json, app.json, .gitignore; research.md consulted by grep only per dispatch, 9 greps below) · diff: n/a (mode spec) · head: 32db7de (spec docs now committed; <code>git status --porcelain</code> clean) · canon cited: workflow.md (Coding Canon: KISS/YAGNI; &quot;Errors &amp; inputs — handle explicitly at every level&quot;; Testing bar) · decisions log: 1 entry (spec-gate approval), <code>grep -in dismiss</code> → 0 · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): <code>install(&#39;fetch&#39;</code> in expo/src/winter/runtime.native.ts → 1 (:40-52, gated on <code>EXPO_PUBLIC_USE_RN_FETCH</code>); <code>uri|Unsupported FormDataPart</code> in expo/src/winter/fetch/convertFormData.ts → 2 (:35-36 comment, :76 throw); <code>createUploadTask|uploadAsync|UploadTask</code> in expo-file-system/build → 15 (File.d.ts:145); <code>timeout|any</code> in expo/src/winter/AbortSignal.ts → <code>installAbortSignalPatch</code> defines both (:9-14); <code>signal|abort</code> in expo/src/winter/fetch/fetch.ts → 8 (:77-83 <code>FetchError</code>, <code>cause: signal.reason</code>); <code>render|act(</code> in expo-router/build/testing-library/index.js → 6 (sync :48, :75-109); <code>@testing-library/react-native</code> in expo-router/package.json → peer <code>&gt;= 13.2.0</code> optional, devDep <code>^13.3.0</code>; bundledNativeModules.json → 6 hits (image-manipulator 57.0.17, file-system 57.0.7, image-picker 57.0.17, network 57.0.2, crypto 57.0.3, jest-expo 57.0.5); installed check → expo-file-system 57.0.7 present, 8 spec&#39;d packages absent (react-query, image-manipulator, image-picker, network, jest, jest-expo, RNTL, @react-native/jest-preset); <code>shouldPreventRemove|addKeyedListener|emit(</code> in core/useOnPreventRemove.js → 7 (:44, :63, :68-71, :87-89) + useOnAction.js:75; <code>if (!preventRemove)</code> in core/usePreventRemove.js → 1; <code>useInsertionEffect</code> in utils/useLatestCallback.js → 1; <code>add|run</code> in global-state/routingQueue.js → notify-only <code>add</code>, dispatch in <code>useImperativeApiEmitter</code> useEffect (imperative-api.js:10-13); research.md <code>fetch|FormData|createUploadTask|expo-file-system</code> → 40+ (:620-621, :1065, :1107, :1123, :1141); <code>offlineFirst|networkMode|useNetworkState|isConnected</code> → 30 (:144, :841, :1185, :1195); <code>quality|manipulat|1600|release()</code> → 40 (:50, :1223-1225, :1255, :1270-1272); <code>13.3.3|renderRouter|jest-preset|jest-expo</code> → 40 (:918-920, :958-969, :1004-1009); <code>preparing|processing|exif</code> → 0 on Send-during-processing; spec.md <code>preparing|processing|disabled.*send</code> → 6 lines, none define Send while preparing; <code>.env*</code> in repo root → 0 (to be created; <code>.gitignore</code> ignores only <code>.env*.local</code>)</p>
 <div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>W1 — offline state unreachable after cache clear</td><td>RESOLVED</td><td>spec.md:40 <code>networkMode: &#39;offlineFirst&#39;</code>, <code>retry: 1, retryDelay: 1000</code>, send mutation <code>networkMode: &#39;always&#39;</code> with no auto-retry; :205 SC6 spells the path out; :146 worst case still 31 s; :154/:156 consistent. First-attempt semantics verified via research.md:1185 (<code>canFetch</code> is true for every mode but <code>online</code>); retry-pause-while-offline is training-data recall, not verified (package not installed).</td></tr><tr><td>W2 — Done blocked by leave guards</td><td>RESOLVED</td><td>spec.md:107 <code>usePreventRemove(!isLeaving)</code>, Done sets <code>isLeaving</code>, effect calls <code>router.dismissTo(&#39;/&#39;)</code>; :139 <code>usePreventRemove((hasMessage || hasPhoto) &amp;&amp; econsultId == null)</code>; :183 reuse map no longer lists <code>dismissAll</code>. Vendored ordering confirms it works: <code>useLatestCallback.js</code> (<code>useInsertionEffect</code>) → <code>usePreventRemove.js</code> early return → <code>routingQueue.js</code>/<code>imperative-api.js:10-13</code> dispatch after commit → <code>useOnPreventRemove.js:87-89</code>, <code>useOnAction.js:75</code> see both guards down.</td></tr><tr><td>I1 — <code>.env</code> fault seeds undeclared</td><td>RESOLVED</td><td>spec.md:43 declares <code>EXPO_PUBLIC_PRACTICE_ID</code>, <code>EXPO_PUBLIC_LATENCY_MS</code>, <code>EXPO_PUBLIC_FAULTS</code> (<code>request:kind</code> pairs); :92/:95 reference them; <code>.gitignore</code> permits a committed <code>.env</code>.</td></tr><tr><td>I2 — <code>__DEV__</code> branch in a 100 % tier</td><td>RESOLVED</td><td>spec.md:206 single <code>src/lib/devWarn.ts</code>, test sets <code>globalThis.__DEV__ = false</code>; :78, :115, :126 route warnings through it.</td></tr></tbody></table></div>
 <div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>consistency</td><td>how-it-works.md:86</td><td>Doc still describes React Native&#39;s fetch/FormData/AbortSignal; the Expo 57 runtime replaces all three, and spec.md:146 repeats one stale rationale</td></tr><tr><td>W2</td><td>WARNING</td><td>ambiguity</td><td>spec.md:105</td><td>Send, Remove, the draft and the leave guard are undefined during the new &quot;Preparing photo&quot; window</td></tr><tr><td>I1</td><td>INFO</td><td>coverage</td><td>spec.md:127</td><td>Long-edge downscale has no guard for the picker&#39;s documented 0 <code>width</code>/<code>height</code></td></tr></tbody></table></div>
-<h3>W1 — how-it-works.md:86 is out of date against the Expo 57 runtime; spec.md:146 carries the same stale rationale</h3>
+<details class="sec"><summary><h3>W1 — how-it-works.md:86 is out of date against the Expo 57 runtime; spec.md:146 carries the same stale rationale</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> consistency</li>
@@ -122,7 +168,7 @@ signal's reason; the HTTP transport maps that onto the same timeout error the fa
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W2 — Send, Remove, the draft and the leave guard are undefined while a photo is &quot;Preparing&quot;</h3>
+</details><details class="sec"><summary><h3>W2 — Send, Remove, the draft and the leave guard are undefined while a photo is &quot;Preparing&quot;</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -142,7 +188,7 @@ result; a newer pick supersedes an older one."</code></pre>
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I1 — <code>processPhoto</code> has no guard for the picker&#39;s documented 0 <code>width</code>/<code>height</code></h3>
+</details><details class="sec"><summary><h3>I1 — <code>processPhoto</code> has no guard for the picker&#39;s documented 0 <code>width</code>/<code>height</code></h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> coverage</li>
@@ -158,7 +204,7 @@ result; a newer pick supersedes an older one."</code></pre>
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
+</details><p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
 <p><strong>Summary:</strong> All four round-2 flags are resolved in the current text, and the W2 fix is confirmed against the vendored navigator&#39;s real ordering (insertion-effect ref, queued dispatch after commit), not just against its own description. The research-driven edits are accurate wherever they touch the runtime — expo/fetch as the global, <code>File.createUploadTask</code> present in expo-file-system 57.0.7, RNTL 13 forced by expo-router&#39;s synchronous <code>renderRouter</code> — and that accuracy is exactly what leaves how-it-works.md:86 as the stale side; correct it first, since the plan reads that doc for orientation, then pin down the &quot;Preparing photo&quot; window so the AC4 tests have one behaviour to assert. Nothing CRITICAL; the spec is ready for the plan after those two edits.</p>
 
   </main>
