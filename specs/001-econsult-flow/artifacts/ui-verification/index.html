@@ -39,13 +39,58 @@ td.res{white-space:nowrap;font-weight:700;font-size:13px;letter-spacing:.04em}
 blockquote{margin:0 0 16px;padding:12px 16px;border-left:3px solid var(--warm);background:var(--warm-soft);border-radius:0 6px 6px 0;max-width:72ch}
 blockquote p{margin:0}
 footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
 </style>
 <div class="shell">
   <header class="head">
     <p class="eyebrow">Flow record · 001-econsult-flow · Finish phase</p>
     <h1>UI verification of the finished flow</h1>
-    <p class="lede">After the last step was committed, the whole flow was driven against the real app, not a test double, on five targets: a phone simulator, a tablet simulator, an Android emulator with TalkBack, a real Samsung tablet and a real iPad. Sixteen scenarios on the two simulators, fifty-six checks on the emulator and twenty-one on the Samsung tablet, and an eleven-option accessibility pass with VoiceOver transcribed on the iPad — each with screenshot and accessibility-tree evidence. Every defect found along the way was fixed and re-verified except the Android camera eviction, which is recorded as a known limit.</p>
+    <p class="lede">After the last step was committed, the whole flow was driven against the real app, not a test double, on five targets: a phone simulator, a tablet simulator, an Android emulator with TalkBack, a real Samsung tablet and a real iPad. Every defect found along the way was fixed and re-verified except the Android camera eviction, which is recorded as a known limit.</p>
   </header>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The finished flow driven end to end against the real app, not a test double, on five targets.</span></p>
+    <p class="ps-r"><b>Outcome</b><span>Every defect found was fixed and re-verified, except the Android camera eviction, which is recorded as a known limit.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>16 scenarios on two simulators · 56 emulator checks · 21 checks on a real Samsung tablet · 11 accessibility options on a real iPad.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>The one simulator defect — Discard on step 1 left the draft and the patient in the flow — was fixed and re-driven; the Accessibility Inspector audit returned 0 warnings on five states, against a positive control that returned 22.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="phone.html">Phone lane</a><a href="android.html">Android lane</a></span></p>
+  </aside>
+
   <main>
 
     <p><a href="../index.html">← Back to the record</a></p>
@@ -69,7 +114,7 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       </a></li>
     </ul>
 
-    <h2>What was checked, and how it came out</h2>
+    <details class="sec" open><summary><h2>What was checked, and how it came out</h2></summary>
     <p>Every lane ran at the medium text size unless a scenario says otherwise, and every lane's result comes from the accessibility tree and the screenshots rather than from an eyeball impression. No lane produced a crash or a red box, and no bundler warning beyond the empty-cache notice and one intermittent expo-router startup warning the Android lane records.</p>
 
     <h3>Phone lane — iPhone 17 simulator, ten scenarios</h3>
@@ -106,19 +151,19 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       </table>
     </div>
 
-    <h2>The one defect on the simulator lanes, found and fixed</h2>
+    </details><details class="sec"><summary><h2>The one defect on the simulator lanes, found and fixed</h2></summary>
     <p>Scenario 7 on the phone. With a draft in progress, pressing Home raised the “Discard your message?” dialog as designed, and “Keep writing” kept the draft. But “Discard” only dismissed the dialog: the app stayed on step 1, the draft survived, and the dialog re-raised on every further Home press — so a patient who chose to discard was trapped in the flow. It failed silently, with nothing in the log.</p>
     <p>The fix was made and the scenario re-driven on the new head. “Discard” now lands on Home, the next “Write to your practice” starts with an unselected step 1 and an empty message field, and the back-action variant of the same path behaves identically. Both runs are on the phone lane page: the first-run screenshots are the <code>s07-</code> series, the re-drive is <code>s07r-</code>.</p>
 
-    <h2>The accessibility audit</h2>
+    </details><details class="sec"><summary><h2>The accessibility audit</h2></summary>
     <p>Scenario 10 is an Xcode Accessibility Inspector audit of the app's screens, run against Expo Go on the iPhone 17 simulator with the default audit options (contrast, Dynamic Type, clipped text, element description, hit region).</p>
     <p>Five states were audited and each returned <strong>0 warnings, 0 duplicates</strong>: home, step 1 loaded, step 3 with the empty-message error, the developer settings modal, and the partial-failure confirmation. Because a run of zeros only means something if the engine was actually looking, the same audit was pointed at Expo Go's own developer menu as a positive control, in the same process: it returned 22 warnings across clipped text, contrast, Dynamic Type and element description. The engine was live and running those categories, so the five clean results are real.</p>
     <p>The evidence is on the phone lane page: the <code>s10r-</code> screenshots pairing each app state with the Inspector window that audited it, plus the results table and the Inspector tree dump.</p>
 
-    <h2>One layout observation on the tablet</h2>
+    </details><details class="sec"><summary><h2>One layout observation on the tablet</h2></summary>
     <blockquote><p>Not a failure. The form column runs 802 pt wide in an 834 pt portrait canvas (1178 pt of 1210 pt in landscape), so body copy and the full-width buttons stretch nearly edge to edge. A centred column of roughly 560 to 680 pt would read better on iPad and would not change phone rendering.</p></blockquote>
 
-    <h2>The evidence in this folder</h2>
+    </details><details class="sec"><summary><h2>The evidence in this folder</h2></summary>
     <ul>
       <li><a href="phone.html">phone.html</a> — the phone lane report, with each scenario's screenshots as a thumbnail strip. 69 screenshots, two accessibility dumps, three logs and the audit results table in <code>phone/</code>.</li>
       <li><a href="tablet.html">tablet.html</a> — the tablet lane report, same shape. 38 screenshots, 35 accessibility and raw-tree dumps and one log in <code>tablet/</code>.</li>
@@ -127,7 +172,7 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
     </ul>
     <p>Screenshots are downscaled copies — long edge at most 900 px, and 600 px for the two that were captured at desktop resolution. Click any thumbnail for the full copy. The text dumps are the originals, unchanged.</p>
 
-  </main>
+  </details></main>
   <footer class="foot">The Android and iPad lane reports are rendered from the markdown in <code>android/</code> and <code>device/</code>; the phone and tablet pages were written up from the same runs, whose screenshots and dumps are in their folders. Findings and verdicts are unchanged.</footer>
 </div>
 </html>

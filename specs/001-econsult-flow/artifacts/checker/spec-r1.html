@@ -65,6 +65,44 @@ blockquote p{margin:0}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
 footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <div class="shell">
   <header class="head">
@@ -77,6 +115,14 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The first checker round on the spec, read against the brief and the existing tree.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">PASS_WITH_FLAGS</span> all eleven findings fixed in the next revision; round 2 records them RESOLVED.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>7 warnings · 4 information items · 8 of 8 files read in full · head <code>f39fb58</code>.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>Among them: the empty state was unreachable from the shipped fixtures, camera availability was undefined while expo-device was removed, and the 100 % coverage target was not reachable as written.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="spec-r2.html">Round 2</a><a href="index.html">All rounds</a></span></p>
+  </aside>
 <p>agent_id: a4a34b2e94bb94206
 mode: spec · round: 1 · dispatched: 2026-09-11T16:58:08Z · reviewed head: f39fb58</p>
 <h2 id="spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</h2>
@@ -86,7 +132,7 @@ mode: spec · round: 1 · dispatched: 2026-09-11T16:58:08Z · reviewed head: f39
 <p><strong>Verdict:</strong> PASS_WITH_FLAGS</p>
 <p><strong>Reviewed:</strong> 8/8 files (spec.md, how-it-works.md, the brief <code>case-study-mobile.md</code>, package.json, app.json, .gitignore, src/app/_layout.tsx, src/app/index.tsx) · diff: n/a (mode spec) · head: f39fb58 · canon cited: workflow.md (Coding Canon: KISS/YAGNI; Testing bar &quot;numeric thresholds are stack-specific&quot;) · decisions log: file absent → empty, no dismissals · searches (local Grep only, Sourcegraph not configured; no cross-repo consumers — standalone take-home repo per brief:10): <code>econsult|Question|CareTeam|practice</code> in src/ → 0; <code>isDevice</code> in expo-constants/build/*.d.ts → 0; <code>isDevice</code> in expo-device/build/Device.d.ts → 1 (line 7); <code>getFontScale</code> in RN PixelRatio.js → 1 (<code>fontScale || PixelRatio.get()</code>, spec claim holds); <code>automaticallyAdjustKeyboardInsets</code> in ScrollView.d.ts → 1; <code>usePreventRemove</code> in expo-router/build/react-navigation → 5 + <code>react-navigation.js</code> re-export; <code>dismissAll|dismissTo|replace</code> in router.d.ts → 6; <code>SafeAreaProvider</code> in expo-router ExpoRoot.js → 2 (provider is mounted); bundledNativeModules → image-picker 57.0.17, network 57.0.2, crypto 57.0.3, device 57.0.2 all bundled; expo-router peerDependenciesMeta → gesture-handler, reanimated, react-native-web, react-dom all <code>optional: true</code> (removal is safe); dependency presence → zod 3.25.76 present transitively, @tanstack/react-query, expo-image-picker, expo-network, expo-crypto, jest-expo, RNTL, eslint-config-expo absent; assets find → 23 files, 14 unreferenced by app.json (matches spec:83)</p>
 <div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>W1</td><td>WARNING</td><td>coverage</td><td>spec.md:189</td><td>&quot;Empty&quot; state required reachable from dev settings, but no fixture or fault kind yields zero writable recipients</td></tr><tr><td>W2</td><td>WARNING</td><td>consistency</td><td>spec.md:81</td><td>Camera hidden &quot;on the iOS simulator&quot; with no detection mechanism, while the only first-party <code>isDevice</code> source (expo-device) is removed</td></tr><tr><td>W3</td><td>WARNING</td><td>ambiguity</td><td>spec.md:40</td><td>&quot;Query&#39;s default retry&quot; unquantified against 15 s timeouts; forced timeout fault shows loading ~67 s before the error state</td></tr><tr><td>W4</td><td>WARNING</td><td>ambiguity</td><td>spec.md:71</td><td>Home prefetch vs dev-settings changes: cache reset unspecified, so SC6 states become order-dependent; loading state only visible inside latency window</td></tr><tr><td>W5</td><td>WARNING</td><td>ambiguity</td><td>spec.md:93</td><td>&quot;Change&quot; recipient row: two valid navigation readings with different data-loss behaviour</td></tr><tr><td>W6</td><td>WARNING</td><td>consistency</td><td>spec.md:72</td><td>Nested Stack inside root Stack: header ownership undefined (double header by default); step 1 loses its back affordance once fixed</td></tr><tr><td>W7</td><td>WARNING</td><td>coverage</td><td>spec.md:190</td><td>100 % statements+branches on every added file conflicts with <code>__DEV__</code>/<code>Platform.OS</code>/<code>isDevice</code> branches unless a test matrix is named</td></tr><tr><td>I1</td><td>INFO</td><td>ambiguity</td><td>spec.md:132</td><td>Seven unpinned values / one verification method that cannot measure what it claims</td></tr><tr><td>I2</td><td>INFO</td><td>spec-compliance</td><td>spec.md:18</td><td>Brief hand-in items (screen recording, platform-ran statement) not carried into the spec</td></tr><tr><td>I3</td><td>INFO</td><td>ambiguity</td><td>spec.md:57</td><td>Backend inbox behaviour asserted as fact in the <code>subject</code> removal rationale</td></tr><tr><td>I4</td><td>INFO</td><td>scope-creep</td><td>spec.md:64</td><td>No delivery order against the brief&#39;s 2–4 h / &quot;bigger will not score higher&quot;</td></tr></tbody></table></div>
-<h3>W1 — Empty state is unreachable from the shipped fixtures and fault kinds</h3>
+<details class="sec"><summary><h3>W1 — Empty state is unreachable from the shipped fixtures and fault kinds</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> coverage</li>
@@ -100,7 +146,7 @@ Line 144 — append: The practice switcher lists all three fixtures.</code></pre
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W2 — Camera-availability detection is undefined while expo-device is removed</h3>
+</details><details class="sec"><summary><h3>W2 — Camera-availability detection is undefined while expo-device is removed</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> consistency</li>
@@ -115,7 +161,7 @@ Line 112 — "Camera unavailable (`Device.isDevice === false`): the camera actio
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W3 — Read-request retry policy is unquantified; time-to-error can reach a minute</h3>
+</details><details class="sec"><summary><h3>W3 — Read-request retry policy is unquantified; time-to-error can reach a minute</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -130,7 +176,7 @@ Line 133 — append: "Worst-case time to the read error state is 2 × 15 s + 1 s
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W4 — Home prefetch vs developer settings and the visible loading state</h3>
+</details><details class="sec"><summary><h3>W4 — Home prefetch vs developer settings and the visible loading state</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -145,7 +191,7 @@ inside the latency window or after raising latency in developer settings; the re
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W5 — &quot;Change&quot; recipient row has two valid navigation readings</h3>
+</details><details class="sec"><summary><h3>W5 — &quot;Change&quot; recipient row has two valid navigation readings</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -159,7 +205,7 @@ the draft has no message; otherwise a 'Discard your message?' confirmation (`use
 </li>
 <li><strong>Needs user:</strong> yes — (a) with a leave guard vs (b) picker-and-return are both defensible; (b) avoids the guard but gives the recipient screen two modes.</li>
 </ul>
-<h3>W6 — Nested Stack: header ownership and step-1 back affordance undefined</h3>
+</details><details class="sec"><summary><h3>W6 — Nested Stack: header ownership and step-1 back affordance undefined</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> consistency</li>
@@ -173,7 +219,7 @@ the screen scaffold below the header so the header keeps the top inset."</code><
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W7 — 100 % statements and branches on every added file is not reachable as written</h3>
+</details><details class="sec"><summary><h3>W7 — 100 % statements and branches on every added file is not reachable as written</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> coverage</li>
@@ -187,7 +233,7 @@ branches exercised through a two-project jest config (`jest-expo/ios`, `jest-exp
 </li>
 <li><strong>Needs user:</strong> yes — threshold and scope are the user&#39;s choice; either keep 100 % and name the matrix, or relax the app/components tier.</li>
 </ul>
-<h3>I1 — Unpinned values and one verification method that cannot measure its claim</h3>
+</details><details class="sec"><summary><h3>I1 — Unpinned values and one verification method that cannot measure its claim</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -203,7 +249,7 @@ branches exercised through a two-project jest config (`jest-expo/ios`, `jest-exp
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I2 — Brief hand-in items not carried into the spec</h3>
+</details><details class="sec"><summary><h3>I2 — Brief hand-in items not carried into the spec</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> spec-compliance</li>
@@ -216,7 +262,7 @@ live regions, virtual-scene camera, edge-to-edge insets)."</code></pre>
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I3 — Backend inbox behaviour asserted as fact</h3>
+</details><details class="sec"><summary><h3>I3 — Backend inbox behaviour asserted as fact</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -228,7 +274,7 @@ the client derives `subject` from the first sentence without asking the patient.
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I4 — No delivery order against the brief&#39;s time budget</h3>
+</details><details class="sec"><summary><h3>I4 — No delivery order against the brief&#39;s time budget</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> scope-creep</li>
@@ -241,7 +287,7 @@ Items 3–4 are cut first if time runs out and are named in DECISIONS.md either 
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<p><strong>Possibly dismissed:</strong> none (decisions log absent)</p>
+</details><p><strong>Possibly dismissed:</strong> none (decisions log absent)</p>
 <p><strong>Summary:</strong> A strong spec: the edge-case taxonomy, platform lens (offline, permissions, iOS-vs-Android), contract ownership and idempotency design are all present and internally consistent, and every platform claim I could check against node_modules held (font-scale fallback, keyboard insets prop, <code>usePreventRemove</code>, optional peers, bundled modules). Fix W2 and W6 first — both change the dependency list and the navigation skeleton the plan derives its file list from — then W1 so SC6 is satisfiable. Working tree note: <code>.vscode/settings.json</code> has an uncommitted edit and <code>specs/</code> is untracked, neither of which affects this review.</p>
 
   </main>

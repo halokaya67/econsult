@@ -1,7 +1,7 @@
 import { handled } from "@/test/handled";
 import { IDEMPOTENCY_HEADER } from "../contracts";
 import { ApiError } from "../transport";
-import { createFakeTransport, DEFAULT_LATENCY_MS } from "./fakeTransport";
+import { createFakeState, createFakeTransport, DEFAULT_LATENCY_MS } from "./fakeTransport";
 
 const signal = () => new AbortController().signal;
 const PHOTO = { uri: "file:///cache/a.jpg", name: "photo.jpg", type: "image/jpeg" };
@@ -160,6 +160,46 @@ describe("createFakeTransport", () => {
     await jest.advanceTimersByTimeAsync(0);
 
     await expect(pending).rejects.toMatchObject({ kind: "server", status: 404 });
+  });
+
+  test("an e-consult survives the transport being rebuilt from new settings", async () => {
+    const state = createFakeState();
+    const created = createFakeTransport({ latencyMs: 0 }, state).postJson(
+      "/econsults",
+      {},
+      key("k1"),
+      signal(),
+    );
+    await jest.advanceTimersByTimeAsync(0);
+    const { econsultId } = (await created) as { econsultId: string };
+
+    const rebuilt = createFakeTransport({ latencyMs: 5000, faults: { create: "server" } }, state);
+    const pending = rebuilt.uploadPhoto(`/econsults/${econsultId}/attachments`, PHOTO, signal());
+    await jest.advanceTimersByTimeAsync(5000);
+
+    expect(econsultId).toBe("ec-1");
+    await expect(pending).resolves.toMatchObject({ attachmentId: expect.stringMatching(/^att-/) });
+  });
+
+  test("ids keep counting up across a rebuilt transport, so no id is handed out twice", async () => {
+    const state = createFakeState();
+    const first = createFakeTransport({ latencyMs: 0 }, state).postJson(
+      "/econsults",
+      {},
+      key("k1"),
+      signal(),
+    );
+    await jest.advanceTimersByTimeAsync(0);
+
+    const second = createFakeTransport(
+      { latencyMs: 0, faults: { upload: "network" } },
+      state,
+    ).postJson("/econsults", {}, key("k2"), signal());
+    await jest.advanceTimersByTimeAsync(0);
+
+    const [a, b] = (await Promise.all([first, second])) as { econsultId: string }[];
+    expect(a.econsultId).toBe("ec-1");
+    expect(b.econsultId).toBe("ec-2");
   });
 
   test("an upload fault applies only to the upload request", async () => {

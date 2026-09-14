@@ -289,8 +289,53 @@
       <span>12 September 2026</span>
     </div>
   </header>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>Step T016's first run of the recipient step: the loaded list at two text sizes, the selection state and the three non-happy paths.</span></p>
+    <p class="ps-r"><b>Outcome</b><span>One defect and two observations over five scenarios — at the largest text size the header Home label is clipped to roughly half its glyph height.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>5 scenarios driven · 7 captures · 1 defect · 2 observations · iPhone 17 simulator, Expo Go SDK 57.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>The fix caps that one button's font scaling at 1.3&times;, the way iOS caps its own bar buttons; re-driven on the re-check page.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="T016-phone-recheck.html">The re-check</a><a href="index.html">All runs</a></span></p>
+  </aside>
 
-<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+</style>
   <div class="since"><strong>Since then.</strong> The loading, error and empty states below were driven through <code>EXPO_PUBLIC_LATENCY_MS</code>, <code>EXPO_PUBLIC_FAULTS</code> and <code>EXPO_PUBLIC_PRACTICE_ID</code>. The environment layer has since been removed: those states are reached from the developer-settings modal, which is the only knob.</div>
 
 
@@ -317,7 +362,7 @@
     </tbody>
   </table>
 
-  <h2 class="section">Captures</h2>
+  <details class="sec"><summary><h2 class="section">Captures</h2></summary>
   <div class="shots">
 
     <section class="shot">
@@ -413,7 +458,7 @@
 
   </div>
 
-  <h2 class="section">Defects</h2>
+  </details><details class="sec"><summary><h2 class="section">Defects</h2></summary>
   <div class="defects">
 
     <div class="defect">
@@ -454,7 +499,7 @@
 
   </div>
 
-  <footer>
+  </details><footer>
     Driven over Expo Go on the iPhone 17 simulator. Each seeded scenario ran from a cleared bundler cache.
   </footer>
 </div>

@@ -65,6 +65,44 @@ blockquote p{margin:0}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
 footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <div class="shell">
   <header class="head">
@@ -77,6 +115,14 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#spec-checker-report-mode-plan">Spec-Checker Report — mode: plan</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The third plan round, on revision 3, 6,907 lines.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-fail">FAIL</span> both blockers fixed in revision 3.1, which went to the plan gate and was approved.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>2 blockers · 1 warning · 2 information items · 4 of 4 artifact files.</span></p>
+    <p class="ps-r"><b>Fixed</b><span><code>STEP_TITLES</code> used without an import in the recipient screen test, and an <code>as const</code> that made the recipients fixture read-only and unassignable; revision 3.1 was verified by the implementation's own typecheck and tests rather than a fourth round.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="../plan.html">The approved plan</a><a href="index.html">All rounds</a></span></p>
+  </aside>
 <p>agent_id: af89073e3dea56438
 mode: plan · round: 3 · reviewed: plan.md revision 3 (working tree) · previous rounds: checker/plan-r1.md, checker/plan-r2.md · dispatched in the foreground (recorded as completed in flow-dispatches.jsonl)</p>
 <h2 id="spec-checker-report-mode-plan">Spec-Checker Report — mode: plan</h2>
@@ -98,7 +144,7 @@ mode: plan · round: 3 · reviewed: plan.md revision 3 (working tree) · previou
 <p>Fix-delta regression review: the T003 <code>create</code> hoist keeps the shared <code>nextId</code>/<code>Map</code>/<code>Set</code> semantics every transport test asserts; the T014 split preserves the preparing live region, Remove-while-preparing, the labelled preview and the disabled state; the T016 radiogroup is a container (no <code>accessible</code>), so the cards stay individually queryable radios and RNTL&#39;s label query needs no <code>accessible</code> gate (round-2 evidence); the T017 <code>QuestionField</code> keeps focus landing on the first radio / the input; the T018 split keeps validate → announce → focus, the sending/sent status line, the same idempotency key on Retry, read-only field and disabled picker while pending; the shared <code>text</code> styles change no asserted style. One regression found (C1).</p>
 <p>Coverage matrix (spec → tasks): unchanged from round 2 and complete (plan.md:6871-6895); tasks → spec orphans: none; TDD order, exact <code>Files:</code> paths, <code>T###</code> ids, no commit steps all hold. Remaining gap: SC7&#39;s 100 % thresholds on <code>src/api</code> (new W1).</p>
 <div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>C1</td><td>CRITICAL</td><td>tests</td><td>plan.md:5387 (T016 <code>recipient.test.tsx</code>)</td><td><code>STEP_TITLES</code> is used but never imported: <code>ReferenceError</code> in jest and TS2304 in <code>npm run typecheck</code> — T016&#39;s verify fails on both</td></tr><tr><td>C2</td><td>CRITICAL</td><td>tests</td><td>plan.md:2643 (T008 <code>recipients.test.ts</code>)</td><td><code>as const</code> makes <code>questions: readonly []</code>, not assignable to <code>RecipientsResult</code> → TS2345 at :2646, :2650, :2651; T008&#39;s <code>npm run typecheck</code> fails</td></tr><tr><td>W1</td><td>WARNING</td><td>tests</td><td>plan.md:470 (<code>contracts.ts</code>), :1163 (<code>fakeTransport.ts</code>); thresholds :158-161</td><td>One statement and two branches in <code>src/api</code> no test reaches; the 100 % thresholds fail <code>npm run test:coverage</code> (SC7)</td></tr><tr><td>I1</td><td>INFO</td><td>reuse</td><td>plan.md:4480, :4634, :6209</td><td>Three local styles are byte-identical to the new <code>text.muted</code></td></tr><tr><td>I2</td><td>INFO</td><td>consistency</td><td>plan.md:4952 vs :2371</td><td><code>PhotoPicker.tsx</code> declares a component <code>ReadyPhoto</code> with the same name as the exported <code>ReadyPhoto</code> draft type</td></tr></tbody></table></div>
-<h3>C1 — <code>STEP_TITLES</code> used without an import in the recipient screen test</h3>
+<details class="sec"><summary><h3>C1 — <code>STEP_TITLES</code> used without an import in the recipient screen test</h3></summary>
 <ul>
 <li><strong>Severity:</strong> CRITICAL</li>
 <li><strong>Category:</strong> tests</li>
@@ -111,7 +157,7 @@ import * as useRecipientsModule from "@/features/econsult/useRecipients";</code>
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>C2 — <code>as const</code> in the <code>recipientNameFor</code> tests does not type-check</h3>
+</details><details class="sec"><summary><h3>C2 — <code>as const</code> in the <code>recipientNameFor</code> tests does not type-check</h3></summary>
 <ul>
 <li><strong>Severity:</strong> CRITICAL</li>
 <li><strong>Category:</strong> tests</li>
@@ -124,7 +170,7 @@ const ready: RecipientsResult = { status: "ready", recipients: TEAM, questions: 
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>W1 — Two <code>src/api</code> branches and one statement still uncovered; the 100 % thresholds fail</h3>
+</details><details class="sec"><summary><h3>W1 — Two <code>src/api</code> branches and one statement still uncovered; the 100 % thresholds fail</h3></summary>
 <ul>
 <li><strong>Severity:</strong> WARNING</li>
 <li><strong>Category:</strong> tests</li>
@@ -146,7 +192,7 @@ T003 <code>fakeTransport.test.ts</code> (Step 8 count → 18):<pre class="code">
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I1 — <code>text.muted</code> still rebuilt locally in three files</h3>
+</details><details class="sec"><summary><h3>I1 — <code>text.muted</code> still rebuilt locally in three files</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> reuse</li>
@@ -156,7 +202,7 @@ T003 <code>fakeTransport.test.ts</code> (Step 8 count → 18):<pre class="code">
 <li><strong>Suggested fix:</strong> <code>style={text.muted}</code> at the three usages and delete the local entries (add <code>import { text } from &quot;@/theme/text&quot;;</code> to TextField and RecipientCard).</li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I2 — Component <code>ReadyPhoto</code> shadows the exported <code>ReadyPhoto</code> type by name</h3>
+</details><details class="sec"><summary><h3>I2 — Component <code>ReadyPhoto</code> shadows the exported <code>ReadyPhoto</code> type by name</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> consistency</li>
@@ -166,7 +212,7 @@ T003 <code>fakeTransport.test.ts</code> (Step 8 count → 18):<pre class="code">
 <li><strong>Suggested fix:</strong> rename the two views <code>PreparingPhotoView</code> / <code>ReadyPhotoView</code> (and the two call sites at :4979-4980).</li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<p><strong>Possibly dismissed:</strong> none</p>
+</details><p><strong>Possibly dismissed:</strong> none</p>
 <p><strong>Summary:</strong> Every round-2 flag is genuinely fixed and the full-tree type probe now compiles 85 of the 87 extracted plan files, including all of revision 3&#39;s refactors, whose behaviour matches what their tests assert. Two type-check failures remain and would stop an implementer at a gate: fix C1 first (a one-line import the W2 fix forgot, breaking T016&#39;s tests and typecheck), then C2 (a pre-existing <code>as const</code> in T008&#39;s test that earlier rounds never compiled); then add the two <code>src/api</code> tests in W1 so the coverage thresholds hold at the finish. The reducer, transport, services, hooks, components and screens are otherwise consistent across tasks, every function is under 50 lines, and the test-environment facts (spy-only <code>restoreAllMocks</code>, CJS data exports without the React Compiler under jest, RN 0.86&#39;s host classes being <code>HostInstance</code>) all support the tests as written.</p>
 
   </main>

@@ -65,6 +65,44 @@ blockquote p{margin:0}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
 footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <div class="shell">
   <header class="head">
@@ -77,6 +115,14 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <ol><li><a href="#spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The closing spec round, reading the ten-line fix delta line by line.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">PASS_WITH_FLAGS</span> no warnings left; both information items fixed in the last spec revision, committed with the plan before the plan gate.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>0 warnings · 2 information items · 3 of 3 in-scope files read in full · head <code>32db7de</code>.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>Both sat on the decision record rather than the design: a stale timeout rationale and the unstated sizing of the photo preview.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="../plan.html">The plan that followed</a><a href="index.html">All rounds</a></span></p>
+  </aside>
 <p>agent_id: a5fc3c6c06d601007
 mode: spec · round: 5 · reviewed head: 32db7de (working tree) · previous rounds: checker/spec-r1.md to checker/spec-r4.md · dispatched in the foreground (recorded as completed in flow-dispatches.jsonl)</p>
 <h2 id="spec-checker-report-mode-spec">Spec-Checker Report — mode: spec</h2>
@@ -84,7 +130,7 @@ mode: spec · round: 5 · reviewed head: 32db7de (working tree) · previous roun
 <p><strong>Reviewed:</strong> 3/3 in-scope files read in full (<code>specs/001-econsult-flow/spec.md</code> and <code>how-it-works.md</code> from the working tree, <code>checker/spec-r4.md</code>; plan.md not opened, out of scope for mode spec; research.md and the brief grepped, not read whole) · diff: n/a (mode spec) · head: 32db7de, working tree <code>M spec.md</code>, <code>M how-it-works.md</code> (+2 html; 5 untracked plan/checker files); the fix-delta <code>git diff -U0</code> on the two docs is 2 files, +10/−8, reviewed line by line · canon cited: workflow.md (Coding Canon: KISS/YAGNI) · searches (local Grep/sed only; Sourcegraph not configured; no cross-repo consumers — standalone take-home repo, spec.md:66): decisions log <code>wc -l</code> → 1 entry, <code>grep -ic dismiss</code> → 0; <code>git diff --stat f39fb58..HEAD -- . &#39;:!specs&#39;</code> → empty (how-it-works snapshot still equals the app); expo <code>runtime.native.ts:38-53</code> read → <code>useRnFetch</code> :41-42, <code>install(&#39;fetch&#39;)</code> :44-52; <code>fetch/fetch.ts:74-92</code> read → :77-78 pre-aborted <code>FetchError { cause: signal.reason }</code>, :83-84 <code>response.abort()</code> + <code>request.cancel()</code>, :90 <code>createFromError</code>; <code>fetch/FetchResponse.ts:180-200</code> read → :183-189 reason-else-<code>DOMException(&#39;AbortError&#39;)</code>; <code>AbortError</code> in <code>fetch/__tests__/FetchResponse-test.ts</code> → 5 (:146, :153, :156, :161, :175); <code>Fetch request has been canceled</code> in <code>expo/ios/Fetch</code> + <code>android/.../fetch</code> → 2 (FetchExceptions.swift:13, FetchExceptions.kt:11); <code>fetch/FetchErrors.ts</code> read whole → prefix <code>fetch failed: </code>, <code>createFromError</code> copies <code>error.cause</code> (native exception carries none); <code>convertFormData.ts:33-37,70-78</code> → :35-36 comment, :77 throw; <code>AbortSignal.ts:7-15</code> → :9-14 patch, <code>TimeoutError</code> → 1 (:23); <code>reason</code> in <code>abort-controller/dist/abort-controller.js</code> → 0; <code>createUploadTask</code> in <code>expo-file-system/build/File.d.ts</code> → 2 (:135 doc, :145 decl), version 57.0.7; <code>bundledNativeModules.json</code> → image-manipulator :53 <code>~57.0.17</code>, image-picker :54 <code>~57.0.17</code>, network :72 <code>~57.0.2</code>; brief <code>photo|attach|upload</code> → 5 (:45-46, :53, :75, :197); research.md <code>aspectRatio|asset.width|getSize|width: 1600</code> → 3 (:221, :1224, :1275), <code>photo.*width|preview.*height</code> → 4 (:32 keeps <code>{ uri, width, height }</code> &quot;in state for the preview&quot;, :50, :937, :1355); spec.md <code>aspect|preview</code> → 4 (:44, :57, :105, :186 — no sizing rule anywhere), <code>AbortError|TimeoutError|signal</code> → 3 (:42, :59, :147)</p>
 <div class="wide"><table><thead><tr><th>Prior flag</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>r4 W1 — expo/fetch abort shape mis-stated for the mid-flight path</td><td>RESOLVED</td><td>how-it-works.md:86 now separates the three shapes: pre-aborted <code>FetchError(..., { cause: signal.reason })</code> (<code>fetch.ts:77-78</code> confirmed), in-flight cancel <code>FetchError(&quot;fetch failed: Fetch request has been canceled&quot;)</code> with no <code>cause</code> (FetchExceptions.swift:13 / .kt:11 via <code>fetch.ts:90</code>; <code>createFromError</code> copies <code>error.cause</code>, which the native exception does not set), post-headers <code>signal.reason</code> else <code>DOMException</code> <code>AbortError</code> (<code>FetchResponse.ts:183-189</code>; test :146-153); polyfill has no <code>reason</code> (0 hits); <code>convertFormData.ts:35-36,77</code> correct; Sources :111 lists the files. spec.md:59 now decides on <code>signal.aborted</code> in the helper&#39;s catch, not on class or <code>cause</code>, and maps any rejection under that signal to the timeout error — matches the runtime.</td></tr><tr><td>r4 W2 — Preparing block controls unstated</td><td>RESOLVED</td><td>spec.md:105: once picked, both source actions are replaced by the block state (&quot;Preparing photo&quot; + labelled &quot;Remove photo&quot;, then preview + the same button); Remove is the only way to replace and returns the two source actions; the draft records on the picker returning an asset (not the tap); a pick after Remove supersedes via <code>pickId</code>. :126 mirrors it (source actions hidden while preparing, Remove shows them again, result ignored unless <code>pickId</code> matches). Different route from the r4 suggestion (actions hidden rather than kept), same outcome: one control set per state for the AC4/SC3 tests. Agrees with :44 (&quot;can be removed&quot;), :123 (permission-denied explanation only appears while the actions are shown, i.e. with no photo), :125 (pick → remove → pick, last wins), :140 (<code>hasPhoto</code> true from <code>preparing</code>).</td></tr><tr><td>r4 I1 — failed processing state implied</td><td>RESOLVED</td><td>spec.md:127: failure moves the draft to <code>ready</code> with the picker&#39;s original <code>uri</code>, <code>width</code>, <code>height</code>, &quot;there is no failed status&quot;, dev warning logged. Consistent with the :126 union and :44.</td></tr><tr><td>r4 I2 — zero-dimension fallback could upscale</td><td>RESOLVED</td><td>spec.md:128 drops the <code>{ width: 1600 }</code> fallback: on a 0 width or height <code>processPhoto</code> skips the downscale, keeps the original asset with a dev warning, &quot;the same outcome as a processing failure&quot;. No longer relies on the unverified upscale behaviour (research.md:1275). Introduces one follow-on ambiguity — new I2 below.</td></tr></tbody></table></div>
 <div class="wide"><table><thead><tr><th>ID</th><th>Severity</th><th>Category</th><th>Location</th><th>Finding</th></tr></thead><tbody><tr><td>I1</td><td>INFO</td><td>consistency</td><td>spec.md:147</td><td>The timeout rationale still keys on error identity (&quot;aborts with a <code>TimeoutError</code> reason; one <code>AbortError</code> path keeps the fake&#39;s abort and the timeout identical&quot;) while :59 now says the helper never inspects the error&#39;s class or <code>cause</code></td></tr><tr><td>I2</td><td>INFO</td><td>ambiguity</td><td>spec.md:128</td><td>The 0-dimension path and the failure path land a <code>ready</code> photo whose <code>width</code> or <code>height</code> can be 0, and no line says how the preview is sized; the research&#39;s stated reason for carrying those fields is the preview</td></tr></tbody></table></div>
-<h3>I1 — Two stories for how a timeout is recognised</h3>
+<details class="sec"><summary><h3>I1 — Two stories for how a timeout is recognised</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> consistency</li>
@@ -102,7 +148,7 @@ Expo's runtime patch being present under jest."</code></pre>
 </li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<h3>I2 — A <code>ready</code> photo may now carry a 0 dimension, and the preview&#39;s sizing rule is unstated</h3>
+</details><details class="sec"><summary><h3>I2 — A <code>ready</code> photo may now carry a 0 dimension, and the preview&#39;s sizing rule is unstated</h3></summary>
 <ul>
 <li><strong>Severity:</strong> INFO</li>
 <li><strong>Category:</strong> ambiguity</li>
@@ -115,7 +161,7 @@ itself from `width`/`height`, so a `ready` photo with a 0 dimension (:127, :128)
 Alternative if nothing else reads them: drop <code>width</code> and <code>height</code> from the <code>ready</code> shape at :126 and :127 and keep only <code>uri</code>.</li>
 <li><strong>Needs user:</strong> no</li>
 </ul>
-<p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
+</details><p><strong>Possibly dismissed:</strong> none (one log entry, the spec-gate approval; no dismissals)</p>
 <p><strong>Summary:</strong> All four round-4 flags are resolved in the working-tree text and verified against the Expo 57 runtime on disk, and the photo-block edits at :44, :105, :125-128 and :140 now tell one story (source actions replaced once picked, Remove the only way back, <code>preparing</code>/<code>ready</code> with <code>pickId</code>, failure and 0-dimension both landing in <code>ready</code> with the original asset). The two leftovers are fix-delta polish, not blockers: align the :147 timeout rationale with the signal-based rule :59 now states, and say how the preview is sized so a 0-dimension <code>ready</code> photo cannot render as nothing (the :3 header also still reads &quot;rounds 1 to 3&quot;). Done well: the how-it-works.md:86 runtime paragraph is now precise enough to be copied into DECISIONS.md as-is, with every citation matching the source.</p>
 
   </main>

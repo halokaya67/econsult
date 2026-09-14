@@ -341,13 +341,56 @@
       <code class="mono">ChoiceGroup</code> now renders its error text directly under the question label
       and before the radio options. Re-check 2 failed because the error, then rendered after the options,
       was 522&nbsp;pt below the fold once the label was scrolled to the top at the largest text size.
-      This run re-drives the same invalid submit at <span class="mono">accessibility-extra-extra-extra-large</span>
-      and again at <span class="mono">medium</span>.
     </p>
     <p class="verdict">Pass <span>5 of 5 checks</span></p>
   </header>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The third re-check of the questions step, with the error rendered directly under the question label.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-pass">PASS</span> 5 of 5 checks: the label lands 16.00 pt below the viewport top and the red error text is fully inside the viewport.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>5 checks, all pass · AX3XL and medium, each from a cold launch · viewport y 116 to 874 (758 pt).</span></p>
+    <p class="ps-r"><b>Fixed</b><span>Closes both defects the first T017 run reported; the default text size is unchanged and clean.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="T018-phone.html">T018, the message step</a><a href="index.html">All runs</a></span></p>
+  </aside>
 
-<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}</style>
+
+<style>.since{margin:18px 0 0;padding:14px 18px;border-left:5px solid currentColor;border-radius:0 6px 6px 0;background:rgba(127,127,127,.09);font-size:15px;line-height:1.55}.since a{color:inherit}
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+</style>
   <div class="since"><strong>Since then.</strong> What a screen reader says, which this run could not capture, has since been recorded twice: TalkBack&rsquo;s exact wording for nine events on an Android emulator (<a href="../ui-verification/android.html">Android lane</a>) and VoiceOver&rsquo;s caption panel for eleven events on a real iPad (<a href="../ui-verification/device.html">iPad lane</a>).</div>
 
 
@@ -359,7 +402,7 @@
   </dl>
 
   <section>
-    <h2>Where the error lands at the largest text size</h2>
+    <details class="sec"><summary><h2>Where the error lands at the largest text size</h2></summary>
     <p class="lede">
       Post-tap geometry from <span class="mono">a11y-after.txt</span>, drawn to scale in the scroll
       view's own point coordinates. The label stops <strong>16.00&nbsp;pt</strong> below the viewport
@@ -439,10 +482,10 @@
         871, with row 873 blank. Both wrapped lines are fully drawn.
       </figcaption>
     </figure>
-  </section>
+  </details></section>
 
   <section>
-    <h2>Checks</h2>
+    <details class="sec" open><summary><h2>Checks</h2></summary>
     <div class="table-wrap">
       <table class="checks">
         <caption>Each check re-run from a cold launch at its own text size.</caption>
@@ -487,7 +530,7 @@
         </tbody>
       </table>
     </div>
-  </section>
+  </details></section>
 
   <section>
     <div class="sizeband">
@@ -528,7 +571,7 @@
   </section>
 
   <section>
-    <h2>Accessibility tree after the invalid submit</h2>
+    <details class="sec"><summary><h2>Accessibility tree after the invalid submit</h2></summary>
     <p class="lede">
       Excerpt from <span class="mono">a11y-after.txt</span> (largest text size). The medium tree
       carries the same names and the same order at smaller coordinates.
@@ -547,10 +590,10 @@ index 41  radio button, unchecked  y 1294.67   "Longer than a month"</pre>
       error before the options it applies to. The label keeps its folded accessible name, and all three
       radios still report <span class="mono">radio button, unchecked</span>.
     </p>
-  </section>
+  </details></section>
 
   <section>
-    <h2>Flags and notes</h2>
+    <details class="sec"><summary><h2>Flags and notes</h2></summary>
     <ul class="notes">
       <li>
         <span class="marker m-watch">Fragile</span>
@@ -581,7 +624,7 @@ index 41  radio button, unchecked  y 1294.67   "Longer than a month"</pre>
         </span>
       </li>
     </ul>
-  </section>
+  </details></section>
 
   <footer>
     Evidence: T017-phone-recheck3/<br>

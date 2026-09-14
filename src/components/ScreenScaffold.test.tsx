@@ -1,12 +1,27 @@
 import { act, fireEvent, screen } from "@testing-library/react-native";
 import * as Network from "expo-network";
-import { useRef } from "react";
-import { Dimensions, Keyboard, Platform, ScrollView, StyleSheet, Text } from "react-native";
+import { useEffect, useRef } from "react";
+import {
+  Dimensions,
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
 import { renderWithProviders } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
 import { ScreenScaffold, useScrollToField } from "./ScreenScaffold";
+
+// Jest renders no layout, so the hook the scaffold reads the text size from is the only place a
+// live Dynamic Type change can be simulated; every test outside that one keeps the real metrics.
+jest.mock("react-native/Libraries/Utilities/useWindowDimensions", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
 
 // The jest ScrollView and Text mocks expose every native method as a shared jest.fn, so the real
 // measure-then-scroll path can be driven end to end.
@@ -21,6 +36,12 @@ const measureLayout = jest.mocked(Text.prototype.measureLayout);
 // Stands in for the content view element getInnerViewRef returns under the New Architecture.
 const CONTENT_REF = {};
 const FIELD_TOP = 480;
+
+// A mount counter: a remount runs the effect again, which is the evidence of a fresh layout pass.
+function MountProbe({ onMount }: { onMount: () => void }) {
+  useEffect(() => onMount(), [onMount]);
+  return <Text>Body</Text>;
+}
 
 function FieldProbe({ withNode = true }: { withNode?: boolean }) {
   const scrollToField = useScrollToField();
@@ -40,9 +61,16 @@ const removeKeyboardListener = jest.fn();
 type KeyboardListener = Parameters<typeof Keyboard.addListener>[1];
 type KeyboardFrame = Parameters<KeyboardListener>[0];
 
-const WINDOW_HEIGHT = Dimensions.get("window").height;
-const WINDOW_WIDTH = Dimensions.get("window").width;
+const WINDOW = Dimensions.get("window");
+const WINDOW_HEIGHT = WINDOW.height;
+const WINDOW_WIDTH = WINDOW.width;
 const KEYBOARD_TOP = Math.round(WINDOW_HEIGHT / 2);
+
+const mockedWindow = jest.mocked(useWindowDimensions);
+
+beforeEach(() => {
+  mockedWindow.mockReturnValue(WINDOW);
+});
 
 // The frame iOS reports: its top edge in window coordinates, and whose keyboard it is.
 function keyboardFrame(screenY: number, isEventFromThisApp: boolean): KeyboardFrame {
@@ -260,6 +288,49 @@ describe("ScreenScaffold and the keyboard", () => {
     unmount();
 
     expect(removeKeyboardListener).toHaveBeenCalled();
+  });
+});
+
+// Changing the system text size while the app runs repaints the glyphs but leaves the layout boxes
+// at the size they were measured at, so the scaffold remounts its content to force a new pass.
+describe("ScreenScaffold and the system text size", () => {
+  test("lays its content out again when the system text size changes", () => {
+    const onMount = jest.fn();
+    mockedWindow.mockReturnValue({ ...WINDOW, fontScale: 1 });
+    const { rerender } = renderWithProviders(
+      <ScreenScaffold>
+        <MountProbe onMount={onMount} />
+      </ScreenScaffold>,
+    );
+
+    mockedWindow.mockReturnValue({ ...WINDOW, fontScale: 2 });
+    rerender(
+      <ScreenScaffold>
+        <MountProbe onMount={onMount} />
+      </ScreenScaffold>,
+    );
+
+    expect(onMount).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("Body")).toBeOnTheScreen();
+  });
+
+  test("leaves its content mounted while the text size stays the same", () => {
+    const onMount = jest.fn();
+    mockedWindow.mockReturnValue({ ...WINDOW, fontScale: 1 });
+    const { rerender } = renderWithProviders(
+      <ScreenScaffold>
+        <MountProbe onMount={onMount} />
+      </ScreenScaffold>,
+    );
+
+    rerender(
+      <ScreenScaffold>
+        <MountProbe onMount={onMount} />
+      </ScreenScaffold>,
+    );
+
+    expect(onMount).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("Body")).toBeOnTheScreen();
   });
 });
 

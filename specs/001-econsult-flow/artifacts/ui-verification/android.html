@@ -70,13 +70,22 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
   <header class="head">
     <p class="eyebrow">Finish phase · Android</p>
     <h1>Finish-phase UI verification — Android lane</h1>
-    <p class="lede">The full walkthrough on a Pixel API 36 emulator in Expo Go: 56 checks, 53 passing. The three Android questions the README singles out all pass; two TalkBack-only accessibility defects and one layout observation came out of the run. A later pass on a physical Galaxy Tab S7 FE covered the three things an emulator cannot show &mdash; camera capture, the spoken header labels and the step 1 read faults &mdash; and found one more defect.</p>
+    <p class="lede">The full walkthrough on a Pixel API 36 emulator in Expo Go: 56 checks, 53 passing. The three Android questions the README singles out all pass; two TalkBack-only accessibility defects and one layout observation came out of the run.</p>
   </header>
   <aside class="toc" aria-label="Contents">
     <p class="label">Contents</p>
     <ol><li><a href="#verdict">Verdict</a></li><li><a href="#environment">Environment</a></li><li><a href="#developer-settings">Developer settings</a></li><li><a href="#the-flow">The flow</a></li><li><a href="#failures-and-offline">Failures and offline</a></li><li><a href="#navigation-and-form-factor">Navigation and form factor</a></li><li><a href="#largest-text">Largest text size</a></li><li><a href="#defects">Defects</a></li><li><a href="#talkback">TalkBack</a></li><li><a href="#not-verified">Not verified</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#re-check">Re-check after fixes</a></li><li><a href="#talkback-spoken">TalkBack spoken text</a></li><li><a href="#spoken-re-check">Re-check of the spoken-output defects</a></li><li><a href="#real-device">Real device: Galaxy Tab S7 FE</a></li><li><a href="#evidence">Evidence</a></li></ol>
   </aside>
   <main>
+  <aside class="ps" aria-label="Summary">
+    <p class="ps-k">In short</p>
+    <p class="ps-r"><b>What</b><span>The walkthrough on a Pixel API 36 emulator in Expo Go with TalkBack, plus a later pass on a real Samsung Galaxy Tab S7 FE.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">DEFECTS</span> at the time of this pass; 53 of 56 checks pass, and all five defects have since been fixed and re-verified.</span></p>
+    <p class="ps-r"><b>Numbers</b><span>56 emulator checks, 53 pass · 5 defects, all closed · 21 checks on the real Galaxy Tab S7 FE, 19 pass · font scales 1.0 and 2.0.</span></p>
+    <p class="ps-r"><b>Fixed</b><span>The three walkthrough defects and the two TalkBack-only ones landed in <code>b1fb557</code>, and the tablet's photo-preview sliver is capped at 360 pt; the camera eviction has no fix in this version and stands as a known limit in DECISIONS.md.</span></p>
+    <p class="ps-r"><b>Next</b><span><a href="index.html">All lanes</a><a href="device.html">Real iPad lane</a></span></p>
+  </aside>
+
 
 <style>
 main > .shots{max-width:none}
@@ -87,14 +96,53 @@ main > .shots{max-width:none}
 .shots figcaption{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:11px;line-height:1.4;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
 .dumps{font-size:14px;color:var(--muted);margin:0 0 24px}
 .dumps code{font-size:12px}
+
+/* Summary card, results table and collapsible sections */
+:root{--ps-line:var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 22%,transparent))));--ps-muted:var(--muted,color-mix(in oklab,currentColor 65%,transparent));--ps-ok:var(--ok,var(--pass,#2d8a5f));--ps-warn:var(--warm,var(--warn,var(--open,#a8681a)));--ps-fail:var(--flag,var(--fail,#c0392b))}
+.ps{display:block;max-width:72ch;margin:0 0 28px;padding:14px 18px;background:var(--surface,var(--panel,transparent));border:1px solid var(--ps-line);border-left:3px solid var(--accent,currentColor);border-radius:8px;font-size:15px;line-height:1.5;text-align:left}
+.ps-k{margin:0 0 10px;padding:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted)}
+.ps-r{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:2px 14px;margin:0 0 6px;padding:0;font-size:15px;line-height:1.5}
+.ps-r:last-child{margin-bottom:0}
+.ps-r b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding-top:3px}
+.ps-r span{min-width:0}
+.ps-r a{color:inherit}
+.ps-r a+a{margin-left:10px}
+.ps code{font-size:.9em}
+.ps-v{display:inline-block;padding:0 .45em;border:1px solid;border-radius:999px;font-weight:700;font-size:.82em;letter-spacing:.04em;white-space:nowrap}
+.ps-v-pass{color:var(--ps-ok)}
+.ps-v-flags{color:var(--ps-warn)}
+.ps-v-fail{color:var(--ps-fail)}
+@media (max-width:520px){.ps-r{grid-template-columns:minmax(0,1fr)}.ps-r b{padding-top:6px}}
+table.ps-t{width:100%;max-width:72ch;border-collapse:collapse;margin:0 0 26px;font-size:14px;line-height:1.45;text-align:left;font-variant-numeric:tabular-nums}
+table.ps-t caption{caption-side:top;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);padding:0 0 8px}
+table.ps-t th{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ps-muted);text-align:left;vertical-align:bottom;background:none}
+table.ps-t td{padding:6px 12px 6px 0;border-bottom:1px solid var(--ps-line);vertical-align:top;text-align:left}
+table.ps-t tr:last-child td{border-bottom:0}
+table.ps-t td:last-child,table.ps-t th:last-child{padding-right:0}
+.ps-pass{color:var(--ps-ok);font-weight:700}
+.ps-fail{color:var(--ps-fail);font-weight:700}
+details.sec{margin:0;padding:0;border:0;border-top:1px solid var(--line,var(--border,var(--rule,color-mix(in oklab,currentColor 18%,transparent))));background:none}
+details.sec>summary{display:flex;gap:.55rem;align-items:baseline;max-width:none;margin:0;padding:.5rem 0;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"";flex:none;align-self:center;width:.42em;height:.42em;border-right:2px solid var(--muted,currentColor);border-bottom:2px solid var(--muted,currentColor);transform:rotate(-45deg);transition:transform .15s ease}
+details.sec[open]>summary::before{transform:rotate(45deg)}
+details.sec>summary>*{flex:0 1 auto;min-width:0}
+details.sec>summary>h2,details.sec>summary>h3,details.sec>summary>div,details.sec>summary>header{flex:1 1 auto}
+details.sec>summary>h2,details.sec>summary>h3{margin:0;padding:0;border:0;font-size:19px;line-height:1.3}
+details.sec>summary:hover>h2{color:var(--accent,inherit)}
+details.sec[open]{padding-bottom:18px}
+@media (prefers-reduced-motion:reduce){details.sec>summary::before{transition:none}}
+main>details.sec{max-width:none}
+details.sec>*{max-width:72ch}
+details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <blockquote><p><strong>Since then.</strong> The three emulator fixes this report re-checks landed in <code>b1fb557</code>. The counts in the summary above are the emulator walkthrough&#39;s; the real-device pass on the Galaxy Tab S7 FE adds twenty-one checks of its own, further down. R-2, the tablet photo-preview sliver, has since been fixed like the rest &mdash; the preview is capped at 360 points &mdash; while R-1, the camera eviction, has not: it stands as a known limit, recorded in <code>DECISIONS.md</code>.</p></blockquote>
-<h2 id="verdict">Verdict</h2>
+<details class="sec" open><summary><h2 id="verdict">Verdict</h2></summary>
 <p><strong>DEFECTS at the time of this pass; all five have since been fixed and re-verified — the first three under <a href="#re-check">Re-check after fixes</a>, the two spoken-output ones under <a href="#spoken-re-check">Re-check of the spoken-output defects</a>.</strong> 53 of 56 checks pass. The three questions the README singles out for Android all pass: the system back gesture and the back key both hold on the confirmation screen, the camera action is correctly absent on the emulator with the library path offered instead, and edge-to-edge insets are respected on every screen. Two accessibility defects were found, both TalkBack-only and neither visible to a sighted touch user, plus one low-severity layout observation. No crash, no app-originated LogBox, no red box.</p>
 <p>A later pass captured what TalkBack actually <em>says</em>, rather than counting utterances. It confirmed the three fixes at the spoken level and turned up <strong>two further defects in the spoken output</strong> &mdash; A (medium) and B (low), one of them a reading this page had previously recorded as passing. Both have since been fixed and heard again: see <a href="#talkback-spoken">TalkBack spoken text</a> and its <a href="#spoken-re-check">re-check</a>.</p>
 <blockquote><p>The blue gear at the top right of every screenshot is Expo Go&#39;s own floating dev-tools button, drawn over the app. It is not part of the app and is ignored throughout.</p></blockquote>
 
-<h2 id="environment">Environment</h2>
+</details><details class="sec"><summary><h2 id="environment">Environment</h2></summary>
 <div class="wide"><table>
 <thead><tr><th>What</th><th>Value</th></tr></thead>
 <tbody>
@@ -105,7 +153,7 @@ main > .shots{max-width:none}
 <tr><td>Project</td><td>expo ~57.0.22, react-native 0.86.3, expo-router ~57.0.21</td></tr>
 <tr><td>Font scales</td><td>1.0 for the walkthrough, 2.0 for the sweep &mdash; the emulator accepted 2.0, so no fallback to 1.3 was needed</td></tr>
 </tbody></table></div>
-<h2 id="developer-settings">Developer settings</h2>
+</details><details class="sec"><summary><h2 id="developer-settings">Developer settings</h2></summary>
 <div class="wide"><table>
 <thead><tr><th>#</th><th>State</th><th>Expected</th><th>Observed</th><th>Verdict</th></tr></thead>
 <tbody>
@@ -123,7 +171,7 @@ main > .shots{max-width:none}
   <figure><a href="android/05-home-after-cancel.png"><img src="android/05-home-after-cancel.png" alt="05-home-after-cancel.png" loading="lazy"></a><figcaption>05-home-after-cancel.png</figcaption></figure>
   <figure><a href="android/06-devsettings-after-cancel-reopen.png"><img src="android/06-devsettings-after-cancel-reopen.png" alt="06-devsettings-after-cancel-reopen.png" loading="lazy"></a><figcaption>06-devsettings-after-cancel-reopen.png</figcaption></figure>
 </div>
-<h2 id="the-flow">The flow</h2>
+</details><details class="sec"><summary><h2 id="the-flow">The flow</h2></summary>
 <p>Default practice <code>prc-0421</code>, font scale 1.0.</p>
 <div class="wide"><table>
 <thead><tr><th>#</th><th>State</th><th>Expected</th><th>Observed</th><th>Verdict</th></tr></thead>
@@ -166,7 +214,7 @@ main > .shots{max-width:none}
   <figure><a href="android/19-confirmation-after-back-and-swipe.png"><img src="android/19-confirmation-after-back-and-swipe.png" alt="19-confirmation-after-back-and-swipe.png" loading="lazy"></a><figcaption>19-confirmation-after-back-and-swipe.png</figcaption></figure>
   <figure><a href="android/20-home-after-done.png"><img src="android/20-home-after-done.png" alt="20-home-after-done.png" loading="lazy"></a><figcaption>20-home-after-done.png</figcaption></figure>
 </div>
-<h2 id="failures-and-offline">Failures and offline</h2>
+</details><details class="sec"><summary><h2 id="failures-and-offline">Failures and offline</h2></summary>
 <div class="wide"><table>
 <thead><tr><th>#</th><th>State</th><th>Expected</th><th>Observed</th><th>Verdict</th></tr></thead>
 <tbody>
@@ -199,7 +247,7 @@ main > .shots{max-width:none}
   <figure><a href="android/39-step2-offline.png"><img src="android/39-step2-offline.png" alt="39-step2-offline.png" loading="lazy"></a><figcaption>39-step2-offline.png</figcaption></figure>
   <figure><a href="android/40-step3-offline-send-disabled.png"><img src="android/40-step3-offline-send-disabled.png" alt="40-step3-offline-send-disabled.png" loading="lazy"></a><figcaption>40-step3-offline-send-disabled.png</figcaption></figure>
 </div>
-<h2 id="navigation-and-form-factor">Navigation and form factor</h2>
+</details><details class="sec"><summary><h2 id="navigation-and-form-factor">Navigation and form factor</h2></summary>
 <div class="wide"><table>
 <thead><tr><th>#</th><th>State</th><th>Observed</th><th>Verdict</th></tr></thead>
 <tbody>
@@ -231,7 +279,7 @@ main > .shots{max-width:none}
   <figure><a href="android/45-not-found-route.png"><img src="android/45-not-found-route.png" alt="45-not-found-route.png" loading="lazy"></a><figcaption>45-not-found-route.png</figcaption></figure>
   <figure><a href="android/46-rotation-locked-portrait.png"><img src="android/46-rotation-locked-portrait.png" alt="46-rotation-locked-portrait.png" loading="lazy"></a><figcaption>46-rotation-locked-portrait.png</figcaption></figure>
 </div>
-<h2 id="largest-text">Largest text size</h2>
+</details><details class="sec"><summary><h2 id="largest-text">Largest text size</h2></summary>
 <p>The emulator accepted a font scale of 2.0, so the sweep ran at the full 2&times; rather than the 1.3&times; fallback. The app was relaunched after the change.</p>
 <div class="wide"><table>
 <thead><tr><th>#</th><th>State</th><th>Observed</th><th>Verdict</th></tr></thead>
@@ -256,7 +304,7 @@ main > .shots{max-width:none}
   <figure><a href="android/59-fs2-confirmation.png"><img src="android/59-fs2-confirmation.png" alt="59-fs2-confirmation.png" loading="lazy"></a><figcaption>59-fs2-confirmation.png</figcaption></figure>
   <figure><a href="android/60-fs2-home-offline.png"><img src="android/60-fs2-home-offline.png" alt="60-fs2-home-offline.png" loading="lazy"></a><figcaption>60-fs2-home-offline.png</figcaption></figure>
 </div>
-<h2 id="defects">Defects</h2>
+</details><details class="sec"><summary><h2 id="defects">Defects</h2></summary>
 <h3>1 &mdash; MEDIUM &middot; Questions step &middot; a corrected choice question keeps announcing its old error</h3>
 <p><strong>FIXED &mdash; re-verified 2026-09-14.</strong> <code>ChoiceGroup</code> now names its label unconditionally, and the stale <code>Error:</code> no longer survives the correction.</p>
 <p><strong>What a user sees.</strong> Nothing, if they can see. With TalkBack on, a patient who leaves the required question blank, hears &quot;Error: This question is required&quot;, then answers it correctly, still hears <em>&quot;How long have you had this problem? (required). Error: This question is required&quot;</em> every time that label is focused, for the rest of the screen&#39;s life. The red error text has already disappeared, so the spoken state and the visible state disagree and there is no way to make it stop.</p>
@@ -292,7 +340,7 @@ main > .shots{max-width:none}
 <h3>B &mdash; LOW &middot; Confirmation &middot; &quot;Message sent&quot; is spoken twice on arrival</h3>
 <p><strong>Fixed and re-verified.</strong> The confirmation heading speaks it once and the message step&#39;s status line is no longer announced. What a patient heard before and why is in <a href="#talkback-spoken">Defect B under TalkBack spoken text</a>; the re-check is in <a href="#spoken-re-check">Re-check of the spoken-output defects</a>.</p>
 
-<h2 id="talkback">TalkBack</h2>
+</details><details class="sec"><summary><h2 id="talkback">TalkBack</h2></summary>
 <p><strong>Available: yes.</strong> The google_apis image ships the Android Accessibility Suite (<code>com.google.android.marvin.talkback</code>). TalkBack was enabled for this pass, confirmed bound and speaking, and disabled again at the end.</p>
 <p><strong>Every figure below is an utterance count</strong>, one per speech-synthesis request, read from the speech-synthesis request log. The exact wording was captured in a later pass and is in <a href="#talkback-spoken">TalkBack spoken text</a>. The counts were calibrated first:</p>
 <ul>
@@ -314,7 +362,7 @@ main > .shots{max-width:none}
   <figure><a href="android/48-talkback-error-card.png"><img src="android/48-talkback-error-card.png" alt="48-talkback-error-card.png" loading="lazy"></a><figcaption>48-talkback-error-card.png</figcaption></figure>
   <figure><a href="android/49-talkback-empty-validation.png"><img src="android/49-talkback-empty-validation.png" alt="49-talkback-empty-validation.png" loading="lazy"></a><figcaption>49-talkback-empty-validation.png</figcaption></figure>
 </div><p class="dumps">Text evidence: <a href="android/talkback-method-and-counts.txt"><code>talkback-method-and-counts.txt</code></a></p>
-<h2 id="not-verified">Not verified</h2>
+</details><details class="sec"><summary><h2 id="not-verified">Not verified</h2></summary>
 <p>The wording of TalkBack&#39;s utterances was captured in the later pass &mdash; see <a href="#talkback-spoken">TalkBack spoken text</a> &mdash; including the spoken hints on a disabled Send or Retry and on a disabled Continue, which are not exposed as separate attributes in the accessibility tree. The disabled state those hints explain was verified in checks 7, 35 and 36. What follows was not verified at all.</p>
 <ul>
 <li><strike><strong>The step 1 loading state.</strong></strike> <strong>Now verified on hardware</strong> &mdash; the skeleton and its accessible name were captured on the tablet, see <a href="#real-device">Real device</a>, check R15.</li>
@@ -325,11 +373,11 @@ main > .shots{max-width:none}
 <li><strong>Multi-window and split screen, and dark mode.</strong> Out of scope. <strike>A real device.</strike> <strong>Now covered</strong> for camera capture, the header labels and the read faults &mdash; see <a href="#real-device">Real device</a>. Rotation while the camera is open remains open there.</li>
 </ul>
 
-<h2 id="logs-and-crashes">Logs and crashes</h2>
+</details><details class="sec"><summary><h2 id="logs-and-crashes">Logs and crashes</h2></summary>
 <p>None. No crash, no app-originated LogBox, no red box, and no bundler warning beyond the bundle lines. The one LogBox that appeared was Expo Go&#39;s own &quot;Cannot connect to Expo CLI&quot; warning, caused deliberately by dropping the emulator&#39;s network to test the offline state on the confirmation screen; it cleared on reload.</p>
 
 
-<h2 id="re-check">Re-check after fixes</h2>
+</details><details class="sec"><summary><h2 id="re-check">Re-check after fixes</h2></summary>
 <p>Same emulator, same Expo Go build. Expo Go was force-stopped and relaunched so the three fixes loaded as a cold bundle rather than a hot reload. Each defect was re-driven with its original repro steps, and the happy path was walked once more at a font scale of 2.0.</p>
 <div class="wide"><table>
 <thead><tr><th>Defect</th><th>Expected after the fix</th><th>Observed</th><th>Verdict</th></tr></thead>
@@ -358,7 +406,7 @@ main > .shots{max-width:none}
 <p>Its call stack is entirely inside <code>node_modules</code>: <code>url.then$argument_0</code> at <code>expo-router/build/fork/useLinking.native.js:127</code> calling <code>dispatchSetState</code> on <code>ContextNavigator</code> (<code>expo-router/build/ExpoRoot.js:135</code>), under <code>ExpoRoot</code> &rarr; <code>App</code> &rarr; <code>WithDevTools</code>. No application frame appears anywhere in it, and none of the three fixes touches router linking or the root navigator. It is expo-router&#39;s <code>getInitialURL()</code> promise resolving before the navigator has mounted &mdash; a race only a deep-link cold start can lose. It did <strong>not</strong> reproduce on two further cold launches of the same bundle, so it is intermittent rather than deterministic. Whether it also occurs on the pre-fix code was not bisected. Recorded as an observation against expo-router, not as a defect of this feature.</p>
 <p><strong>State left behind.</strong> Font scale back to 1.0 (verified), TalkBack disabled and confirmed unbound, with touch exploration off. Developer settings back at <code>prc-0421</code> with Fail: Create message returned to None.</p>
 
-<h2 id="talkback-spoken">TalkBack spoken text</h2>
+</details><details class="sec"><summary><h2 id="talkback-spoken">TalkBack spoken text</h2></summary>
 <p>Same emulator, same Expo Go build. TalkBack&#39;s on-screen speech output was switched on for this pass, so every sentence it speaks is drawn on the screen as it is spoken and is caught in the screenshots below. TalkBack draws an app announcement on a <strong>red</strong> ground and the reading of whatever holds screen-reader focus on <strong>grey</strong>, which is how the two are told apart throughout.</p>
 <p>This section carries the wording behind the counts in the <a href="#talkback">TalkBack</a> section, and corrects one reading inferred from them: the validation-error reading recorded there as passing did not generalise to the questions step, where the wording showed the error spoken twice. Both spoken-output defects this section found have since been fixed and heard again &mdash; see <a href="#spoken-re-check">the re-check</a> at the end.</p>
 <blockquote><p>&quot;Times&quot; is the number of separate utterances that carried the sentence. Once is a pass.</p></blockquote>
@@ -450,7 +498,7 @@ main > .shots{max-width:none}
 </div>
 <p><strong>State left behind.</strong> TalkBack disabled and confirmed unbound with touch exploration off, and its speech-output display switched back off. Developer settings back at <code>prc-0421</code>, Latency Default, all four faults None, Force offline off; font scale 1.0, rotation automatic, the app on the home screen with no offline banner.</p>
 
-<h2 id="real-device">Real device: Samsung Galaxy Tab S7 FE</h2>
+</details><details class="sec"><summary><h2 id="real-device">Real device: Samsung Galaxy Tab S7 FE</h2></summary>
 <p>A second pass on physical hardware, on the same bundle as <a href="#re-check">Re-check after fixes</a>, loaded cold. It covers only the three things the emulator could not show: camera capture, the spoken labels on the header controls, and the two read-fault states on step 1. Everything above stands as recorded.</p>
 <div class="wide"><table>
 <thead><tr><th>What</th><th>Value</th></tr></thead>
@@ -559,11 +607,11 @@ main > .shots{max-width:none}
 <h3>State left behind</h3>
 <p>TalkBack disabled and confirmed unbound, with touch exploration off and the tablet&#39;s pre-existing accessibility service untouched. Developer settings back at <code>prc-0421</code>, Latency Default, all four faults None, Force offline off. The app is on the home screen with no offline banner. Font scale and rotation were left as the tablet&#39;s owner had them. The camera permission granted during the pass was left granted; the temporary image placed in the gallery for the library check was deleted.</p>
 
-<h2 id="evidence">Evidence</h2>
+</details><details class="sec"><summary><h2 id="evidence">Evidence</h2></summary>
 <p>114 screenshots and seven text files in this directory: 64 and four from the original emulator run, the eleven <code>R*</code> screenshots and three <code>R*</code> trees from the re-check, the fifteen <code>T*</code> screenshots of TalkBack&#39;s spoken text, the six <code>TR*</code> screenshots from the spoken-output re-check, and the eighteen <code>D1-*</code> screenshots from the real-device pass. The state left behind on the emulator: font scale back to 1.0, TalkBack disabled with its speech-output display off, rotation back to automatic, and Developer settings back at <code>prc-0421</code> / Latency Default / all faults None / Force offline off. The tablet is described under <a href="#real-device">Real device</a>.</p>
 <p class="dumps">Text evidence: <a href="android/report.md"><code>report.md</code></a>, <a href="android/setup.log"><code>setup.log</code></a>, <a href="android/a11y-choicegroup-stale-label.txt"><code>a11y-choicegroup-stale-label.txt</code></a>, <a href="android/a11y-not-found-link.txt"><code>a11y-not-found-link.txt</code></a>, <a href="android/talkback-method-and-counts.txt"><code>talkback-method-and-counts.txt</code></a>, <a href="android/R1-choicegroup-label-reset.txt"><code>R1-choicegroup-label-reset.txt</code></a>, <a href="android/R2-not-found-button.txt"><code>R2-not-found-button.txt</code></a>, <a href="android/R3-error-card-reveal.txt"><code>R3-error-card-reveal.txt</code></a></p><div class="shots">
   <figure><a href="android/61-final-home-defaults.png"><img src="android/61-final-home-defaults.png" alt="61-final-home-defaults.png" loading="lazy"></a><figcaption>61-final-home-defaults.png</figcaption></figure>
 </div>
-  </main>
+  </details></main>
   <footer class="foot">Generated from <code>android/report.md</code>.</footer>
 </div>
