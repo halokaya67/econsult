@@ -1,8 +1,6 @@
 <meta charset="utf-8">
 <title>E-consult Flow Plan</title>
 <meta name="description" content="Twenty-two test-first tasks that build the e-consult submission flow, each with exact files, interfaces and verify commands.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
   --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
@@ -23,7 +21,7 @@
   --code-bg:#1B292D; --shadow:none; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
 a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
 .shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
@@ -50,7 +48,7 @@ li{margin:0 0 6px}
 li > p{margin:0}
 strong{font-weight:700}
 em{color:var(--muted);font-style:italic}
-code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
 pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
 pre.code code{background:none;padding:0;font-size:inherit}
 .band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
@@ -100,7 +98,7 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
 <li>I5, deferred at the finish gate, was carried out in the restructuring pass; all four of its ownership findings are resolved.</li>
 </ul>
 </blockquote>
-<p>Revision 2, after plan-checker round 1 (<code>checker/plan-r1.md</code>): screen tests moved out of the route directory, a test-only flow layout that carries a preset draft, hoist-safe jest mocks, role queries only on accessibility elements, the zod output type in the services, and the smaller findings. Revision 2.1, after spec-checker round 4 (<code>checker/spec-r4.md</code>): the timeout helper decides on its own aborted signal instead of the error&#39;s name (<code>isAbortError</code> removed), the photo processor keeps the original when the picker reports a zero dimension instead of asking for a bound that could upscale, and the decisions text no longer claims a <code>FetchError</code> on every abort. Revision 3, after plan-checker round 2 (<code>checker/plan-r2.md</code>): a typed manipulator mock, <code>userEvent</code> imported from Testing Library, ambient types for expo-router&#39;s runtime matchers, a typed failure test in the photo task, six branch tests for the coverage thresholds, a radio group around the recipient cards, shared text styles in <code>src/theme/text.ts</code>, and every function under fifty lines. Revision 3.1, after plan-checker round 3 (<code>checker/plan-r3.md</code>): the missing <code>STEP_TITLES</code> import in the recipient test, a typed <code>ready</code> result in the recipients test, two more <code>src/api</code> coverage tests, <code>text.muted</code> at its last three sites, and the photo views renamed so they do not shadow the draft&#39;s <code>ReadyPhoto</code> type.</p>
+<p>Revision 2, after plan-checker round 1 (<code>checker/plan-r1.md</code>): screen tests moved out of the route directory, a test-only flow layout that carries a preset draft, hoist-safe jest mocks, role queries only on accessibility elements, the zod output type in the services, and the smaller findings. Revision 2.1, after spec-checker round 4 (<code>checker/spec-r4.md</code>): the timeout helper decides on its own aborted signal instead of the error&#39;s name (<code>isAbortError</code> removed), the photo processor keeps the original when the picker reports a zero dimension instead of asking for a bound that could upscale, and the decisions text no longer claims a <code>FetchError</code> on every abort. Revision 3, after plan-checker round 2 (<code>checker/plan-r2.md</code>): a typed manipulator mock, <code>userEvent</code> imported from Testing Library, ambient types for expo-router&#39;s runtime matchers, a typed failure test in the photo task, six branch tests for the coverage thresholds, a radio group around the recipient cards, shared text styles in <code>src/theme/text.ts</code>, and every function under fifty lines. Revision 3.1, after plan-checker round 3 (<code>checker/plan-r3.md</code>): the missing <code>STEP_TITLES</code> import in the recipient test, a typed <code>ready</code> result in the recipients test, two more <code>src/api</code> coverage tests, <code>text.muted</code> at its last three sites, and the photo views renamed so they do not shadow the draft&#39;s <code>ReadyPhoto</code> type. No fourth round ran: revision 3.1 is the revision that went to the plan gate and was approved there, and its two blocking fixes are confirmed by the implementation — <code>src/__tests__/app/econsult/recipient.test.tsx</code> imports <code>STEP_TITLES</code>, <code>src/features/econsult/utils/recipients.test.ts</code> annotates its fixture <code>RecipientsResult</code>, and both compile and pass under <code>npm run typecheck</code> and <code>npm test</code>.</p>
 <p><strong>Goal:</strong> One complete e-consult path in Expo Go on the iOS simulator, from a clean clone with <code>npx expo start</code>: choose a recipient, answer the practice&#39;s questions, write the message, optionally add a downscaled photo, see a clear confirmation, with loading, empty, error, sending, offline and partial-failure states, usable with VoiceOver and the largest text sizes.</p>
 <p><strong>Architecture:</strong> expo-router native stack with a nested <code>econsult</code> group whose layout owns the draft (a pure reducer in React context) and the flow&#39;s header. TanStack Query over a typed <code>Transport</code> interface with one shipped implementation, an in-process fake with latency, faults and abort support; zod schemas at the boundary. Screens are thin: they compose a small set of accessible components and call feature hooks. A development-only settings screen switches practice, latency, faults and offline at runtime.</p>
 <p><strong>Tech Stack:</strong> Expo SDK 57 (expo 57.0.22, expo-router 57.0.21), React Native 0.86.3, React 19.2.3, TypeScript 6.0.3, @tanstack/react-query 5, zod 4, expo-image-picker, expo-image-manipulator, expo-network, expo-crypto, expo-device, expo-image; jest-expo 57 with @testing-library/react-native 13.3.3; eslint-config-expo 57 with prettier.</p>
@@ -6571,20 +6569,5 @@ npm run lint</code></pre>
 2026-09-12T22:00 · finish:ui-verify · auto · finish_gate — the user answered the finish gate with "Set, go ahead"</code></pre>
 
   </main>
-  <footer class="foot">Generated from <code>plan.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+  <footer class="foot">Generated from <code>plan.md</code>.</footer>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
-<script>
-(function(){
-  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  function renderPending(){
-    if (!window.mermaid) return;
-    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
-    if (!nodes.length) return;
-    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
-    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
-  }
-  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
-})();
-</script>

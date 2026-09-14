@@ -3,8 +3,8 @@ import { act, renderRouter, screen, waitFor } from "expo-router/testing-library"
 import { Alert, Text } from "react-native";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders } from "@/test/renderWithProviders";
-import { initialDraft, type DraftState } from "../state/draft";
 import { useDiscardGuard } from "./useDiscardGuard";
+import { initialDraft, type DraftState } from "../state/draft";
 
 const GUARDED_DRAFT: DraftState = { ...initialDraft, message: "My knee hurts" };
 

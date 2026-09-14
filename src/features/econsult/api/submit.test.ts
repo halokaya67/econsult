@@ -1,6 +1,5 @@
 import { createFakeTransport } from "@/api/fake/fakeTransport";
 import { createServices, type Services } from "@/api/services";
-import { initialDraft, type DraftState } from "../state/draft";
 import {
   idempotencyKeyFor,
   retryAttachment,
@@ -10,6 +9,7 @@ import {
   toCreateRequest,
   type SubmitInput,
 } from "./submit";
+import { initialDraft, type DraftState } from "../state/draft";
 
 const SESSION = { patientId: "pat-1", practiceId: "prc-0421", displayName: "Ria" };
 const PHOTO = { uri: "file:///cache/a.jpg", name: "photo.jpg", type: "image/jpeg" };

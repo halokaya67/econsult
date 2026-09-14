@@ -1,8 +1,6 @@
 <meta charset="utf-8">
 <title>Spec review, round 1</title>
 <meta name="description" content="Verdict: PASS_WITH_FLAGS. 7 warnings, 4 information items.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
   --ground:#F6F8F8; --surface:#FFFFFF; --ink:#16262B; --muted:#55686D; --line:#D6DFE1;
@@ -23,7 +21,7 @@
   --code-bg:#1B292D; --shadow:none; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:32px 96px;-webkit-font-smoothing:antialiased}
 a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
 .shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0 48px}
@@ -50,7 +48,7 @@ li{margin:0 0 6px}
 li > p{margin:0}
 strong{font-weight:700}
 em{color:var(--muted);font-style:italic}
-code{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:4px}
 pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.5}
 pre.code code{background:none;padding:0;font-size:inherit}
 .band{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;margin:8px 0 24px;overflow-x:auto;box-shadow:var(--shadow)}
@@ -247,20 +245,5 @@ Items 3–4 are cut first if time runs out and are named in DECISIONS.md either 
 <p><strong>Summary:</strong> A strong spec: the edge-case taxonomy, platform lens (offline, permissions, iOS-vs-Android), contract ownership and idempotency design are all present and internally consistent, and every platform claim I could check against node_modules held (font-scale fallback, keyboard insets prop, <code>usePreventRemove</code>, optional peers, bundled modules). Fix W2 and W6 first — both change the dependency list and the navigation skeleton the plan derives its file list from — then W1 so SC6 is satisfiable. Working tree note: <code>.vscode/settings.json</code> has an uncommitted edit and <code>specs/</code> is untracked, neither of which affects this review.</p>
 
   </main>
-  <footer class="foot">Generated from <code>checker/spec-r1.md</code>. Diagrams render with Mermaid; when opened as a local file they need an internet connection for the renderer.</footer>
+  <footer class="foot">Generated from <code>checker/spec-r1.md</code>.</footer>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
-<script>
-(function(){
-  var dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (document.documentElement.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  function renderPending(){
-    if (!window.mermaid) return;
-    var nodes = Array.prototype.filter.call(document.querySelectorAll('pre.mermaid'), function(n){ return !n.querySelector('svg'); });
-    if (!nodes.length) return;
-    window.mermaid.initialize({ startOnLoad:false, theme: dark ? 'dark' : 'neutral', securityLevel:'loose', fontFamily:'"Atkinson Hyperlegible Next", system-ui, sans-serif' });
-    window.mermaid.run({ nodes: nodes }).catch(function(e){ console.warn('mermaid', e); });
-  }
-  if (document.readyState === 'complete') setTimeout(renderPending, 600); else window.addEventListener('load', function(){ setTimeout(renderPending, 600); });
-})();
-</script>

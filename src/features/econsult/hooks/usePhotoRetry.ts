@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
 import { announce } from "@/lib/announce";
 import { runOnce } from "@/lib/inFlight";
+import { useRetryAttachment } from "./useRetryAttachment";
 import { readyPhoto } from "../state/draft";
 import { useDraft } from "../state/DraftProvider";
 import { sendErrorCopy } from "../utils/errorCopy";
 import { photoFileFor } from "../utils/photo";
-import { useRetryAttachment } from "./useRetryAttachment";
 
 export const PHOTO_STILL_FAILED =
   "The photo still couldn't be attached. You can try again or continue without it.";
