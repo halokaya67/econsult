@@ -80,7 +80,7 @@ describe("ChoiceGroup", () => {
     expect(error.props.accessibilityLiveRegion).toBeUndefined();
   });
 
-  test("reports the chosen option with the caller's own literal type", async () => {
+  test("hands the pressed option to onChange", async () => {
     const chosen: Size[] = [];
     const user = userEvent.setup();
     render(
@@ -95,6 +95,23 @@ describe("ChoiceGroup", () => {
     await user.press(screen.getByRole("radio", { name: "Large" }));
 
     expect(chosen).toEqual(["Large"]);
+  });
+
+  // The @ts-expect-error is the real assertion, made by tsc; the render shows what the rejected
+  // value would otherwise leave behind. The option type is named because inference alone would
+  // widen it to include whatever the value is.
+  test("takes no value that is outside its own options", () => {
+    render(
+      <ChoiceGroup<Size>
+        label="Size"
+        options={SIZES}
+        // @ts-expect-error a value outside the options is not assignable
+        value="Medium"
+        onChange={() => {}}
+      />,
+    );
+
+    expect(screen.queryByRole("radio", { checked: true })).toBeNull();
   });
 
   test("renders the error between the label and the options, so a long label scrolls with it", () => {

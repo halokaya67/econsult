@@ -64,6 +64,8 @@ describe("NetworkProvider", () => {
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
+    // The preset already mocks the announcer, so the spy is the mock every earlier test wrote to.
+    announce.mockClear();
     mockedState.mockReturnValue({ isConnected: false, isInternetReachable: false });
 
     renderHook(() => useIsOffline(), { wrapper: wrapperWith(false) });
@@ -75,6 +77,7 @@ describe("NetworkProvider", () => {
     const announce = jest
       .spyOn(AccessibilityInfo, "announceForAccessibility")
       .mockImplementation(() => {});
+    announce.mockClear();
     mockedState.mockReturnValue({ isConnected: true, isInternetReachable: true });
     const { rerender } = renderHook(() => useIsOffline(), { wrapper: wrapperWith(false) });
 

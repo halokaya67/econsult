@@ -1,5 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
+import { AccessibilityInfo } from "react-native";
 import { TestProviders } from "@/test/renderWithProviders";
 import * as submitModule from "../api/submit";
 import { initialDraft, type DraftState } from "../state/draft";
@@ -51,14 +52,22 @@ describe("usePhotoRetry", () => {
     expect(upload).toHaveBeenCalledTimes(1);
   });
 
-  test("uploads nothing when the draft no longer holds a ready photo", async () => {
+  // Without the spoken line the assertion below would also pass for a retry that threw on the
+  // missing photo and swallowed it into the alert, which is not "did nothing".
+  test("uploads nothing and says nothing when the draft no longer holds a ready photo", async () => {
     const upload = jest.spyOn(submitModule, "retryAttachment");
+    const spoken = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    // The preset already mocks the announcer, so the spy is the mock every earlier test wrote to.
+    spoken.mockClear();
     const { result } = renderHook(() => usePhotoRetry(), {
       wrapper: draftWrapper({ ...SENT, photo: null }),
     });
 
-    act(() => result.current.start());
+    await act(async () => result.current.start());
 
     expect(upload).not.toHaveBeenCalled();
+    expect(spoken).not.toHaveBeenCalled();
   });
 });

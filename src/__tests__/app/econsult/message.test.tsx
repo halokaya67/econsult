@@ -68,6 +68,8 @@ const CONTENT_REF = {};
 // Latency for the in-flight-send tests: far enough past the first renders that no stale render of
 // the leave guard can be what lets navigation through.
 const SEND_LATENCY_MS = 120;
+// Latency for the reads, so the first render lands while the practice config is still in flight.
+const READ_LATENCY_MS = 50;
 // The field group starts at its label; the input itself sits below the label and the hint.
 const FIELD_TOP = 540;
 const INPUT_TOP = 620;
@@ -106,6 +108,21 @@ describe("Message step", () => {
     await user.press(screen.getByRole("button", { name: "Change" }));
 
     expect(screen).toHavePathname("/econsult/recipient");
+  });
+
+  // A deep link lands here before the config says whether the practice asks questions, and a header
+  // rendered on that first guess would count "2 of 2" out loud and then "3 of 3".
+  test("holds the step header back until the config resolves, then announces it once", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
+
+    renderMessage({ settings: { latencyMs: READ_LATENCY_MS } });
+    expect(screen.queryByText(/^Step/)).toBeNull();
+
+    expect(await screen.findByText("Step 3 of 3")).toBeOnTheScreen();
+    expect(announce.mock.calls.filter(([line]) => line.startsWith("Step"))).toHaveLength(1);
   });
 
   test("an empty message is blocked with an error tied to the field and announced", async () => {

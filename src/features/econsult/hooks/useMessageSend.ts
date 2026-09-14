@@ -4,6 +4,7 @@ import type { ScrollToField } from "@/components/ScreenScaffold";
 import { useSession } from "@/hooks/useSession";
 import { announce, focusForScreenReader, type Focusable } from "@/lib/announce";
 import { devWarn } from "@/lib/devWarn";
+import { runOnce } from "@/lib/inFlight";
 import { idempotencyKeyFor, submitInputFor } from "../api/submit";
 import { readyPhoto } from "../state/draft";
 import { useDraft } from "../state/DraftProvider";
@@ -84,31 +85,28 @@ export function useMessageSend() {
     field.clearError();
   }
 
-  const onSend: Send = async (scrollToField) => {
-    if (isInFlight.current) return;
-    const { recipientId } = draft;
-    if (field.validate(draft.message, scrollToField) !== null) return;
-    if (recipientId === null) {
-      devWarn(NO_RECIPIENT_WARNING);
-      return;
-    }
-    const idempotencyKey = idempotencyKeyFor(draft);
-    dispatch({ type: "submitStarted", idempotencyKey });
-    setStatus(SENDING_STATUS);
-    isInFlight.current = true;
-    try {
-      const outcome = await submit.mutateAsync(
-        submitInputFor(draft, session, recipientId, idempotencyKey),
-      );
-      dispatch({ type: "attachmentSettled", attachment: outcome.attachment });
-      router.replace("/econsult/sent");
-    } catch {
-      // The mutation's own error state renders the failure; this only drops the status line.
-      setStatus("");
-    } finally {
-      isInFlight.current = false;
-    }
-  };
+  const onSend: Send = (scrollToField) =>
+    runOnce(isInFlight, async () => {
+      const { recipientId } = draft;
+      if (field.validate(draft.message, scrollToField) !== null) return;
+      if (recipientId === null) {
+        devWarn(NO_RECIPIENT_WARNING);
+        return;
+      }
+      const idempotencyKey = idempotencyKeyFor(draft);
+      dispatch({ type: "submitStarted", idempotencyKey });
+      setStatus(SENDING_STATUS);
+      try {
+        const outcome = await submit.mutateAsync(
+          submitInputFor(draft, session, recipientId, idempotencyKey),
+        );
+        dispatch({ type: "attachmentSettled", attachment: outcome.attachment });
+        router.replace("/econsult/sent");
+      } catch {
+        // The mutation's own error state renders the failure; this only drops the status line.
+        setStatus("");
+      }
+    });
 
   return { submit, status, field, onMessageChange, onSend };
 }

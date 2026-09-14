@@ -4,7 +4,7 @@ import { act, renderRouter, screen, waitFor } from "expo-router/testing-library"
 import { AccessibilityInfo, Text } from "react-native";
 import SentScreen from "@/app/econsult/sent";
 import * as submitModule from "@/features/econsult/api/submit";
-import * as useSubmitModule from "@/features/econsult/hooks/useSubmit";
+import * as retryModule from "@/features/econsult/hooks/useRetryAttachment";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { RETRY_LABEL } from "@/lib/retryLabel";
 import * as networkModule from "@/providers/NetworkProvider";
@@ -29,6 +29,7 @@ const SENT: DraftState = {
 };
 
 const FAILED: DraftState = { ...SENT, photo: READY_PHOTO, attachment: "failed" };
+const PHOTO_FAILED_LINE = "Your message was sent, but the photo could not be attached.";
 
 // Start on step 1 and push the confirmation on top of it so that "back" has a real target to be
 // blocked from.
@@ -101,6 +102,22 @@ describe("Sent", () => {
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
+  // The line is on screen from the first render, so without the announcement nothing would speak
+  // it; a live region would be Android-only and say it a second time there.
+  test("the failed-photo line is spoken once when the confirmation opens", async () => {
+    const spoken = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    // The preset already mocks the announcer, so the spy is the mock every earlier test wrote to.
+    spoken.mockClear();
+
+    renderSent(FAILED);
+    await screen.findByRole("alert");
+
+    expect(spoken.mock.calls.filter(([line]) => line === PHOTO_FAILED_LINE)).toHaveLength(1);
+    expect(screen.getByRole("alert").props.accessibilityLiveRegion).toBeUndefined();
+  });
+
   test("Try again is disabled with a spoken reason while offline", async () => {
     // The provider reads the network mock once per mount, so the link is flipped at the hook.
     jest.spyOn(networkModule, "useIsOffline").mockReturnValue(true);
@@ -114,8 +131,8 @@ describe("Sent", () => {
   test("a successful retry confirms the photo", async () => {
     const retry = { mutateAsync: jest.fn(async () => "attached" as const), isPending: false };
     jest
-      .spyOn(useSubmitModule, "useRetryAttachment")
-      .mockReturnValue(retry as unknown as ReturnType<typeof useSubmitModule.useRetryAttachment>);
+      .spyOn(retryModule, "useRetryAttachment")
+      .mockReturnValue(retry as unknown as ReturnType<typeof retryModule.useRetryAttachment>);
     const user = userEvent.setup();
     renderSent(FAILED);
 
@@ -139,8 +156,8 @@ describe("Sent", () => {
       error: null,
     };
     jest
-      .spyOn(useSubmitModule, "useRetryAttachment")
-      .mockReturnValue(retry as unknown as ReturnType<typeof useSubmitModule.useRetryAttachment>);
+      .spyOn(retryModule, "useRetryAttachment")
+      .mockReturnValue(retry as unknown as ReturnType<typeof retryModule.useRetryAttachment>);
     const user = userEvent.setup();
     renderSent(FAILED);
 
@@ -184,8 +201,8 @@ describe("Sent", () => {
   test("a retry uploads nothing when the e-consult reference is missing", async () => {
     const retry = { mutateAsync: jest.fn(), isPending: false, error: null };
     jest
-      .spyOn(useSubmitModule, "useRetryAttachment")
-      .mockReturnValue(retry as unknown as ReturnType<typeof useSubmitModule.useRetryAttachment>);
+      .spyOn(retryModule, "useRetryAttachment")
+      .mockReturnValue(retry as unknown as ReturnType<typeof retryModule.useRetryAttachment>);
     const user = userEvent.setup();
     renderSent({ ...SENT, econsultId: null, photo: READY_PHOTO, attachment: "failed" });
 
