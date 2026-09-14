@@ -1,23 +1,13 @@
-import { createContext, useCallback, useContext, useRef, type ReactNode } from "react";
+import { useCallback, useRef, type ReactNode } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ScrollToFieldContext, type ScrollToField } from "@/hooks/useScrollToField";
 import type { Focusable } from "@/lib/announce";
 import { useIsOffline } from "@/providers/NetworkProvider";
 import { colors, spacing } from "@/theme/tokens";
 import { OfflineBanner } from "./OfflineBanner";
 
 type Props = { children: ReactNode; action?: ReactNode; testID?: string };
-
-export type ScrollToField = (node: Focusable | null) => void;
-
-const ScrollToFieldContext = createContext<ScrollToField>(() => {});
-
-// Large text can push a validation error far above the viewport, where moving screen-reader focus
-// to it leaves the screen looking untouched. Only components rendered inside the scaffold reach
-// its scroll view, so a screen reads this from its action rather than from itself.
-export function useScrollToField(): ScrollToField {
-  return useContext(ScrollToFieldContext);
-}
 
 // getInnerViewRef returns the content view element; it is absent from ScrollView's types.
 type WithInnerViewRef = { getInnerViewRef?: () => Focusable | null };
