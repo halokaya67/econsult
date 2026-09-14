@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Finish-phase UI verification — 001-econsult-flow</title>
-<meta name="description" content="The finished e-consult flow driven end to end on a phone and a tablet simulator: sixteen scenarios, all passing, with one defect found and fixed and an accessibility audit completed on a re-run.">
+<meta name="description" content="The finished e-consult flow driven end to end on a phone simulator, a tablet simulator and an Android emulator: seventy-two scenarios and checks, with every defect found along the way fixed and re-verified.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -46,7 +46,7 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
   <header class="head">
     <p class="eyebrow">Flow record · 001-econsult-flow · Finish phase</p>
     <h1>UI verification of the finished flow</h1>
-    <p class="lede">After the last step was committed, the whole flow was driven on two simulators — a phone and a tablet — against the real app, not a test double. Sixteen scenarios in total, all passing, with screenshot and accessibility-tree evidence for each.</p>
+    <p class="lede">After the last step was committed, the whole flow was driven on three devices — a phone simulator, a tablet simulator and an Android emulator — against the real app, not a test double. Sixteen scenarios and fifty-six checks in total, with screenshot and accessibility-tree evidence for each, and every defect found along the way fixed and re-verified.</p>
   </header>
   <main>
 
@@ -61,10 +61,14 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
         <p class="name">Tablet lane</p>
         <p class="what">iPad Pro 11-inch (M5) simulator, Expo Go. Six scenarios, all pass, with one non-failing note about the content width.</p>
       </a></li>
+      <li class="lane"><a href="android.html">
+        <p class="name">Android lane</p>
+        <p class="what">Pixel emulator, Android 16 / API 36, Expo Go, with TalkBack. Fifty-six checks, fifty-three pass: two TalkBack-only accessibility defects and one layout observation, all since fixed.</p>
+      </a></li>
     </ul>
 
     <h2>What was checked, and how it came out</h2>
-    <p>Both lanes were driven with the same tooling (agent-device 0.21.0) at the medium text size unless a scenario says otherwise, and each lane's result comes from the accessibility tree and the screenshots rather than from an eyeball impression. The one exception is the Accessibility Inspector audit, which was driven through AppleScript UI scripting because the Inspector is not an app the device driver can reach. Neither lane produced a crash, a red box or a Metro warning beyond the empty-cache notice.</p>
+    <p>The two simulator lanes were driven with the same tooling (agent-device 0.21.0) and the Android lane with <code>adb</code>, each at the medium text size unless a scenario says otherwise, and every lane's result comes from the accessibility tree and the screenshots rather than from an eyeball impression. Two exceptions needed their own driver: the Accessibility Inspector audit, run through AppleScript UI scripting because the Inspector is not an app the device driver can reach, and TalkBack on the emulator, enabled through <code>settings put secure</code>. No lane produced a crash or a red box, and no Metro warning beyond the empty-cache notice and one intermittent expo-router startup warning the Android lane records.</p>
 
     <h3>Phone lane — iPhone 17 simulator, ten scenarios</h3>
     <div class="wide">
@@ -117,10 +121,11 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
     <ul>
       <li><a href="phone.html">phone.html</a> — the phone lane report, with each scenario's screenshots as a thumbnail strip. 69 screenshots, two accessibility dumps, four logs and the audit results table in <code>phone/</code>.</li>
       <li><a href="tablet.html">tablet.html</a> — the tablet lane report, same shape. 38 screenshots, 35 accessibility and raw-tree dumps and one log in <code>tablet/</code>.</li>
+      <li><a href="android.html">android.html</a> — the Android lane report, same shape, with the re-check that closed its three defects. 75 screenshots, six accessibility and method dumps and one log in <code>android/</code>.</li>
     </ul>
     <p>Screenshots are downscaled copies — long edge at most 900 px, and 600 px for the two that were captured at desktop resolution. Click any thumbnail for the full copy. The text dumps are the originals, unchanged.</p>
 
   </main>
-  <footer class="foot">Both lane reports are rendered from the markdown each lane wrote at the time; their wording and verdicts are unedited.</footer>
+  <footer class="foot">All three lane reports are rendered from the markdown each lane wrote at the time; their wording and verdicts are unedited.</footer>
 </div>
 </html>

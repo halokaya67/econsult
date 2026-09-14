@@ -10,6 +10,7 @@ import { PhotoPicker } from "@/features/econsult/components/PhotoPicker";
 import { StepHeader } from "@/features/econsult/components/StepHeader";
 import {
   useMessageSend,
+  useRevealSendError,
   type Send,
   type SendState,
 } from "@/features/econsult/hooks/useMessageSend";
@@ -120,7 +121,8 @@ function DraftPhotoPicker({ disabled }: { disabled: boolean }) {
   );
 }
 
-// Also inside the scaffold, so Retry sends with the same scroll-to-field the button uses.
+// Also inside the scaffold, so Retry sends with the same scroll-to-field the button uses, and a
+// failed send can scroll its own error card into view.
 function SendFeedback({
   status,
   error,
@@ -133,12 +135,16 @@ function SendFeedback({
   onSend: Send;
 }) {
   const scrollToField = useScrollToField();
+  const cardRef = useRevealSendError(error, scrollToField);
   return (
     <>
       {/* Not a live region: the hook announces the status, and both would speak it on Android. */}
       {status ? <Text style={styles.status}>{status}</Text> : null}
       {error ? (
         <ErrorState
+          ref={(node) => {
+            cardRef.current = node;
+          }}
           title={ERROR_TITLE}
           body={sendErrorCopy(error)}
           retryBlockedReason={isOffline ? OFFLINE_HINT : undefined}

@@ -1,0 +1,37 @@
+D3 re-check -- after a failed send the error card is in view and takes screen-reader focus
+
+Repro: Developer settings -> Fail: Create message = Network -> Apply -> step 1 recipient ->
+step 2 answer -> step 3, type a message, Send. Font scale 1.0, 1080x2424 viewport.
+
+1. Sighted half (R3b, screenshot taken WITHOUT scrolling after the failure)
+
+   The view scrolled itself: the 'Your message' heading is clipped at the top of the viewport,
+   which it was not before the Send (R3a). Node bounds straight after the failure:
+
+     [android.view.View accessibilityRole=alert]  bounds=[84,1647][996,1899]
+        desc: "Your message wasn't sent, We couldn't reach your practice. Check your
+               connection and try again."
+     [android.widget.Button]                      bounds=[84,1941][996,2067]
+        desc: 'Try again'
+     [android.widget.Button]                      bounds=[42,2172][1038,2298]
+        desc: 'Send'
+
+   Every one of the three ends above y=2424, so the card, Try again and Send are all inside the
+   viewport with no scrolling, and Send still clears the gesture pill. Before the fix the card's
+   body landed at the bottom edge and both buttons were below the fold (22-create-failure.png).
+
+2. Screen-reader half (R3c before, R3d after, TalkBack enabled)
+
+   TalkBack bound and confirmed:
+     dumpsys accessibility -> Bound services:{Service[label=TalkBack, feedbackType[FEEDBACK_SPOKEN,
+     FEEDBACK_HAPTIC, FEEDBACK_AUDIBLE], ...]}, Crashed services:{}, touchExplorationEnabled=true
+
+   dumpsys accessibility reports focus only at window granularity ('Accessibility Focused Window
+   Id = 2134', the Expo Go window), not per node, so the node was read from TalkBack's own focus
+   highlight in the screenshot.
+
+   R3d shows the green accessibility-focus rectangle drawn around x=82..992, y=1614..1885 -- the
+   alert View at [84,1647][996,1899], i.e. the error card's heading and body together. Focus is on
+   the card, not left behind on the Send button that was double-tapped to trigger the send.
+
+VERDICT: PASS on both halves.

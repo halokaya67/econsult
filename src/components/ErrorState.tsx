@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type Ref } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { announce } from "@/lib/announce";
 import { RETRY_LABEL } from "@/lib/retryLabel";
@@ -13,11 +13,14 @@ export function ErrorState({
   body,
   onRetry,
   retryBlockedReason,
+  ref,
 }: {
   title: string;
   body: string;
   onRetry: () => void;
   retryBlockedReason?: string;
+  // The ref lands on the alert, the element a caller scrolls to and moves screen-reader focus to.
+  ref?: Ref<View>;
 }) {
   // A live region is Android-only, which left the alert silent on iOS; the announcement speaks it
   // on both, so the region is gone rather than saying it twice on Android.
@@ -27,7 +30,7 @@ export function ErrorState({
 
   return (
     <View style={[styles.stack, styles.errorBox]}>
-      <View accessible accessibilityRole="alert" style={styles.stack}>
+      <View ref={ref} accessible accessibilityRole="alert" style={styles.stack}>
         <Text style={text.heading}>{title}</Text>
         <Text style={text.body}>{body}</Text>
       </View>

@@ -1,0 +1,23 @@
+D2 re-check -- the not-found screen's way out is an actionable node
+
+Repro:
+  adb shell am start -a android.intent.action.VIEW -d "exp://10.0.2.2:8083/--/nowhere"
+  adb shell uiautomator dump /sdcard/ui.xml && adb pull /sdcard/ui.xml
+
+Node as it lands now (R2a):
+  [android.widget.Button] clickable=true enabled=true bounds=[42,578][1038,704]
+     desc: 'Go to the home screen'
+  [android.widget.TextView] bounds=[63,609][1017,672]
+     text: 'Go to the home screen'
+
+Before the fix the same node was:
+  class="android.view.View" clickable="false" content-desc=""
+
+The button's box is 126 px tall at 420 dpi = 48 dp, so it also meets the 48-point minimum the
+repository's rules require of every interactive element.
+
+Tapped at (540, 641) -> the home screen (R2b): 'Hello, Ria de Boer.', 'Developer settings' and
+'Write to your practice', with the back arrow gone from the header -- router.dismissTo('/') left no
+not-found entry on the stack.
+
+VERDICT: PASS.

@@ -73,6 +73,8 @@ const READ_LATENCY_MS = 50;
 // The field group starts at its label; the input itself sits below the label and the hint.
 const FIELD_TOP = 540;
 const INPUT_TOP = 620;
+// The error card is inserted below the photo block, far enough down to be off a short screen.
+const CARD_TOP = 880;
 
 // Only an ApiError comes out of the fake transport, so a plain bug in the upload is injected here.
 function breakTheUpload() {
@@ -313,6 +315,26 @@ describe("Message step", () => {
     });
     expect(screen.getByRole("button", { name: RETRY_LABEL })).toBeOnTheScreen();
     expect(screen).toHavePathname("/econsult/message");
+  });
+
+  // Inserted above Send, the card pushed it and Try again below the fold and nothing scrolled.
+  test("a failed create scrolls its error card into view and moves focus to it", async () => {
+    const focus = jest
+      .spyOn(AccessibilityInfo, "sendAccessibilityEvent")
+      .mockImplementation(() => {});
+    getInnerViewRef.mockReturnValue(CONTENT_REF);
+    measureLayout.mockImplementation((_relativeTo, onSuccess) => onSuccess(0, CARD_TOP, 300, 200));
+    const user = userEvent.setup();
+    renderMessage({ settings: { faults: { create: "network" } } });
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+
+    await user.press(screen.getByRole("button", { name: "Send" }));
+    await screen.findByRole("alert");
+
+    // The message passed validation, so the card is the only node measured or focused.
+    expect(scrollTo).toHaveBeenCalledWith({ x: 0, y: CARD_TOP - spacing.md, animated: true });
+    expect(focus).toHaveBeenCalledWith(measureLayout.mock.contexts[0], "focus");
   });
 
   test("Retry re-sends with the idempotency key of the first attempt", async () => {

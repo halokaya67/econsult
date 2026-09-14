@@ -1,0 +1,33 @@
+Accessibility-tree evidence — ChoiceGroup label keeps a stale error in its accessible name
+Captured with: adb shell uiautomator dump, Android 16 (API 36), font scale 1.0.
+Screen: /econsult/questions (prc-0421), first question "How long have you had this problem?".
+
+1. Pristine — no error. content-desc is empty, so TalkBack reads the visible text.
+   TextView bounds=[42,648][1038,816]
+     text      = 'How long have you had this problem? (required)'
+     content-desc = ''
+
+2. After Continue with nothing answered — the error is folded into the accessible name (correct).
+   TextView bounds=[42,648][1038,816]
+     text      = 'How long have you had this problem? (required)'
+     content-desc = 'How long have you had this problem? (required). Error: This question is required'
+   (a sibling TextView 'This question is required' is also present, in red)
+
+3. After answering "1 to 4 weeks" — the red error TextView is GONE from the tree, but the label's
+   content-desc is unchanged. Re-dumped after 3 s, after selecting a different option, and after a
+   scroll that forces re-layout; identical every time.
+   TextView bounds=[42,648][1038,816]
+     text      = 'How long have you had this problem? (required)'
+     content-desc = 'How long have you had this problem? (required). Error: This question is required'   <-- STALE
+   (no 'This question is required' node anywhere in the tree)
+
+Contrast — the same pattern on TextField behaves correctly:
+   Before: EditText content-desc = 'What would you like to ask?. Error: Please write your question before sending'
+   After typing: EditText content-desc = 'What would you like to ask?'    <-- correctly reset
+
+Source difference:
+  src/components/TextField.tsx:61    accessibilityLabel={accessibleName(visibleLabel, error)}      // always a string
+  src/components/ChoiceGroup.tsx     accessibilityLabel={error ? accessibleName(visibleLabel, error) : undefined}
+React Native on Android does not clear a previously set contentDescription when accessibilityLabel
+goes from a string back to undefined; TextField never hits that path because accessibleName() returns
+the plain label when error is falsy.
