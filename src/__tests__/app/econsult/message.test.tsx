@@ -7,14 +7,14 @@ import { act, renderRouter, screen, waitFor } from "expo-router/testing-library"
 import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
 import * as servicesModule from "@/api/services";
 import MessageScreen from "@/app/econsult/message";
-import { RETRY_LABEL } from "@/components/StatusViews";
 import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/features/econsult/components/PhotoPicker";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/utils/validation";
+import { RETRY_LABEL } from "@/lib/retryLabel";
 import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
-import { TestProviders, type ProviderOptions } from "@/test/providers";
+import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
 
 function SentProbe() {

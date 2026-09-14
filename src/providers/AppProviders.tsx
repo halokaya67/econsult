@@ -1,7 +1,6 @@
 import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import type { DevSettings } from "@/features/devSettings/utils/settings";
-import { DevSettingsProvider, useDevSettings } from "./DevSettingsProvider";
+import { DevSettingsProvider, useDevSettings, type DevSettings } from "./DevSettingsProvider";
 import { NetworkProvider } from "./NetworkProvider";
 import { ServicesProvider } from "./ServicesProvider";
 

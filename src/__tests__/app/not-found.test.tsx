@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Text } from "react-native";
 import NotFoundScreen from "@/app/+not-found";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 
 const Home = () => <Text>home</Text>;
 

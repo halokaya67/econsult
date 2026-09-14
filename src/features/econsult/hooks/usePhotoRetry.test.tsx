@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 import * as submitModule from "../api/submit";
 import { initialDraft, type DraftState } from "../state/draft";
 import { DraftProvider } from "../state/DraftProvider";

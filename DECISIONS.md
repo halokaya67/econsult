@@ -92,9 +92,11 @@ Traded off: the error is above the options instead of where a sighted user might
 folders scatters one feature across six places.
 Decided: the first layer groups by responsibility and the second by kind — inside a feature every
 file sits in `api`, `state`, `hooks`, `components` or `utils`, never loose at its root; app-wide
-context lives in `src/providers`; shared hooks in `src/hooks`, a provider's own context hook stays
-in its provider file; shared components go in `src/components`, shared logic with no single owner in
-`src/lib`; routes under `src/app` stay thin; types sit with the code that owns them; no barrel files.
+context lives in `src/providers`; shared hooks in `src/hooks`, while a context's accessor hook stays
+with whatever mounts the context; shared components go in `src/components`, where a generic building
+block with no domain vocabulary stays even while one feature uses it; shared logic with no single
+owner in `src/lib`; routes under `src/app` stay thin; types sit with the code that owns them; no
+barrel files.
 Traded off: newcomers expecting the type-based layout have to learn the ownership rule, and screen
 tests live under `src/__tests__/app` because expo-router treats every file under `src/app` as a route.
 

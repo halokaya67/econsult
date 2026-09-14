@@ -10,7 +10,7 @@ export const BACK_ONLINE_MESSAGE = "You're back online.";
 const OfflineContext = createContext<boolean>(false);
 
 // Fail-open: only an explicit "not connected" counts as offline; unknown counts as online.
-export function isLinkDown(isConnected: boolean | undefined, forceOffline: boolean): boolean {
+function isLinkDown(isConnected: boolean | undefined, forceOffline: boolean): boolean {
   return forceOffline || isConnected === false;
 }
 

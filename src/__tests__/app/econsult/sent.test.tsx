@@ -3,13 +3,13 @@ import { router } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, Text } from "react-native";
 import SentScreen from "@/app/econsult/sent";
-import { RETRY_LABEL } from "@/components/StatusViews";
 import * as submitModule from "@/features/econsult/api/submit";
 import * as useSubmitModule from "@/features/econsult/hooks/useSubmit";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
+import { RETRY_LABEL } from "@/lib/retryLabel";
 import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
-import { TestProviders } from "@/test/providers";
+import { TestProviders } from "@/test/renderWithProviders";
 
 const Home = () => <Text>home</Text>;
 const Recipient = () => <Text>recipient</Text>;

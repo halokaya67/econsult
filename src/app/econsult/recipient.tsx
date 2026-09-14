@@ -1,15 +1,15 @@
 import { Stack, useRouter } from "expo-router";
-import { usePreventRemove } from "expo-router/react-navigation";
-import { useEffect, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
+import { LoadingCards } from "@/components/LoadingCards";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { RecipientCard } from "@/components/RecipientCard";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
-import { EmptyState, ErrorState, LoadingCards } from "@/components/StatusViews";
-import { StepHeader } from "@/components/StepHeader";
 import { TextButton } from "@/components/TextButton";
+import { RecipientCard } from "@/features/econsult/components/RecipientCard";
+import { StepHeader } from "@/features/econsult/components/StepHeader";
+import { useDiscardGuard } from "@/features/econsult/hooks/useDiscardGuard";
 import { useRecipients } from "@/features/econsult/hooks/useRecipients";
-import { shouldGuardLeaving, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { roleLabel, type RecipientsResult } from "@/features/econsult/utils/recipients";
 import {
@@ -26,8 +26,6 @@ const EMPTY_TITLE = "Your practice hasn't switched on e-consults in the app yet"
 const EMPTY_BODY = "You can still phone the practice with your question.";
 const ERROR_TITLE = "We couldn't load your practice's details";
 const ERROR_BODY = "Check your connection and try again.";
-const DISCARD_TITLE = "Discard your message?";
-const DISCARD_BODY = "Your message and photo will be lost.";
 const STEP_ROUTES = { questions: "/econsult/questions", message: "/econsult/message" } as const;
 
 type ReadyResult = Extract<RecipientsResult, { status: "ready" }>;
@@ -113,24 +111,6 @@ function RecipientBody({
     );
   }
   return <RecipientList result={result} selectedId={selectedId} onSelect={onSelect} />;
-}
-
-// Leaving step 1 in any direction means leaving the flow, so Discard lowers the guard and goes home
-// instead of replaying the blocked action: a root-level pop re-dispatched here is a no-op on device.
-function useDiscardGuard(draft: DraftState) {
-  const router = useRouter();
-  const [isLeaving, setIsLeaving] = useState(false);
-
-  usePreventRemove(shouldGuardLeaving(draft) && !isLeaving, () => {
-    Alert.alert(DISCARD_TITLE, DISCARD_BODY, [
-      { text: "Keep writing", style: "cancel" },
-      { text: "Discard", style: "destructive", onPress: () => setIsLeaving(true) },
-    ]);
-  });
-
-  useEffect(() => {
-    if (isLeaving) router.dismissTo("/");
-  }, [isLeaving, router]);
 }
 
 export default function RecipientScreen() {

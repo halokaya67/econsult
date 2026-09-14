@@ -1,7 +1,12 @@
 import { act, renderHook } from "@testing-library/react-native";
 import type { ReactNode } from "react";
-import { DEFAULT_DEV_SETTINGS, type DevSettings } from "@/features/devSettings/utils/settings";
-import { DevSettingsProvider, useDevSettings } from "./DevSettingsProvider";
+import { DEFAULT_PRACTICE_ID, FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
+import {
+  DEFAULT_DEV_SETTINGS,
+  DevSettingsProvider,
+  useDevSettings,
+  type DevSettings,
+} from "./DevSettingsProvider";
 
 const SETTINGS: DevSettings = {
   practiceId: "prc-0873",
@@ -15,6 +20,18 @@ function wrapperWith(initial?: DevSettings) {
     return <DevSettingsProvider initial={initial}>{children}</DevSettingsProvider>;
   };
 }
+
+describe("DEFAULT_DEV_SETTINGS", () => {
+  test("starts on a fixture practice with the built-in latency, no faults and the link up", () => {
+    expect(FIXTURE_PRACTICE_IDS).toContain(DEFAULT_PRACTICE_ID);
+    expect(DEFAULT_DEV_SETTINGS).toEqual({
+      practiceId: DEFAULT_PRACTICE_ID,
+      latencyMs: null,
+      faults: {},
+      forceOffline: false,
+    });
+  });
+});
 
 describe("DevSettingsProvider", () => {
   test("starts from the default settings when no initial settings are given", () => {
