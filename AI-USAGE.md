@@ -65,12 +65,6 @@ Intervention: the human asked why VoiceOver and TalkBack could not be tested; ca
 overlay were captured, seven defects fixed.
 Needed because: every double-speak came from a second channel no count could show.
 
-**The showcase recording ran fifty minutes for a five-page app.** The driver paused for a snapshot
-before every tap.
-Intervention: the human stopped it twice ("recording, not pictures"; "an hour for three minutes");
-the agent was halted and its script run directly, four minutes.
-Needed because: the tooling's pace was being mistaken for the app's.
-
 **The repository leaked its making.** Session links in commits, an editor folder in history, the
 template's licence, local paths and tooling stories in the record, review verdicts shown without
 their outcome.

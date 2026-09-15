@@ -35,9 +35,6 @@ below.
 - [One path through the flow](specs/001-econsult-flow/artifacts/recording/econsult-one-path.mp4) —
   a minute on the iPhone simulator: recipient, questions, message, a photo from the library, send,
   confirmation.
-- [Every state](specs/001-econsult-flow/artifacts/recording/econsult-showcase.mp4) — one continuous
-  run through all twelve scenarios below, from validation to the largest text size, with
-  [chapters](specs/001-econsult-flow/artifacts/recording/chapters.md) giving the time of each.
 
 ## The fake backend, and how to reach every state
 
