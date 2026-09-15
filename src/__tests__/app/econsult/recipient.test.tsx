@@ -1,14 +1,19 @@
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import { fireEvent, userEvent } from "@testing-library/react-native";
 import { router } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
-import { AccessibilityInfo, Alert, Text } from "react-native";
+import type { ReactNode } from "react";
+import { AccessibilityInfo, Alert, Pressable, Text } from "react-native";
+import type { Faults } from "@/api/fake/fakeTransport";
 import RecipientScreen from "@/app/econsult/recipient";
 import HomeScreen from "@/app/index";
+import { practiceKeys } from "@/features/econsult/api/queries";
 import * as useRecipientsModule from "@/features/econsult/hooks/useRecipients";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { STEP_TITLES } from "@/features/econsult/utils/steps";
 import { RETRY_LABEL } from "@/lib/copy";
+import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 
@@ -16,6 +21,7 @@ const LOAD_ERROR_NAME =
   "We couldn't load your practice's details. Check your connection and try again.";
 // Long enough that the retry's own loading render lands, as it does on a device.
 const RETRY_LATENCY_MS = 50;
+const BREAK_READS_LABEL = "Break the practice reads";
 
 const Stub = (label: string) =>
   function StubScreen() {
@@ -55,10 +61,31 @@ function MessageProbe() {
   return <Text>{`message:${draft.recipientId ?? "none"}`}</Text>;
 }
 
+// Stands in for the developer-settings screen, and shows when the failed refetch has reached the
+// tree, since the step itself is meant to look unchanged.
+function FaultProbe({ faults }: { faults: Faults }) {
+  const { settings, apply } = useDevSettings();
+  const { status } = useQuery({
+    queryKey: practiceKeys.config(settings.practiceId),
+    enabled: false,
+  });
+  return (
+    <>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={BREAK_READS_LABEL}
+        onPress={() => apply({ ...settings, faults })}
+      />
+      <Text>{`config:${status}`}</Text>
+    </>
+  );
+}
+
 function renderFlow(
   options: ProviderOptions = {},
   draft?: DraftState,
   initialUrl = "/econsult/recipient",
+  probe?: ReactNode,
 ) {
   return renderRouter(
     {
@@ -70,7 +97,12 @@ function renderFlow(
     },
     {
       initialUrl,
-      wrapper: ({ children }) => <TestProviders {...options}>{children}</TestProviders>,
+      wrapper: ({ children }) => (
+        <TestProviders {...options}>
+          {children}
+          {probe}
+        </TestProviders>
+      ),
     },
   );
 }
@@ -175,6 +207,22 @@ describe("Recipient step", () => {
       { exact: false },
     );
     expect(screen.getByRole("button", { name: RETRY_LABEL })).toBeOnTheScreen();
+  });
+
+  // A stale list beats no list: the error card is for a first load that never landed.
+  test("keeps the radio cards when a refetch fails after a successful first load", async () => {
+    const user = userEvent.setup();
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
+    renderFlow({ client }, undefined, undefined, <FaultProbe faults={{ config: "server" }} />);
+    await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" });
+
+    await user.press(screen.getByRole("button", { name: BREAK_READS_LABEL }));
+    act(() => void client.refetchQueries());
+
+    await screen.findByText("config:error");
+    expect(screen.getByRole("radio", { name: "Dr. J. de Vries, GP" })).toBeOnTheScreen();
+    expect(screen.getByRole("radio", { name: "M. Bakker, Practice nurse" })).toBeOnTheScreen();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
   // The card is the whole step when the load fails, and it says nothing of its own, so the focus

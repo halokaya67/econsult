@@ -57,9 +57,18 @@ describe("combineRecipients", () => {
     expect(result.status).toBe("loading");
   });
 
-  test("is an error when either request failed, even with stale data, and retry refetches the failed one", () => {
+  test("a failed refetch keeps the cached list", () => {
+    const config = fakeResult<PracticeEConsultConfig>({ data: CONFIG, isError: true });
+    const team = fakeResult<CareTeamMember[]>({ data: TEAM, isError: true });
+
+    const result = combineRecipients([config, team]);
+
+    expect(result).toEqual({ status: "ready", recipients: [TEAM[0]], questions: [] });
+  });
+
+  test("the error card shows when a failed read has nothing cached, and retry refetches the failed one", () => {
     const refetch = jest.fn();
-    const config = fakeResult<PracticeEConsultConfig>({ data: CONFIG, isError: true, refetch });
+    const config = fakeResult<PracticeEConsultConfig>({ isError: true, refetch });
     const team = fakeResult<CareTeamMember[]>({ data: TEAM });
 
     const result = combineRecipients([config, team]);

@@ -45,9 +45,12 @@ export function joinRecipients(
 
 type Results = [UseQueryResult<PracticeEConsultConfig>, UseQueryResult<CareTeamMember[]>];
 
-// Error wins over stale data: a failed refetch must show the error, not last time's list.
+// A stale list beats no list, so cached data wins over a failed refetch. The error card is for a
+// first load that never landed: a read that failed with nothing to show.
 export function combineRecipients([config, team]: Results): RecipientsResult {
-  if (config.isError || team.isError) {
+  const hasConfigFailed = config.isError && !config.data;
+  const hasTeamFailed = team.isError && !team.data;
+  if (hasConfigFailed || hasTeamFailed) {
     return {
       status: "error",
       retry: () => {
