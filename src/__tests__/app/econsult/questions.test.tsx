@@ -1,7 +1,14 @@
 import { fireEvent, userEvent } from "@testing-library/react-native";
 import { renderRouter, screen } from "expo-router/testing-library";
-import { AccessibilityInfo, Dimensions, ScrollView, Text, TextInput, View } from "react-native";
-import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
+import {
+  AccessibilityInfo,
+  Dimensions,
+  ScrollView,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import type { Question } from "@/api/contracts";
 import QuestionsScreen from "@/app/econsult/questions";
 import * as choiceGroupSource from "@/components/ChoiceGroup";
