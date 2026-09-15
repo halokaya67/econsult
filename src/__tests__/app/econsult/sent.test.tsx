@@ -1,4 +1,4 @@
-import { userEvent } from "@testing-library/react-native";
+import { fireEvent, userEvent } from "@testing-library/react-native";
 import { router } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { AccessibilityInfo, Text } from "react-native";
@@ -180,6 +180,21 @@ describe("Sent", () => {
     });
     expect(await screen.findByText("Your photo was attached.")).toBeOnTheScreen();
     expect(screen.queryByText(/The photo still couldn't be attached/)).toBeNull();
+  });
+
+  test("two presses of Try again in the same tick upload the photo once", async () => {
+    const retry = { mutateAsync: jest.fn(async () => "attached" as const), isPending: false };
+    jest
+      .spyOn(retryModule, "useRetryAttachment")
+      .mockReturnValue(retry as unknown as ReturnType<typeof retryModule.useRetryAttachment>);
+    renderSent(FAILED);
+    const button = await screen.findByRole("button", { name: RETRY_LABEL });
+
+    fireEvent.press(button);
+    fireEvent.press(button);
+
+    expect(await screen.findByText("Your photo was attached.")).toBeOnTheScreen();
+    expect(retry.mutateAsync).toHaveBeenCalledTimes(1);
   });
 
   test("a retry that reports another failure is spoken, shown, and leaves both options open", async () => {

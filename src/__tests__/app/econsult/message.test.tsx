@@ -105,6 +105,18 @@ function breakTheUpload() {
   }));
 }
 
+// Counts the creates the real fake receives, so a double press can be judged by what reached it.
+function countCreates() {
+  const createServices = servicesModule.createServices;
+  const create = jest.fn();
+  jest.spyOn(servicesModule, "createServices").mockImplementation((transport) => {
+    const services = createServices(transport);
+    create.mockImplementation(services.createEConsult);
+    return { ...services, createEConsult: create };
+  });
+  return create;
+}
+
 describe("Message step", () => {
   beforeEach(() => {
     scrollTo.mockClear();
@@ -261,6 +273,25 @@ describe("Message step", () => {
     await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
     expect(screen.getByText(/^sent:ec-\d+:none$/)).toBeOnTheScreen();
     expect(announce.mock.calls.filter(([line]) => line === SENT_STATUS)).toHaveLength(0);
+  });
+
+  test("two presses of Send in the same tick create one e-consult", async () => {
+    const create = countCreates();
+    const user = userEvent.setup();
+    renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "My knee has hurt for two weeks");
+
+    // Both presses inside one act: nothing re-renders between them, as with two real taps.
+    const send = screen.getByRole("button", { name: "Send" });
+    act(() => {
+      fireEvent.press(send);
+      fireEvent.press(send);
+    });
+
+    await waitFor(() => expect(screen).toHavePathname("/econsult/sent"));
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByText(/^sent:ec-\d+:none$/)).toHaveLength(1);
   });
 
   test("the sending status is spoken once, by the announcement and not by a live region", async () => {
