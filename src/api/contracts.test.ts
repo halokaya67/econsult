@@ -42,16 +42,30 @@ describe("questionSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  test("coerces an unknown question type to text and drops its options", () => {
-    const result = questionSchema.parse({
-      id: "q-date",
-      label: "When?",
-      type: "date",
-      options: ["x", "y"],
-      required: false,
+  test("a question whose type this app cannot render is left out of the config", () => {
+    const result = practiceConfigSchema.parse({
+      practiceId: "prc-1",
+      recipientIds: ["ct-1"],
+      questions: [
+        { id: "q-date", label: "When?", type: "date", required: false },
+        { id: "q-text", label: "Where?", type: "text", required: true },
+        "not a question",
+      ].filter((question) => typeof question !== "string"),
     });
 
-    expect(result).toEqual({ id: "q-date", label: "When?", type: "text", required: false });
+    expect(result.questions).toEqual([
+      { id: "q-text", label: "Where?", type: "text", required: true },
+    ]);
+  });
+
+  test("a question with no type at all still fails the config", () => {
+    const result = practiceConfigSchema.safeParse({
+      practiceId: "prc-1",
+      recipientIds: [],
+      questions: [{ id: "q", label: "x", required: true }],
+    });
+
+    expect(result.success).toBe(false);
   });
 
   test("rejects a question without an id", () => {

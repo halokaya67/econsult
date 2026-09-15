@@ -7,12 +7,13 @@ export const IDEMPOTENCY_HEADER = "Idempotency-Key";
 
 const nonEmpty = z.string().min(1);
 
-// The backend may send question types this app does not render; a text field keeps the patient moving.
-function coerceUnknownQuestionType(input: unknown): unknown {
-  if (typeof input !== "object" || input === null || !("type" in input)) return input;
-  const { type, options: _dropped, ...rest } = input as { type: unknown; options?: unknown };
-  const isKnown = KNOWN_QUESTION_TYPES.some((known) => known === type);
-  return isKnown ? input : { ...rest, type: "text" };
+// A question type this app cannot render is left out, so a new backend kind never breaks the form.
+function withoutUnknownQuestionTypes(input: unknown): unknown {
+  if (!Array.isArray(input)) return input;
+  return input.filter((question) => {
+    if (typeof question !== "object" || question === null || !("type" in question)) return true;
+    return KNOWN_QUESTION_TYPES.some((known) => known === (question as { type: unknown }).type);
+  });
 }
 
 const choiceQuestionSchema = z.object({
@@ -30,10 +31,10 @@ const textQuestionSchema = z.object({
   required: z.boolean(),
 });
 
-export const questionSchema = z.preprocess(
-  coerceUnknownQuestionType,
-  z.discriminatedUnion("type", [choiceQuestionSchema, textQuestionSchema]),
-);
+export const questionSchema = z.discriminatedUnion("type", [
+  choiceQuestionSchema,
+  textQuestionSchema,
+]);
 
 export const careTeamRoleSchema = z.enum(["gp", "nurse", "assistant", "other"]).catch("other");
 
@@ -46,7 +47,7 @@ export const careTeamMemberSchema = z.object({
 export const practiceConfigSchema = z.object({
   practiceId: nonEmpty,
   recipientIds: z.array(nonEmpty),
-  questions: z.array(questionSchema),
+  questions: z.preprocess(withoutUnknownQuestionTypes, z.array(questionSchema)),
 });
 
 export const answerSchema = z.object({ questionId: nonEmpty, value: z.string() });
