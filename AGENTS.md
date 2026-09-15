@@ -121,8 +121,9 @@ actions as past-tense events (`recipientSelected`) rather than commands.
   | Progress the app reports, such as "Sending" | One `announce()` call, next to the event      |
   | Anything already spoken by one of the above | Nothing — no live region, no second mechanism |
 
-  A polite live region is allowed only where it is that text's single channel: the "Preparing photo"
-  line, the picker's notes, the thin-message nudge; every duplicate heard came from a second one.
+  No live regions at all: `accessibilityLiveRegion` is Android-only, so a note that relied on it was
+  silent for VoiceOver. A note that appears on its own (a denied permission, a failed pick, the
+  thin-message nudge) is announced once where it is set.
 
 - Selection is never colour alone: border weight, fill and a filled dot change together.
 - Three shared focus hooks, one situation each. `useFocusAfterCommit` focuses a node after the
