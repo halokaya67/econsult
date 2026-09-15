@@ -123,6 +123,11 @@ Decided: a five-minute stale time on the reads; a refetch keeps the old data whi
 Alternatives: a short stale time (a refetch on almost every step for data that does not change); the error card on step 2 too (throws away answers the patient can still give).
 Traded off: a question the practice changed in the last five minutes is asked in its old form.
 
+**Reads are never cancelled, only timed out.** A read the patient walked away from still warms the cache for the next visit, which matters most on a slow connection.
+Decided: the timeout is the only thing that aborts a read; leaving a step lets the read finish and keeps its result.
+Alternatives: aborting a read when its screen unmounts (throws away work already paid for, for two small documents that never change per keystroke).
+Traded off: an abandoned read completes in the background; the abort signal on the transport exists for the timeout, not for screens.
+
 **A failed refresh beats stale data.** A patient must not write to a doctor who has left.
 Decided: when a refetch fails, the error card replaces the list.
 Alternatives: keep showing the old list with a warning (friendlier, riskier for a medical list).
