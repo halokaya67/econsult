@@ -69,6 +69,11 @@ Decided: the practice previews the first line.
 Alternatives: a required subject (one more thing to get wrong); an optional one (mostly left empty).
 Traded off: an inbox that needs a subject must derive one.
 
+**Screens are not guarded against cold links.** Every screen has an address, but nothing sends links into the app.
+Decided: no guard on a screen opened directly by address; the confirmation trusts the draft it is given.
+Alternatives: a redirect on every step when the draft is empty (guards an entrance no app or service uses); dropping the URL scheme (expo-router needs it for its own development links).
+Traded off: a hand-typed link to the confirmation renders an empty one; the moment a link is sent from anywhere, the guards must come first.
+
 **The confirmation is one-way.** A sent message must never look editable.
 Decided: no back button, no back gesture, a guard that swallows any leave; Done goes home.
 Alternatives: back to the message step (a double send waiting to happen); resetting the stack on send (loses the transition and the reference screen).
