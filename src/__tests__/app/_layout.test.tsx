@@ -3,7 +3,7 @@ import { renderRouter, screen } from "expo-router/testing-library";
 import { Text } from "react-native";
 import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
 import { STALE_TIME_MS } from "@/api/queryClient";
-import RootLayout from "@/app/_layout";
+import RootLayout, { ErrorBoundary } from "@/app/_layout";
 import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { useIsOffline } from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
@@ -36,6 +36,10 @@ function renderRootLayout() {
 }
 
 describe("RootLayout", () => {
+  test("exports a route error boundary so a render error shows a retry instead of a blank screen", () => {
+    expect(typeof ErrorBoundary).toBe("function");
+  });
+
   test("wraps its screens in the developer settings, query and network providers", () => {
     renderRootLayout();
 

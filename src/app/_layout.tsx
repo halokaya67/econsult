@@ -3,6 +3,9 @@ import { useState } from "react";
 import { createQueryClient } from "@/api/queryClient";
 import { AppProviders } from "@/providers/AppProviders";
 
+// A render error anywhere below the root shows expo-router's boundary with a retry instead of a blank screen.
+export { ErrorBoundary } from "expo-router";
+
 export default function RootLayout() {
   const [queryClient] = useState(createQueryClient);
   return (
