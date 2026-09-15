@@ -5,7 +5,7 @@ import { Alert } from "react-native";
 import { shouldGuardLeaving, type DraftState } from "../state/draft";
 
 const DISCARD_TITLE = "Discard your message?";
-const DISCARD_BODY = "Your message and photo will be lost.";
+const DISCARD_BODY = "What you have entered so far will be lost.";
 
 // Leaving step 1 in any direction means leaving the flow, so Discard lowers the guard and goes home
 // instead of replaying the blocked action: a root-level pop re-dispatched here is a no-op on device.

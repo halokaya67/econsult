@@ -9,14 +9,14 @@ import {
   type RequestName,
 } from "@/api/fake/fakeTransport";
 import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
+import { CancelHeaderButton } from "@/components/CancelHeaderButton";
 import { ChoiceGroup, type Choice } from "@/components/ChoiceGroup";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
-import { TextButton } from "@/components/TextButton";
 import { isDevelopmentBuild } from "@/lib/devWarn";
 import { useDevSettings, type DevSettings } from "@/providers/DevSettingsProvider";
 import { text } from "@/theme/text";
-import { HEADER_BUTTON_MAX_FONT_SCALE, MIN_TOUCH, spacing } from "@/theme/tokens";
+import { MIN_TOUCH, spacing } from "@/theme/tokens";
 
 const TITLE = "Developer settings";
 const INTRO = "Development mode only. Applying clears cached practice data and returns home.";
@@ -85,17 +85,6 @@ function OfflineToggle({ value, onChange }: { value: boolean; onChange: (next: b
   );
 }
 
-// The modal's only other exit applies the draft, so Cancel is the way out that keeps the settings.
-function CancelButton({ onPress }: { onPress: () => void }) {
-  return (
-    <TextButton
-      label="Cancel"
-      onPress={onPress}
-      maxFontSizeMultiplier={HEADER_BUTTON_MAX_FONT_SCALE}
-    />
-  );
-}
-
 function FaultGroups({ faults, onChange }: { faults: Faults; onChange: (next: Faults) => void }) {
   return (
     <>
@@ -129,8 +118,9 @@ export default function DevSettingsScreen() {
 
   return (
     <>
+      {/* The modal's only other exit applies the draft, so Cancel is the way out that keeps them. */}
       <Stack.Screen
-        options={{ headerLeft: () => <CancelButton onPress={() => router.back()} /> }}
+        options={{ headerLeft: () => <CancelHeaderButton onPress={() => router.back()} /> }}
       />
       <ScreenScaffold action={<PrimaryButton label="Apply and go home" onPress={onApply} />}>
         <Text accessibilityRole="header" style={text.title}>

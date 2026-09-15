@@ -1,4 +1,4 @@
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { EmptyState } from "@/components/EmptyState";
@@ -21,7 +21,7 @@ import {
 } from "@/features/econsult/utils/steps";
 import { useFocusOnLayout } from "@/hooks/useFocusOnLayout";
 import { focusForScreenReader, type Focusable } from "@/lib/announce";
-import { HEADER_BUTTON_MAX_FONT_SCALE, spacing } from "@/theme/tokens";
+import { spacing } from "@/theme/tokens";
 
 const LOADING_LABEL = "Loading your practice's care team";
 const CONTINUE_HINT = "Choose who you are writing to first";
@@ -75,16 +75,6 @@ function ContinueButton({
       disabled={selectedId === null}
       accessibilityHint={selectedId === null ? CONTINUE_HINT : undefined}
       onPress={onPress}
-    />
-  );
-}
-
-function HomeHeaderButton({ onPress }: { onPress: () => void }) {
-  return (
-    <TextButton
-      label="Home"
-      onPress={onPress}
-      maxFontSizeMultiplier={HEADER_BUTTON_MAX_FONT_SCALE}
     />
   );
 }
@@ -160,24 +150,21 @@ export default function RecipientScreen() {
     ) : undefined;
 
   return (
-    <>
-      <Stack.Screen options={{ headerLeft: () => <HomeHeaderButton onPress={goHome} /> }} />
-      <ScreenScaffold action={action}>
-        {result.status === "ready" ? (
-          <StepHeader
-            stepNumber={stepNumber("recipient", hasQuestions)}
-            stepCount={stepCount(hasQuestions)}
-            title={STEP_TITLES.recipient}
-          />
-        ) : null}
-        <RecipientBody
-          result={result}
-          selectedId={selectedId}
-          onSelect={(id) => dispatch({ type: "recipientSelected", recipientId: id })}
-          goHome={goHome}
+    <ScreenScaffold action={action}>
+      {result.status === "ready" ? (
+        <StepHeader
+          stepNumber={stepNumber("recipient", hasQuestions)}
+          stepCount={stepCount(hasQuestions)}
+          title={STEP_TITLES.recipient}
         />
-      </ScreenScaffold>
-    </>
+      ) : null}
+      <RecipientBody
+        result={result}
+        selectedId={selectedId}
+        onSelect={(id) => dispatch({ type: "recipientSelected", recipientId: id })}
+        goHome={goHome}
+      />
+    </ScreenScaffold>
   );
 }
 

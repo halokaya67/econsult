@@ -141,6 +141,8 @@ export function sentSubmission(state: DraftState): SentSubmission | null {
   return state.submission.phase === "sent" ? state.submission : null;
 }
 
+// A chosen recipient is enough to guard: the flow past step 1 always has one, and an untouched
+// step 1 has nothing to ask about.
 export function shouldGuardLeaving(state: DraftState): boolean {
-  return hasUnsentContent(state) && sentSubmission(state) === null;
+  return (state.recipientId !== null || hasUnsentContent(state)) && sentSubmission(state) === null;
 }

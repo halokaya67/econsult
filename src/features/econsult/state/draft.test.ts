@@ -187,4 +187,20 @@ describe("selectors", () => {
     expect(shouldGuardLeaving(typed)).toBe(true);
     expect(shouldGuardLeaving(created)).toBe(false);
   });
+
+  test("shouldGuardLeaving is true once a recipient is chosen, with nothing else entered", () => {
+    const chosen: DraftState = { ...initialDraft, recipientId: "ct-11" };
+
+    expect(shouldGuardLeaving(chosen)).toBe(true);
+  });
+
+  test("shouldGuardLeaving is false for an empty draft", () => {
+    expect(shouldGuardLeaving(initialDraft)).toBe(false);
+  });
+
+  test("shouldGuardLeaving is false once the e-consult exists, even with a recipient", () => {
+    const sent: DraftState = { ...initialDraft, recipientId: "ct-11", submission: SENT_SUBMISSION };
+
+    expect(shouldGuardLeaving(sent)).toBe(false);
+  });
 });

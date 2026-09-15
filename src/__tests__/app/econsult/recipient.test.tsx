@@ -107,10 +107,6 @@ function renderFlow(
   );
 }
 
-async function pressHome(user: ReturnType<typeof userEvent.setup>) {
-  await user.press(screen.getByRole("button", { name: "Home" }));
-}
-
 function spyOnAlert() {
   return jest.spyOn(Alert, "alert").mockImplementation(() => {});
 }
@@ -277,7 +273,7 @@ describe("Recipient step", () => {
     const user = userEvent.setup();
     await startGuardedStepOne(user);
 
-    await pressHome(user);
+    act(() => router.back());
 
     expect(alert).toHaveBeenCalledWith(
       "Discard your message?",
@@ -299,30 +295,18 @@ describe("Recipient step", () => {
     expect(screen.getByRole("button", { name: "Write to your practice" })).toBeOnTheScreen();
   });
 
-  test("choosing Discard after the header Home button leaves the wizard for home", async () => {
-    const alert = spyOnAlert();
-    const user = userEvent.setup();
-    await startGuardedStepOne(user);
-    await pressHome(user);
-
-    pressDialogButton(alert, "Discard");
-
-    await waitFor(() => expect(screen).toHavePathname("/"));
-    expect(screen.getByRole("button", { name: "Write to your practice" })).toBeOnTheScreen();
-  });
-
   test("choosing Keep writing stays on step 1 with the draft still guarded", async () => {
     const alert = spyOnAlert();
     const user = userEvent.setup();
     await startGuardedStepOne(user);
-    await pressHome(user);
+    act(() => router.back());
 
     pressDialogButton(alert, "Keep writing");
 
     expect(screen).toHavePathname("/econsult/recipient");
     expect(screen.getByText("Step 1 of 3")).toBeOnTheScreen();
     // The guard only still fires while the draft holds the message it would discard.
-    await pressHome(user);
+    act(() => router.back());
     expect(alert).toHaveBeenCalledTimes(2);
     expect(screen).toHavePathname("/econsult/recipient");
   });
@@ -333,8 +317,27 @@ describe("Recipient step", () => {
     await user.press(screen.getByRole("button", { name: "Write to your practice" }));
     await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" });
 
-    await pressHome(user);
+    act(() => router.back());
 
+    await waitFor(() => expect(screen).toHavePathname("/"));
+  });
+
+  test("leaving after tapping a recipient card asks before discarding", async () => {
+    const alert = spyOnAlert();
+    const user = userEvent.setup();
+    renderFlow({}, undefined, "/");
+    await user.press(screen.getByRole("button", { name: "Write to your practice" }));
+    await user.press(await screen.findByRole("radio", { name: "Dr. J. de Vries, GP" }));
+
+    act(() => router.back());
+
+    expect(alert).toHaveBeenCalledWith(
+      "Discard your message?",
+      expect.any(String),
+      expect.any(Array),
+    );
+    expect(screen).toHavePathname("/econsult/recipient");
+    pressDialogButton(alert, "Discard");
     await waitFor(() => expect(screen).toHavePathname("/"));
   });
 });
