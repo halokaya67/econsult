@@ -268,6 +268,16 @@ describe("Recipient step", () => {
     expect(screen.getByRole("button", { name: "Back to start" })).toBeOnTheScreen();
   });
 
+  test("Back to start from the empty state returns to the home screen", async () => {
+    const user = userEvent.setup();
+    renderFlow({ settings: { practiceId: "prc-0000" } });
+
+    await user.press(await screen.findByRole("button", { name: "Back to start" }));
+
+    await waitFor(() => expect(screen).toHavePathname("/"));
+    expect(screen.getByRole("button", { name: "Write to your practice" })).toBeOnTheScreen();
+  });
+
   test("leaving with a typed message asks before discarding", async () => {
     const alert = spyOnAlert();
     const user = userEvent.setup();

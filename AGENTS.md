@@ -199,8 +199,10 @@ alternatives and why each lost, what it costs us. `DECISIONS.md` is the one-page
 assumptions, the four decisions that matter most, what was traded away, the platforms verified and
 what comes next — and changes only when one of those does.
 
-`AI-USAGE.md` holds incidents, not process: a bold one-line title, then the problem, the human or
-checker intervention, and why it was needed — "Needed because ...".
+`docs/ai-usage-log.md` holds the incidents, not process: a bold one-line title, then the problem,
+the human or checker intervention, and why it was needed — "Needed because ...". `AI-USAGE.md` is
+the half-page summary — tools, one thing AI got wrong, one rejection, what was not delegated — and
+changes only when one of those four does.
 
 Verification evidence goes under `specs/<flow>/artifacts/ui-verification/<lane>/` as a `report.md`
 and numbered screenshots per state; report results — observed, passed, failed, fixed — not tooling.

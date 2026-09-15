@@ -134,7 +134,8 @@ This was built by AI in a loop with human gates: a human approved the spec and t
 every product question and looked at each step's preview, while separate AI checkers reviewed the
 research, the spec, the plan, the code and the tests. `DECISIONS.md` holds the assumptions, the four
 decisions that matter most, what was traded away and what would come next; every decision in full is
-in `docs/decisions-log.md`. The dashboard opened by `npm run showcase` holds the detail, stage by
+in `docs/decisions-log.md`. `AI-USAGE.md` is the half-page account of the AI's part; every incident
+is in `docs/ai-usage-log.md`. The dashboard opened by `npm run showcase` holds the detail, stage by
 stage with a link to the evidence behind each.
 
 ```bash
