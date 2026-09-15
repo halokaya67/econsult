@@ -25,11 +25,19 @@ const SENT: DraftState = {
   ...initialDraft,
   recipientId: "ct-11",
   message: "Hi",
-  econsultId: "ec-1",
-  attachment: "none",
+  submission: { phase: "sent", econsultId: "ec-1", attachment: "none" },
 };
 
-const FAILED: DraftState = { ...SENT, photo: READY_PHOTO, attachment: "failed" };
+const ATTACHED: DraftState = {
+  ...SENT,
+  photo: READY_PHOTO,
+  submission: { phase: "sent", econsultId: "ec-1", attachment: "attached" },
+};
+const FAILED: DraftState = {
+  ...SENT,
+  photo: READY_PHOTO,
+  submission: { phase: "sent", econsultId: "ec-1", attachment: "failed" },
+};
 const PHOTO_FAILED_LINE = "Your message was sent, but the photo could not be attached.";
 // Long enough to outlast the arrival fallback, which is itself longer than a push transition.
 const ARRIVAL_TIMEOUT_MS = 3000;
@@ -120,7 +128,7 @@ describe("Sent", () => {
   // The photo may be of a rash, and the flow is the only thing that could still need the file.
   test("Done takes the photo file off the device", async () => {
     const user = userEvent.setup();
-    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "attached" });
+    renderSent(ATTACHED);
     await screen.findByText("Sent to Dr. J. de Vries.");
 
     await user.press(screen.getByRole("button", { name: "Done" }));
@@ -264,25 +272,8 @@ describe("Sent", () => {
     expect(screen.getByRole("button", { name: "Continue without the photo" })).toBeOnTheScreen();
   });
 
-  test("a retry uploads nothing when the e-consult reference is missing", async () => {
-    const retry = { mutateAsync: jest.fn(), isPending: false, error: null };
-    jest
-      .spyOn(retryModule, "useRetryAttachment")
-      .mockReturnValue(retry as unknown as ReturnType<typeof retryModule.useRetryAttachment>);
-    const user = userEvent.setup();
-    renderSent({ ...SENT, econsultId: null, photo: READY_PHOTO, attachment: "failed" });
-
-    await user.press(await screen.findByRole("button", { name: RETRY_LABEL }));
-
-    expect(retry.mutateAsync).not.toHaveBeenCalled();
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "Your message was sent, but the photo could not be attached",
-      { exact: false },
-    );
-  });
-
   test("an attached photo is confirmed", async () => {
-    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "attached" });
+    renderSent(ATTACHED);
 
     expect(await screen.findByText("Your photo was attached.")).toBeOnTheScreen();
   });

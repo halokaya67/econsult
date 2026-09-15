@@ -119,7 +119,7 @@ export function useMessageSend() {
         const outcome = await submit.mutateAsync(
           submitInputFor(draft, session, recipientId, idempotencyKey),
         );
-        dispatch({ type: "attachmentSettled", attachment: outcome.attachment });
+        dispatch({ type: "attachmentSettled", ...outcome });
         router.replace("/econsult/sent");
       } catch {
         // The mutation's own error state renders the failure; this only drops the status line.

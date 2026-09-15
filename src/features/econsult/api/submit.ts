@@ -20,7 +20,9 @@ export type SubmitOutcome = { econsultId: string; attachment: AttachmentStatus }
 // The first send allocates the key; every retry reuses the one the reducer kept, so a retry can
 // never create a second e-consult.
 export function idempotencyKeyFor(draft: DraftState): string {
-  return draft.idempotencyKey ?? newId();
+  const { submission } = draft;
+  if (submission.phase !== "draft" || submission.idempotencyKey === null) return newId();
+  return submission.idempotencyKey;
 }
 
 export function submitInputFor(

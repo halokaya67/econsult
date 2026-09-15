@@ -52,7 +52,9 @@ function broken(): Services {
 
 describe("idempotencyKeyFor", () => {
   test("reuses the key the draft already carries", () => {
-    expect(idempotencyKeyFor({ ...DRAFT, idempotencyKey: "key-9" })).toBe("key-9");
+    const keyed: DraftState = { ...DRAFT, submission: { phase: "draft", idempotencyKey: "key-9" } };
+
+    expect(idempotencyKeyFor(keyed)).toBe("key-9");
   });
 
   test("allocates a fresh key for a draft that has never been sent", () => {

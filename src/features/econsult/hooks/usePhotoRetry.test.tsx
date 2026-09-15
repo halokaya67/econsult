@@ -14,13 +14,13 @@ const READY_PHOTO = {
   width: 10,
   height: 10,
 } as const;
+const ECONSULT_ID = "ec-1";
 const SENT: DraftState = {
   ...initialDraft,
   recipientId: "ct-11",
   message: "Hi",
-  econsultId: "ec-1",
   photo: READY_PHOTO,
-  attachment: "failed",
+  submission: { phase: "sent", econsultId: ECONSULT_ID, attachment: "failed" },
 };
 
 function draftWrapper(draft: DraftState) {
@@ -38,7 +38,9 @@ describe("usePhotoRetry", () => {
 
   test("ignores a second retry that lands inside the first one's tick", async () => {
     const upload = jest.spyOn(submitModule, "retryAttachment");
-    const { result } = renderHook(() => usePhotoRetry(), { wrapper: draftWrapper(SENT) });
+    const { result } = renderHook(() => usePhotoRetry(ECONSULT_ID), {
+      wrapper: draftWrapper(SENT),
+    });
 
     // TanStack notifies observers on a macrotask, so the settle only lands inside act if the block
     // waits for a timer too.
@@ -61,7 +63,7 @@ describe("usePhotoRetry", () => {
       .mockImplementation(() => {});
     // The preset already mocks the announcer, so the spy is the mock every earlier test wrote to.
     spoken.mockClear();
-    const { result } = renderHook(() => usePhotoRetry(), {
+    const { result } = renderHook(() => usePhotoRetry(ECONSULT_ID), {
       wrapper: draftWrapper({ ...SENT, photo: null }),
     });
 

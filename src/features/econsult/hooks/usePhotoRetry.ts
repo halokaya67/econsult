@@ -11,8 +11,9 @@ export const PHOTO_STILL_FAILED =
   "The photo still couldn't be attached. You can try again or continue without it.";
 
 // mutateAsync rejects on anything the upload does not report as a photo outcome, so the rejection
-// is caught here and shown from the mutation's own error state instead of going unhandled.
-export function usePhotoRetry() {
+// is caught here and shown from the mutation's own error state instead of going unhandled. The
+// caller passes the id of the e-consult it is showing, which is the only one a retry may upload to.
+export function usePhotoRetry(econsultId: string) {
   const { draft, dispatch } = useDraft();
   const retry = useRetryAttachment();
   const [hasRetryFailed, setHasRetryFailed] = useState(false);
@@ -20,14 +21,13 @@ export function usePhotoRetry() {
   // would upload the photo twice.
   const isInFlight = useRef(false);
   const photo = readyPhoto(draft);
-  const { econsultId } = draft;
 
   async function run() {
-    if (!photo || !econsultId) return;
+    if (!photo) return;
     setHasRetryFailed(false);
     try {
       const attachment = await retry.mutateAsync({ econsultId, photo: photoFileFor(photo) });
-      dispatch({ type: "attachmentSettled", attachment });
+      dispatch({ type: "attachmentSettled", econsultId, attachment });
       // An upload the API rejects resolves as an outcome rather than throwing, so this branch is
       // the only place a repeated failure becomes visible.
       if (attachment === "failed") {

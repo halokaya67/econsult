@@ -7,13 +7,13 @@ import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { PHOTO_STILL_FAILED, usePhotoRetry } from "@/features/econsult/hooks/usePhotoRetry";
 import { useRecipients } from "@/features/econsult/hooks/useRecipients";
+import { sentSubmission, type SentSubmission } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { useFocusOnArrival, type ArrivalNavigation } from "@/hooks/useFocusOnArrival";
 import type { Focusable } from "@/lib/announce";
-import { RETRY_LABEL } from "@/lib/copy";
-import { OFFLINE_HINT } from "@/lib/copy";
+import { OFFLINE_HINT, RETRY_LABEL } from "@/lib/copy";
 import { useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
@@ -28,13 +28,13 @@ const CONTINUE_WITHOUT_PHOTO = "Continue without the photo";
 // The alert groups only the text, so the two buttons stay separately focusable elements and its
 // name is the photo-failed line the arrival focus speaks. It is not a live region: the retry hook
 // announces every line it adds, and both would speak it on Android.
-function PhotoOutcome({ ref }: { ref?: Ref<View> }) {
-  const { draft, dispatch } = useDraft();
+function PhotoOutcome({ submission, ref }: { submission: SentSubmission; ref?: Ref<View> }) {
+  const { dispatch } = useDraft();
   const isOffline = useIsOffline();
-  const retry = usePhotoRetry();
+  const retry = usePhotoRetry(submission.econsultId);
 
-  if (draft.attachment === "attached") return <Text style={text.body}>{PHOTO_ATTACHED}</Text>;
-  if (draft.attachment !== "failed") return null;
+  if (submission.attachment === "attached") return <Text style={text.body}>{PHOTO_ATTACHED}</Text>;
+  if (submission.attachment !== "failed") return null;
   return (
     <View style={styles.warning}>
       <View ref={ref} accessible accessibilityRole="alert" style={styles.stack}>
@@ -52,7 +52,13 @@ function PhotoOutcome({ ref }: { ref?: Ref<View> }) {
       />
       <TextButton
         label={CONTINUE_WITHOUT_PHOTO}
-        onPress={() => dispatch({ type: "attachmentSettled", attachment: "none" })}
+        onPress={() =>
+          dispatch({
+            type: "attachmentSettled",
+            econsultId: submission.econsultId,
+            attachment: "none",
+          })
+        }
       />
     </View>
   );
@@ -66,7 +72,8 @@ export default function SentScreen() {
   const [isLeaving, setIsLeaving] = useState(false);
   const headingRef = useRef<Focusable | null>(null);
   const alertRef = useRef<Focusable | null>(null);
-  const hasFailedPhoto = draft.attachment === "failed";
+  const sent = sentSubmission(draft);
+  const hasFailedPhoto = sent?.attachment === "failed";
 
   // The guard stays up until Done lowers it; the unwind runs in the effect below, by which time
   // the guard is already down, so Done is not blocked by it.
@@ -93,12 +100,15 @@ export default function SentScreen() {
       </Text>
       <Text style={text.body}>Sent to {recipientNameFor(recipients, draft.recipientId)}.</Text>
       <Text style={text.body}>{REPLY_TIME}</Text>
-      <Text style={text.body}>Reference: {draft.econsultId}</Text>
-      <PhotoOutcome
-        ref={(node) => {
-          alertRef.current = node;
-        }}
-      />
+      <Text style={text.body}>Reference: {sent?.econsultId}</Text>
+      {sent && (
+        <PhotoOutcome
+          submission={sent}
+          ref={(node) => {
+            alertRef.current = node;
+          }}
+        />
+      )}
     </ScreenScaffold>
   );
 }

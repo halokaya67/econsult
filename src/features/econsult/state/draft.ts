@@ -13,14 +13,20 @@ export type ReadyPhoto = Extract<DraftPhoto, { status: "ready" }>;
 
 export type AttachmentStatus = "none" | "attached" | "failed";
 
+// The send's id and its photo outcome are one fact, so neither can be recorded without the other.
+// The key stands for the payload a draft would send, which is why it retires with that phase.
+export type Submission =
+  | { phase: "draft"; idempotencyKey: string | null }
+  | { phase: "sent"; econsultId: string; attachment: AttachmentStatus };
+
+export type SentSubmission = Extract<Submission, { phase: "sent" }>;
+
 export type DraftState = {
   recipientId: string | null;
   answers: Readonly<Record<string, string>>;
   message: string;
   photo: DraftPhoto | null;
-  idempotencyKey: string | null;
-  econsultId: string | null;
-  attachment: AttachmentStatus;
+  submission: Submission;
 };
 
 export type DraftAction =
@@ -41,16 +47,16 @@ export type DraftAction =
   | { type: "photoRemoved" }
   | { type: "submitStarted"; idempotencyKey: string }
   | { type: "econsultCreated"; econsultId: string }
-  | { type: "attachmentSettled"; attachment: AttachmentStatus };
+  // The outcome names the e-consult whose photo settled, so the reducer never has to ask whether
+  // there is one.
+  | { type: "attachmentSettled"; econsultId: string; attachment: AttachmentStatus };
 
 export const initialDraft: DraftState = {
   recipientId: null,
   answers: {},
   message: "",
   photo: null,
-  idempotencyKey: null,
-  econsultId: null,
-  attachment: "none",
+  submission: { phase: "draft", idempotencyKey: null },
 };
 
 // A late result only counts for the pick the draft is still waiting on.
@@ -64,23 +70,38 @@ function applyPhotoReady(
 }
 
 // The key stands for one payload, so an edit before the e-consult exists retires it and the next
-// Send mints a fresh one; once the create has landed the key belongs to it and nothing may reuse it.
-function keyAfterEdit(state: DraftState): string | null {
-  return state.econsultId === null ? null : state.idempotencyKey;
+// Send mints a fresh one; once the create has landed there is no key left for anything to reuse.
+function submissionAfterEdit(submission: Submission): Submission {
+  return submission.phase === "sent" ? submission : { phase: "draft", idempotencyKey: null };
+}
+
+// The first Send mints the key and every later one finds it already there, so no retry can create a
+// second e-consult.
+function submissionAfterSendStart(submission: Submission, idempotencyKey: string): Submission {
+  if (submission.phase !== "draft" || submission.idempotencyKey !== null) return submission;
+  return { phase: "draft", idempotencyKey };
 }
 
 export function draftReducer(state: DraftState, action: DraftAction): DraftState {
   switch (action.type) {
     case "recipientSelected":
-      return { ...state, recipientId: action.recipientId, idempotencyKey: keyAfterEdit(state) };
+      return {
+        ...state,
+        recipientId: action.recipientId,
+        submission: submissionAfterEdit(state.submission),
+      };
     case "answerChanged":
       return {
         ...state,
         answers: { ...state.answers, [action.questionId]: action.value },
-        idempotencyKey: keyAfterEdit(state),
+        submission: submissionAfterEdit(state.submission),
       };
     case "messageChanged":
-      return { ...state, message: action.message, idempotencyKey: keyAfterEdit(state) };
+      return {
+        ...state,
+        message: action.message,
+        submission: submissionAfterEdit(state.submission),
+      };
     case "photoPickStarted":
       return { ...state, photo: { status: "preparing", pickId: action.pickId } };
     case "photoReady":
@@ -88,11 +109,19 @@ export function draftReducer(state: DraftState, action: DraftAction): DraftState
     case "photoRemoved":
       return { ...state, photo: null };
     case "submitStarted":
-      return { ...state, idempotencyKey: state.idempotencyKey ?? action.idempotencyKey };
+      return {
+        ...state,
+        submission: submissionAfterSendStart(state.submission, action.idempotencyKey),
+      };
     case "econsultCreated":
-      return { ...state, econsultId: action.econsultId };
-    case "attachmentSettled":
-      return { ...state, attachment: action.attachment };
+      return {
+        ...state,
+        submission: { phase: "sent", econsultId: action.econsultId, attachment: "none" },
+      };
+    case "attachmentSettled": {
+      const { econsultId, attachment } = action;
+      return { ...state, submission: { phase: "sent", econsultId, attachment } };
+    }
   }
 }
 
@@ -108,6 +137,10 @@ export function readyPhoto(state: DraftState): ReadyPhoto | null {
   return state.photo?.status === "ready" ? state.photo : null;
 }
 
+export function sentSubmission(state: DraftState): SentSubmission | null {
+  return state.submission.phase === "sent" ? state.submission : null;
+}
+
 export function shouldGuardLeaving(state: DraftState): boolean {
-  return hasUnsentContent(state) && state.econsultId === null;
+  return hasUnsentContent(state) && sentSubmission(state) === null;
 }

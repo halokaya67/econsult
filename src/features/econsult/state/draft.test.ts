@@ -9,6 +9,7 @@ import {
 } from "./draft";
 
 const PICKED = "file:///picked.jpg";
+const SENT_SUBMISSION = { phase: "sent", econsultId: "ec-1", attachment: "none" } as const;
 const READY = {
   type: "photoReady",
   pickId: "p1",
@@ -119,47 +120,55 @@ describe("draftReducer", () => {
     const first = draftReducer(initialDraft, { type: "submitStarted", idempotencyKey: "k1" });
     const retry = draftReducer(first, { type: "submitStarted", idempotencyKey: "k2" });
 
-    expect(first.idempotencyKey).toBe("k1");
-    expect(retry.idempotencyKey).toBe("k1");
+    expect(first.submission).toEqual({ phase: "draft", idempotencyKey: "k1" });
+    expect(retry.submission).toEqual({ phase: "draft", idempotencyKey: "k1" });
   });
 
   test("editing the payload after a failed send drops the key", () => {
-    const failed: DraftState = { ...initialDraft, idempotencyKey: "k1" };
+    const failed: DraftState = {
+      ...initialDraft,
+      submission: { phase: "draft", idempotencyKey: "k1" },
+    };
 
     const typed = draftReducer(failed, { type: "messageChanged", message: "Hi" });
     const answered = draftReducer(failed, { type: "answerChanged", questionId: "q1", value: "a" });
     const rerouted = draftReducer(failed, { type: "recipientSelected", recipientId: "ct-12" });
 
-    expect(typed.idempotencyKey).toBeNull();
-    expect(answered.idempotencyKey).toBeNull();
-    expect(rerouted.idempotencyKey).toBeNull();
+    expect(typed.submission).toEqual({ phase: "draft", idempotencyKey: null });
+    expect(answered.submission).toEqual({ phase: "draft", idempotencyKey: null });
+    expect(rerouted.submission).toEqual({ phase: "draft", idempotencyKey: null });
   });
 
   test("the send after an edit mints a new key", () => {
     const edited = draftReducer(
-      { ...initialDraft, idempotencyKey: "k1" },
+      { ...initialDraft, submission: { phase: "draft", idempotencyKey: "k1" } },
       { type: "messageChanged", message: "Hi" },
     );
 
     const next = draftReducer(edited, { type: "submitStarted", idempotencyKey: "k2" });
 
-    expect(next.idempotencyKey).toBe("k2");
+    expect(next.submission).toEqual({ phase: "draft", idempotencyKey: "k2" });
   });
 
-  test("an edit once the e-consult exists keeps the key of the create that made it", () => {
-    const created: DraftState = { ...initialDraft, idempotencyKey: "k1", econsultId: "ec-1" };
+  // Once the create has landed the key is gone with the draft phase, so an edit has none to retire.
+  test("an edit once the e-consult exists leaves the sent submission untouched", () => {
+    const created: DraftState = { ...initialDraft, submission: SENT_SUBMISSION };
 
     const next = draftReducer(created, { type: "messageChanged", message: "Hi" });
 
-    expect(next.idempotencyKey).toBe("k1");
+    expect(next.submission).toBe(created.submission);
   });
 
   test("econsultCreated and attachmentSettled record the outcome", () => {
     const created = draftReducer(initialDraft, { type: "econsultCreated", econsultId: "ec-1" });
-    const settled = draftReducer(created, { type: "attachmentSettled", attachment: "failed" });
+    const settled = draftReducer(created, {
+      type: "attachmentSettled",
+      econsultId: "ec-1",
+      attachment: "failed",
+    });
 
-    expect(settled.econsultId).toBe("ec-1");
-    expect(settled.attachment).toBe("failed");
+    expect(created.submission).toEqual({ phase: "sent", econsultId: "ec-1", attachment: "none" });
+    expect(settled.submission).toEqual({ phase: "sent", econsultId: "ec-1", attachment: "failed" });
   });
 });
 
@@ -172,7 +181,7 @@ describe("selectors", () => {
 
   test("shouldGuardLeaving is true only for unsent content before the e-consult exists", () => {
     const typed: DraftState = { ...initialDraft, message: "Hi" };
-    const created: DraftState = { ...typed, econsultId: "ec-1" };
+    const created: DraftState = { ...typed, submission: SENT_SUBMISSION };
 
     expect(shouldGuardLeaving(initialDraft)).toBe(false);
     expect(shouldGuardLeaving(typed)).toBe(true);

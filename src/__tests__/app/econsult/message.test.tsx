@@ -8,7 +8,7 @@ import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-nati
 import * as servicesModule from "@/api/services";
 import MessageScreen from "@/app/econsult/message";
 import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/features/econsult/components/PhotoPicker";
-import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
+import { initialDraft, sentSubmission, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/utils/validation";
 import { RETRY_LABEL } from "@/lib/copy";
@@ -20,7 +20,8 @@ import { spacing } from "@/theme/tokens";
 
 function SentProbe() {
   const { draft } = useDraft();
-  return <Text>{`sent:${draft.econsultId ?? "none"}:${draft.attachment}`}</Text>;
+  const sent = sentSubmission(draft);
+  return <Text>{sent ? `sent:${sent.econsultId}:${sent.attachment}` : "sent:none"}</Text>;
 }
 const RecipientStub = () => <Text>recipient</Text>;
 
