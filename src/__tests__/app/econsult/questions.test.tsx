@@ -1,6 +1,7 @@
-import { userEvent } from "@testing-library/react-native";
+import { fireEvent, userEvent } from "@testing-library/react-native";
 import { renderRouter, screen } from "expo-router/testing-library";
-import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
+import { AccessibilityInfo, Dimensions, ScrollView, Text, TextInput, View } from "react-native";
+import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 import type { Question } from "@/api/contracts";
 import QuestionsScreen from "@/app/econsult/questions";
 import * as choiceGroupSource from "@/components/ChoiceGroup";
@@ -12,6 +13,13 @@ import { accessibleName, labelWithRequirement } from "@/lib/fieldLabel";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
+
+// Jest renders no layout, so the text-size hook is the only place a live Dynamic Type change can be
+// simulated; every other test keeps the real window metrics.
+jest.mock("react-native/Libraries/Utilities/useWindowDimensions", () => {
+  const { Dimensions } = jest.requireActual("react-native");
+  return { __esModule: true, default: jest.fn(() => Dimensions.get("window")) };
+});
 
 function MessageProbe() {
   const { draft } = useDraft();
@@ -200,6 +208,26 @@ describe("Questions step", () => {
 
     expect(screen).toHavePathname("/econsult/message");
     expect(screen.getByText("message:1 to 4 weeks:Paracetamol")).toBeOnTheScreen();
+  });
+
+  test("a text-size change while answering keeps the answers, on a freshly laid-out form", async () => {
+    const window = jest.mocked(useWindowDimensions);
+    window.mockReturnValue({ ...Dimensions.get("window"), fontScale: 1 });
+    const user = userEvent.setup();
+    renderQuestions();
+    await screen.findByText(CHOICE);
+    await user.press(screen.getByRole("radio", { name: "1 to 4 weeks" }));
+    await user.type(screen.getByLabelText(TEXT), "Paracetamol");
+    const inputBefore = screen.getByLabelText(TEXT);
+
+    window.mockReturnValue({ ...Dimensions.get("window"), fontScale: 2 });
+    // The first change after the new scale re-renders the form, which remounts it; one event, so
+    // nothing else is fired at the old input.
+    fireEvent.changeText(screen.getByLabelText(TEXT), "Paracetamol daily");
+
+    expect(screen.getByLabelText(TEXT)).not.toBe(inputBefore);
+    expect(screen.getByRole("radio", { name: "1 to 4 weeks", checked: true })).toBeOnTheScreen();
+    expect(screen.getByLabelText(TEXT).props.value).toBe("Paracetamol daily");
   });
 
   test("an optional question can be left empty", async () => {
