@@ -25,7 +25,7 @@ Revision 2, after plan-checker round 1 (`checker/plan-r1.md`): screen tests move
 
 **Tech Stack:** Expo SDK 57 (expo 57.0.22, expo-router 57.0.21), React Native 0.86.3, React 19.2.3, TypeScript 6.0.3, @tanstack/react-query 5, zod 4, expo-image-picker, expo-image-manipulator, expo-network, expo-crypto, expo-device, expo-image; jest-expo 57 with @testing-library/react-native 13.3.3; eslint-config-expo 57 with prettier.
 
-**Spec:** `specs/001-econsult-flow/spec.md` (how the code works today: `specs/001-econsult-flow/how-it-works.md`; platform facts: `specs/001-econsult-flow/research.md`).
+**Spec:** `specs/001-econsult-flow/flow/spec.md` (how the code works today: `specs/001-econsult-flow/flow/how-it-works.md`; platform facts: `specs/001-econsult-flow/flow/research.md`).
 
 ## Global Constraints
 

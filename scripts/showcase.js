@@ -10,7 +10,6 @@ const DASHBOARD = path.join(
   "..",
   "specs",
   "001-econsult-flow",
-  "artifacts",
   "index.html",
 );
 

@@ -2,7 +2,7 @@
 
 Generated on 2026-09-11 from the research workflow that preceded the specification. Nine topics were each researched by a read-only agent that had to open its sources and mark unopened recall as unverified; a second agent then tried to refute every claim and checked every named package against Expo Go for SDK 57 (the brief requires a clean clone to run with `npx expo start`). A completeness critic then listed gaps, contradictions and anything that would break Expo Go, and one follow-up round researched the gaps. Nothing here was edited by hand; the specification cites this record.
 
-A rendered copy lives at `artifacts/research.html`.
+A rendered copy lives at `../artifacts/research.html`.
 
 > **Since then.** This is the research as it stood before the specification; the spec accepted some of it and overruled the rest, and the build then overturned one more. Where the app differs from the recommendations below:
 >

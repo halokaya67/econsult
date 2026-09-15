@@ -11,7 +11,7 @@ Feature `001-econsult-flow` · branch `feat/econsult-flow` · written 2026-09-11
 > - The error-bearing accessible name sits on a wrapping accessible view, not on the label text, because iOS caches a text's name until its words change.
 > - A `+not-found` route was added, with a button rather than a link, so a screen reader can leave it.
 
-How it works today: how-it-works.md (rendered copy: `artifacts/how-it-works.html`). Platform facts behind the choices below: research.md (rendered copy: `artifacts/research.html`).
+How it works today: how-it-works.md (rendered copy: `../artifacts/how-it-works.html`). Platform facts behind the choices below: research.md (rendered copy: `../artifacts/research.html`).
 
 ## Problem & Goals
 
