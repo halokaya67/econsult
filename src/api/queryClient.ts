@@ -2,7 +2,8 @@ import { QueryClient } from "@tanstack/react-query";
 
 export const READ_RETRY_COUNT = 1;
 export const READ_RETRY_DELAY_MS = 1000;
-export const STALE_TIME_MS = 30_000;
+// Five minutes: a practice's questions and care team change rarely, and a refetch keeps the old data anyway.
+export const STALE_TIME_MS = 5 * 60_000;
 
 // Reads are offline-first so the first attempt always runs (the fake is in-process); the send
 // mutation runs "always" so it can never sit paused with a spinner that lies.

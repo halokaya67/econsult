@@ -118,6 +118,11 @@ Decided: reads retry once when the link returns; the send always runs, never aut
 Alternatives: the library's default online mode for the send (a false offline reading pauses it forever); automatic retries on the send (duplicates).
 Traded off: an offline send fails at once instead of waiting.
 
+**Cached reads stay fresh for five minutes, and the questions step keeps them across a failed refresh.** A practice's questions and care team change rarely.
+Decided: a five-minute stale time on the reads; a refetch keeps the old data while it runs, and step 2 keeps showing the questions it has if a refetch fails.
+Alternatives: a short stale time (a refetch on almost every step for data that does not change); the error card on step 2 too (throws away answers the patient can still give).
+Traded off: a question the practice changed in the last five minutes is asked in its old form.
+
 **A failed refresh beats stale data.** A patient must not write to a doctor who has left.
 Decided: when a refetch fails, the error card replaces the list.
 Alternatives: keep showing the old list with a warning (friendlier, riskier for a medical list).

@@ -95,9 +95,9 @@ actions as past-tense events (`recipientSelected`) rather than commands.
 - Keyboard and scrolling belong to `ScreenScaffold`: it owns the scroll view, the offline banner,
   the safe-area padding and the keyboard inset, and provides `useScrollToField`. A screen puts its
   primary action in the `action` slot, never pins a footer, and never asks for automatic insets.
-- Reads are offline-first: one retry after a second, a 30-second stale time, a 15-second timeout,
-  and a failed refetch replaces the list with the error card rather than showing a stale medical
-  list. The send mutation runs in `always` mode and never retries itself, so it fails fast instead
+- Reads are offline-first: one retry after a second, a five-minute stale time, a 15-second timeout,
+  and a failed refetch replaces the recipient list with the error card rather than showing a
+  stale medical list, while the questions step keeps the questions it already has. The send mutation runs in `always` mode and never retries itself, so it fails fast instead
   of pausing behind a spinner; create times out at 15 seconds, the photo upload at 45.
 - One idempotency key per payload: the first send mints it, every retry reuses it, an edit before
   the create lands retires it, and once the create has landed the key belongs to that e-consult.
