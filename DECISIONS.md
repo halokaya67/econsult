@@ -243,4 +243,5 @@ Draft persistence with a resume prompt, which also recovers an Android camera ca
 with Edit and Send before the confirmation; landscape layouts; a dark appearance; a stale list shown
 with a warning instead of the error card; an exit confirmation on the back gesture from Home; the
 real transport with upload progress; Dutch copy tested with TalkBack; an inbox so the practice's
-reply closes the loop; and end-to-end tests on both platforms.
+reply closes the loop; deep links from the practice's messages and notifications, with the
+guards each step then needs against a cold arrival; and end-to-end tests on both platforms.
