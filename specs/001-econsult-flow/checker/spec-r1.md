@@ -169,7 +169,7 @@ mode: spec · round: 1 · dispatched: 2026-09-11T16:58:08Z · reviewed head: f39
 - **Category:** ambiguity
 - **Location:** `specs/001-econsult-flow/spec.md:57`
 - **Finding:** "The practice inbox derives a preview from the first line of the body" describes the GP-side system, which is out of scope and unknowable here.
-- **Why:** The brief rewards stated assumptions (brief:250); a confident claim about a system you do not own is the kind of thing the interviewers push on.
+- **Why:** The brief rewards stated assumptions (brief:250); a confident claim about a system you do not own is the kind of thing the readers push on.
 - **Suggested fix:**
   ```
   :57 — "Assumption: the practice inbox can derive a preview from the first line of the body. If it cannot,

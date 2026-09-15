@@ -51,7 +51,7 @@ alternatives named.
 Intervention: the human set the shape (short lines; only our decisions; alternatives and why they
 lost), asked for an audit of unrecorded decisions and chose each one, cutting eight as
 over-engineering.
-Needed because: an interviewer reads these in minutes.
+Needed because: a reader has minutes, not an afternoon.
 
 **Android and the accessibility options had not been tested.** Simulator passes had stopped at
 "names verified, speech not verified".
