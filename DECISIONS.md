@@ -233,15 +233,25 @@ Traded off: no single place to browse all types.
 
 ## Platform
 
-Verified on the iOS simulators at default and largest text with a clean Accessibility Inspector audit
-on every screen, on an Android 16 emulator with TalkBack's speech captured, on a real Samsung tablet
-(camera, back labels, read faults) and on a real iPad.
+Verified by hand, with the evidence under `specs/001-econsult-flow/artifacts/ui-verification/`:
+
+- iOS simulators (iPhone and iPad) at the default and the largest text size, with a clean
+  Accessibility Inspector audit on every screen.
+- An Android 16 emulator with TalkBack, its speech captured word for word.
+- A real Samsung tablet: camera capture, the header labels under TalkBack, the read faults and the
+  loading skeleton.
+- A real iPad: VoiceOver with the caption panel, the nine accessibility options, camera capture.
 
 ## With another two weeks
 
-Draft persistence with a resume prompt, which also recovers an Android camera capture; a review step
-with Edit and Send before the confirmation; landscape layouts; a dark appearance; a stale list shown
-with a warning instead of the error card; an exit confirmation on the back gesture from Home; the
-real transport with upload progress; Dutch copy tested with TalkBack; an inbox so the practice's
-reply closes the loop; deep links from the practice's messages and notifications, with the
-guards each step then needs against a cold arrival; and end-to-end tests on both platforms.
+- Draft persistence with a resume prompt, which also recovers an Android camera capture.
+- A review step with Edit and Send before the confirmation.
+- Deep links from the practice's messages and notifications, with the guards each step then needs
+  against a cold arrival.
+- Landscape layouts, and a dark appearance.
+- A stale list shown with a warning instead of the error card.
+- An exit confirmation on the back gesture from Home.
+- The real transport, with upload progress.
+- Dutch copy, tested with TalkBack.
+- An inbox, so the practice's reply closes the loop.
+- End-to-end tests on both platforms.
