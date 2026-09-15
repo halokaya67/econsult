@@ -1,8 +1,8 @@
 # Android UI verification — e-consult flow
 
-Date: 2026-09-14. Worktree head `f177213`.
+Date: 2026-09-14. Worktree head `830ce8a`.
 
-> **Since then.** The three emulator fixes this report re-checks landed in `b1fb557`. The counts above
+> **Since then.** The three emulator fixes this report re-checks landed in `b15b8f7`. The counts above
 > the fold are the emulator walkthrough's; the real-device pass on the Galaxy Tab S7 FE adds
 > twenty-one checks of its own, further down. R-2, the tablet photo-preview sliver, has since been
 > fixed like the rest — the preview is capped at 360 points — while R-1, the camera eviction, has not:
@@ -459,7 +459,7 @@ emulator is left running.
 
 ## Real device: Samsung Galaxy Tab S7 FE
 
-Date: 2026-09-14. Worktree head `b1fb557` — the same bundle as "Re-check after fixes", loaded cold.
+Date: 2026-09-14. Worktree head `b15b8f7` — the same bundle as "Re-check after fixes", loaded cold.
 
 | | |
 | --- | --- |

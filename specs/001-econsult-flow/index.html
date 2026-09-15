@@ -99,7 +99,7 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       </ol>
     </nav>
 
-    <p class="stand">Every number on this page was counted from the files in this repository, and each section says which file it was counted from. Commit hashes are the ones on the <code>feat/econsult-flow</code> branch as it stands, so <code>git show &lt;hash&gt;</code> works from a clone; the execution log at the end of <a href="flow/plan.md">plan.md</a> records the hashes as the run itself saw them, before the branch was rebased.</p>
+    <p class="stand">Every number on this page was counted from the files in this repository, and each section says which file it was counted from. Commit hashes are the ones on <code>main</code>, so <code>git show &lt;hash&gt;</code> works from a clone; the execution log at the end of <a href="flow/plan.md">plan.md</a> records the hashes as the run itself saw them, before the history was rewritten.</p>
 
     <h2 id="research"><span class="num">01</span>Brief → research</h2>
     <p>Before anything was specified, nine platform topics were researched by agents that had to open their sources and mark unopened recall as unverified; a second pass then tried to refute every claim against the installed SDK, and a completeness critic sent six remaining gaps back for one more round.</p>
@@ -126,11 +126,11 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
           <tr><td><a href="artifacts/checker/spec-r2.html">Spec review 2</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all four fixed in the next revision; round 3 records them RESOLVED</span></td><td class="n">2 W · 2 I</td><td class="n"><a href="flow/checker/spec-r2.md">spec-r2.md</a></td></tr>
           <tr><td><a href="artifacts/checker/spec-r3.html">Spec review 3</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all three fixed in the next revision; round 4 records them RESOLVED</span></td><td class="n">2 W · 1 I</td><td class="n"><a href="flow/checker/spec-r3.md">spec-r3.md</a></td></tr>
           <tr><td><a href="artifacts/checker/spec-r4.html">Spec review 4</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ all four fixed in the next revision; round 5 records them RESOLVED</span></td><td class="n">2 W · 2 I</td><td class="n"><a href="flow/checker/spec-r4.md">spec-r4.md</a></td></tr>
-          <tr><td><a href="artifacts/checker/spec-r5.html">Spec review 5</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ both fixed in the last spec revision, committed with the plan (<code>cab5de3</code>) before the plan gate</span></td><td class="n">0 W · 2 I</td><td class="n"><a href="flow/checker/spec-r5.md">spec-r5.md</a></td></tr>
+          <tr><td><a href="artifacts/checker/spec-r5.html">Spec review 5</a></td><td class="v pass">PASS_WITH_FLAGS<span class="res">→ both fixed in the last spec revision, committed with the plan (<code>b8e96fa</code>) before the plan gate</span></td><td class="n">0 W · 2 I</td><td class="n"><a href="flow/checker/spec-r5.md">spec-r5.md</a></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="src">Verdicts are each report's own <code>**Verdict:**</code> line. The counts are the numbered rows of each report's findings table: <code>W</code> for warnings, <code>I</code> for information items, none of the five rounds raising a <code>C</code> blocker. Totals: 13 warnings, 11 information items, 0 blockers. The resolutions are each following round's own prior-flag table, where every item of the round before it is marked RESOLVED with its evidence. Rounds 1 and 2 came before the spec gate; rounds 3 to 5 ran after it, during planning, and their fixes are the eight changed lines between the spec commit <code>9f6ecac</code> and the plan commit <code>cab5de3</code> — including round 5's two: the timeout rationale that still keyed on the error's identity, and the photo preview's sizing.</p>
+    <p class="src">Verdicts are each report's own <code>**Verdict:**</code> line. The counts are the numbered rows of each report's findings table: <code>W</code> for warnings, <code>I</code> for information items, none of the five rounds raising a <code>C</code> blocker. Totals: 13 warnings, 11 information items, 0 blockers. The resolutions are each following round's own prior-flag table, where every item of the round before it is marked RESOLVED with its evidence. Rounds 1 and 2 came before the spec gate; rounds 3 to 5 ran after it, during planning, and their fixes are the eight changed lines between the spec commit <code>a8df88c</code> and the plan commit <code>b8e96fa</code> — including round 5's two: the timeout rationale that still keyed on the error's identity, and the photo preview's sizing.</p>
     <ul class="links">
       <li><a href="artifacts/spec.html">The spec</a> <span class="note">— the agreed behaviour, as it stood after round five (<a href="flow/spec.md">spec.md</a>)</span></li>
       <li>The spec went to a human gate and was approved there; the approval is the first line of the decision index in <a href="artifacts/plan.html">plan.html</a>.</li>
@@ -154,34 +154,34 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
     <h3>The twenty-two steps, in the order they were committed</h3>
     <p>One commit per step, tests written first, inside the step's declared file fence. Six steps put a new screen on the device; each of those was driven on an iPhone 17 simulator at the default and the largest accessibility text size before the step was allowed to pass, and re-driven after every fix.</p>
     <ol class="tasks">
-      <li class="task"><p class="tid">T001</p><p class="ttitle">Test, lint, format and type-check tooling</p><p class="tsha">02efd1d</p></li>
-      <li class="task"><p class="tid">T002</p><p class="ttitle">Wire contracts and fixtures</p><p class="tsha">498c6b5</p></li>
-      <li class="task"><p class="tid">T003</p><p class="ttitle">Transport interface, errors, timeout helper and the fake transport</p><p class="tsha">5ed85e1</p></li>
-      <li class="task"><p class="tid">T004</p><p class="ttitle">Typed services with timeouts and boundary validation</p><p class="tsha">91eff94</p></li>
-      <li class="task"><p class="tid">T005</p><p class="ttitle">Query client, network state, announcements, dev warning, ids</p><p class="tsha">1a73630</p></li>
-      <li class="task"><p class="tid">T006</p><p class="ttitle">Developer settings, services provider, session and the test provider stack</p><p class="tsha">5459086</p></li>
-      <li class="task"><p class="tid">T007</p><p class="ttitle">Draft state, reducer, selectors and provider</p><p class="tsha">ae816aa</p></li>
-      <li class="task"><p class="tid">T008</p><p class="ttitle">Shared queries, recipient helpers and the recipients and questions hooks</p><p class="tsha">7123dfe</p></li>
-      <li class="task"><p class="tid">T009</p><p class="ttitle">Validation and the step model</p><p class="tsha">5c51877</p></li>
-      <li class="task"><p class="tid">T010</p><p class="ttitle">Sending, the partial-failure outcome and the mutations</p><p class="tsha">8d02d75</p></li>
-      <li class="task"><p class="tid">T011</p><p class="ttitle">Photo processing</p><p class="tsha">aaf1bba</p></li>
-      <li class="task"><p class="tid">T012</p><p class="ttitle">Theme tokens, screen scaffold, buttons, offline banner and step header</p><p class="tsha">68e4582</p></li>
-      <li class="task"><p class="tid">T013</p><p class="ttitle">Text field, choice group, recipient card and the status views</p><p class="tsha">5b8e34a</p></li>
-      <li class="task"><p class="tid">T014</p><p class="ttitle">Photo picker</p><p class="tsha">6f60ec9</p></li>
-      <li class="task"><p class="tid">T015</p><p class="ttitle">App shell: providers, root stack, home screen and the flow group</p><p class="tsha">06d47d7</p>
+      <li class="task"><p class="tid">T001</p><p class="ttitle">Test, lint, format and type-check tooling</p><p class="tsha">35903e4</p></li>
+      <li class="task"><p class="tid">T002</p><p class="ttitle">Wire contracts and fixtures</p><p class="tsha">ba34edc</p></li>
+      <li class="task"><p class="tid">T003</p><p class="ttitle">Transport interface, errors, timeout helper and the fake transport</p><p class="tsha">6e9d0f6</p></li>
+      <li class="task"><p class="tid">T004</p><p class="ttitle">Typed services with timeouts and boundary validation</p><p class="tsha">9760400</p></li>
+      <li class="task"><p class="tid">T005</p><p class="ttitle">Query client, network state, announcements, dev warning, ids</p><p class="tsha">21dbe7e</p></li>
+      <li class="task"><p class="tid">T006</p><p class="ttitle">Developer settings, services provider, session and the test provider stack</p><p class="tsha">b80f551</p></li>
+      <li class="task"><p class="tid">T007</p><p class="ttitle">Draft state, reducer, selectors and provider</p><p class="tsha">5048a9c</p></li>
+      <li class="task"><p class="tid">T008</p><p class="ttitle">Shared queries, recipient helpers and the recipients and questions hooks</p><p class="tsha">c114d72</p></li>
+      <li class="task"><p class="tid">T009</p><p class="ttitle">Validation and the step model</p><p class="tsha">8fa035b</p></li>
+      <li class="task"><p class="tid">T010</p><p class="ttitle">Sending, the partial-failure outcome and the mutations</p><p class="tsha">dda92d3</p></li>
+      <li class="task"><p class="tid">T011</p><p class="ttitle">Photo processing</p><p class="tsha">1d20667</p></li>
+      <li class="task"><p class="tid">T012</p><p class="ttitle">Theme tokens, screen scaffold, buttons, offline banner and step header</p><p class="tsha">ae608e5</p></li>
+      <li class="task"><p class="tid">T013</p><p class="ttitle">Text field, choice group, recipient card and the status views</p><p class="tsha">c1be608</p></li>
+      <li class="task"><p class="tid">T014</p><p class="ttitle">Photo picker</p><p class="tsha">a92d2f8</p></li>
+      <li class="task"><p class="tid">T015</p><p class="ttitle">App shell: providers, root stack, home screen and the flow group</p><p class="tsha">0527bfd</p>
         <p class="tev"><a href="artifacts/visuals/T015-phone.html">preview</a> <span class="note">— clean; one flag about the placeholder step's missing back control carried to T016</span></p></li>
-      <li class="task"><p class="tid">T016</p><p class="ttitle">Step 1, the recipient screen</p><p class="tsha">e677722</p>
+      <li class="task"><p class="tid">T016</p><p class="ttitle">Step 1, the recipient screen</p><p class="tsha">2fcccfc</p>
         <p class="tev"><a href="artifacts/visuals/T016-phone.html">preview</a><a href="artifacts/visuals/T016-phone-recheck.html">re-check</a> <span class="note">— header label clipped at the largest text size</span></p></li>
-      <li class="task"><p class="tid">T017</p><p class="ttitle">Step 2, the questions screen</p><p class="tsha">27aa5a0</p>
+      <li class="task"><p class="tid">T017</p><p class="ttitle">Step 2, the questions screen</p><p class="tsha">495c359</p>
         <p class="tev"><a href="artifacts/visuals/T017-phone.html">preview</a><a href="artifacts/visuals/T017-phone-recheck.html">re-check</a><a href="artifacts/visuals/T017-phone-recheck2.html">re-check 2</a><a href="artifacts/visuals/T017-phone-recheck3.html">re-check 3</a> <span class="note">— scroll-to-error took three attempts</span></p></li>
-      <li class="task"><p class="tid">T018</p><p class="ttitle">Step 3, the message screen with photo and sending</p><p class="tsha">a1a6fb0</p>
+      <li class="task"><p class="tid">T018</p><p class="ttitle">Step 3, the message screen with photo and sending</p><p class="tsha">c9c94f0</p>
         <p class="tev"><a href="artifacts/visuals/T018-phone.html">preview</a><a href="artifacts/visuals/T018-phone-recheck.html">re-check</a> <span class="note">— an invalid Send scrolled the field's label off screen</span></p></li>
-      <li class="task"><p class="tid">T019</p><p class="ttitle">The confirmation screen</p><p class="tsha">e6e0db7</p>
+      <li class="task"><p class="tid">T019</p><p class="ttitle">The confirmation screen</p><p class="tsha">15f8456</p>
         <p class="tev"><a href="artifacts/visuals/T019-phone.html">preview</a><a href="artifacts/visuals/T019-phone-recheck.html">re-check</a> <span class="note">— a failed photo retry changed nothing on screen</span></p></li>
-      <li class="task"><p class="tid">T020</p><p class="ttitle">Developer settings screen</p><p class="tsha">b094bce</p>
+      <li class="task"><p class="tid">T020</p><p class="ttitle">Developer settings screen</p><p class="tsha">fa5b053</p>
         <p class="tev"><a href="artifacts/visuals/T020-phone.html">preview</a><a href="artifacts/visuals/T020-phone-recheck.html">re-check</a> <span class="note">— the Force offline switch was pushed past the screen edge</span></p></li>
-      <li class="task"><p class="tid">T021</p><p class="ttitle">Dependency, configuration and asset cleanup, and the agent guidance files</p><p class="tsha">a19b53d</p></li>
-      <li class="task"><p class="tid">T022</p><p class="ttitle">README, DECISIONS.md and AI-USAGE.md</p><p class="tsha">bcce520</p></li>
+      <li class="task"><p class="tid">T021</p><p class="ttitle">Dependency, configuration and asset cleanup, and the agent guidance files</p><p class="tsha">dbd2c06</p></li>
+      <li class="task"><p class="tid">T022</p><p class="ttitle">README, DECISIONS.md and AI-USAGE.md</p><p class="tsha">295f9ed</p></li>
     </ol>
     <ul class="figs">
       <li class="fig"><b>22</b><span>steps, one commit each</span></li>
@@ -189,7 +189,7 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       <li class="fig"><b>5</b><span>of those needed a re-check</span></li>
       <li class="fig"><b>13</b><span>simulator runs in total</span></li>
     </ul>
-    <p class="src">Step ids, titles and order from the twenty-two <code>### Task</code> headings and the execution-log table in <code>plan.md</code>; hashes from <code>git log</code> on <code>feat/econsult-flow</code>, matched to the execution log one-to-one by subject and order. Runs counted as the pages listed on <a href="artifacts/visuals/index.html">visuals/index.html</a>: six first runs plus seven re-checks.</p>
+    <p class="src">Step ids, titles and order from the twenty-two <code>### Task</code> headings and the execution-log table in <code>plan.md</code>; hashes from <code>git log</code> on <code>main</code>, matched to the execution log one-to-one by subject and order. Runs counted as the pages listed on <a href="artifacts/visuals/index.html">visuals/index.html</a>: six first runs plus seven re-checks.</p>
     <ul class="links">
       <li><a href="artifacts/plan.html">The plan</a> <span class="note">— the twenty-two steps with their fences and verify commands, the amendments, the execution log and the decision index (<a href="flow/plan.md">plan.md</a>)</span></li>
       <li><a href="artifacts/board.html">The detailed board</a> <span class="note">— every step again, with why it exists, how many files it touched and what it shipped</span></li>
@@ -197,28 +197,28 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
     </ul>
 
     <h2 id="review"><span class="num">04</span>The implementation review</h2>
-    <p>With the last step committed, a checker read the whole change rather than any one step — 132 files across 25 commits at the first round — three times over, re-reading each round's fixes in the next. All three returned PASS_WITH_FLAGS, the flow's proceed-with-tracked-items verdict: <strong>only a FAIL blocks</strong>, so the change was never held, and the flags were carried to the finish gate instead, where each was closed or accepted by name.</p>
+    <p>With the last step committed, a checker read the whole change rather than any one step — 132 files across 25 commits at the first round — three times over, re-reading each round's fixes in the next. All three returned PASS_WITH_FLAGS, so the change was never held, and the flags were carried to the finish gate instead, where each was closed or accepted by name.</p>
     <div class="wide">
       <table>
         <thead><tr><th>Round</th><th>Verdict</th><th>Raised</th><th>Where its flags closed</th></tr></thead>
         <tbody>
-          <tr><td><a href="artifacts/checker/final-r1.html">Final review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 6 I</td><td class="closed">The first review-fix commit, <code>15d0259</code> “fix(econsult): lock navigation while sending, announce offline once, surface picker failures” — nine of the thirteen. W6, W7, I5 and I6 were deferred and restated in round 3.</td></tr>
-          <tr><td><a href="artifacts/checker/final-r2.html">Final review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">3 W · 1 I</td><td class="closed">The second, <code>ad5dee8</code> “fix(econsult): re-dispatch the send's own navigation through the lock” — W8, W9 and I7. W7 was the round-1 warning carried again.</td></tr>
+          <tr><td><a href="artifacts/checker/final-r1.html">Final review 1</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">7 W · 6 I</td><td class="closed">The first review-fix commit, <code>acae921</code> “fix(econsult): lock navigation while sending, announce offline once, surface picker failures” — nine of the thirteen. W6, W7, I5 and I6 were deferred and restated in round 3.</td></tr>
+          <tr><td><a href="artifacts/checker/final-r2.html">Final review 2</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">3 W · 1 I</td><td class="closed">The second, <code>051a4a0</code> “fix(econsult): re-dispatch the send's own navigation through the lock” — W8, W9 and I7. W7 was the round-1 warning carried again.</td></tr>
           <tr><td><a href="artifacts/checker/final.html">Final review 3, closing</a></td><td class="v pass">PASS_WITH_FLAGS</td><td class="n">2 W · 4 I</td><td class="closed">Nothing left to fix in the code; this round restated what was still open, and each of the six closed after it — listed below.</td></tr>
         </tbody>
       </table>
     </div>
     <ul>
       <li><strong>W6</strong>, the Accessibility Inspector audit having no evidence — closed by the finish-phase audit: five states, zero warnings, and a positive control that returned 22 (<a href="artifacts/ui-verification/phone.html">phone lane</a>).</li>
-      <li><strong>I6</strong>, the Home → Discard path never driven — closed by the finish walkthrough, which drove it and found that Discard on step 1 did nothing; fixed in <code>1bc3e88</code> “fix(econsult): make Discard on step 1 leave the flow” and re-driven as scenario 7 of the <a href="artifacts/ui-verification/phone.html">phone lane</a>.</li>
+      <li><strong>I6</strong>, the Home → Discard path never driven — closed by the finish walkthrough, which drove it and found that Discard on step 1 did nothing; fixed in <code>66147e8</code> “fix(econsult): make Discard on step 1 leave the flow” and re-driven as scenario 7 of the <a href="artifacts/ui-verification/phone.html">phone lane</a>.</li>
       <li><strong>I5</strong>, four structure and ownership observations — closed by the restructuring pass in <a href="#after">section 6</a>; all four are resolved, and three of the paths it named no longer exist.</li>
-      <li><strong>I8</strong> (the AI-USAGE round count going stale) and <strong>I9</strong> (an intermittent <code>act(...)</code> warning) — closed by the docs-polish commit <code>e7ab09a</code> “docs: record the three final review rounds and the offline process record”, which also recorded the three rounds.</li>
+      <li><strong>I8</strong> (the AI-USAGE round count going stale) and <strong>I9</strong> (an intermittent <code>act(...)</code> warning) — closed by the docs-polish commit <code>41b06df</code> “docs: record the three final review rounds and the offline process record”, which also recorded the three rounds.</li>
       <li><strong>W7</strong>, thirteen generated and prior-round files not read in full — accepted; the report itself asks for no fix before merge.</li>
     </ul>
-    <p class="src">Verdicts and counts read the same way as the earlier rounds, from <a href="flow/checker/final-r1.md">final-r1.md</a>, <a href="flow/checker/final-r2.md">final-r2.md</a> and <a href="flow/checker/final.md">final.md</a>. The fix commits are the ones whose messages name those findings, in branch order, matched to each round's own prior-flag table: round 2 read <code>15d0259</code> and marked nine of round 1's items RESOLVED; round 3 read <code>ad5dee8</code> and marked round 2's three RESOLVED. The five closures above are the statuses in <a href="flow/checker/final.md">final.md</a>'s own “Since then” note, with the commit subjects from <code>git log --oneline</code>; I5's resolution is also recorded in the revision notes of <a href="flow/plan.md">plan.md</a>.</p>
+    <p class="src">Verdicts and counts read the same way as the earlier rounds, from <a href="flow/checker/final-r1.md">final-r1.md</a>, <a href="flow/checker/final-r2.md">final-r2.md</a> and <a href="flow/checker/final.md">final.md</a>. The fix commits are the ones whose messages name those findings, in branch order, matched to each round's own prior-flag table: round 2 read <code>acae921</code> and marked nine of round 1's items RESOLVED; round 3 read <code>051a4a0</code> and marked round 2's three RESOLVED. The five closures above are the statuses in <a href="flow/checker/final.md">final.md</a>'s own “Since then” note, with the commit subjects from <code>git log --oneline</code>; I5's resolution is also recorded in the revision notes of <a href="flow/plan.md">plan.md</a>.</p>
     <ul class="links">
       <li><a href="artifacts/checker/index.html">All eleven checker rounds on one page</a> <span class="note">— five on the spec, three on the plan, three on the finished change, each with what it raised and where those findings closed</span></li>
-      <li><code>2e453b1</code> <span class="note">— the coverage commit that preceded round 1: tests only, every source file at 100 %</span></li>
+      <li><code>ff0b70f</code> <span class="note">— the coverage commit that preceded round 1: tests only, every source file at 100 %</span></li>
     </ul>
 
     <h2 id="ui"><span class="num">05</span>UI verification, on four lanes</h2>
@@ -227,15 +227,15 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       <table>
         <thead><tr><th>Lane</th><th>Passed</th><th>Defects</th><th>Report</th></tr></thead>
         <tbody>
-          <tr><td>Phone — iPhone 17 simulator, iOS 26.5</td><td class="n">10 / 10 scenarios</td><td>1 found → fixed (<code>1bc3e88</code>) and re-driven</td><td><a href="artifacts/ui-verification/phone.html">phone.html</a></td></tr>
+          <tr><td>Phone — iPhone 17 simulator, iOS 26.5</td><td class="n">10 / 10 scenarios</td><td>1 found → fixed (<code>66147e8</code>) and re-driven</td><td><a href="artifacts/ui-verification/phone.html">phone.html</a></td></tr>
           <tr><td>Tablet — iPad Pro 11-inch (M5) simulator</td><td class="n">6 / 6 scenarios</td><td>0; one layout observation about the full-width column</td><td><a href="artifacts/ui-verification/tablet.html">tablet.html</a></td></tr>
-          <tr><td>Android emulator — Pixel, API 36, TalkBack</td><td class="n">53 / 56 checks</td><td>5 found → all fixed and re-verified: 1–3 in <code>b1fb557</code>, the two spoken-output ones earlier</td><td><a href="artifacts/ui-verification/android.html">android.html</a></td></tr>
+          <tr><td>Android emulator — Pixel, API 36, TalkBack</td><td class="n">53 / 56 checks</td><td>5 found → all fixed and re-verified: 1–3 in <code>b15b8f7</code>, the two spoken-output ones earlier</td><td><a href="artifacts/ui-verification/android.html">android.html</a></td></tr>
           <tr><td>Android lane, second half — real Samsung Galaxy Tab S7 FE</td><td class="n">19 / 21 checks</td><td>2 found: 1 fixed by a preview cap (the preview's aspect on a tablet), 1 recorded as a known limit (process eviction during capture)</td><td><a href="artifacts/ui-verification/android.html#real-device">android.html</a></td></tr>
           <tr><td>Real iPad Air 11-inch (M3), iOS 27</td><td class="n">11 / 11 accessible-name checks<br>12 / 12 VoiceOver events after two re-checks</td><td>7 found: 5 fixed and re-verified; 1 and 2 stand as observations; the earlier blank-message-step defect confirmed fixed</td><td><a href="artifacts/ui-verification/device.html">device.html</a></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="src">Each row is the lane report's own verdict paragraph: “ten scenarios, all passing” and “six scenarios, all passing” from <a href="artifacts/ui-verification/phone.html#verdict">phone.html</a> and <a href="artifacts/ui-verification/tablet.html">tablet.html</a>; “53 of 56 checks pass … all five since fixed and re-verified” and “19 of 21 checks pass” from <a href="artifacts/ui-verification/android/report.md">android/report.md</a>; for the iPad, the eleven rows of the “Accessible names” table (all Pass) and the twelve VoiceOver events across that report's “VoiceOver” table and the two re-checks that supersede six of its rows (all Pass) in <a href="artifacts/ui-verification/device/report.md">device/report.md</a>, whose Defects section lists the seven, five of them marked fixed. That run also drove nine accessibility settings one at a time, with the setting screenshotted as proof before each pass, and both system text sizes. The Android report names the head each pass ran against but not the commit that fixed each defect; <code>b1fb557</code>'s own message claims defects 1 to 3, and the two spoken-output ones were closed before it by the review-fix commits in section 6. The two physical-device lanes are additional passes, not replacements: the Samsung run covers only what an emulator cannot show, and the iPad run only the accessibility settings.</p>
+    <p class="src">Each row is the lane report's own verdict paragraph: “ten scenarios, all passing” and “six scenarios, all passing” from <a href="artifacts/ui-verification/phone.html#verdict">phone.html</a> and <a href="artifacts/ui-verification/tablet.html">tablet.html</a>; “53 of 56 checks pass … all five since fixed and re-verified” and “19 of 21 checks pass” from <a href="artifacts/ui-verification/android/report.md">android/report.md</a>; for the iPad, the eleven rows of the “Accessible names” table (all Pass) and the twelve VoiceOver events across that report's “VoiceOver” table and the two re-checks that supersede six of its rows (all Pass) in <a href="artifacts/ui-verification/device/report.md">device/report.md</a>, whose Defects section lists the seven, five of them marked fixed. That run also drove nine accessibility settings one at a time, with the setting screenshotted as proof before each pass, and both system text sizes. The Android report names the head each pass ran against but not the commit that fixed each defect; <code>b15b8f7</code>'s own message claims defects 1 to 3, and the two spoken-output ones were closed before it by the review-fix commits in section 6. The two physical-device lanes are additional passes, not replacements: the Samsung run covers only what an emulator cannot show, and the iPad run only the accessibility settings.</p>
 
     <h3>The Accessibility Inspector audit</h3>
     <p>Xcode's Accessibility Inspector was run against the app on the iPhone 17 simulator with the default audit options. Five states were audited — home, step 1 loaded, step 3 with the empty-message error, the developer-settings modal, and the partial-failure confirmation — and each returned <strong>0 warnings, 0 duplicates</strong>. Because a row of zeros only means something if the engine was looking, the same audit was pointed at Expo Go's own developer menu as a positive control, in the same process: <strong>22 warnings</strong>.</p>
@@ -260,32 +260,32 @@ footer.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);co
       <table>
         <thead><tr><th>Commit</th><th>Subject</th><th>Belongs to</th></tr></thead>
         <tbody>
-          <tr><td class="n">68fdd18</td><td>refactor: group the source tree by responsibility and ownership</td><td>pre-PR review</td></tr>
-          <tr><td class="n">7aac59c</td><td>fix: address pre-PR review findings</td><td>pre-PR review</td></tr>
-          <tr><td class="n">705ca0a</td><td>refactor: group the source tree by responsibility, then by kind</td><td>pre-PR review</td></tr>
-          <tr><td class="n">b5b1aaf</td><td>docs: shorten the hand-in documents</td><td>pre-PR review</td></tr>
-          <tr><td class="n">693bb39</td><td>refactor: remove the env seeds</td><td>pre-PR review</td></tr>
-          <tr><td class="n">6ce561a</td><td>refactor: keep the shared layer strictly by kind</td><td>post-PR delta review</td></tr>
-          <tr><td class="n">06393b6</td><td>docs(specs): make the process record self-contained</td><td>post-PR delta review</td></tr>
-          <tr><td class="n">577cc71</td><td>refactor: fix the ownership leaks the folder check found</td><td>post-PR delta review</td></tr>
-          <tr><td class="n">f177213</td><td>fix: address posted-review findings</td><td>post-PR delta review</td></tr>
-          <tr><td class="n">b1fb557</td><td>fix: address the Android emulator findings</td><td>UI verification, Android lane</td></tr>
+          <tr><td class="n">c3075f7</td><td>refactor: group the source tree by responsibility and ownership</td><td>pre-PR review</td></tr>
+          <tr><td class="n">6bb68f6</td><td>fix: address pre-PR review findings</td><td>pre-PR review</td></tr>
+          <tr><td class="n">548b121</td><td>refactor: group the source tree by responsibility, then by kind</td><td>pre-PR review</td></tr>
+          <tr><td class="n">08c63d3</td><td>docs: shorten the hand-in documents</td><td>pre-PR review</td></tr>
+          <tr><td class="n">2cec1cd</td><td>refactor: remove the env seeds</td><td>pre-PR review</td></tr>
+          <tr><td class="n">767c39b</td><td>refactor: keep the shared layer strictly by kind</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">8db98fe</td><td>docs(specs): make the process record self-contained</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">078de6f</td><td>refactor: fix the ownership leaks the folder check found</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">830ce8a</td><td>fix: address posted-review findings</td><td>post-PR delta review</td></tr>
+          <tr><td class="n">b15b8f7</td><td>fix: address the Android emulator findings</td><td>UI verification, Android lane</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="src">Hashes and subjects from <code>git log --oneline</code> on <code>feat/econsult-flow</code>, for everything after the flow's own last commit <code>0a0d23d</code>. The two fix commits name their review in the subject; the refactor and documentation commits around them are grouped by where they fall between those two, which is an inference from the order and the dates, not a claim the commits themselves make.</p>
-    <p>What the two reviews changed is mostly structural: the source tree moved from “where the file was first needed” to “who owns it”, the shared layer stopped importing a feature, the in-flight guard became a plain helper so the React Compiler would take the hooks again, three announcements that spoke twice on Android were reduced to one, and two tests that could not fail were made into real assertions. The rules they produced are written into the <a href="../../README.md">README</a> and <a href="../../DECISIONS.md">DECISIONS.md</a>.</p>
+    <p class="src">Hashes and subjects from <code>git log --oneline</code> on <code>main</code>, for everything after the flow's own last commit <code>cd63ca1</code>. The two fix commits name their review in the subject; the refactor and documentation commits around them are grouped by where they fall between those two, which is an inference from the order and the dates, not a claim the commits themselves make.</p>
+    <p>What the two reviews changed is mostly structural: the source tree moved from “where the file was first needed” to “who owns it”, the shared layer stopped importing a feature, the in-flight guard became a plain helper so the React Compiler would take the hooks again, three announcements that spoke twice on Android were reduced to one, and two tests that could not fail were made into real assertions. The rules they produced are written into the <a href="../../README.md">README</a> and the <a href="../../docs/decisions-log.md">decision log</a>.</p>
 
     <h2 id="handin"><span class="num">07</span>Hand-in documents</h2>
     <p>Three documents at the repository root, written by the flow's last step and kept current by the reviews after it.</p>
     <ul class="links">
       <li><a href="../../README.md">README.md</a> <span class="note">— how to run it, how to reach every state, where to find things, and “How it was built” with the control-point table</span></li>
-      <li><a href="../../DECISIONS.md">DECISIONS.md</a> <span class="note">— each product and technical decision as the question, what was decided and what it traded off</span></li>
+      <li><a href="../../DECISIONS.md">DECISIONS.md</a> <span class="note">— the assumptions, the four decisions that matter most, what was traded away and what comes next; every decision in full, as why, decided, alternatives and traded off, is in <a href="../../docs/decisions-log.md">docs/decisions-log.md</a></span></li>
       <li><a href="../../AI-USAGE.md">AI-USAGE.md</a> <span class="note">— where the AI went wrong, the human intervention each case needed, and why</span></li>
     </ul>
 
     <h2 id="caught"><span class="num">08</span>What the loop caught</h2>
-    <p>Six cases the README's control-point table cites, each one a defect that the stage before it had passed. They are the argument for the gates.</p>
+    <p>Six cases the control points produced, each one a defect that the stage before it had passed. They are the argument for the gates.</p>
     <ol class="caught">
       <li>
         <p class="what">The upload recommendation would have failed on the first byte</p>

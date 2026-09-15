@@ -8,13 +8,13 @@
 > - `src/smoke.test.tsx` (T001) was deleted once real tests existed.
 > - T011's `src/lib/photo.ts` is `src/features/econsult/utils/photo.ts`; `PickedPhoto` carries a `mimeType`, and `photoFileFor` maps a kept original to its own type and extension instead of always claiming JPEG.
 > - T012's `ScreenScaffold` no longer uses `automaticallyAdjustKeyboardInsets` and no longer announces the offline transition: it listens for the keyboard itself, and the network provider announces once per transition.
-> - T013's `src/components/StatusViews.tsx` is three files (`LoadingCards`, `EmptyState`, `ErrorState`); `ErrorState` takes a `retryBlockedReason` and a ref and announces itself on mount, and `RETRY_LABEL` moved to `src/lib/retryLabel.ts`.
+> - T013's `src/components/StatusViews.tsx` is three files (`LoadingCards`, `EmptyState`, `ErrorState`); `ErrorState` takes a `retryBlockedReason` and a ref and announces itself on mount, and `RETRY_LABEL` moved to `src/lib/copy.ts`.
 > - T014's `PhotoPicker` moved to `src/features/econsult/components/` and gained `PREVIEW_MAX_WIDTH`, its own sub-components and per-source denial copy.
-> - T006's `src/lib/devSettings.tsx` split into `src/providers/DevSettingsProvider.tsx`, `src/providers/ServicesProvider.tsx`, `src/hooks/useSession.ts` (where the session is faked) and `src/features/devSettings/utils/options.ts`.
+> - T006's `src/lib/devSettings.tsx` split into `src/providers/DevSettingsProvider.tsx`, `src/providers/ServicesProvider.tsx`, `src/hooks/useSession.ts` (where the session is faked), with the option tables declared in `src/app/dev-settings.tsx` itself.
 > - T006's `src/test/providers.tsx` is `src/test/renderWithProviders.tsx`, and `useSubmit.test.tsx` sits beside its hook in `src/features/econsult/hooks/`.
 > - The 400-line file cap was superseded by the repository's 800-line canon; one test file, `src/__tests__/app/econsult/message.test.tsx`, is over 400 lines by choice.
 > - T022's document contracts widened: the platform statement now covers an Android emulator with TalkBack, a real Samsung tablet and a real iPad, and AI-USAGE.md records four device lanes rather than one simulator lane.
-> - The execution log's closing figures have been overtaken: the suite counted 270 tests then and spans 53 test files at `b1fb557`, the Android emulator lane added 56 checks and the real Samsung tablet 21, and a real-iPad accessibility pass followed.
+> - The execution log's closing figures have been overtaken: the suite counted 270 tests then and spans 56 test files on `main`, the Android emulator lane added 56 checks and the real Samsung tablet 21, and a real-iPad accessibility pass followed.
 > - I5, deferred at the finish gate, was carried out in the restructuring pass; all four of its ownership findings are resolved.
 
 Revision 2, after plan-checker round 1 (`checker/plan-r1.md`): screen tests moved out of the route directory, a test-only flow layout that carries a preset draft, hoist-safe jest mocks, role queries only on accessibility elements, the zod output type in the services, and the smaller findings. Revision 2.1, after spec-checker round 4 (`checker/spec-r4.md`): the timeout helper decides on its own aborted signal instead of the error's name (`isAbortError` removed), the photo processor keeps the original when the picker reports a zero dimension instead of asking for a bound that could upscale, and the decisions text no longer claims a `FetchError` on every abort. Revision 3, after plan-checker round 2 (`checker/plan-r2.md`): a typed manipulator mock, `userEvent` imported from Testing Library, ambient types for expo-router's runtime matchers, a typed failure test in the photo task, six branch tests for the coverage thresholds, a radio group around the recipient cards, shared text styles in `src/theme/text.ts`, and every function under fifty lines. Revision 3.1, after plan-checker round 3 (`checker/plan-r3.md`): the missing `STEP_TITLES` import in the recipient test, a typed `ready` result in the recipients test, two more `src/api` coverage tests, `text.muted` at its last three sites, and the photo views renamed so they do not shadow the draft's `ReadyPhoto` type. No fourth round ran: revision 3.1 is the revision that went to the plan gate and was approved there, and its two blocking fixes are confirmed by the implementation — `src/__tests__/app/econsult/recipient.test.tsx` imports `STEP_TITLES`, `src/features/econsult/utils/recipients.test.ts` annotates its fixture `RecipientsResult`, and both compile and pass under `npm run typecheck` and `npm test`.
@@ -55,14 +55,13 @@ The table below reflects the tree after the post-implementation restructuring pa
 | `src/app/` | `+not-found.tsx`, `_layout.tsx`, `dev-settings.tsx`, `index.tsx` |
 | `src/app/econsult/` | `_layout.tsx`, `message.tsx`, `questions.tsx`, `recipient.tsx`, `sent.tsx` |
 | `src/components/` | `ChoiceGroup.tsx`, `EmptyState.tsx`, `ErrorState.tsx`, `LoadingCards.tsx`, `OfflineBanner.tsx`, `PrimaryButton.tsx`, `ScreenScaffold.tsx`, `TextButton.tsx`, `TextField.tsx` |
-| `src/features/devSettings/utils/` | `options.ts` |
 | `src/features/econsult/api/` | `queries.ts`, `submit.ts` |
 | `src/features/econsult/components/` | `PhotoPicker.tsx`, `RecipientCard.tsx`, `StepHeader.tsx` |
 | `src/features/econsult/hooks/` | `useDiscardGuard.ts`, `useMessageSend.ts`, `usePhotoRetry.ts`, `useQuestions.ts`, `useRecipients.ts`, `useRetryAttachment.ts`, `useSubmit.ts` |
 | `src/features/econsult/state/` | `DraftProvider.tsx`, `draft.ts` |
 | `src/features/econsult/utils/` | `errorCopy.ts`, `photo.ts`, `recipients.ts`, `steps.ts`, `validation.ts` |
 | `src/hooks/` | `useFocusAfterCommit.ts`, `useFocusOnArrival.ts`, `useSession.ts` |
-| `src/lib/` | `announce.ts`, `devWarn.ts`, `fieldLabel.ts`, `ids.ts`, `inFlight.ts`, `retryLabel.ts` |
+| `src/lib/` | `announce.ts`, `copy.ts`, `devWarn.ts`, `fieldLabel.ts`, `ids.ts`, `inFlight.ts` |
 | `src/providers/` | `AppProviders.tsx`, `DevSettingsProvider.tsx`, `NetworkProvider.tsx`, `ServicesProvider.tsx` |
 | `src/test/` | `expo-router-matchers.d.ts`, `flowLayout.tsx`, `handled.ts`, `renderWithProviders.tsx` |
 | `src/theme/` | `text.ts`, `tokens.ts` |

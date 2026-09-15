@@ -74,7 +74,7 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
   </header>
   <aside class="toc" aria-label="Contents">
     <p class="label">Contents</p>
-    <ol><li><a href="#verdict">Verdict</a></li><li><a href="#scenarios">Scenarios</a></li><li><a href="#form-factor-checklist-phone">Form-factor checklist (phone)</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#evidence">Evidence</a></li></ol>
+    <ol><li><a href="#verdict">Verdict</a></li><li><a href="#scenarios">Scenarios</a></li><li><a href="#form-factor-checklist-phone">Form-factor checklist (phone)</a></li><li><a href="#keyboard">Keyboard</a></li><li><a href="#logs-and-crashes">Logs and crashes</a></li><li><a href="#evidence">Evidence</a></li></ol>
   </aside>
   <main>
   <aside class="ps" aria-label="Summary">
@@ -83,6 +83,7 @@ footer.foot{grid-column:1/-1;margin-top:56px;padding-top:16px;border-top:1px sol
     <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-pass">PASS</span> all ten scenarios pass — eight on the first run, the discard guard after a fix.</span></p>
     <p class="ps-r"><b>Numbers</b><span>10 scenarios · 3 runs (heads <code>bfe019d</code>, <code>48896ef</code>, <code>179934a</code>) · 5 audited states, each 0 warnings and 0 duplicates.</span></p>
     <p class="ps-r"><b>Fixed</b><span>Scenario 7 failed: Discard only dismissed its dialog and left the draft on step 1. It was fixed and re-driven to PASS, and the audit was checked against a positive control that returned 22 warnings.</span></p>
+    <p class="ps-r"><b>Keyboard</b><span><span class="ps-v ps-v-pass">PASS</span> a later pass after the keyboard-reveal fix: the message field stays above the keyboard at the default size, accessibility Large and XXXL (<a href="#keyboard">Keyboard</a>).</span></p>
     <p class="ps-r"><b>Next</b><span><a href="index.html">All lanes</a><a href="tablet.html">Tablet lane</a></span></p>
   </aside>
 
@@ -136,12 +137,12 @@ details.sec>*{max-width:72ch}
 details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
 </style>
 <p>Device: iPhone 17 simulator, iOS 26.5, Expo Go. Text size: medium unless stated. Three runs: the full walkthrough (scenarios 1–10) at head <code>bfe019d</code>, the re-drive of scenario 7 at head <code>48896ef</code> after the discard fix, and the Accessibility Inspector audit (scenario 10) at head <code>179934a</code>.</p>
-<blockquote><p><strong>Since then.</strong> This lane ran at heads <code>bfe019d</code>, <code>48896ef</code> and <code>179934a</code>; the branch head is <code>b1fb557</code>. The message and questions steps, <code>ChoiceGroup</code>, <code>ErrorState</code>, <code>ScreenScaffold</code>, the photo picker and the announce helper have all changed since, mostly through the Android and real-device fixes, so the screens below are the app as it stood at the time.</p></blockquote>
+<blockquote><p><strong>Since then.</strong> This lane ran at heads <code>bfe019d</code>, <code>48896ef</code> and <code>179934a</code>; the branch head is <code>b15b8f7</code>. The message and questions steps, <code>ChoiceGroup</code>, <code>ErrorState</code>, <code>ScreenScaffold</code>, the photo picker and the announce helper have all changed since, mostly through the Android and real-device fixes, so the screens below are the app as it stood at the time.</p></blockquote>
 <details class="sec" open><summary><h2 id="verdict">Verdict</h2></summary>
 <p>All ten scenarios PASS. On the first run eight passed outright and scenario 7 failed (fixed and re-driven to PASS); the Accessibility Inspector audit passed on all five audited states. No crashes, no LogBox, no bundler warnings beyond the cache notice.</p>
 </details><details class="sec"><summary><h2 id="scenarios">Scenarios</h2></summary>
 <table class="ps-t">
-    <caption>Ten scenarios, all PASS</caption>
+    <caption>Ten scenarios, all PASS, plus the later keyboard pass</caption>
     <thead><tr><th scope="col">#</th><th scope="col">Scenario</th><th scope="col">Result</th></tr></thead>
     <tbody>
       <tr><td>1</td><td>Happy path with photo (prc-0421)</td><td><span class="ps-pass">PASS</span></td></tr>
@@ -154,6 +155,7 @@ details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
       <tr><td>8</td><td>The other two practices (prc-0873, prc-0000)</td><td><span class="ps-pass">PASS</span></td></tr>
       <tr><td>9</td><td>Largest text size sweep</td><td><span class="ps-pass">PASS</span></td></tr>
       <tr><td>10</td><td>Accessibility Inspector audit (SC3)</td><td><span class="ps-pass">PASS</span></td></tr>
+      <tr><td>K</td><td>Keyboard reveal, later pass (default, Large, XXXL)</td><td><span class="ps-pass">PASS</span> at all three sizes</td></tr>
     </tbody>
   </table>
 
@@ -293,10 +295,22 @@ Fault reset and Developer settings verified at defaults. Evidence: s10r-01 … s
 <li>Safe-area insets respected: PASS.</li>
 <li>Keyboard does not cover the field being edited: PASS, with the nit that the bottom controls sit behind the keyboard until the user scrolls, and the field re-takes focus after the picker.</li>
 </ul>
+</details><details class="sec"><summary><h2 id="keyboard">Keyboard</h2></summary>
+<p>A later pass on the same simulator, after the keyboard-reveal fix, at the default text size and at accessibility Large and XXXL. On iOS the reveal is minimal: the page scrolls only by the part of the field the keyboard covers plus the margin, so at the default size nothing moves, and at Large the hint&#39;s last lines, the caret and the field&#39;s bottom all stay in view. At XXXL the field alone is taller than the room above the keyboard, so the reveal clamps at the field&#39;s own top, because no scroll can show the label and the field together. The same fix changed Android, where the keyboard&#39;s coordinate is a screen value while the window measure excludes the status bar, so the reveal measures against the root view, and where Expo Go&#39;s resize mode does not shrink the content, so Android is padded like iOS and the reveal re-runs once the padding has grown the page; that run is on the <a href="android.html#keyboard">Android lane</a>.</p>
+<ul>
+<li>Default text size: the field already fits, nothing scrolls. PASS.</li>
+<li>Accessibility Large: minimal scroll; the hint&#39;s last lines and the caret stay in view, the field&#39;s bottom clears the keyboard. PASS.</li>
+<li>Accessibility XXXL: the field alone is taller than the room above the keyboard, so the reveal clamps at the field&#39;s own top. PASS.</li>
+</ul>
+<div class="shots">
+  <figure><a href="phone/keyboard-reveal.png"><img src="phone/keyboard-reveal.png" alt="Message step at the default text size with the keyboard up: the whole field fits above it, nothing scrolled" loading="lazy"></a><figcaption>keyboard-reveal.png &mdash; iPhone 17, default text size: the field already fits, nothing scrolls</figcaption></figure>
+  <figure><a href="phone/keyboard-reveal-ax-large.png"><img src="phone/keyboard-reveal-ax-large.png" alt="Message step at accessibility Large with the keyboard up: the page scrolled a little, the hint's last lines, the caret and the field's bottom edge above the keyboard" loading="lazy"></a><figcaption>keyboard-reveal-ax-large.png &mdash; accessibility Large: minimal scroll, the hint&#39;s last lines and the caret stay in view, the field&#39;s bottom clears the keyboard</figcaption></figure>
+  <figure><a href="phone/keyboard-reveal-xxxl.png"><img src="phone/keyboard-reveal-xxxl.png" alt="Message step at accessibility XXXL with the keyboard up: the field's top edge sits just under the header and the field runs down behind the keyboard" loading="lazy"></a><figcaption>keyboard-reveal-xxxl.png &mdash; accessibility XXXL: the field alone is taller than the room above the keyboard, so the reveal clamps at the field&#39;s own top</figcaption></figure>
+</div>
 </details><details class="sec"><summary><h2 id="logs-and-crashes">Logs and crashes</h2></summary>
 <p>None. The setup logs hold only &quot;iOS Bundled&quot; lines; no LogBox or red box in any tree; no crash. The scenario-7 defect logged nothing (it failed silently).</p>
 </details><details class="sec"><summary><h2 id="evidence">Evidence</h2></summary>
-<p>52 files from the first run (s01 … s10, setup.log), 8 from the scenario-7 re-drive (s07r-<em>) and 15 from the audit (s10r-</em>), all in this directory.</p>
+<p>52 files from the first run (s01 … s10, setup.log), 8 from the scenario-7 re-drive (s07r-<em>) and 15 from the audit (s10r-</em>), all in this directory, plus the three <code>keyboard-reveal-*</code> screenshots from the later keyboard pass.</p>
 <p>Everything outside the numbered scenarios — the boot check, the end-of-run state and the bundler log:</p>
 <p class="dumps">Text evidence: <a href="phone/setup.log"><code>setup.log</code></a></p>
 

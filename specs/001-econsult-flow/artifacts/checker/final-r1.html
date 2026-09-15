@@ -118,7 +118,7 @@ details.sec>summary,details.sec>.wide,details.sec>.band{max-width:none}
   <aside class="ps" aria-label="Summary">
     <p class="ps-k">In short</p>
     <p class="ps-r"><b>What</b><span>The first review of the finished change: the whole diff against the spec, the plan, the canon and the verify evidence.</span></p>
-    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">PASS_WITH_FLAGS</span> nine of the thirteen findings fixed in the first review-fix commit <code>15d0259</code>; W6, W7, I5 and I6 deferred and restated later.</span></p>
+    <p class="ps-r"><b>Outcome</b><span><span class="ps-v ps-v-flags">PASS_WITH_FLAGS</span> nine of the thirteen findings fixed in the first review-fix commit <code>acae921</code>; W6, W7, I5 and I6 deferred and restated later.</span></p>
     <p class="ps-r"><b>Numbers</b><span>7 warnings · 6 information items · 119 of 132 files read in full · 132 files over 25 commits · <code>f39fb58</code> to <code>a04aede</code>.</span></p>
     <p class="ps-r"><b>Fixed</b><span>Navigation was not locked while a send was in flight, the offline announcement repeated once per mounted screen, <code>pick()</code> swallowed launcher and permission failures, and <code>RecipientScreen</code> ran to 70 lines.</span></p>
     <p class="ps-r"><b>Next</b><span><a href="final-r2.html">Round 2</a><a href="index.html">All rounds</a></span></p>
@@ -129,7 +129,7 @@ mode: final · reviewed head: a04aede · base: f39fb58 · previous rounds: spec-
 <blockquote>
 <p><strong>Since then.</strong> This round read the change at <code>a04aede</code>. The branch has moved on; what it records that no longer holds:</p>
 <ul>
-<li>The diff it measured — 132 files over 25 commits, 41 test files and 261 tests — stands at 432 files over 40 commits at <code>b1fb557</code>, across 53 test files.</li>
+<li>The diff it measured — 132 files over 25 commits, 41 test files and 261 tests — stands at 432 files over 40 commits at <code>b15b8f7</code>, across 53 test files.</li>
 <li>Twenty-one paths in its Files block are gone: <code>env.example</code>, <code>src/smoke.test.tsx</code>, <code>src/test/providers.tsx</code>, the <code>src/lib/{devSettings,network,photo,queryClient}</code> modules and the four <code>src/components</code> files that moved into the feature; the list also predates <code>src/app/+not-found.tsx</code>, <code>src/providers/</code>, <code>src/hooks/</code>, <code>src/features/devSettings/</code> and the four newer feature hooks.</li>
 <li>The step 1 leave guard it cites in <code>recipient.tsx</code> is now <code>src/features/econsult/hooks/useDiscardGuard.ts</code>.</li>
 <li>A8 certifies a mechanism that has since been replaced: the scaffold pads for the keyboard itself instead of adjusting insets.</li>

@@ -5,11 +5,11 @@ mode: final · round: 3 (closing) · reviewed head: bfe019d · base: f39fb58 · 
 
 > **Since then.** This closing round read the change at `bfe019d`. What it records that no longer holds:
 >
-> - The diff it measured — 133 files over 28 commits, 41 test files and 268 tests — stands at 432 files over 40 commits at `b1fb557`, across 53 test files.
-> - Its file-length figures moved with the code: at `b1fb557` the longest non-test file is 221 lines (`src/app/econsult/message.tsx`) and the longest test 418 (`src/__tests__/app/econsult/message.test.tsx`), left over the plan's 400-line cap by choice.
+> - The diff it measured — 133 files over 28 commits, 41 test files and 268 tests — stands at 656 files over 66 commits on `main`, across 56 test files.
+> - Its file-length figures moved with the code: at `b15b8f7` the longest non-test file is 221 lines (`src/app/econsult/message.tsx`) and the longest test 418 (`src/__tests__/app/econsult/message.test.tsx`), left over the plan's 400-line cap by choice.
 > - `ui-verification/` was empty when this was written; it now holds four lanes, and the Accessibility Inspector audit is recorded on the phone lane.
 > - W6 is closed, and I6's Discard path was driven twice — on the phone lane and on the real Samsung tablet.
-> - I5's four findings are resolved; three of the paths it cites no longer exist, and `dev-settings.tsx` exports only its screen, importing the option tables from `src/features/devSettings/utils/options.ts`.
+> - I5's four findings are resolved; three of the paths it cites no longer exist, and `dev-settings.tsx` exports only its screen and declares its own option tables.
 > - I8's round count is settled: all three final reports are committed, and AI-USAGE.md records three rounds.
 > - I9's intermittent `act(...)` warning belongs to `src/features/econsult/hooks/useSubmit.test.tsx`, and it did not reproduce on a fresh run of that file.
 > - The prior-flag table's line anchors have moved: the send lock sits later in `message.tsx`, and the photo picker moved into the feature.

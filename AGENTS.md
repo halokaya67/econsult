@@ -3,7 +3,7 @@
 An Expo app where a patient sends a non-urgent question to their GP practice: pick a recipient,
 answer the practice's questions, write the message, optionally add a photo, land on a confirmation.
 An in-process fake backend, no server. Below is what the code already does: follow it, or change a
-rule deliberately and record it in `DECISIONS.md`.
+rule deliberately and record it in `docs/decisions-log.md`.
 
 ## The one hard constraint
 
@@ -15,7 +15,8 @@ Before adding a package:
 - If `node_modules/expo/bundledNativeModules.json` lists it, add the pinned version with
   `npx expo install <name>`.
 - If it is not there and the package ships native code, it cannot be used: find another way, or
-  describe the real implementation in `DECISIONS.md` and fake it, as the HTTP transport is faked.
+  describe the real implementation in `docs/decisions-log.md` and fake it, as the HTTP transport
+  is faked.
 - Pure JavaScript is allowed but still needs a reason; the dependency list is short on purpose.
 - Check behaviour against the versioned SDK 57 documentation and the installed source under
   `node_modules`, not recall; Expo's `fetch` rejects the form-data upload the research recommended.
@@ -47,9 +48,13 @@ at a feature's root.
 A file lives inside a feature only while that feature is its sole owner; the moment a second one
 needs it, it moves to `src/components` or `src/lib`. Two exceptions are deliberate: a generic
 building block with no domain vocabulary stays shared even with one user, as the id generator does,
-and a context's accessor hook lives with whatever mounts it. A screen's sub-component
-graduates into `src/features/<name>/components/` when a second screen needs it, when it owns state
-or copy of its own, or when its file passes about 200 lines; until then it stays in the route file.
+and a context's accessor hook lives with whatever mounts it. A file holds one responsibility, one
+reason to change. A screen's sub-component graduates into `src/features/<name>/components/` when a
+second screen needs it or when it owns copy, state or effects of its own; until then it stays in the
+route file. A component that takes on a second responsibility becomes a folder named after it, one
+file per responsibility (each with its test beside it) without an index, so the import names the
+file: `@/components/ScreenScaffold/ScreenScaffold`. About 200 lines is the point to check whether a
+second responsibility crept in, not the reason to split.
 
 Screen tests live under `src/__tests__/app`, mirroring the route path, because every `.tsx` under
 `src/app` is loaded as a route. No barrels: import the module, not an `index.ts` that re-exports it.
@@ -58,8 +63,9 @@ No `types/` folder: wire types come from the zod schemas, every other type sits 
 ## Inside a file
 
 One order, top to bottom: imports, exported types, local types, constants, pure helpers, hooks,
-sub-components, the one export, styles. A route file has exactly one export, its default screen
-component; a module exports the one thing it is named for, plus whatever a test needs by name.
+sub-components, the one export, styles; a provider file puts its accessor hook after the provider it
+reads. A route file has exactly one export, its default screen component; a module exports the one
+thing it is named for, plus whatever a test needs by name.
 
 Imports go in three groups with no blank line between them — bare packages, then `@/` paths, then
 relative paths — alphabetical within each group, and `import/order` enforces it. Use `@/` across
@@ -71,8 +77,9 @@ Export it when a test needs the exact words; move it to `src/lib/copy.ts` when a
 Comments explain why, not what, and run to two sentences at most: a constraint, a platform gotcha or
 an invariant the next reader would otherwise delete. Doc comments follow their format's conventions.
 
-Functions stay under 50 lines, nesting under four levels, early returns preferred; a file past about
-200 lines is a signal to move a piece out.
+Functions stay under 50 lines, nesting under four levels, early returns preferred; a file holds one
+responsibility, and about 200 lines is the point to check whether a second one crept in, not a
+threshold.
 
 Names: `PascalCase.tsx` for a component or provider file, `useThing.ts` for a hook, `camelCase.ts`
 for everything else, `<name>.test.ts(x)` beside the file it covers. `UPPER_SNAKE_CASE` for module
@@ -97,11 +104,12 @@ actions as past-tense events (`recipientSelected`) rather than commands.
   the safe-area padding and the keyboard inset, and provides `useScrollToField`. A screen puts its
   primary action in the `action` slot, never pins a footer, and never asks for automatic insets.
 - Reads are offline-first: one retry after a second, a five-minute stale time, a 15-second timeout,
-  and a failed refetch replaces the recipient list with the error card rather than showing a
-  stale medical list, while the questions step keeps the questions it already has. The send mutation runs in `always` mode and never retries itself, so it fails fast instead
-  of pausing behind a spinner; create times out at 15 seconds, the photo upload at 45.
+  and a failed read shows the error card only when nothing is cached; with cached data the steps
+  keep what they have. The send mutation runs in `always` mode and never retries itself, so it
+  fails fast instead of pausing behind a spinner; create times out at 15 seconds, the photo upload
+  at 45.
 - One idempotency key per payload: the first send mints it, every retry reuses it, an edit before
-  the create lands retires it, and once the create has landed the key belongs to that e-consult.
+  the create lands retires it, and once the create has landed the key is gone.
 - Sending is two calls, create then upload. A failed upload is a partial outcome the patient sees,
   "sent, photo not attached"; its retry uploads to the same e-consult id, never a second create.
 - The photo's files belong to the flow: the draft provider deletes every `file://` uri the draft
@@ -126,7 +134,7 @@ actions as past-tense events (`recipientSelected`) rather than commands.
 
   No live regions at all: `accessibilityLiveRegion` is Android-only, so a note that relied on it was
   silent for VoiceOver. A note that appears on its own (a denied permission, a failed pick, the
-  thin-message nudge) is announced once where it is set.
+  thin-message nudge) is announced once where it is set, and not again when a re-layout remounts it.
 
 - Selection is never colour alone: border weight, fill and a filled dot change together.
 - Three shared focus hooks, one situation each. `useFocusAfterCommit` focuses a node after the
@@ -185,9 +193,11 @@ layout and speaks nothing — five screens here passed their unit tests and fail
 
 ## Records
 
-`DECISIONS.md` holds decisions we made, not requirements the brief imposed. Add an entry under the
-matching heading, four lines, one each: why it was needed, what was decided, the alternatives and
-why each lost, what it costs us.
+`docs/decisions-log.md` holds every decision we made, not requirements the brief imposed. Add an
+entry under the matching heading, four lines, one each: why it was needed, what was decided, the
+alternatives and why each lost, what it costs us. `DECISIONS.md` is the one-page summary — the
+assumptions, the four decisions that matter most, what was traded away, the platforms verified and
+what comes next — and changes only when one of those does.
 
 `AI-USAGE.md` holds incidents, not process: a bold one-line title, then the problem, the human or
 checker intervention, and why it was needed — "Needed because ...".
@@ -211,7 +221,7 @@ changed, and leave the original text as it was written.
 
 ## Things not to do
 
-Each of these was considered and rejected; the reasoning is in `DECISIONS.md`.
+Each of these was considered and rejected; the reasoning is in `docs/decisions-log.md`.
 
 - No state library. The draft is a reducer in a context mounted by the flow's layout.
 - No UI or styling library. Controls are hand-built on the tokens in `src/theme`.

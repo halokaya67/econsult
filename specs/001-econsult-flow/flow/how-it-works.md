@@ -4,7 +4,7 @@ Snapshot of the `feat/econsult-flow` worktree at commit `f39fb58`, before any fe
 
 > **Since then.** The feature was built on top of this snapshot; the page is kept as the record of what the plan had to build on. What it describes that no longer holds:
 >
-> - The empty shell is gone: the whole e-consult flow, an in-process fake backend and a test suite of 53 files now sit on this skeleton.
+> - The empty shell is gone: the whole e-consult flow, an in-process fake backend and a test suite of 56 files now sit on this skeleton.
 > - The root layout mounts the provider stack, and the index route is the home screen rather than a placeholder.
 > - `app.json` pins `userInterfaceStyle: "light"`, adds the expo-image-picker plugin and drops the `web` block.
 > - `package.json` carries ten scripts — `format`, `format:check`, `typecheck`, `test`, `test:coverage` and `showcase` among them — and no `web` script.

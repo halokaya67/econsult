@@ -5,16 +5,16 @@ mode: final · reviewed head: a04aede · base: f39fb58 · previous rounds: spec-
 
 > **Since then.** This round read the change at `a04aede`. The branch has moved on; what it records that no longer holds:
 >
-> - The diff it measured — 132 files over 25 commits, 41 test files and 261 tests — stands at 432 files over 40 commits at `b1fb557`, across 53 test files.
-> - Twenty-one paths in its Files block are gone: `env.example`, `src/smoke.test.tsx`, `src/test/providers.tsx`, the `src/lib/{devSettings,network,photo,queryClient}` modules and the four `src/components` files that moved into the feature; the list also predates `src/app/+not-found.tsx`, `src/providers/`, `src/hooks/`, `src/features/devSettings/` and the four newer feature hooks.
+> - The diff it measured — 132 files over 25 commits, 41 test files and 261 tests — stands at 656 files over 66 commits on `main`, across 56 test files.
+> - Twenty-one paths in its Files block are gone: `env.example`, `src/smoke.test.tsx`, `src/test/providers.tsx`, the `src/lib/{devSettings,network,photo,queryClient}` modules and the four `src/components` files that moved into the feature; the list also predates `src/app/+not-found.tsx`, `src/providers/`, `src/hooks/` and the four newer feature hooks.
 > - The step 1 leave guard it cites in `recipient.tsx` is now `src/features/econsult/hooks/useDiscardGuard.ts`.
 > - A8 certifies a mechanism that has since been replaced: the scaffold pads for the keyboard itself instead of adjusting insets.
 > - U4's and A6's `env.example` and `.env` seeds no longer exist; the developer settings screen is the only knob.
 > - A9's per-scaffold offline announcement was fixed in round 2: the network provider announces once per transition.
 > - W2 to W5 are fixed, and two of the files they point at no longer exist.
 > - SC3's missing Accessibility Inspector audit (W6) has since run on the phone lane: five states, zero warnings and zero duplicates each, against a positive control of 22.
-> - I5's four ownership findings were carried out in the restructuring pass — to `src/providers/ServicesProvider.tsx`, `src/providers/DevSettingsProvider.tsx`, `src/hooks/useSession.ts` and `src/features/devSettings/utils/options.ts` — and the `recipients.ts` / `useRecipients.ts` type cycle is gone.
-> - `StatusViews.tsx` is three files now, and the offline banner copy lives in `src/providers/NetworkProvider.tsx`.
+> - I5's four ownership findings were carried out in the restructuring pass — to `src/providers/ServicesProvider.tsx`, `src/providers/DevSettingsProvider.tsx` and `src/hooks/useSession.ts`, with the option tables declared in `src/app/dev-settings.tsx` — and the `recipients.ts` / `useRecipients.ts` type cycle is gone.
+> - `StatusViews.tsx` is three files now, and the offline banner copy lives in `src/lib/copy.ts`.
 > - I6's untested Discard path was driven on the phone lane and again on the real Samsung tablet.
 
 **Verdict:** PASS_WITH_FLAGS

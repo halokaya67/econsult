@@ -5,8 +5,8 @@ mode: final · round: 2 · reviewed head: 8ecfbb7 · base: f39fb58 · previous r
 
 > **Since then.** This round read the change at `8ecfbb7`. What it records that no longer holds:
 >
-> - The diff it measured — 133 files over 27 commits, 41 test files and 267 tests — stands at 432 files over 40 commits at `b1fb557`, across 53 test files.
-> - W2's evidence moved to `src/providers/NetworkProvider.tsx`, copy and all.
+> - The diff it measured — 133 files over 27 commits, 41 test files and 267 tests — stands at 656 files over 66 commits on `main`, across 56 test files.
+> - W2's evidence moved to `src/providers/NetworkProvider.tsx`, and its copy to `src/lib/copy.ts`.
 > - W3, I3 and W9 locate `src/components/PhotoPicker.tsx`, which is now `src/features/econsult/components/PhotoPicker.tsx`; the `SourceButtons` extraction they suggest is in the shipped file.
 > - I4's evidence is now `src/components/ErrorState.tsx`, one of the three files `StatusViews.tsx` became.
 > - I5, deferred here to a separate restructuring pass, was carried out.

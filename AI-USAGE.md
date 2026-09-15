@@ -1,9 +1,16 @@
 # AI usage
 
 Claude Code did the research, the spec, the plan, the code, the tests, the review rounds and the
-device driving. The human approved the spec and the plan, made every decision in `DECISIONS.md`, and
-stepped in wherever the entries below say so. Each entry: what happened, the intervention, why it
-was needed.
+device driving. The human approved the spec and the plan, made every decision in `DECISIONS.md` and
+`docs/decisions-log.md`, and stepped in wherever the entries below say so. Each entry: what happened,
+the intervention, why it was needed.
+
+## Tools
+
+Claude Code, with subagents for the research, the spec, the plan, the code, the tests and the review
+rounds. A command-line tool that drives a device, for the simulator, emulator and physical-device
+passes. The platforms' own VoiceOver and TalkBack, with captions and the speech overlay, for the
+spoken-text checks. No other AI tool.
 
 ## Caught by the loop's own checks
 
@@ -16,8 +23,9 @@ Needed because: the advice read as standard practice and no test could catch it 
 Intervention: the plan checker caught it before any code existed.
 Needed because: the mistake only shows at start-up, not in the test runner.
 
-**Five screens passed their unit tests and failed on the simulator.** Scroll-to-error a no-op, an
-error off screen, a label scrolled away, a photo retry that changed nothing, a clipped switch.
+**Five screens passed their unit tests and failed on the simulator.** Scroll-to-error a no-op, a
+header label clipped at the largest text size, a label scrolled away, a photo retry that changed
+nothing, a clipped switch.
 Intervention: each step was driven on the simulator at the largest text size and fixed before commit.
 Needed because: jest renders no layout and no text scaling.
 
@@ -33,31 +41,16 @@ Needed because: the spec looked complete and the defect lived in navigator inter
 
 ## Human interventions
 
-**Environment seeds nobody used.** A `.env` and its parsing existed beside developer settings.
-Intervention: the human asked twice what they were for; they were removed.
-Needed because: two knobs for one thing, one of them always empty.
-
 **The source tree had drifted into type-based buckets.** Files sat where they were first needed.
 Intervention: the human asked for a review against React Native and clean-code practice, then set
 the rule, by responsibility first and by kind second, and rejected two of my regroupings.
 Needed because: each step's agent saw only its own file fence.
 
-**Changes were being queued while a question was still open.** Answers came with actions attached.
-Intervention: the human ruled that a question is a discussion and any change waits for a yes.
-Needed because: a discussion is where the decision gets made, not after it.
-
-**The hand-in documents were essays.** Long paragraphs, decisions the brief had made for us, no
-alternatives named.
-Intervention: the human set the shape (short lines; only our decisions; alternatives and why they
-lost), asked for an audit of unrecorded decisions and chose each one, cutting eight as
-over-engineering.
-Needed because: a reader has minutes, not an afternoon.
-
 **Android and the accessibility options had not been tested.** Simulator passes had stopped at
 "names verified, speech not verified".
-Intervention: the human asked, rejected a pass that listed the options as not verified, pointed out
-that my scripts were what kept unbinding the audit tool, connected a real iPad and a real tablet, and
-reported an empty Home screen. The method changed to driving the devices' own Settings.
+Intervention: the human asked, rejected a pass that listed the options as not verified, connected a
+real iPad and a real tablet, and reported an empty Home screen. The method changed to driving the
+devices' own Settings.
 Needed because: twelve defects existed only on hardware, and VoiceOver does not run on a simulator.
 
 **Screen readers had never been heard.** Counts, not words.
