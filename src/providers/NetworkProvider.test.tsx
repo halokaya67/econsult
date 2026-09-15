@@ -3,12 +3,8 @@ import { renderHook } from "@testing-library/react-native";
 import * as Network from "expo-network";
 import type { ReactNode } from "react";
 import { AccessibilityInfo } from "react-native";
-import {
-  BACK_ONLINE_MESSAGE,
-  NetworkProvider,
-  OFFLINE_MESSAGE,
-  useIsOffline,
-} from "./NetworkProvider";
+import { OFFLINE_MESSAGE } from "@/lib/copy";
+import { BACK_ONLINE_MESSAGE, NetworkProvider, useIsOffline } from "./NetworkProvider";
 
 const mockedState = jest.mocked(Network.useNetworkState);
 

@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
+import { OFFLINE_MESSAGE } from "@/lib/copy";
 import { renderWithProviders } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
 import { ScreenScaffold, useScrollToField } from "./ScreenScaffold";

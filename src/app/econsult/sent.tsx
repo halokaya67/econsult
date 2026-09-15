@@ -12,8 +12,9 @@ import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { useFocusOnArrival, type ArrivalNavigation } from "@/hooks/useFocusOnArrival";
 import type { Focusable } from "@/lib/announce";
-import { RETRY_LABEL } from "@/lib/retryLabel";
-import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
+import { RETRY_LABEL } from "@/lib/copy";
+import { OFFLINE_HINT } from "@/lib/copy";
+import { useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
 

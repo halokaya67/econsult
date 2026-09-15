@@ -34,7 +34,7 @@ so every feature has the same shape inside it.
 | A UI building block more than one feature uses  | `src/components`                                                    |
 | A shared hook that is not a context's accessor  | `src/hooks`                                                         |
 | Shared logic that is not UI                     | `src/lib`                                                           |
-| Copy more than one screen speaks                | `src/lib`, as `RETRY_LABEL` is                                      |
+| Copy more than one file speaks                  | `src/lib/copy.ts`; copy with one owner stays in that file           |
 | Colour, spacing, type scale, touch-target sizes | `src/theme`                                                         |
 | A helper the tests share                        | `src/test`                                                          |
 | A screen's test                                 | `src/__tests__/app`                                                 |
@@ -66,7 +66,7 @@ relative paths — alphabetical within each group, and `import/order` enforces i
 areas, relative paths inside the feature you are in.
 
 Copy is module constants above the component, `const FIELD_HINT = "..."`, never a literal in JSX.
-Export it when a test needs the exact words; move it to `src/lib` when a second screen speaks it.
+Export it when a test needs the exact words; move it to `src/lib/copy.ts` when a second file speaks it.
 
 Comments explain why, not what, and run to two sentences at most: a constraint, a platform gotcha or
 an invariant the next reader would otherwise delete. Doc comments follow their format's conventions.

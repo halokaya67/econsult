@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react-native";
-import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
+import { OFFLINE_MESSAGE } from "@/lib/copy";
 import { OfflineBanner } from "./OfflineBanner";
 
 test("the offline banner is an alert that reads the offline message", () => {

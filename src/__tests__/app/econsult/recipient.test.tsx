@@ -8,7 +8,7 @@ import * as useRecipientsModule from "@/features/econsult/hooks/useRecipients";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { STEP_TITLES } from "@/features/econsult/utils/steps";
-import { RETRY_LABEL } from "@/lib/retryLabel";
+import { RETRY_LABEL } from "@/lib/copy";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 

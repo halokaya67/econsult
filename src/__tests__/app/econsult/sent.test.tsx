@@ -6,7 +6,7 @@ import SentScreen from "@/app/econsult/sent";
 import * as submitModule from "@/features/econsult/api/submit";
 import * as retryModule from "@/features/econsult/hooks/useRetryAttachment";
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
-import { RETRY_LABEL } from "@/lib/retryLabel";
+import { RETRY_LABEL } from "@/lib/copy";
 import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { deletedPhotoUris, forgetDeletedPhotos } from "@/test/photoFiles";

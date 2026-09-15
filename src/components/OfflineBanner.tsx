@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { OFFLINE_MESSAGE } from "@/providers/NetworkProvider";
+import { OFFLINE_MESSAGE } from "@/lib/copy";
 import { colors, fontSize, lineHeight, radius, spacing } from "@/theme/tokens";
 
 // Text only, so grouping it into one accessibility element is safe and makes the role queryable.

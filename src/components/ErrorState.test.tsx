@@ -1,6 +1,6 @@
 import { render, screen, userEvent } from "@testing-library/react-native";
 import { AccessibilityInfo } from "react-native";
-import { RETRY_LABEL } from "@/lib/retryLabel";
+import { RETRY_LABEL } from "@/lib/copy";
 import { ErrorState } from "./ErrorState";
 
 describe("ErrorState", () => {

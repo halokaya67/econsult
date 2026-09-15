@@ -91,7 +91,7 @@ kind, so a feature always has the same shape inside it.
 | A UI building block more than one feature uses                | `src/components`                                                                                              |
 | A shared hook that is not a context's accessor                | `src/hooks`                                                                                                   |
 | Shared logic that is not UI                                   | `src/lib`                                                                                                     |
-| Copy more than one screen speaks                              | `src/lib` — the shared constants, such as `retryLabel` for the one retry wording                              |
+| Copy more than one file speaks                                | `src/lib/copy.ts` — the three shared strings today; copy with one owner stays in that file                    |
 | Colour, spacing, type-scale and touch-target tokens           | `src/theme`                                                                                                   |
 | A helper the tests share                                      | `src/test`                                                                                                    |
 | A screen's test                                               | `src/__tests__/app` — unit tests sit beside their code, but a test under `src/app` would be loaded as a route |

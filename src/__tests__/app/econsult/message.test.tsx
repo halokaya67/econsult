@@ -11,7 +11,7 @@ import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/features/econsult/comp
 import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/utils/validation";
-import { RETRY_LABEL } from "@/lib/retryLabel";
+import { RETRY_LABEL } from "@/lib/copy";
 import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
 import { deletedPhotoUris, forgetDeletedPhotos } from "@/test/photoFiles";

@@ -1,6 +1,6 @@
 import type { Ref } from "react";
 import { StyleSheet, Text, View, type ViewProps } from "react-native";
-import { RETRY_LABEL } from "@/lib/retryLabel";
+import { RETRY_LABEL } from "@/lib/copy";
 import { text } from "@/theme/text";
 import { colors, radius, spacing } from "@/theme/tokens";
 import { PrimaryButton } from "./PrimaryButton";

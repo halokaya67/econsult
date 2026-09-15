@@ -24,7 +24,8 @@ import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/st
 import { isMessageThin } from "@/features/econsult/utils/validation";
 import { announce } from "@/lib/announce";
 import type { Focusable } from "@/lib/announce";
-import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
+import { OFFLINE_HINT } from "@/lib/copy";
+import { useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
 import { colors, fontSize, lineHeight, spacing } from "@/theme/tokens";
 
