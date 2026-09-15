@@ -96,7 +96,7 @@ kind, so a feature always has the same shape inside it.
 | A helper the tests share                                      | `src/test`                                                                                                    |
 | A screen's test                                               | `src/__tests__/app` — unit tests sit beside their code, but a test under `src/app` would be loaded as a route |
 
-Every feature is laid out the same way:
+There is one feature, `econsult`, and any other would be laid out the same way:
 
 ```
 src/features/econsult/

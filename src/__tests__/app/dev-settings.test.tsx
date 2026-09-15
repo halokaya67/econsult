@@ -1,15 +1,17 @@
 import { onlineManager, QueryClient } from "@tanstack/react-query";
-import { userEvent } from "@testing-library/react-native";
+import { userEvent, within } from "@testing-library/react-native";
 import { router, Stack } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
 import { Text } from "react-native";
 import { DEFAULT_PRACTICE_ID } from "@/api/fake/fixtures";
 import DevSettingsScreen from "@/app/dev-settings";
-import { practiceLabelFor } from "@/features/devSettings/utils/options";
 import * as devWarn from "@/lib/devWarn";
 import { useDevSettings } from "@/providers/DevSettingsProvider";
 import { useIsOffline } from "@/providers/NetworkProvider";
 import { TestProviders } from "@/test/renderWithProviders";
+
+// The screen labels a practice with what its fixture holds; the test speaks the same words.
+const PRACTICE_0873 = "prc-0873: two recipients, no questions";
 
 // Reads the network context as well as the settings, so Apply with Force offline is observable.
 function HomeProbe() {
@@ -49,7 +51,7 @@ describe("Developer settings screen", () => {
     const user = userEvent.setup();
     renderDevSettings(client);
 
-    await user.press(screen.getByRole("radio", { name: practiceLabelFor("prc-0873") }));
+    await user.press(screen.getByRole("radio", { name: PRACTICE_0873 }));
     await user.press(screen.getByRole("radio", { name: "Slow (5 seconds)" }));
     await user.press(screen.getAllByRole("radio", { name: "Server" })[0]);
     await user.press(screen.getByRole("switch", { name: "Force offline" }));
@@ -60,6 +62,24 @@ describe("Developer settings screen", () => {
     expect(clear).toHaveBeenCalled();
   });
 
+  test("a fault put back to None leaves its request unfaulted", async () => {
+    const user = userEvent.setup();
+    renderDevSettings();
+    // Both the label's wrapper and the radiogroup carry the group's name; the radios are in the
+    // second of them.
+    const configFault = (name: string) => {
+      const [, group] = screen.getAllByLabelText("Fail: Practice config");
+      return within(group).getByRole("radio", { name });
+    };
+
+    await user.press(configFault("Server"));
+    await user.press(configFault("None"));
+    await user.press(screen.getByRole("button", { name: "Apply and go home" }));
+
+    await waitFor(() => expect(screen).toHavePathname("/"));
+    expect(screen.getByText(`home:${DEFAULT_PRACTICE_ID}:0:-:false:false`)).toBeOnTheScreen();
+  });
+
   test("Cancel discards the draft settings, keeps the cache and returns home", async () => {
     const client = new QueryClient();
     const clear = jest.spyOn(client, "clear");
@@ -68,7 +88,7 @@ describe("Developer settings screen", () => {
     act(() => router.push("/dev-settings"));
     await waitFor(() => expect(screen).toHavePathname("/dev-settings"));
 
-    await user.press(screen.getByRole("radio", { name: practiceLabelFor("prc-0873") }));
+    await user.press(screen.getByRole("radio", { name: PRACTICE_0873 }));
     await user.press(screen.getByRole("button", { name: "Cancel" }));
 
     await waitFor(() => expect(screen).toHavePathname("/"));

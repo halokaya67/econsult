@@ -8,6 +8,12 @@ const OPTIONS = ["Less than a week", "1 to 4 weeks"];
 const SIZES = ["Small", "Large"] as const;
 type Size = (typeof SIZES)[number];
 
+// Values that are not strings, as the developer settings' latency presets are.
+const LATENCY_PAIRS: { label: string; value: number | null }[] = [
+  { label: "Default", value: null },
+  { label: "Slow (5 seconds)", value: 5000 },
+];
+
 type Instance = ReturnType<typeof render>["root"];
 
 const inRenderOrder = (node: Instance): Instance[] => [
@@ -97,6 +103,34 @@ describe("ChoiceGroup", () => {
     await user.press(screen.getByRole("radio", { name: "Large" }));
 
     expect(chosen).toEqual(["Large"]);
+  });
+
+  test("renders an option pair by its label and reports its value", async () => {
+    const chosen: (number | null)[] = [];
+    const user = userEvent.setup();
+    render(
+      <ChoiceGroup
+        label="Latency"
+        options={LATENCY_PAIRS}
+        value={null}
+        onChange={(latencyMs) => chosen.push(latencyMs)}
+      />,
+    );
+
+    await user.press(screen.getByRole("radio", { name: "Slow (5 seconds)" }));
+
+    expect(chosen).toEqual([5000]);
+  });
+
+  test("checks the option pair whose value is the current one", () => {
+    render(
+      <ChoiceGroup label="Latency" options={LATENCY_PAIRS} value={5000} onChange={() => {}} />,
+    );
+
+    expect(
+      screen.getByRole("radio", { name: "Slow (5 seconds)", checked: true }),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("radio", { name: "Default", checked: false })).toBeOnTheScreen();
   });
 
   // The @ts-expect-error is the real assertion, made by tsc; the render shows what the rejected

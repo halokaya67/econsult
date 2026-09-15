@@ -11,9 +11,12 @@ import {
   spacing,
 } from "@/theme/tokens";
 
-type Props<T extends string> = {
+// A plain string option is its own label; anything else names a value the caller applies directly.
+export type Choice<T> = { label: string; value: T };
+
+type Props<T> = {
   label: string;
-  options: readonly T[];
+  options: readonly (T | Choice<T>)[];
   value: T | null;
   onChange: (value: T) => void;
   requirement?: Requirement;
@@ -26,7 +29,7 @@ const DOT_SIZE = 24;
 // The group View carries role and name for TalkBack but is not `accessible`, which would swallow
 // its radios; iOS has no group element, so the label's wrapper folds in the error and takes the ref.
 // The error sits between label and radios so it stays visible when a tall label is scrolled to.
-export function ChoiceGroup<T extends string>({
+export function ChoiceGroup<T>({
   label,
   options,
   value,
@@ -47,18 +50,21 @@ export function ChoiceGroup<T extends string>({
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <View accessibilityRole="radiogroup" accessibilityLabel={visibleLabel} style={styles.group}>
         {options.map((option) => {
-          const checked = option === value;
+          // typeof cannot subtract string from an unconstrained T, so the pair side is asserted.
+          const choice =
+            typeof option === "string" ? { label: option, value: option } : (option as Choice<T>);
+          const checked = choice.value === value;
           return (
             <Pressable
-              key={option}
+              key={choice.label}
               accessibilityRole="radio"
-              accessibilityLabel={option}
+              accessibilityLabel={choice.label}
               accessibilityState={{ checked }}
-              onPress={() => onChange(option)}
+              onPress={() => onChange(choice.value)}
               style={[styles.option, checked && styles.optionChecked]}
             >
               <View style={[styles.dot, checked && styles.dotChecked]} />
-              <Text style={styles.optionText}>{option}</Text>
+              <Text style={styles.optionText}>{choice.label}</Text>
             </Pressable>
           );
         })}

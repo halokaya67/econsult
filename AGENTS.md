@@ -39,9 +39,10 @@ so every feature has the same shape inside it.
 | A helper the tests share                        | `src/test`                                                          |
 | A screen's test                                 | `src/__tests__/app`                                                 |
 
-A feature is five kinds and nothing else: `api/` for its reads and writes, `state/` for its reducer
-and provider, `hooks/` for what the screens call, `components/` for UI only it uses, `utils/` for
-pure rules and for copy with more than one reader. Nothing sits loose at a feature's root.
+`econsult` is the one feature. A feature is five kinds and nothing else: `api/` for its reads and
+writes, `state/` for its reducer and provider, `hooks/` for what the screens call, `components/` for
+UI only it uses, `utils/` for pure rules and for copy with more than one reader. Nothing sits loose
+at a feature's root.
 
 A file lives inside a feature only while that feature is its sole owner; the moment a second one
 needs it, it moves to `src/components` or `src/lib`. Two exceptions are deliberate: a generic
