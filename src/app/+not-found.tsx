@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { Text } from "react-native";
-import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { ScreenScaffold } from "@/components/ScreenScaffold/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { text } from "@/theme/text";
 

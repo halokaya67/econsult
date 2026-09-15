@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Text } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { ScreenScaffold } from "@/components/ScreenScaffold/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { careTeamQuery, configQuery } from "@/features/econsult/api/queries";
 import { useSession } from "@/hooks/useSession";

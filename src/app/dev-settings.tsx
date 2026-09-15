@@ -12,7 +12,7 @@ import { FIXTURE_PRACTICE_IDS } from "@/api/fake/fixtures";
 import { CancelHeaderButton } from "@/components/CancelHeaderButton";
 import { ChoiceGroup, type Choice } from "@/components/ChoiceGroup";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { ScreenScaffold } from "@/components/ScreenScaffold/ScreenScaffold";
 import { isDevelopmentBuild } from "@/lib/devWarn";
 import { useDevSettings, type DevSettings } from "@/providers/DevSettingsProvider";
 import { text } from "@/theme/text";

@@ -1,8 +1,17 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { useRef } from "react";
-import { AccessibilityInfo, Text, View } from "react-native";
+import { AccessibilityInfo, Dimensions, Text, useWindowDimensions, View } from "react-native";
+import { ScreenScaffold } from "@/components/ScreenScaffold/ScreenScaffold";
 import { focusForScreenReader, type Focusable } from "@/lib/announce";
+import { renderWithProviders } from "@/test/renderWithProviders";
 import { useFocusOnLayout } from "./useFocusOnLayout";
+
+// Jest renders no layout, so the text-size hook is the only place a live Dynamic Type change can be
+// simulated; every other test keeps the real window metrics.
+jest.mock("react-native/Libraries/Utilities/useWindowDimensions", () => {
+  const { Dimensions: realDimensions } = jest.requireActual("react-native");
+  return { __esModule: true, default: jest.fn(() => realDimensions.get("window")) };
+});
 
 const CARD_NAME = "We couldn't load your practice's details. Check your connection and try again.";
 const LAYOUT = { nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 120 } } };
@@ -43,6 +52,10 @@ function spyOnFocus() {
   // The preset already mocks it, so the spy is the mock every earlier test wrote to.
   focus.mockClear();
   return focus;
+}
+
+function setFontScale(fontScale: number): void {
+  jest.mocked(useWindowDimensions).mockReturnValue({ ...Dimensions.get("window"), fontScale });
 }
 
 describe("useFocusOnLayout", () => {
@@ -87,5 +100,30 @@ describe("useFocusOnLayout", () => {
     layOutCard();
 
     expect(focus).toHaveBeenCalledTimes(2);
+  });
+
+  // A text-size change remounts the whole page, so the card is a new view although the patient has
+  // been looking at it all along and has already heard it.
+  test("leaves a card the text size laid out again unspoken", () => {
+    const focus = spyOnFocus();
+    setFontScale(1);
+    const { rerender } = renderWithProviders(
+      <ScreenScaffold>
+        <Step hasCard />
+      </ScreenScaffold>,
+    );
+    layOutCard();
+    const cardBefore = screen.getByRole("alert");
+
+    setFontScale(2);
+    rerender(
+      <ScreenScaffold>
+        <Step hasCard />
+      </ScreenScaffold>,
+    );
+    layOutCard();
+
+    expect(screen.getByRole("alert")).not.toBe(cardBefore);
+    expect(focus).toHaveBeenCalledTimes(1);
   });
 });

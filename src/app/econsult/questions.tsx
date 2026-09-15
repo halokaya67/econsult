@@ -3,7 +3,11 @@ import { useRef, useState, type RefObject } from "react";
 import type { Question } from "@/api/contracts";
 import { ChoiceGroup } from "@/components/ChoiceGroup";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold, useScrollToField, type ScrollToField } from "@/components/ScreenScaffold";
+import {
+  ScreenScaffold,
+  useScrollToField,
+  type ScrollToField,
+} from "@/components/ScreenScaffold/ScreenScaffold";
 import { TextField } from "@/components/TextField";
 import { StepHeader } from "@/features/econsult/components/StepHeader";
 import { useQuestions } from "@/features/econsult/hooks/useQuestions";

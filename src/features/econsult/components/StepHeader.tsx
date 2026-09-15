@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useIsRelayout } from "@/components/ScreenScaffold/ScreenScaffold";
 import { announce } from "@/lib/announce";
 import { text } from "@/theme/text";
 import { colors, fontSize, spacing, STEP_CHIP_MAX_FONT_SCALE } from "@/theme/tokens";
@@ -9,10 +10,13 @@ type Props = { stepNumber: number; stepCount: number; title: string };
 // Neither platform reliably announces route changes, so each step announces itself.
 export function StepHeader({ stepNumber, stepCount, title }: Props) {
   const counter = `Step ${stepNumber} of ${stepCount}`;
+  const isRelayout = useIsRelayout();
 
+  // A text-size change mounts the step a second time; the patient has not arrived on it again.
   useEffect(() => {
+    if (isRelayout()) return;
     announce(`${counter}: ${title}`);
-  }, [counter, title]);
+  }, [counter, isRelayout, title]);
 
   return (
     <View style={styles.wrap}>

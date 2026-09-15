@@ -4,10 +4,21 @@ import * as Crypto from "expo-crypto";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { act, renderRouter, screen, waitFor } from "expo-router/testing-library";
-import { AccessibilityInfo, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  AccessibilityInfo,
+  Dimensions,
+  ScrollView,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import * as servicesModule from "@/api/services";
 import MessageScreen from "@/app/econsult/message";
-import { CHOOSE_PHOTO_LABEL, REMOVE_PHOTO_LABEL } from "@/features/econsult/components/PhotoPicker";
+import {
+  CHOOSE_PHOTO_LABEL,
+  REMOVE_PHOTO_LABEL,
+} from "@/features/econsult/components/PhotoPicker/PhotoPicker";
 import { initialDraft, sentSubmission, type DraftState } from "@/features/econsult/state/draft";
 import { useDraft } from "@/features/econsult/state/DraftProvider";
 import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/utils/validation";
@@ -17,6 +28,13 @@ import { flowLayoutWith } from "@/test/flowLayout";
 import { deletedPhotoUris, forgetDeletedPhotos } from "@/test/photoFiles";
 import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
+
+// Jest renders no layout, so the text-size hook is the only place a live Dynamic Type change can be
+// simulated; every other test keeps the real window metrics.
+jest.mock("react-native/Libraries/Utilities/useWindowDimensions", () => {
+  const { Dimensions: realDimensions } = jest.requireActual("react-native");
+  return { __esModule: true, default: jest.fn(() => realDimensions.get("window")) };
+});
 
 function SentProbe() {
   const { draft } = useDraft();
@@ -119,11 +137,16 @@ function countCreates() {
   return create;
 }
 
+function setFontScale(fontScale: number): void {
+  jest.mocked(useWindowDimensions).mockReturnValue({ ...Dimensions.get("window"), fontScale });
+}
+
 describe("Message step", () => {
   beforeEach(() => {
     scrollTo.mockClear();
     getInnerViewRef.mockReset();
     measureLayout.mockReset();
+    jest.mocked(useWindowDimensions).mockReturnValue(Dimensions.get("window"));
     forgetDeletedPhotos();
   });
 
@@ -174,6 +197,32 @@ describe("Message step", () => {
 
     const nudge = screen.getByText(/A little more detail/);
     expect(nudge.props.accessibilityLiveRegion).toBeUndefined();
+    expect(
+      announce.mock.calls.filter(([line]) => line.startsWith("A little more detail")),
+    ).toHaveLength(1);
+  });
+
+  // The text size can be changed from the control centre mid-message, which lays the step out
+  // again; the nudge is still the same one, already on screen and already heard.
+  test("a text-size change with the nudge on screen does not speak it again", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
+    setFontScale(1);
+    const user = userEvent.setup();
+    renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.type(screen.getByLabelText(FIELD), "Sore knee");
+    const inputBefore = screen.getByLabelText(FIELD);
+
+    setFontScale(2);
+    // The first change after the new scale re-renders the step, which remounts it; one event, so
+    // nothing else is fired at the old input.
+    fireEvent.changeText(screen.getByLabelText(FIELD), "Sore knees");
+
+    expect(screen.getByLabelText(FIELD)).not.toBe(inputBefore);
+    expect(screen.getByText(/A little more detail/)).toBeOnTheScreen();
     expect(
       announce.mock.calls.filter(([line]) => line.startsWith("A little more detail")),
     ).toHaveLength(1);

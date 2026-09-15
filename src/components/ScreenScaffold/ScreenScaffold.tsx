@@ -1,33 +1,29 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-import {
-  Keyboard,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { createContext, useCallback, useContext, useRef, type ReactNode } from "react";
+import { Platform, ScrollView, StyleSheet, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { Focusable } from "@/lib/announce";
 import { useIsOffline } from "@/providers/NetworkProvider";
 import { colors, spacing } from "@/theme/tokens";
-import { OfflineBanner } from "./OfflineBanner";
-
-type Props = { children: ReactNode; action?: ReactNode; testID?: string };
+import { OfflineBanner } from "../OfflineBanner";
+import { scrollFieldIntoView } from "./scrollToField";
+import { useKeyboardInset } from "./useKeyboardInset";
+import { useRelayoutFlag } from "./useRelayoutFlag";
+import { useRevealFocusedInput } from "./useRevealFocusedInput";
 
 export type ScrollToField = (node: Focusable | null) => void;
+
+// Asked from an effect or a handler, never during render: the answer is only settled once the
+// commit that remounted the page is done, and a ref read in render is what the compiler rejects.
+export type IsRelayout = () => boolean;
+
+type Props = { children: ReactNode; action?: ReactNode; testID?: string };
 
 // The scaffold owns the scroll view and provides the real implementation; outside one the default
 // no-op keeps the call site unconditional.
 const ScrollToFieldContext = createContext<ScrollToField>(() => {});
+
+// Outside a scaffold nothing remounts a page under the patient, so every mount is an arrival.
+const IsRelayoutContext = createContext<IsRelayout>(() => false);
 
 // Large text can push a validation error far above the viewport, where moving screen-reader focus
 // to it leaves the screen looking untouched. Only components rendered inside the scaffold reach
@@ -36,45 +32,10 @@ export function useScrollToField(): ScrollToField {
   return useContext(ScrollToFieldContext);
 }
 
-// getInnerViewRef returns the content view element; it is absent from ScrollView's types.
-type WithInnerViewRef = { getInnerViewRef?: () => Focusable | null };
-
-// Children sit in the scroll view's content view, so their offset within it is the offset to
-// scroll to; the margin keeps the field clear of the top edge. The New Architecture measures only
-// against an element ref, so the node handle from getInnerViewNode is silently ignored.
-function scrollFieldIntoView(scroll: ScrollView, node: Focusable): void {
-  const content = (scroll as ScrollView & WithInnerViewRef).getInnerViewRef?.() ?? null;
-  if (content == null) return;
-  node.measureLayout(content, (_left, top) =>
-    scroll.scrollTo({ x: 0, y: Math.max(0, top - spacing.md), animated: true }),
-  );
-}
-
-// iOS reports the frame of every keyboard on the device, including one owned by another process:
-// the photo picker's runs out of process and reports its frame at the top of the screen. React
-// Native's own `automaticallyAdjustKeyboardInsets` applies that frame too, which leaves every
-// mounted scroll view inset by a whole screen, so only this app's keyboard is answered here.
-function useKeyboardInset(): number {
-  const { height } = useWindowDimensions();
-  const [inset, setInset] = useState(0);
-
-  useEffect(() => {
-    if (Platform.OS !== "ios") return;
-    const subscriptions = [
-      Keyboard.addListener("keyboardWillChangeFrame", (event) => {
-        if (!event.isEventFromThisApp) return;
-        const frame = event.endCoordinates;
-        // The iPadOS photo picker reports an empty frame at the window origin, which read as a
-        // keyboard top would inset the content by a whole window; an empty frame covers nothing.
-        const isCovering = frame.width > 0 && frame.height > 0;
-        setInset(isCovering ? Math.max(height - frame.screenY, 0) : 0);
-      }),
-      Keyboard.addListener("keyboardWillHide", () => setInset(0)),
-    ];
-    return () => subscriptions.forEach((subscription) => subscription.remove());
-  }, [height]);
-
-  return inset;
+// The scaffold is what remounts the page on a text-size change, so only it can tell a re-layout
+// from an arrival; anything that speaks on mount asks before speaking.
+export function useIsRelayout(): IsRelayout {
+  return useContext(IsRelayoutContext);
 }
 
 // One scroll view per step with the primary action as its last child: no pinned footer, so the
@@ -89,6 +50,8 @@ export function ScreenScaffold({ children, action, testID }: Props) {
   const { fontScale } = useWindowDimensions();
   const isOffline = useIsOffline();
   const scrollRef = useRef<ScrollView>(null);
+  const isRelayout = useRelayoutFlag(fontScale);
+  const onContentSizeChange = useRevealFocusedInput(scrollRef);
 
   const scrollToField = useCallback<ScrollToField>((node) => {
     if (node && scrollRef.current) scrollFieldIntoView(scrollRef.current, node);
@@ -100,6 +63,7 @@ export function ScreenScaffold({ children, action, testID }: Props) {
       ref={scrollRef}
       testID={testID}
       style={styles.scroll}
+      onContentSizeChange={onContentSizeChange}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
       contentContainerStyle={[
@@ -112,9 +76,11 @@ export function ScreenScaffold({ children, action, testID }: Props) {
       ]}
     >
       <ScrollToFieldContext.Provider value={scrollToField}>
-        {isOffline ? <OfflineBanner /> : null}
-        {children}
-        {action ? <View style={styles.action}>{action}</View> : null}
+        <IsRelayoutContext.Provider value={isRelayout}>
+          {isOffline ? <OfflineBanner /> : null}
+          {children}
+          {action ? <View style={styles.action}>{action}</View> : null}
+        </IsRelayoutContext.Provider>
       </ScrollToFieldContext.Provider>
     </ScrollView>
   );

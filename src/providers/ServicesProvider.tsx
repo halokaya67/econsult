@@ -5,7 +5,7 @@ import { useDevSettings } from "./DevSettingsProvider";
 
 const ServicesContext = createContext<Services | null>(null);
 
-// The one place that chooses the backend: the real client described in DECISIONS.md would be
+// The one place that chooses the backend: the real client described in docs/decisions-log.md would be
 // constructed here instead of the fake, and nothing above or below this file would change.
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const { settings } = useDevSettings();

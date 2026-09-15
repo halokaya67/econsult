@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { ErrorState } from "@/components/ErrorState";
 import { LoadingCards } from "@/components/LoadingCards";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { ScreenScaffold } from "@/components/ScreenScaffold/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { RecipientCard } from "@/features/econsult/components/RecipientCard";
 import { StepHeader } from "@/features/econsult/components/StepHeader";

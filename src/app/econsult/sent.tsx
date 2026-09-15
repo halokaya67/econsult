@@ -3,7 +3,7 @@ import { usePreventRemove } from "expo-router/react-navigation";
 import { useEffect, useRef, useState, type Ref } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { ScreenScaffold } from "@/components/ScreenScaffold";
+import { ScreenScaffold } from "@/components/ScreenScaffold/ScreenScaffold";
 import { TextButton } from "@/components/TextButton";
 import { PHOTO_STILL_FAILED, usePhotoRetry } from "@/features/econsult/hooks/usePhotoRetry";
 import { useRecipients } from "@/features/econsult/hooks/useRecipients";

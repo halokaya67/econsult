@@ -16,4 +16,10 @@ export const text = StyleSheet.create({
   },
   body: { color: colors.text, fontSize: fontSize.body, lineHeight: lineHeight.body },
   muted: { color: colors.muted, fontSize: fontSize.body, lineHeight: lineHeight.body },
+  status: {
+    color: colors.primary,
+    fontSize: fontSize.body,
+    lineHeight: lineHeight.body,
+    fontWeight: "600",
+  },
 });
