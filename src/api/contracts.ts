@@ -1,20 +1,10 @@
 import { z } from "zod";
 
-const KNOWN_QUESTION_TYPES = ["choice", "text"] as const;
 const MIN_CHOICE_OPTIONS = 2;
 
 export const IDEMPOTENCY_HEADER = "Idempotency-Key";
 
 const nonEmpty = z.string().min(1);
-
-// A question type this app cannot render is left out, so a new backend kind never breaks the form.
-function withoutUnknownQuestionTypes(input: unknown): unknown {
-  if (!Array.isArray(input)) return input;
-  return input.filter((question) => {
-    if (typeof question !== "object" || question === null || !("type" in question)) return true;
-    return KNOWN_QUESTION_TYPES.some((known) => known === (question as { type: unknown }).type);
-  });
-}
 
 const choiceQuestionSchema = z.object({
   id: nonEmpty,
@@ -36,6 +26,13 @@ export const questionSchema = z.discriminatedUnion("type", [
   textQuestionSchema,
 ]);
 
+// A question the app cannot render (no type, an unknown type, a choice with one option) is left out
+// so the rest of the form still renders; the config as a whole never fails because of one question.
+function onlyRenderableQuestions(input: unknown): unknown {
+  if (!Array.isArray(input)) return input;
+  return input.filter((question) => questionSchema.safeParse(question).success);
+}
+
 export const careTeamRoleSchema = z.enum(["gp", "nurse", "assistant", "other"]).catch("other");
 
 export const careTeamMemberSchema = z.object({
@@ -47,7 +44,7 @@ export const careTeamMemberSchema = z.object({
 export const practiceConfigSchema = z.object({
   practiceId: nonEmpty,
   recipientIds: z.array(nonEmpty),
-  questions: z.preprocess(withoutUnknownQuestionTypes, z.array(questionSchema)),
+  questions: z.preprocess(onlyRenderableQuestions, z.array(questionSchema)),
 });
 
 export const answerSchema = z.object({ questionId: nonEmpty, value: z.string() });

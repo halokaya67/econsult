@@ -92,7 +92,7 @@ Traded off: any exit loses the text, which is why the discard guard exists, and 
 ## Contract
 
 **Contract shapes.** The brief leaves the shape to the app.
-Decided: questions are choice or text; a question of a type this app cannot render is left out rather than shown wrongly; care-team members carry a role and an unknown role reads as "other"; a choice question with fewer than two options fails the whole config, because a form that cannot be answered honestly is worse than an error and Retry.
+Decided: questions are choice or text; any question the app cannot render (no type, an unknown type, a choice with fewer than two options) is left out and the rest of the form still renders; care-team members carry a role and an unknown role reads as "other"; only a config that is not the right shape at all fails, and that shows the error card, never a crash.
 Alternatives: take the brief's draft types as fixed (no role, so two names with no way to tell the GP; a free-form question type).
 Traded off: a real backend must match these shapes or grow a mapping layer.
 

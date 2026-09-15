@@ -42,15 +42,16 @@ describe("questionSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  test("a question whose type this app cannot render is left out of the config", () => {
+  test("a question the app cannot render is left out and the rest of the form stays", () => {
     const result = practiceConfigSchema.parse({
       practiceId: "prc-1",
       recipientIds: ["ct-1"],
       questions: [
         { id: "q-date", label: "When?", type: "date", required: false },
+        { id: "q-none", label: "Untyped", required: true },
+        { id: "q-one", label: "Pick", type: "choice", options: ["only"], required: true },
         { id: "q-text", label: "Where?", type: "text", required: true },
-        "not a question",
-      ].filter((question) => typeof question !== "string"),
+      ],
     });
 
     expect(result.questions).toEqual([
@@ -58,11 +59,11 @@ describe("questionSchema", () => {
     ]);
   });
 
-  test("a question with no type at all still fails the config", () => {
+  test("a questions field that is not a list still fails the config", () => {
     const result = practiceConfigSchema.safeParse({
       practiceId: "prc-1",
       recipientIds: [],
-      questions: [{ id: "q", label: "x", required: true }],
+      questions: "none",
     });
 
     expect(result.success).toBe(false);
