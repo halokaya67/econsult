@@ -224,6 +224,11 @@ Decided: listen for the keyboard, ignore foreign and empty frames, pad the conte
 Alternatives: the automatic insets (the bug); no keyboard handling (the keyboard covers Send).
 Traded off: no native nudge of the focused input; the scaffold must reach the window bottom.
 
+**The form re-lays out on a text-size change.** Changing the system text size while the app runs repaints the glyphs but leaves every box at the size it was measured at.
+Decided: the scaffold remounts its content when the font scale changes; answers, the message and the photo live in the draft and survive.
+Alternatives: relaunch to re-measure (what the patient would otherwise have to do); re-measure each box by hand (every component grows code for a rare event).
+Traded off: an open keyboard closes, a transient picker note disappears and the step is spoken once more, for a change made mid-message that is rare.
+
 **The error name lives on a view, not a text.** iOS caches a text's accessible name until its words change.
 Decided: a wrapping accessible view carries the name and error.
 Alternatives: the name on the text (stale after the error clears).
