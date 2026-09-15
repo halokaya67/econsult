@@ -47,7 +47,7 @@ type Note = { kind: "denied"; source: Source } | { kind: "failed" };
 type Props = {
   photo: DraftPhoto | null;
   disabled?: boolean;
-  onPickStarted: (pickId: string) => void;
+  onPickStarted: (pickId: string, uri: string) => void;
   onPickReady: (pickId: string, result: PickedPhoto) => void;
   onRemove: () => void;
 };
@@ -159,7 +159,7 @@ export function PhotoPicker({
       if (result.canceled) return;
       const asset = result.assets[0];
       const pickId = newId();
-      onPickStarted(pickId);
+      onPickStarted(pickId, asset.uri);
       announce(PREPARING_LABEL);
       onPickReady(
         pickId,

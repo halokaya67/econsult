@@ -9,6 +9,7 @@ import { initialDraft, type DraftState } from "@/features/econsult/state/draft";
 import { RETRY_LABEL } from "@/lib/retryLabel";
 import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
+import { deletedPhotoUris, forgetDeletedPhotos } from "@/test/photoFiles";
 import { TestProviders } from "@/test/renderWithProviders";
 
 const Home = () => <Text>home</Text>;
@@ -68,6 +69,8 @@ function renderSent(draft: DraftState) {
 }
 
 describe("Sent", () => {
+  beforeEach(forgetDeletedPhotos);
+
   afterEach(() => jest.restoreAllMocks());
 
   test("confirms who received the message and gives the reference", async () => {
@@ -112,6 +115,18 @@ describe("Sent", () => {
     await user.press(screen.getByRole("button", { name: "Done" }));
 
     await waitFor(() => expect(screen).toHavePathname("/"));
+  });
+
+  // The photo may be of a rash, and the flow is the only thing that could still need the file.
+  test("Done takes the photo file off the device", async () => {
+    const user = userEvent.setup();
+    renderSent({ ...SENT, photo: READY_PHOTO, attachment: "attached" });
+    await screen.findByText("Sent to Dr. J. de Vries.");
+
+    await user.press(screen.getByRole("button", { name: "Done" }));
+
+    await waitFor(() => expect(screen).toHavePathname("/"));
+    await waitFor(() => expect(deletedPhotoUris()).toEqual([READY_PHOTO.uri]));
   });
 
   test("a failed photo upload is shown with a retry and a way to continue without it", async () => {

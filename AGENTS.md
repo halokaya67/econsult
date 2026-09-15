@@ -103,6 +103,8 @@ actions as past-tense events (`recipientSelected`) rather than commands.
   the create lands retires it, and once the create has landed the key belongs to that e-consult.
 - Sending is two calls, create then upload. A failed upload is a partial outcome the patient sees,
   "sent, photo not attached"; its retry uploads to the same e-consult id, never a second create.
+- The photo's files belong to the flow: the draft provider deletes every `file://` uri the draft
+  named when it unmounts, so nothing removes a photo mid-flow, not even Remove or a replacement.
 
 ## Accessibility rules
 
@@ -146,7 +148,8 @@ Write the test first and watch it fail for the reason you expect: no red run, no
   `TestProviders` from `src/test/renderWithProviders`, so no test can pass against wiring the app
   does not have. Router tests use `renderRouter` with `flowLayoutWith(draft)` as `econsult/_layout`.
 - `jest.setup.ts` is the global mock world: uuids from a counter, a real device, a connected
-  network, granted photo permissions with cancelled launchers, a working image manipulator. Opt out
+  network, granted photo permissions with cancelled launchers, a working image manipulator, a
+  working file system whose deletions `src/test/photoFiles` reads back. Opt out
   inside the test that needs it (`jest.mocked`, `jest.replaceProperty`, `jest.spyOn`), never here.
 - Coverage is enforced per area: 100 % of statements, branches, functions and lines on `src/api`,
   `src/features`, `src/hooks`, `src/lib` and `src/providers`, 90 % of statements on `src/components`

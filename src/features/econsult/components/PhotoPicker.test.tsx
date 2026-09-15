@@ -97,6 +97,8 @@ describe("PhotoPicker", () => {
 
     await waitFor(() => expect(handlers.onPickReady).toHaveBeenCalled());
     const pickId = handlers.onPickStarted.mock.calls[0][0];
+    // The picked file is a copy in the app's cache, and naming it is what lets the flow delete it.
+    expect(handlers.onPickStarted).toHaveBeenCalledWith(pickId, ASSET.uri);
     expect(handlers.onPickReady).toHaveBeenCalledWith(pickId, {
       uri: "file:///cache/processed.jpg",
       width: 1600,

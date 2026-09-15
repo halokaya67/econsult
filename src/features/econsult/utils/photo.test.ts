@@ -1,5 +1,7 @@
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
+import { deletedPhotoUris, failNextPhotoDelete, forgetDeletedPhotos } from "@/test/photoFiles";
 import {
+  discardPhotoFiles,
   PHOTO_JPEG_QUALITY,
   PHOTO_MAX_EDGE,
   PHOTO_MIME_JPEG,
@@ -134,6 +136,46 @@ describe("photoFileFor", () => {
       name: "photo.png",
       type: "image/png",
     });
+    warn.mockRestore();
+  });
+});
+
+describe("discardPhotoFiles", () => {
+  beforeEach(forgetDeletedPhotos);
+
+  test("deletes every cache file it is given", () => {
+    discardPhotoFiles(["file:///cache/original.jpg", "file:///cache/processed.jpg"]);
+
+    expect(deletedPhotoUris()).toEqual([
+      "file:///cache/original.jpg",
+      "file:///cache/processed.jpg",
+    ]);
+  });
+
+  test("leaves a uri the app never wrote alone", () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    discardPhotoFiles(["ph://A1B2-C3D4", "content://media/external/images/42", "https://x.test/a"]);
+
+    expect(deletedPhotoUris()).toEqual([]);
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  test("does nothing when the draft named no files", () => {
+    discardPhotoFiles(new Set());
+
+    expect(deletedPhotoUris()).toEqual([]);
+  });
+
+  test("warns and deletes the rest when one file is already gone", () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    failNextPhotoDelete("File does not exist");
+
+    discardPhotoFiles(["file:///cache/gone.jpg", "file:///cache/here.jpg"]);
+
+    expect(deletedPhotoUris()).toEqual(["file:///cache/here.jpg"]);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("File does not exist"));
     warn.mockRestore();
   });
 });

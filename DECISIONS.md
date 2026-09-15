@@ -155,6 +155,11 @@ Decided: no recovery path in this version; the limit is documented.
 Alternatives: save the draft and consume the picker's pending result on relaunch (a day of work); a standalone build (a third of Expo Go's footprint, fewer evictions).
 Traded off: a real-device capture can lose the draft.
 
+**A photo of a rash must not outlive the message on the device.** The picker copies the photo into the cache and the downscale writes a second file beside it, and neither was ever removed.
+Decided: every file the draft referenced during its life is deleted when the flow ends, whether that is Done, Discard or Home.
+Alternatives: delete right after a successful upload (breaks Try again on the confirmation); leave it to the OS cache eviction (days away, and not guaranteed).
+Traded off: a dependency on expo-file-system, and a crash mid-flow leaves its files behind because the next run of the flow does not sweep them.
+
 ## Layout and design
 
 **Portrait only.** No landscape layout was designed.
@@ -218,6 +223,13 @@ Traded off: no native nudge of the focused input; the scaffold must reach the wi
 Decided: a wrapping accessible view carries the name and error.
 Alternatives: the name on the text (stale after the error clears).
 Traded off: one more view per choice group.
+
+## Security and privacy
+
+**What leaves the device, and what stays.** The message is medical and the photo may show skin.
+Decided: no message body, answer or patient id is ever logged (the only logger is development-only and prints outcomes, not content); the photo goes up without EXIF under a laundered name (`photo.<ext>`); every photo file the draft referenced is deleted when the flow ends; authentication is outside the brief's scope, and a real token plugs into the transport's constructor in the composition root so no screen ever sees it.
+Alternatives: logging request payloads in development (convenient, but a rash photo path or a message in a log file); keeping the original filename (leaks the patient's naming); a per-screen auth header (spreads a secret through the tree).
+Traded off: a development warning that names an outcome without its data is harder to debug from; the real transport's TLS and token handling are described, not shipped.
 
 ## Source layout
 

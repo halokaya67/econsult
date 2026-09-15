@@ -14,6 +14,7 @@ import { EMPTY_MESSAGE_ERROR } from "@/features/econsult/utils/validation";
 import { RETRY_LABEL } from "@/lib/retryLabel";
 import * as networkModule from "@/providers/NetworkProvider";
 import { flowLayoutWith } from "@/test/flowLayout";
+import { deletedPhotoUris, forgetDeletedPhotos } from "@/test/photoFiles";
 import { TestProviders, type ProviderOptions } from "@/test/renderWithProviders";
 import { spacing } from "@/theme/tokens";
 
@@ -122,6 +123,7 @@ describe("Message step", () => {
     scrollTo.mockClear();
     getInnerViewRef.mockReset();
     measureLayout.mockReset();
+    forgetDeletedPhotos();
   });
 
   // The offline test leaves react-query's shared online manager offline, which would pause the
@@ -545,6 +547,25 @@ describe("Message step", () => {
     await user.press(screen.getByRole("button", { name: REMOVE_PHOTO_LABEL }));
     expect(screen.queryByLabelText("Your photo")).toBeNull();
     expect(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL })).toBeOnTheScreen();
+  });
+
+  // Remove is not the end of the flow, so it takes nothing off the device; the sweep when the flow
+  // is left covers the picked file and the downscaled one it was turned into.
+  test("both files a pick wrote survive Remove and go when the flow is left", async () => {
+    jest
+      .mocked(ImagePicker.launchImageLibraryAsync)
+      .mockResolvedValueOnce({ canceled: false, assets: [ASSET] });
+    const user = userEvent.setup();
+    const { unmount } = renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+    await user.press(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL }));
+    await screen.findByLabelText("Your photo");
+
+    await user.press(screen.getByRole("button", { name: REMOVE_PHOTO_LABEL }));
+
+    expect(deletedPhotoUris()).toEqual([]);
+    unmount();
+    expect(deletedPhotoUris()).toEqual([ASSET.uri, "file:///cache/processed.jpg"]);
   });
 
   test("Send is disabled while a photo is still preparing", async () => {

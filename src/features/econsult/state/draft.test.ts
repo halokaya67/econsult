@@ -8,6 +8,7 @@ import {
   type DraftState,
 } from "./draft";
 
+const PICKED = "file:///picked.jpg";
 const READY = {
   type: "photoReady",
   pickId: "p1",
@@ -39,7 +40,7 @@ describe("draftReducer", () => {
         draftReducer(initialDraft, { type: "answerChanged", questionId: "q1", value: "a" }),
         { type: "messageChanged", message: "Hi" },
       ),
-      { type: "photoPickStarted", pickId: "p1" },
+      { type: "photoPickStarted", pickId: "p1", uri: PICKED },
     );
 
     const next = draftReducer(filled, { type: "recipientSelected", recipientId: "ct-12" });
@@ -50,7 +51,11 @@ describe("draftReducer", () => {
   });
 
   test("a pick starts a preparing photo and hasUnsentContent becomes true", () => {
-    const next = draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1" });
+    const next = draftReducer(initialDraft, {
+      type: "photoPickStarted",
+      pickId: "p1",
+      uri: PICKED,
+    });
 
     expect(next.photo).toEqual({ status: "preparing", pickId: "p1" });
     expect(isPhotoPreparing(next)).toBe(true);
@@ -58,7 +63,11 @@ describe("draftReducer", () => {
   });
 
   test("a ready result for the current pick replaces the preparing photo", () => {
-    const preparing = draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1" });
+    const preparing = draftReducer(initialDraft, {
+      type: "photoPickStarted",
+      pickId: "p1",
+      uri: PICKED,
+    });
 
     const next = draftReducer(preparing, READY);
 
@@ -74,8 +83,8 @@ describe("draftReducer", () => {
 
   test("a ready result for a superseded pick is ignored", () => {
     const second = draftReducer(
-      draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1" }),
-      { type: "photoPickStarted", pickId: "p2" },
+      draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1", uri: PICKED }),
+      { type: "photoPickStarted", pickId: "p2", uri: "file:///picked-2.jpg" },
     );
 
     const next = draftReducer(second, READY);
@@ -85,7 +94,7 @@ describe("draftReducer", () => {
 
   test("a ready result after removal is ignored", () => {
     const removed = draftReducer(
-      draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1" }),
+      draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1", uri: PICKED }),
       { type: "photoRemoved" },
     );
 
@@ -96,7 +105,7 @@ describe("draftReducer", () => {
 
   test("removing the photo clears it", () => {
     const ready = draftReducer(
-      draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1" }),
+      draftReducer(initialDraft, { type: "photoPickStarted", pickId: "p1", uri: PICKED }),
       READY,
     );
 

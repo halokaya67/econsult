@@ -124,7 +124,7 @@ function DraftPhotoPicker({ disabled }: { disabled: boolean }) {
     <PhotoPicker
       photo={draft.photo}
       disabled={disabled}
-      onPickStarted={(pickId) => dispatch({ type: "photoPickStarted", pickId })}
+      onPickStarted={(pickId, uri) => dispatch({ type: "photoPickStarted", pickId, uri })}
       onPickReady={(pickId, result) => dispatch({ type: "photoReady", pickId, ...result })}
       onRemove={() => dispatch({ type: "photoRemoved" })}
     />

@@ -44,6 +44,12 @@ jest.mock("expo-image-picker", () => ({
   PermissionStatus: { GRANTED: "granted", UNDETERMINED: "undetermined", DENIED: "denied" },
 }));
 
+// A working file system: every `File` remembers the uri it was built for and carries its own
+// `delete`, so `src/test/photoFiles` can read which photo files the app actually removed.
+jest.mock("expo-file-system", () => ({
+  File: jest.fn((uri: string) => ({ uri, delete: jest.fn() })),
+}));
+
 jest.mock("expo-image-manipulator", () => {
   const mockImage = {
     saveAsync: jest.fn(async () => ({

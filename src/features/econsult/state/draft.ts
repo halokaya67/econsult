@@ -27,7 +27,9 @@ export type DraftAction =
   | { type: "recipientSelected"; recipientId: string }
   | { type: "answerChanged"; questionId: string; value: string }
   | { type: "messageChanged"; message: string }
-  | { type: "photoPickStarted"; pickId: string }
+  // The uri is the picker's own copy of the photo in the cache. The reducer has no use for it; the
+  // provider tracks it so the file goes when the flow ends.
+  | { type: "photoPickStarted"; pickId: string; uri: string }
   | {
       type: "photoReady";
       pickId: string;

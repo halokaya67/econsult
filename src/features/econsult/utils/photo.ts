@@ -1,3 +1,4 @@
+import { File } from "expo-file-system";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import type { PhotoFile } from "@/api/transport";
 import { devWarn } from "@/lib/devWarn";
@@ -7,6 +8,10 @@ export const PHOTO_JPEG_QUALITY = 0.7;
 export const PHOTO_MIME_JPEG = "image/jpeg";
 
 const JPEG_EXTENSION = "jpg";
+
+// Only the copies the picker and the manipulator wrote into our cache are ours to delete; a `ph://`
+// or `content://` uri names the patient's own library item.
+const FILE_SCHEME = "file://";
 
 // The picker may hand back any of these untouched when processing fails; anything else is declared
 // a JPEG, which is what the endpoint accepts by default.
@@ -77,4 +82,17 @@ export function photoFileFor(photo: PickedPhoto): PhotoFile {
     return { uri: photo.uri, name: `photo.${JPEG_EXTENSION}`, type: PHOTO_MIME_JPEG };
   }
   return { uri: photo.uri, name: `photo.${extension}`, type };
+}
+
+// A photo of a rash must not outlive the message it went with, so every file the draft named is
+// deleted at once. `File#delete` throws when the file is already gone, and that is nobody's problem.
+export function discardPhotoFiles(uris: Iterable<string>): void {
+  for (const uri of uris) {
+    if (!uri.startsWith(FILE_SCHEME)) continue;
+    try {
+      new File(uri).delete();
+    } catch (error) {
+      devWarn(`Photo file could not be deleted: ${String(error)}`);
+    }
+  }
 }
