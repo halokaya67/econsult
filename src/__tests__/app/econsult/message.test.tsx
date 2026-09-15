@@ -145,6 +145,25 @@ describe("Message step", () => {
     expect(announce.mock.calls.filter(([line]) => line.startsWith("Step"))).toHaveLength(1);
   });
 
+  test("a short message shows the nudge and speaks it once, with no live region", async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, "announceForAccessibility")
+      .mockImplementation(() => {});
+    announce.mockClear();
+    const user = userEvent.setup();
+    renderMessage();
+    await screen.findByText("To: Dr. J. de Vries");
+
+    await user.type(screen.getByLabelText(FIELD), "Sore knee");
+    await user.type(screen.getByLabelText(FIELD), " since");
+
+    const nudge = screen.getByText(/A little more detail/);
+    expect(nudge.props.accessibilityLiveRegion).toBeUndefined();
+    expect(
+      announce.mock.calls.filter(([line]) => line.startsWith("A little more detail")),
+    ).toHaveLength(1);
+  });
+
   test("an empty message is blocked with an error spoken by moving focus to the field", async () => {
     const namesWhenFocused: (string | undefined)[] = [];
     const announce = jest

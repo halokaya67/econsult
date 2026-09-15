@@ -4,6 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ActivityIndicator, Linking, StyleSheet, Text, View } from "react-native";
 import { TextButton } from "@/components/TextButton";
+import { announce } from "@/lib/announce";
 import { devWarn } from "@/lib/devWarn";
 import { newId } from "@/lib/ids";
 import { text } from "@/theme/text";
@@ -70,9 +71,7 @@ function PreparingPhotoView({ disabled, onRemove }: PhotoStateProps) {
     <View style={styles.stack}>
       <View style={styles.row}>
         <ActivityIndicator color={colors.primary} />
-        <Text accessibilityLiveRegion="polite" style={text.body}>
-          {PREPARING_LABEL}
-        </Text>
+        <Text style={text.body}>{PREPARING_LABEL}</Text>
       </View>
       <TextButton label={REMOVE_PHOTO_LABEL} disabled={disabled} onPress={onRemove} />
     </View>
@@ -99,15 +98,11 @@ function ReadyPhotoView({ uri, disabled, onRemove }: PhotoStateProps & { uri: st
 // Open Settings only helps a denied permission; a failed launcher is worth another tap instead.
 function PickNote({ note }: { note: Note }) {
   if (note.kind === "failed") {
-    return (
-      <Text accessibilityLiveRegion="polite" style={text.muted}>
-        {PICK_FAILED_NOTE}
-      </Text>
-    );
+    return <Text style={text.muted}>{PICK_FAILED_NOTE}</Text>;
   }
   return (
     <View style={styles.stack}>
-      <Text accessibilityLiveRegion="polite" style={text.muted}>
+      <Text style={text.muted}>
         {note.source === "camera" ? CAMERA_DENIED_NOTE : PERMISSION_DENIED_NOTE}
       </Text>
       <TextButton label={OPEN_SETTINGS_LABEL} onPress={() => void Linking.openSettings()} />
@@ -155,13 +150,17 @@ export function PhotoPicker({
     const permission: Permission =
       source === "camera" ? [cameraStatus, requestCamera] : [libraryStatus, requestLibrary];
     try {
-      if (!(await ensureGranted(permission))) return setNote({ kind: "denied", source });
+      if (!(await ensureGranted(permission))) {
+        announce(source === "camera" ? CAMERA_DENIED_NOTE : PERMISSION_DENIED_NOTE);
+        return setNote({ kind: "denied", source });
+      }
       setNote(null);
       const result = await launch(source);
       if (result.canceled) return;
       const asset = result.assets[0];
       const pickId = newId();
       onPickStarted(pickId);
+      announce(PREPARING_LABEL);
       onPickReady(
         pickId,
         await processPhoto({
@@ -173,6 +172,7 @@ export function PhotoPicker({
       );
     } catch (error) {
       devWarn(`Photo pick failed: ${String(error)}`);
+      announce(PICK_FAILED_NOTE);
       setNote({ kind: "failed" });
     }
   }

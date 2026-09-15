@@ -1,6 +1,6 @@
 import { useNavigation, useRouter } from "expo-router";
 import { usePreventRemove } from "expo-router/react-navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ErrorState } from "@/components/ErrorState";
 import { PrimaryButton } from "@/components/PrimaryButton";
@@ -22,6 +22,7 @@ import { sendErrorCopy } from "@/features/econsult/utils/errorCopy";
 import { recipientNameFor } from "@/features/econsult/utils/recipients";
 import { STEP_TITLES, stepCount, stepNumber } from "@/features/econsult/utils/steps";
 import { isMessageThin } from "@/features/econsult/utils/validation";
+import { announce } from "@/lib/announce";
 import type { Focusable } from "@/lib/announce";
 import { OFFLINE_HINT, useIsOffline } from "@/providers/NetworkProvider";
 import { text } from "@/theme/text";
@@ -94,6 +95,11 @@ function ToRow({
 // The two wrappers look redundant but are not: reading a ref setter during render trips the
 // compiler's react-hooks/refs rule, so the node is handed over from inside the callback instead.
 function MessageField({ send, message }: { send: SendState; message: string }) {
+  const isThin = isMessageThin(message);
+  // Spoken once when the nudge appears; a live region would be Android-only.
+  useEffect(() => {
+    if (isThin) announce(THIN_NUDGE);
+  }, [isThin]);
   return (
     <>
       <TextField
@@ -107,11 +113,7 @@ function MessageField({ send, message }: { send: SendState; message: string }) {
         editable={!send.submit.isPending}
         multiline
       />
-      {isMessageThin(message) ? (
-        <Text accessibilityLiveRegion="polite" style={text.muted}>
-          {THIN_NUDGE}
-        </Text>
-      ) : null}
+      {isThin ? <Text style={text.muted}>{THIN_NUDGE}</Text> : null}
     </>
   );
 }

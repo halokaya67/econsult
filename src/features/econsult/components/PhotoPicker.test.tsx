@@ -2,7 +2,7 @@ import { render, screen, userEvent, waitFor } from "@testing-library/react-nativ
 import * as Device from "expo-device";
 import { ImageManipulator } from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import { Linking } from "react-native";
+import { AccessibilityInfo, Linking } from "react-native";
 import {
   CAMERA_DENIED_NOTE,
   CAMERA_UNAVAILABLE_NOTE,
@@ -43,6 +43,15 @@ function renderPicker(photo: Photo = null, disabled = false) {
   const handlers = { onPickStarted: jest.fn(), onPickReady: jest.fn(), onRemove: jest.fn() };
   render(<PhotoPicker photo={photo} disabled={disabled} {...handlers} />);
   return handlers;
+}
+
+// The preset already mocks the announcer, so the spy is the mock every earlier test wrote to.
+function spyAnnounce() {
+  const announce = jest
+    .spyOn(AccessibilityInfo, "announceForAccessibility")
+    .mockImplementation(() => {});
+  announce.mockClear();
+  return announce;
 }
 
 describe("PhotoPicker", () => {
@@ -121,9 +130,11 @@ describe("PhotoPicker", () => {
     const user = userEvent.setup();
     const handlers = renderPicker();
 
+    const announce = spyAnnounce();
     await user.press(screen.getByRole("button", { name: TAKE_PHOTO_LABEL }));
 
     await waitFor(() => expect(handlers.onPickReady).toHaveBeenCalled());
+    expect(announce.mock.calls.filter(([line]) => line === PREPARING_LABEL)).toHaveLength(1);
     expect(ImagePicker.launchCameraAsync).toHaveBeenCalledWith(
       expect.objectContaining({ quality: 1 }),
     );
@@ -138,15 +149,19 @@ describe("PhotoPicker", () => {
     expect(handlers.onPickStarted).not.toHaveBeenCalled();
   });
 
-  test("a denied permission explains itself and offers Settings", async () => {
+  test("a denied permission explains itself, once, and offers Settings", async () => {
     mockPermission("useMediaLibraryPermissions", denied);
     const openSettings = jest.spyOn(Linking, "openSettings").mockResolvedValue();
+    const announce = spyAnnounce();
     const user = userEvent.setup();
     const handlers = renderPicker();
 
     await user.press(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL }));
 
-    expect(await screen.findByText(PERMISSION_DENIED_NOTE)).toBeOnTheScreen();
+    const note = await screen.findByText(PERMISSION_DENIED_NOTE);
+    expect(note).toBeOnTheScreen();
+    expect(note.props.accessibilityLiveRegion).toBeUndefined();
+    expect(announce.mock.calls.filter(([line]) => line === PERMISSION_DENIED_NOTE)).toHaveLength(1);
     await user.press(screen.getByRole("button", { name: "Open Settings" }));
     expect(openSettings).toHaveBeenCalled();
     expect(handlers.onPickStarted).not.toHaveBeenCalled();
@@ -154,12 +169,14 @@ describe("PhotoPicker", () => {
 
   test("a denied camera permission names the camera, not the library", async () => {
     mockPermission("useCameraPermissions", denied);
+    const announce = spyAnnounce();
     const user = userEvent.setup();
     const handlers = renderPicker();
 
     await user.press(screen.getByRole("button", { name: TAKE_PHOTO_LABEL }));
 
     expect(await screen.findByText(CAMERA_DENIED_NOTE)).toBeOnTheScreen();
+    expect(announce.mock.calls.filter(([line]) => line === CAMERA_DENIED_NOTE)).toHaveLength(1);
     expect(screen.queryByText(PERMISSION_DENIED_NOTE)).toBeNull();
     expect(screen.getByRole("button", { name: "Open Settings" })).toBeOnTheScreen();
     expect(handlers.onPickStarted).not.toHaveBeenCalled();
@@ -169,23 +186,27 @@ describe("PhotoPicker", () => {
     const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
     mockPermission("useMediaLibraryPermissions", granted);
     jest.mocked(ImagePicker.launchImageLibraryAsync).mockRejectedValueOnce(new Error("busy"));
+    const announce = spyAnnounce();
     const user = userEvent.setup();
     const handlers = renderPicker();
 
     await user.press(screen.getByRole("button", { name: CHOOSE_PHOTO_LABEL }));
 
-    expect(await screen.findByText(PICK_FAILED_NOTE)).toBeOnTheScreen();
+    const note = await screen.findByText(PICK_FAILED_NOTE);
+    expect(note).toBeOnTheScreen();
+    expect(note.props.accessibilityLiveRegion).toBeUndefined();
+    expect(announce.mock.calls.filter(([line]) => line === PICK_FAILED_NOTE)).toHaveLength(1);
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("busy"));
     expect(screen.queryByRole("button", { name: "Open Settings" })).toBeNull();
     expect(handlers.onPickStarted).not.toHaveBeenCalled();
     expect(handlers.onPickReady).not.toHaveBeenCalled();
   });
 
-  test("shows the preparing state as a live region and still offers Remove", async () => {
+  test("shows the preparing state and still offers Remove", async () => {
     const user = userEvent.setup();
     const handlers = renderPicker({ status: "preparing", pickId: "p1" });
 
-    expect(screen.getByText(PREPARING_LABEL).props.accessibilityLiveRegion).toBe("polite");
+    expect(screen.getByText(PREPARING_LABEL).props.accessibilityLiveRegion).toBeUndefined();
     expect(screen.queryByRole("button", { name: CHOOSE_PHOTO_LABEL })).toBeNull();
     await user.press(screen.getByRole("button", { name: REMOVE_PHOTO_LABEL }));
 
